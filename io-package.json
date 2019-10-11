@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.3",
+		"version": "0.0.5",
 		"news": {
+			"0.0.5": {
+				"en": "First beta release, read all information to states by configurable interval.",
+				"de": "Erste Beta-Version, lesen Sie alle Informationen in konfigurierbaren Intervallen.",
+				"ru": "Первый бета-релиз, прочитайте всю информацию для состояний через настраиваемый интервал",
+				"pt": "Primeira versão beta, leia todas as informações dos estados por intervalo configurável.",
+				"nl": "Eerste bètaversie, lees alle informatie naar toestanden volgens configureerbaar interval.",
+				"fr": "Première version bêta, lisez toutes les informations dans des états par intervalle configurable.",
+				"it": "Prima versione beta, leggi tutte le informazioni sugli stati per intervallo configurabile.",
+				"es": "Primera versión beta, lea toda la información a los estados por intervalo configurable.",
+				"pl": "Pierwsza wersja beta, czytaj wszystkie informacje do stanów według konfigurowalnego interwału.",
+				"zh-cn": "第一个beta版本，按可配置的间隔将所有信息读取到状态。"
+			},
 			"0.0.3": {
 				"en": "Implemented all room states, configurable refresh intervall ",
 				"de": "Implementiert alle Raumzustände, konfigurierbares Aktualisierungsintervall",

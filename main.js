@@ -25,6 +25,7 @@ const tado_config = {
 };
 
 const oauth2 = require('simple-oauth2').create(tado_config);
+const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
 
 // const fs = require("fs");
@@ -168,7 +169,7 @@ class Tado extends utils.Adapter {
 				try {
 					await this.DoMobileDevices(this.getMe_data.homes[i].id);
 				} catch (error) {
-					this.log.error('Issue in Get all mobile devices' + error);
+					this.log.silly('Issue in Get all mobile devices' + error);
 				}
 				
 				this.log.silly('Get all rooms');
@@ -795,7 +796,8 @@ class Tado extends utils.Adapter {
 						});
 
 						for (const x in this.Zones_data [i][y]){
-							this.create_state(HomeId + '.Rooms.' + this.Zones_data [i].id +  '.' +  y + '.' + x, y, this.Zones_data [i][y][x]);
+							// this.log.info(x + '   |   ' + y)
+							this.create_state(HomeId + '.Rooms.' + this.Zones_data [i].id +  '.' +  y + '.' + x, x, this.Zones_data [i][y][x]);
 						}
 						break;
 					
@@ -969,8 +971,8 @@ class Tado extends utils.Adapter {
 					break;
 
 				case ('sensorDataPoints'):
-					this.create_state(state_root_states + '.' + 'Actual_Temperature', i, ZonesState_data[i].insideTemperature.celsius);
-					this.create_state(state_root_states + '.' + 'Actual_Humidity', i, ZonesState_data[i].humidity.percentage);
+					this.create_state(state_root_states + '.' + 'Actual_Temperature', 'Actual_Temperature', ZonesState_data[i].insideTemperature.celsius);
+					this.create_state(state_root_states + '.' + 'Actual_Humidity', 'Actual_Humidity', ZonesState_data[i].humidity.percentage);
 					break;		
 
 				case ('setting'):
@@ -1036,16 +1038,38 @@ class Tado extends utils.Adapter {
 
 	async create_state(state, name, value){
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
-		await this.setObjectNotExistsAsync(state, {
-			type: 'state',
-			common: {
-				name: name,
-				read : true,
-				write : false
-			},
-			native: {},
-		});
-		await this.setState(state, {val: value, ack: true});
+		this.log.debug('Create_state called for : ' + name	 + ' with value : ' + value);
+
+		if (state_attr[name] !==  undefined) {
+			await this.setObjectNotExistsAsync(state, {
+				type: 'state',
+				common: {
+					name: state_attr[name].name,
+					role: state_attr[name].role,
+					type: state_attr[name].type,
+					unit: state_attr[name].unit,
+					read : true,
+					write : false
+				},
+				native: {},
+			});
+			await this.setState(state, {val: value, ack: true});
+		} else {
+			this.log.debug('No type defined for name : ' + name + '|value : |' + value);
+			await this.setObjectNotExistsAsync(state, {
+				type: 'state',
+				common: {
+					name: name,
+					read : true,
+					write : false,
+					role: 'state',
+					type:'mixed'
+				},
+				native: {},
+			});
+			await this.setState(state, {val: value, ack: true});
+			
+		}
 	}
 
 }

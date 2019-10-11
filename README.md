@@ -1,5 +1,5 @@
-![Logo](admin/tado.png)
-# ioBroker.tado
+ # ioBroker.tado 
+<img src="./admin/tado.png" width="50" height="50">
 
 [![NPM version](http://img.shields.io/npm/v/iobroker.tado.svg)](https://www.npmjs.com/package/iobroker.tado)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.tado.svg)](https://www.npmjs.com/package/iobroker.tado)
@@ -15,6 +15,11 @@
 tado° ensures a comfortable and healthy climate while saving up to 31% on your heating bill.
 
 ## Changelog
+
+### 0.0.5 Public beta, released to latest repository
+* (DutchmanNL) add library to handle propper state and attribute creation
+* (DutchmanNL) beta release to latest repository
+* (DutchmanNL) released on NPM (installable by admin)
 
 ### 0.0.3 
 * (DutchmanNL) implement all zone states & data refresh intervall
