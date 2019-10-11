@@ -37,5 +37,17 @@ systemDictionary = {
 		'es': 'Contraseña',
 		'pl': 'Hasło',
 		'zh-cn': '密码'
+	},
+	'intervall': {
+		'en': 'Refresh intervall in second',
+		'de': 'Aktualisierungsintervall in Sekunde',
+		'ru': 'Обновить интервал в секунду',
+		'pt': 'Atualizar intervalo em segundo',
+		'nl': 'Vernieuw intervall in seconde',
+		'fr': "Rafraîchir l'intervalle en seconde",
+		'it': 'Intervallo di aggiornamento al secondo',
+		'es': 'Actualizar intervalo en segundo',
+		'pl': 'Odśwież interwał w sekundę',
+		'zh-cn': '刷新间隔秒'
 	}
 };

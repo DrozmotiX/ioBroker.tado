@@ -16,6 +16,12 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 
 ## Changelog
 
+### 0.0.3 
+* (DutchmanNL) implement all zone states & data refresh intervall
+
+### 0.0.2
+* (DutchmanNL) Alpha, read zones, their devices and related states
+
 ### 0.0.1
 * (DutchmanNL) Alpha, read account and mobile device information
 

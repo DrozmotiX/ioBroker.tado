@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.2",
+		"version": "0.0.3",
 		"news": {
+			"0.0.3": {
+				"en": "Implemented all room states, configurable refresh intervall ",
+				"de": "Implementiert alle Raumzustände, konfigurierbares Aktualisierungsintervall",
+				"ru": "Реализованы все состояния комнаты, настраивается интервал обновления",
+				"pt": "Implementado todos os estados da sala, intervalo de atualização configurável",
+				"nl": "Alle kamerstatussen geïmplementeerd, configureerbare vernieuwingsintervallen",
+				"fr": "Implémentation de tous les états de la salle, intervalle d'actualisation configurable",
+				"it": "Implementato tutti gli stati della stanza, intervallo di aggiornamento configurabile",
+				"es": "Implementado todos los estados de sala, intervalo de actualización configurable",
+				"pl": "Wdrożono wszystkie stany pomieszczenia, konfigurowalny interwał odświeżania",
+				"zh-cn": "实现所有房间状态，可配置刷新间隔"
+			},
 			"0.0.2": {
 				"en": "Alpha, reads basic information of account and mobile devices.",
 				"de": "Alpha, liest grundlegende Informationen zum Konto und zu Mobilgeräten.",
@@ -83,7 +95,8 @@
 	},
 	"native": {
 		"Username": "",
-		"Password": ""
+		"Password": "",
+		"intervall": 30
 	},
 	"objects": [],
 	"instanceObjects": [
