@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"news": {
+			"0.0.2": {
+				"en": "Alpha, reads basic information of account and mobile devices.",
+				"de": "Alpha, liest grundlegende Informationen zum Konto und zu Mobilgeräten.",
+				"ru": "Альфа, читает основную информацию об учетной записи и мобильных устройствах.",
+				"pt": "Alfa, lê informações básicas da conta e dos dispositivos móveis.",
+				"nl": "Alpha, leest basisinformatie van account en mobiele apparaten.",
+				"fr": "Alpha, lit les informations de base du compte et des appareils mobiles.",
+				"it": "Alpha, legge le informazioni di base sull'account e sui dispositivi mobili.",
+				"es": "Alfa, lee información básica de cuenta y dispositivos móviles.",
+				"pl": "Alpha, czyta podstawowe informacje o koncie i urządzeniach mobilnych.",
+				"zh-cn": "Alpha，读取帐户和移动设备的基本信息。"
+			},
 			"0.0.1": {
 				"en": "Alpha, reads basic information of account and mobile devices.",
 				"de": "Alpha, liest grundlegende Informationen zum Konto und zu Mobilgeräten.",
