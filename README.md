@@ -15,6 +15,10 @@
 tado° ensures a comfortable and healthy climate while saving up to 31% on your heating bill.
 
 ## Changelog
+### 0.0.6 Implemented away status
+* (DutchmanNL) Implemented away status
+* (DutchmanNL) fixed issue in state reading
+* (DutchmanNL) updated some attributes
 
 ### 0.0.5 Public beta, released to latest repository
 * (DutchmanNL) add library to handle propper state and attribute creation

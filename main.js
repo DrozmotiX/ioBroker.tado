@@ -346,7 +346,10 @@ class Tado extends utils.Adapter {
 	getZoneState(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
 	}
-	
+
+	getAwayConfiguration(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
+	}
 	// Unclear purpose, ignore for now
 	// getZoneCapabilities(home_id, zone_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
@@ -365,10 +368,6 @@ class Tado extends utils.Adapter {
 
 	// getTimeTables(home_id, zone_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
-	// }
-
-	// getAwayConfiguration(home_id, zone_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	// }
 
 	// getTimeTable(home_id, zone_id, timetable_id) {
@@ -826,6 +825,7 @@ class Tado extends utils.Adapter {
 			// Unclear purpose, ignore for now
 			// await this.DoZoneCapabilities(HomeId, this.Zones_data [i].id, basic_tree);
 			// await this.DoZoneOverlay(HomeId, this.Zones_data [i].id, basic_tree);
+			await this.DoAwayConfiguration(HomeId, this.Zones_data [i].id, basic_tree);
 
 		}
 	}
@@ -963,7 +963,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				case ('overlayType'):
-					this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
+					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
 					break;						
 										
 				case ('preparation'):
@@ -1035,6 +1035,30 @@ class Tado extends utils.Adapter {
 	// 		this.log.error(error);
 	// 	}
 	// }
+
+	async DoAwayConfiguration(HomeId,ZoneId, state_root_states){
+		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
+		this.log.debug('AwayConfiguration_data Result : ' + JSON.stringify(AwayConfiguration_data));
+
+		for (const i in AwayConfiguration_data){
+
+			switch (i){
+				
+				case ('minimumAwayTemperature'):
+					this.create_state(state_root_states + '.AwayConfiguration.' + i	, i, AwayConfiguration_data[i].celsius);
+					break;
+				case ('preheatingLevel'):
+					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
+					break;
+				case ('type'):
+					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
+					break;
+
+				default:
+					this.log.error('Send this info to developer !!! { Unhandable information found in DoAwayConfiguration : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(AwayConfiguration_data[i]));
+			}
+		}
+	}
 
 	async create_state(state, name, value){
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);

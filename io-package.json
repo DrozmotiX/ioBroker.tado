@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.5",
+		"version": "0.0.6",
 		"news": {
+			"0.0.": {
+				"en": "Implemented away status, attribute updates",
+				"de": "Abwesenheitsstatus implementiert, Attributaktualisierungen",
+				"ru": "Реализован статус отсутствия, обновления атрибутов",
+				"pt": "Status ausente implementado, atualizações de atributo",
+				"nl": "Geïmplementeerde afwezigheidsstatus, kenmerkupdates",
+				"fr": "Statut d'absence implémenté, mises à jour d'attributs",
+				"it": "Implementato lo stato via, aggiornamenti degli attributi",
+				"es": "Estado de ausencia implementado, actualizaciones de atributos",
+				"pl": "Wdrożono status nieobecności, aktualizacje atrybutów",
+				"zh-cn": "已实施的离开状态，属性更新"
+			},
 			"0.0.5": {
 				"en": "First beta release, read all information to states by configurable interval.",
 				"de": "Erste Beta-Version, lesen Sie alle Informationen in konfigurierbaren Intervallen.",
