@@ -959,6 +959,117 @@ class Tado extends utils.Adapter {
 
 
 				case ('overlay'):
+
+					await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
+						type: 'channel',
+						common: {
+							name: i,
+						},
+						native: {},
+					});
+				
+					for (const x in ZonesState_data[i]){
+						
+						switch (x){
+
+							case ('type'):
+								this.create_state(state_root_states + '.' + i  + '.' + x, x, JSON.stringify(ZonesState_data[i][x]));
+								break;	
+
+							case ('setting'):
+
+								for (const y in ZonesState_data[i]){
+
+									try {
+
+										await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + x, {
+											type: 'channel',
+											common: {
+												name: x,
+											},
+											native: {},
+										});
+			
+										switch (y){
+				
+											case ('temperature'): 
+												if (ZonesState_data[i][x][y].celsius === null) {
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, null);
+												} else {
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius);
+												}
+											
+												break;
+
+											case ('type'):
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+
+											case ('power'):
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+
+											default:
+
+										}		
+
+									} catch (error) {
+										// this.log.error(error);
+					
+									}
+								}
+								break;	
+		
+							case ('termination'):
+								for (const y in ZonesState_data[i]){
+
+									try {
+
+										await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + y, {
+											type: 'channel',
+											common: {
+												name: y,
+											},
+											native: {},
+										});
+			
+										switch (y){
+											
+											case ('projectedExpiry'):
+												this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+
+
+											case ('type'):
+												this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+
+											case ('typeSkillBasedApp'):
+												this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+
+											default:
+
+										}
+
+									} catch (error) {
+										// this.log.error(error);
+					
+									}
+								}
+								break;	
+
+							default:
+								this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+						}
+
+					}
+
 					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
 					break;
 

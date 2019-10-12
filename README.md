@@ -15,6 +15,10 @@
 tado° ensures a comfortable and healthy climate while saving up to 31% on your heating bill.
 
 ## Changelog
+
+### 0.0.7 Improve overlay states
+* (DutchmanNL) improve overlay states  (https://github.com/iobroker-community-adapters/ioBroker.tado/issues/1)
+
 ### 0.0.6 Implemented away status
 * (DutchmanNL) Implemented away status
 * (DutchmanNL) fixed issue in state reading

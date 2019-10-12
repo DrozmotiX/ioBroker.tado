@@ -1,9 +1,12 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.6",
+		"version": "0.0.7",
 		"news": {
-			"0.0.": {
+			"0.0.7": {
+				"en": "Improve overlay states"
+			},
+			"0.0.6": {
 				"en": "Implemented away status, attribute updates",
 				"de": "Abwesenheitsstatus implementiert, Attributaktualisierungen",
 				"ru": "Реализован статус отсутствия, обновления атрибутов",
