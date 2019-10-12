@@ -16,6 +16,12 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 
 ## Changelog
 
+### 0.0.8 Implement overlay clear states & control
+* (Dutchman) implement capability to reset running polling timer
+* (Dutchman) implement clear overlay
+* (Dutchman) execute polling after overlay clear
+* (Dutchman) reset states to NULL when polling time * 2 no data is received
+
 ### 0.0.7 Improve overlay states
 * (DutchmanNL) improve overlay states  (https://github.com/iobroker-community-adapters/ioBroker.tado/issues/1)
 

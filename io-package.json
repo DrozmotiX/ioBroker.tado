@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.7",
+		"version": "0.0.8",
 		"news": {
+			"0.0.8 RC 1": {
+				"en": "Implemented overlay clear states & control",
+				"de": "Overlay Clear States & Control implementiert",
+				"ru": "Реализовано наложение четких состояний и контроля",
+				"pt": "Sobreposição de estados claros e controle implementados",
+				"nl": "Geïmplementeerde overlay clear states & control geïmplementeerd",
+				"fr": "Superposition implémentée des états et contrôles clairs",
+				"it": "Implementati stati di sovrapposizione e controllo chiari",
+				"es": "Superposición implementada estados claros y control",
+				"pl": "Wdrożona nakładka kasuje stany i kontrolę",
+				"zh-cn": "实施叠加清除状态和控制"
+			},
 			"0.0.7": {
 				"en": "Improve overlay states"
 			},

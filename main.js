@@ -27,8 +27,9 @@ const tado_config = {
 const oauth2 = require('simple-oauth2').create(tado_config);
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
+let polling; // Polling timer
 
-// const fs = require("fs");
+// const fs = require('fs');
 
 class Tado extends utils.Adapter {
 
@@ -80,7 +81,36 @@ class Tado extends utils.Adapter {
 	onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			if (state.ack === false) {
+
+				// const deviceId = id.split('.');
+				const deviceId = id.split('.');
+				// let stateNameToSend = '';
+				for (const x in deviceId){
+					this.log.debug('Device id channel : ' + deviceId[x]);
+					switch (deviceId[x]) {
+
+						case ('clearZoneOverlay'):
+							this.log.warn('Overlay cleared for zone : ' + deviceId[4] + ' in home : ' + deviceId[2]);
+							this.clearZoneOverlay(deviceId[2],deviceId[4]);
+							this.DoConnect()
+
+							break;
+
+						default:
+
+					}
+
+				}
+
+				this.log.debug('State change detected from different source then adapter');
+				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+				
+			}  else {
+				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			}
+
+
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
@@ -195,15 +225,22 @@ class Tado extends utils.Adapter {
 
 			}
 
-			setTimeout( () => {
+			// Clear running timer
+			(function () {if (polling) {clearTimeout(polling); polling = null;}})();
+			// timer
+			polling = setTimeout( () => {
 				this.DoConnect();
 			}, intervall_time);
+
+
+
+			
 
 		} catch (error) {
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
 			// retry connection
-			setTimeout( () => {
+			polling = setTimeout( () => {
 				this.DoConnect();
 			}, 30000);
 		}
@@ -350,6 +387,11 @@ class Tado extends utils.Adapter {
 	getAwayConfiguration(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	}
+
+	clearZoneOverlay(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+	}
+
 	// Unclear purpose, ignore for now
 	// getZoneCapabilities(home_id, zone_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
@@ -372,10 +414,6 @@ class Tado extends utils.Adapter {
 
 	// getTimeTable(home_id, zone_id, timetable_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
-	// }
-
-	// clearZoneOverlay(home_id, zone_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
 	// }
 
 	// setZoneOverlay(home_id, zone_id, power, temperature, termination) {
@@ -960,6 +998,8 @@ class Tado extends utils.Adapter {
 
 				case ('overlay'):
 
+					this.log.debug('API data of overlay : ' + JSON.stringify(ZonesState_data[i]));
+					this.log.debug('API data : ' + JSON.stringify(ZonesState_data[i]));
 					await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
 						type: 'channel',
 						common: {
@@ -967,6 +1007,8 @@ class Tado extends utils.Adapter {
 						},
 						native: {},
 					});
+
+					this.create_state(state_root_states + '.' + i  + '.clearZoneOverlay', 'clearZoneOverlay', '');
 				
 					for (const x in ZonesState_data[i]){
 						
@@ -1023,11 +1065,11 @@ class Tado extends utils.Adapter {
 								break;	
 		
 							case ('termination'):
-								for (const y in ZonesState_data[i]){
+								for (const y in ZonesState_data[i][x]){
 
 									try {
 
-										await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + y, {
+										await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + x, {
 											type: 'channel',
 											common: {
 												name: y,
@@ -1038,31 +1080,49 @@ class Tado extends utils.Adapter {
 										switch (y){
 											
 											case ('projectedExpiry'):
-												this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][x][y]);
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
 
 												break;
 
 
 											case ('type'):
-												this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][x][y]);
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
 
 												break;
 
 											case ('typeSkillBasedApp'):
-												this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][x][y]);
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
 
 												break;
 
+											case ('remainingTimeInSeconds'):
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+											
+											case ('durationInSeconds'):
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+								
+											case ('expiry'):
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+												break;
+															
+
 											default:
+												this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay termination : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(ZonesState_data[i][x][y]));
 
 										}
 
 									} catch (error) {
-										// this.log.error(error);
+										this.log.error(error);
 					
 									}
 								}
 								break;	
+
 
 							default:
 								this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
@@ -1174,7 +1234,7 @@ class Tado extends utils.Adapter {
 	async create_state(state, name, value){
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name	 + ' with value : ' + value);
-
+		const intervall_time = (this.config.intervall * 2);
 		if (state_attr[name] !==  undefined) {
 			await this.setObjectNotExistsAsync(state, {
 				type: 'state',
@@ -1184,11 +1244,20 @@ class Tado extends utils.Adapter {
 					type: state_attr[name].type,
 					unit: state_attr[name].unit,
 					read : true,
-					write : false
+					write : state_attr[name].write
 				},
 				native: {},
 			});
-			await this.setState(state, {val: value, ack: true});
+			await this.setState(state, {val: value, ack: true, expire: intervall_time });
+
+			// if state has writable flag yes, subscribe on changes
+
+			if (state_attr[name].write === true) {
+				this.subscribeStates(state);
+				this.log.debug('State subscribed!: ' + state);
+			}
+			
+
 		} else {
 			this.log.debug('No type defined for name : ' + name + '|value : |' + value);
 			await this.setObjectNotExistsAsync(state, {
@@ -1202,7 +1271,7 @@ class Tado extends utils.Adapter {
 				},
 				native: {},
 			});
-			await this.setState(state, {val: value, ack: true});
+			await this.setState(state, {val: value, ack: true, expire: intervall_time});
 			
 		}
 	}
