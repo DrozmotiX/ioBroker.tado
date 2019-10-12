@@ -78,7 +78,7 @@ class Tado extends utils.Adapter {
 	 * @param {string} id
 	 * @param {ioBroker.State | null | undefined} state
 	 */
-	onStateChange(id, state) {
+	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
 			if (state.ack === false) {
@@ -91,9 +91,20 @@ class Tado extends utils.Adapter {
 					switch (deviceId[x]) {
 
 						case ('clearZoneOverlay'):
-							this.log.warn('Overlay cleared for zone : ' + deviceId[4] + ' in home : ' + deviceId[2]);
+							this.log.warn('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
 							this.clearZoneOverlay(deviceId[2],deviceId[4]);
-							this.DoConnect()
+							this.DoConnect();
+
+							break;
+						
+						case ('temperature'):
+							this.log.error('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
+							this.log.error('Temperature change message to API : '  + deviceId[2] + ', ' +  deviceId[4] + ',0, ' + state.val);
+							// const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
+
+							this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, 'manual');
+
+							this.DoConnect();
 
 							break;
 
@@ -103,8 +114,8 @@ class Tado extends utils.Adapter {
 
 				}
 
-				this.log.debug('State change detected from different source then adapter');
-				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+				this.log.error('State change detected from different source then adapter');
+				this.log.error(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 				
 			}  else {
 				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -209,6 +220,7 @@ class Tado extends utils.Adapter {
 				} catch (error) {
 					this.log.error('Issue in Get all rooms' + error);
 				}
+
 			}
 
 
@@ -231,10 +243,6 @@ class Tado extends utils.Adapter {
 			polling = setTimeout( () => {
 				this.DoConnect();
 			}, intervall_time);
-
-
-
-			
 
 		} catch (error) {
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
@@ -293,8 +301,8 @@ class Tado extends utils.Adapter {
 				.then(result => {
 					this._accessToken = oauth2.accessToken.create(result);
 					// const token = oauth2.accessToken.create(result);
-					JSON.stringify(result);
-					JSON.stringify(this._accessToken);
+					// JSON.stringify(result);
+					// JSON.stringify(this._accessToken);
 					resolve(this._accessToken);
 				})
 				.catch(error => {
@@ -392,6 +400,38 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
 	}
 
+	setZoneOverlay(home_id, zone_id, power, temperature, termination) {
+		const config = {
+			setting: {
+				type: 'HEATING',
+			},
+			termination: {
+			}
+		};
+
+		if (power.toLowerCase() == 'on') {
+			config.setting.power = 'ON';
+
+			if (temperature) {
+				config.setting.temperature = {};
+				config.setting.temperature.celsius = temperature;
+			}
+		} else {
+			config.setting.power = 'OFF';
+		}
+
+		if (!isNaN(parseInt(termination))) {
+			config.termination.type = 'TIMER';
+			config.termination.durationInSeconds = termination;
+		} else if(termination && termination.toLowerCase() == 'auto') {
+			config.termination.type = 'TADO_MODE';
+		} else {
+			config.termination.type = 'MANUAL';
+		}
+
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
+	}
+
 	// Unclear purpose, ignore for now
 	// getZoneCapabilities(home_id, zone_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
@@ -416,46 +456,15 @@ class Tado extends utils.Adapter {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
 	// }
 
-	// setZoneOverlay(home_id, zone_id, power, temperature, termination) {
-	// 	const config = {
-	// 		setting: {
-	// 			type: 'HEATING',
-	// 		},
-	// 		termination: {
-	// 		}
-	// 	};
-
-	// 	if (power.toLowerCase() == 'on') {
-	// 		config.setting.power = 'ON';
-
-	// 		if (temperature) {
-	// 			config.setting.temperature = {};
-	// 			config.setting.temperature.celsius = temperature;
-	// 		}
-	// 	} else {
-	// 		config.setting.power = 'OFF';
-	// 	}
-
-	// 	if (!isNaN(parseInt(termination))) {
-	// 		config.termination.type = 'TIMER';
-	// 		config.termination.durationInSeconds = termination;
-	// 	} else if(termination && termination.toLowerCase() == 'auto') {
-	// 		config.termination.type = 'TADO_MODE';
-	// 	} else {
-	// 		config.termination.type = 'MANUAL';
-	// 	}
-
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
-	// }
-
 	// identifyDevice(device_id) {
 	// 	return this.apiCall(`/api/v2/devices/${device_id}/identify`, 'post');
 	// }
+
 	*/
 	async DoHome(HomeId){
 		// Get additional basic data for all homes
 		this.Home_data = await this.getHome(HomeId);
-		this.log.debug('Home_data Result : ' + JSON.stringify(this.Home_data));
+		this.log.info('Home_data Result : ' + JSON.stringify(this.Home_data));
 		for (const i in this.Home_data){
 			this.log.debug('Home_data ' + i + ' with value : ' + JSON.stringify(this.Home_data[i]));
 			// Info channel for Each Home
@@ -862,14 +871,14 @@ class Tado extends utils.Adapter {
 			await this.DoZoneStates(HomeId, this.Zones_data [i].id, basic_tree);
 			// Unclear purpose, ignore for now
 			// await this.DoZoneCapabilities(HomeId, this.Zones_data [i].id, basic_tree);
-			// await this.DoZoneOverlay(HomeId, this.Zones_data [i].id, basic_tree);
+			// await this.DoZoneOverlay(HomeId, this.Zones_data [i].id, basic_tree); //  only 404 error
 			await this.DoAwayConfiguration(HomeId, this.Zones_data [i].id, basic_tree);
 
 		}
 	}
 
 	async DoReadDevices(state_root,Devices_data, ){
-		this.log.debug('Devices_data Result : ' + JSON.stringify(Devices_data));
+		this.log.info('Devices_data Result : ' + JSON.stringify(Devices_data));
 
 		await this.setObjectNotExistsAsync(state_root, {
 			type: 'channel',
@@ -1195,7 +1204,7 @@ class Tado extends utils.Adapter {
 	// 	this.log.debug('ZoneCapabilities_data Result : ' + JSON.stringify(ZoneCapabilities_data));
 	// }
 
-	// Unclear purpose, ignore for now
+	// Unclear purpose, ignore for now only 404 error
 	// async DoZoneOverlay(HomeId,ZoneId, state_root_states){
 	// 	try {
 			
@@ -1234,8 +1243,24 @@ class Tado extends utils.Adapter {
 	async create_state(state, name, value){
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name	 + ' with value : ' + value);
-		const intervall_time = (this.config.intervall * 2);
-		if (state_attr[name] !==  undefined) {
+		const intervall_time = (this.config.intervall * 4);
+
+		
+		try {
+							
+			if (state_attr[name].write === true) {
+				this.subscribeStates(state);
+				this.log.debug('State subscribed!: ' + state);
+			} else {
+				state_attr[name].write = false;
+			}	
+
+		} catch (error) {
+			state_attr[name].write = false;
+			
+		}
+
+		try {
 			await this.setObjectNotExistsAsync(state, {
 				type: 'state',
 				common: {
@@ -1248,7 +1273,7 @@ class Tado extends utils.Adapter {
 				},
 				native: {},
 			});
-			await this.setState(state, {val: value, ack: true, expire: intervall_time });
+			await this.setState(state, {val: value, ack: true, expire: intervall_time});
 
 			// if state has writable flag yes, subscribe on changes
 
@@ -1257,8 +1282,8 @@ class Tado extends utils.Adapter {
 				this.log.debug('State subscribed!: ' + state);
 			}
 			
-
-		} else {
+		} catch (error) {
+	
 			this.log.debug('No type defined for name : ' + name + '|value : |' + value);
 			await this.setObjectNotExistsAsync(state, {
 				type: 'state',
@@ -1272,9 +1297,10 @@ class Tado extends utils.Adapter {
 				native: {},
 			});
 			await this.setState(state, {val: value, ack: true, expire: intervall_time});
-			
 		}
 	}
+
+
 
 }
 

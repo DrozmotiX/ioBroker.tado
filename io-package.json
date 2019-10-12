@@ -1,9 +1,21 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.8",
+		"version": "0.0.9",
 		"news": {
-			"0.0.8 RC 1": {
+			"0.0.9": {
+				"en": "Implemented room temperature settings",
+				"de": "Raumtemperatureinstellungen implementiert",
+				"ru": "Реализованы настройки комнатной температуры",
+				"pt": "Configurações de temperatura ambiente implementadas",
+				"nl": "Geïmplementeerde instellingen voor kamertemperatuur",
+				"fr": "Paramètres de température ambiante implémentés",
+				"it": "Implementate le impostazioni della temperatura ambiente",
+				"es": "Configuración de temperatura ambiente implementada",
+				"pl": "Wdrożone ustawienia temperatury w pomieszczeniu",
+				"zh-cn": "已实施的室温设置"
+			},
+			"0.0.8": {
 				"en": "Implemented overlay clear states & control",
 				"de": "Overlay Clear States & Control implementiert",
 				"ru": "Реализовано наложение четких состояний и контроля",
@@ -14,9 +26,6 @@
 				"es": "Superposición implementada estados claros y control",
 				"pl": "Wdrożona nakładka kasuje stany i kontrolę",
 				"zh-cn": "实施叠加清除状态和控制"
-			},
-			"0.0.7": {
-				"en": "Improve overlay states"
 			},
 			"0.0.6": {
 				"en": "Implemented away status, attribute updates",
@@ -41,42 +50,6 @@
 				"es": "Primera versión beta, lea toda la información a los estados por intervalo configurable.",
 				"pl": "Pierwsza wersja beta, czytaj wszystkie informacje do stanów według konfigurowalnego interwału.",
 				"zh-cn": "第一个beta版本，按可配置的间隔将所有信息读取到状态。"
-			},
-			"0.0.3": {
-				"en": "Implemented all room states, configurable refresh intervall ",
-				"de": "Implementiert alle Raumzustände, konfigurierbares Aktualisierungsintervall",
-				"ru": "Реализованы все состояния комнаты, настраивается интервал обновления",
-				"pt": "Implementado todos os estados da sala, intervalo de atualização configurável",
-				"nl": "Alle kamerstatussen geïmplementeerd, configureerbare vernieuwingsintervallen",
-				"fr": "Implémentation de tous les états de la salle, intervalle d'actualisation configurable",
-				"it": "Implementato tutti gli stati della stanza, intervallo di aggiornamento configurabile",
-				"es": "Implementado todos los estados de sala, intervalo de actualización configurable",
-				"pl": "Wdrożono wszystkie stany pomieszczenia, konfigurowalny interwał odświeżania",
-				"zh-cn": "实现所有房间状态，可配置刷新间隔"
-			},
-			"0.0.2": {
-				"en": "Alpha, reads basic information of account and mobile devices.",
-				"de": "Alpha, liest grundlegende Informationen zum Konto und zu Mobilgeräten.",
-				"ru": "Альфа, читает основную информацию об учетной записи и мобильных устройствах.",
-				"pt": "Alfa, lê informações básicas da conta e dos dispositivos móveis.",
-				"nl": "Alpha, leest basisinformatie van account en mobiele apparaten.",
-				"fr": "Alpha, lit les informations de base du compte et des appareils mobiles.",
-				"it": "Alpha, legge le informazioni di base sull'account e sui dispositivi mobili.",
-				"es": "Alfa, lee información básica de cuenta y dispositivos móviles.",
-				"pl": "Alpha, czyta podstawowe informacje o koncie i urządzeniach mobilnych.",
-				"zh-cn": "Alpha，读取帐户和移动设备的基本信息。"
-			},
-			"0.0.1": {
-				"en": "Alpha, reads basic information of account and mobile devices.",
-				"de": "Alpha, liest grundlegende Informationen zum Konto und zu Mobilgeräten.",
-				"ru": "Альфа, читает основную информацию об учетной записи и мобильных устройствах.",
-				"pt": "Alfa, lê informações básicas da conta e dos dispositivos móveis.",
-				"nl": "Alpha, leest basisinformatie van account en mobiele apparaten.",
-				"fr": "Alpha, lit les informations de base du compte et des appareils mobiles.",
-				"it": "Alpha, legge le informazioni di base sull'account e sui dispositivi mobili.",
-				"es": "Alfa, lee información básica de cuenta y dispositivos móviles.",
-				"pl": "Alpha, czyta podstawowe informacje o koncie i urządzeniach mobilnych.",
-				"zh-cn": "Alpha，读取帐户和移动设备的基本信息。"
 			}
 		},
 		"title": "Tado",
