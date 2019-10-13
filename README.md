@@ -15,6 +15,11 @@
 tado° ensures a comfortable and healthy climate while saving up to 31% on your heating bill.
 
 ## Changelog
+
+### 0.1.0 Release public Beta & Implement heating on / off
+* (Dutchman) Release public Beta
+* (Dutchman) Implement heating on / off
+
 ### 0.0.9 Implemented room temperature settings
 * (Dutchman) Capability to change room temperature
 * (Dutchman) small code fixes

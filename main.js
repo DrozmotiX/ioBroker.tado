@@ -1,8 +1,8 @@
 'use strict';
 
 /*
- * Created with @iobroker/create-adapter v1.16.0
- */
+* Created with @iobroker/create-adapter v1.16.0
+*/
 
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
@@ -83,40 +83,58 @@ class Tado extends utils.Adapter {
 			// The state was changed
 			if (state.ack === false) {
 
-				// const deviceId = id.split('.');
-				const deviceId = id.split('.');
-				// let stateNameToSend = '';
-				for (const x in deviceId){
-					this.log.debug('Device id channel : ' + deviceId[x]);
-					switch (deviceId[x]) {
+				try {
 
-						case ('clearZoneOverlay'):
-							this.log.warn('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
-							this.clearZoneOverlay(deviceId[2],deviceId[4]);
-							this.DoConnect();
+					// const deviceId = id.split('.');
+					const deviceId = id.split('.');
+					// let stateNameToSend = '';
+					for (const x in deviceId){
+						this.log.debug('Device id channel : ' + deviceId[x]);
+						switch (deviceId[x]) {
 
-							break;
-						
-						case ('temperature'):
-							this.log.error('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
-							this.log.error('Temperature change message to API : '  + deviceId[2] + ', ' +  deviceId[4] + ',0, ' + state.val);
-							// const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
+							case ('clearZoneOverlay'):
+								this.log.warn('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
+								this.clearZoneOverlay(deviceId[2],deviceId[4]);
+								this.DoConnect();
 
-							this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, 'manual');
+								break;
+														
+							case ('temperature'):
+								this.log.warn('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val);							
+								this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, 'manual');
 
-							this.DoConnect();
+								this.DoConnect();
 
-							break;
+								break;
 
-						default:
+							case ('power'):
+								try {
+									const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
+									this.log.warn('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + ' and Temperature : ' + temperature.val);
+									this.setZoneOverlay(deviceId[2], deviceId[4],state.val,temperature.val, 'manual');
+
+								} catch (error) {
+									this.log.warn('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + '  error from temperature : ' + error);
+									this.setZoneOverlay(deviceId[2], deviceId[4],  state.val, '20', 'manual');
+								}
+
+								this.DoConnect();
+
+								break;
+
+							default:
+
+						}
 
 					}
 
+					this.log.debug('State change detected from different source then adapter');
+					this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+				
+				} catch (error) {
+					this.log.error('Issue at state  change : ' + error);
 				}
 
-				this.log.error('State change detected from different source then adapter');
-				this.log.error(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-				
 			}  else {
 				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			}
@@ -464,7 +482,7 @@ class Tado extends utils.Adapter {
 	async DoHome(HomeId){
 		// Get additional basic data for all homes
 		this.Home_data = await this.getHome(HomeId);
-		this.log.info('Home_data Result : ' + JSON.stringify(this.Home_data));
+		this.log.debug('Home_data Result : ' + JSON.stringify(this.Home_data));
 		for (const i in this.Home_data){
 			this.log.debug('Home_data ' + i + ' with value : ' + JSON.stringify(this.Home_data[i]));
 			// Info channel for Each Home
@@ -878,7 +896,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async DoReadDevices(state_root,Devices_data, ){
-		this.log.info('Devices_data Result : ' + JSON.stringify(Devices_data));
+		this.log.debug('Devices_data Result : ' + JSON.stringify(Devices_data));
 
 		await this.setObjectNotExistsAsync(state_root, {
 			type: 'channel',
@@ -1001,7 +1019,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				case ('openWindow'):
-					this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
+					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
 					break;						
 
 
@@ -1058,7 +1076,7 @@ class Tado extends utils.Adapter {
 												break;
 
 											case ('power'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].toLowerCase());
 
 												break;
 
@@ -1275,6 +1293,21 @@ class Tado extends utils.Adapter {
 			});
 			await this.setState(state, {val: value, ack: true, expire: intervall_time});
 
+
+			try {
+
+				await this.extendObjectAsync(state, {
+					type: 'state',
+					common: {
+						states : state_attr[name].states
+					}
+				});
+
+			} catch (error) {
+
+				// no states attributes found for state
+				
+			}
 			// if state has writable flag yes, subscribe on changes
 
 			if (state_attr[name].write === true) {

@@ -1,19 +1,19 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.0.9",
+		"version": "0.1.0",
 		"news": {
-			"0.0.9": {
-				"en": "Implemented room temperature settings",
-				"de": "Raumtemperatureinstellungen implementiert",
-				"ru": "Реализованы настройки комнатной температуры",
-				"pt": "Configurações de temperatura ambiente implementadas",
-				"nl": "Geïmplementeerde instellingen voor kamertemperatuur",
-				"fr": "Paramètres de température ambiante implémentés",
-				"it": "Implementate le impostazioni della temperatura ambiente",
-				"es": "Configuración de temperatura ambiente implementada",
-				"pl": "Wdrożone ustawienia temperatury w pomieszczeniu",
-				"zh-cn": "已实施的室温设置"
+			"0.1.0": {
+				"en": "Implemented room temperature change and enable/disable heating control",
+				"de": "Raumtemperaturänderung implementiert und Heizungsregelung aktivieren / deaktivieren",
+				"ru": "Реализовано изменение температуры в помещении и включение / отключение управления отоплением",
+				"pt": "Implementada mudança de temperatura ambiente e ativar / desativar o controle de aquecimento",
+				"nl": "Veranderde ruimtetemperatuurverandering en schakel de verwarmingsregeling in / uit",
+				"fr": "Mise en œuvre du changement de température ambiante et activation / désactivation du contrôle du chauffage",
+				"it": "Implementata la variazione della temperatura ambiente e abilita / disabilita il controllo del riscaldamento",
+				"es": "Se implementó el cambio de temperatura ambiente y se habilitó / deshabilitó el control de calefacción",
+				"pl": "Wdrożona zmiana temperatury w pomieszczeniu i włączenie / wyłączenie sterowania ogrzewaniem",
+				"zh-cn": "实现室内温度变化并启用/禁用加热控制"
 			},
 			"0.0.8": {
 				"en": "Implemented overlay clear states & control",
