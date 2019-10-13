@@ -202,9 +202,9 @@ class Tado extends utils.Adapter {
 			// Get Basic data needed for all other querys and store to global variable
 			this.getMe_data = await this.getMe();
 			this.log.debug('GetMe result : ' + JSON.stringify(this.getMe_data));
-
+			
 			for (const i in this.getMe_data.homes) {
-
+				this.DoWriteJsonRespons(this.getMe_data.homes[i].id,'Stage_01_GetMe_Data', this.getMe_data);						
 				// create device channel for each Home found in getMe
 				await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id, {
 					type: 'device',
@@ -216,13 +216,21 @@ class Tado extends utils.Adapter {
 				
 				// Write basic data to home specific info channel states
 				await this.DoHome(this.getMe_data.homes[i].id);
+				await this.DoDevices(this.getMe_data.homes[i].id);
 				await this.DoWeather(this.getMe_data.homes[i].id);
+				await this.DoInstallations(this.getMe_data.homes[i].id);
 				
 				
-				// this.getDevices(this.getMe_data.homes[i].id)
+				
+				
 				// this.getInstallations(this.getMe_data.homes[i].id);	
 				// await this.DoUsers(this.getMe_data.homes[i].id) 	// User information equal to Weather, ignoring function but keep for history/feature functionality
-				// await this.DoStates(this.getMe_data.homes[i].id)
+				try {
+					await this.DoStates(this.getMe_data.homes[i].id);
+				} catch (error) {
+					//  no info
+				}
+
 				
 				this.log.silly('Get all mobile devices');
 				try {
@@ -373,20 +381,19 @@ class Tado extends utils.Adapter {
 	// }
 
 	// Function disabled, no data in API ?
-	// getInstallations(home_id) {
-	// 	this.log.info('getInstallations called')
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/installations`);
-	// }
+	getInstallations(home_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
+	}
 
 	// User information equal to Weather, ignoring function but keep for history/feature functionality
-	// getUsers(home_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/users`);
-	// }
+	getUsers(home_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/users`);
+	}
 
 	// Function disabled, no data in API ?
-	// getState(home_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/state`);
-	// }
+	getState_info(home_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/state`);
+	}
 
 	getMobileDevices(home_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
@@ -451,24 +458,24 @@ class Tado extends utils.Adapter {
 	}
 
 	// Unclear purpose, ignore for now
-	// getZoneCapabilities(home_id, zone_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
-	// }
+	getZoneCapabilities(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
+	}
 
 	// Unclear purpose, ignore for now
-	// getZoneOverlay(home_id, zone_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
-	// }
+	getZoneOverlay(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
+	}
 
-	/*	######## To-Do ########
+
 	// Coding break point of functionality
 	// getZoneDayReport(home_id, zone_id, reportDate) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/dayReport?date=${reportDate}`);
 	// }
 
-	// getTimeTables(home_id, zone_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
-	// }
+	getTimeTables(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
+	}
 
 	// getTimeTable(home_id, zone_id, timetable_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
@@ -478,11 +485,15 @@ class Tado extends utils.Adapter {
 	// 	return this.apiCall(`/api/v2/devices/${device_id}/identify`, 'post');
 	// }
 
-	*/
+
 	async DoHome(HomeId){
 		// Get additional basic data for all homes
 		this.Home_data = await this.getHome(HomeId);
 		this.log.debug('Home_data Result : ' + JSON.stringify(this.Home_data));
+		
+		this.DoWriteJsonRespons(HomeId,'Stage_02_HomeData', this.Home_data);
+		
+		
 		for (const i in this.Home_data){
 			this.log.debug('Home_data ' + i + ' with value : ' + JSON.stringify(this.Home_data[i]));
 			// Info channel for Each Home
@@ -598,6 +609,7 @@ class Tado extends utils.Adapter {
 	async DoWeather(HomeId){
 		const weather_data = await this.getWeather(HomeId);
 		this.log.debug('Weather_data Result : ' + JSON.stringify(weather_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_04_Weather', weather_data);
 		for (const i in weather_data){
 			this.log.debug('Weather' + i + ' with value : ' + JSON.stringify(weather_data[i]));
 			// Info channel for Each Home
@@ -631,17 +643,27 @@ class Tado extends utils.Adapter {
 
 	}
 
-	// Function disabled, no data in API ?
-	// async DoUsers(HomeId){
-	// 	const Users_data = await this.getWeather(HomeId);
-	// 	this.log.info('Users_data Result : ' + JSON.stringify(Users_data));
-	// }
+	async DoDevices(HomeId){
+		const Devices_data = await this.getDevices(HomeId);
+		this.log.debug('Users_data Result : ' + JSON.stringify(Devices_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_03_Devices', Devices_data);
+
+		
+	}
+
+	async DoInstallations(HomeId){
+		const Installations_data = await this.getInstallations(HomeId);
+		this.log.debug('Installations_data Result : ' + JSON.stringify(Installations_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_05_Installations', Installations_data);
+	}
+
 
 	// Function disabled, no data in API ?
-	// async DoStates(HomeId){
-	// 	const States_data = await this.getState(HomeId);
-	// 	this.log.info('States_data Result : ' + JSON.stringify(States_data));				
-	// }
+	async DoStates(HomeId){
+		this.States_data = await this.getState_info(HomeId);
+		this.log.debug('States_data Result : ' + JSON.stringify(this.States_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_14_StatesData', this.States_data);			
+	}
 
 	// User information equal to Weather, ignoring function but keep for history/feature functionality
 	// async DoUsers(HomeId){
@@ -654,7 +676,7 @@ class Tado extends utils.Adapter {
 	async DoMobileDevices(HomeId){
 		this.MobileDevices_data = await this.getMobileDevices(HomeId);
 		this.log.debug('MobileDevices_data Result : ' + JSON.stringify(this.MobileDevices_data));
-
+		this.DoWriteJsonRespons(HomeId,'Stage_06_MobileDevicesData', this.MobileDevices_data);
 		for (const i in this.MobileDevices_data){
 			this.log.debug('Mobiel Device' + i + ' with value : ' + JSON.stringify(this.MobileDevices_data[i]));
 			// // Info channel for Each Home
@@ -723,6 +745,7 @@ class Tado extends utils.Adapter {
 	async DoMobileDeviceSettings(HomeId,DeviceId){
 		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId,DeviceId);
 		this.log.debug('MobileDeviceSettings_Data Result : ' + JSON.stringify(MobileDeviceSettings_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_07_MobileDevicesSettings_'  + DeviceId, MobileDeviceSettings_data);
 		// device setting channel for Each Home
 		await this.setObjectNotExistsAsync(HomeId + '.Mobile_Devices.' + DeviceId +  '.Device_Setting', {
 			type: 'channel',
@@ -763,7 +786,8 @@ class Tado extends utils.Adapter {
 
 	async DoZones(HomeId){
 		this.Zones_data = await this.getZones(HomeId);
-		this.log.debug('Zones_data Result : ' + JSON.stringify(this.Zones_data ));
+		this.log.debug('Zones_data Result : ' + JSON.stringify(this.Zones_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_08_ZonesData', this.Zones_data);
 
 		await this.setObjectNotExistsAsync(HomeId + '.Rooms', {
 			type: 'channel',
@@ -888,11 +912,29 @@ class Tado extends utils.Adapter {
 			const basic_tree = HomeId + '.Rooms.' + this.Zones_data [i].id;
 			await this.DoZoneStates(HomeId, this.Zones_data [i].id, basic_tree);
 			// Unclear purpose, ignore for now
-			// await this.DoZoneCapabilities(HomeId, this.Zones_data [i].id, basic_tree);
-			// await this.DoZoneOverlay(HomeId, this.Zones_data [i].id, basic_tree); //  only 404 error
+			await this.DoZoneCapabilities(HomeId, this.Zones_data [i].id);
+
+
+			try {
+				await this.DoZoneOverlay(HomeId, this.Zones_data [i].id); //  only 404 error
+
+			} catch (error) {
+				// no info
+				// this.log.error(error);
+			}
+			
+			
+			
 			await this.DoAwayConfiguration(HomeId, this.Zones_data [i].id, basic_tree);
+			await this.DoTimeTables(HomeId, this.Zones_data [i].id);
 
 		}
+	}
+
+	async DoUser(HomeId){
+		this.Users_data = await this.getZones(HomeId);
+		this.log.debug('Users_data Result : ' + JSON.stringify(this.Users_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_15_ZonesData', this.Users_data);
 	}
 
 	async DoReadDevices(state_root,Devices_data, ){
@@ -988,6 +1030,7 @@ class Tado extends utils.Adapter {
 	async DoZoneStates(HomeId,ZoneId, state_root_states){
 		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
 		this.log.debug('ZoneStates_data Result : ' + JSON.stringify(ZonesState_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_09_ZoneStates_data_' +  ZoneId, ZonesState_data);
 
 		for (const i in ZonesState_data){
 
@@ -1065,7 +1108,7 @@ class Tado extends utils.Adapter {
 												if (ZonesState_data[i][x][y].celsius === null) {
 													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, null);
 												} else {
-													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius);
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius, false);
 												}
 											
 												break;
@@ -1191,7 +1234,7 @@ class Tado extends utils.Adapter {
 								if (ZonesState_data[i][y].celsius === null) {
 									this.create_state(state_root_states + '.' + i + '.' + y, y, null);
 								} else {
-									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius);
+									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius, false);
 								}
 							} else {
 								this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y]);
@@ -1217,26 +1260,32 @@ class Tado extends utils.Adapter {
 	}
 
 	// Unclear purpose, ignore for now
-	// async DoZoneCapabilities(HomeId,ZoneId, state_root_states){
-	// 	const ZoneCapabilities_data = await this.getZoneCapabilities(HomeId, ZoneId);
-	// 	this.log.debug('ZoneCapabilities_data Result : ' + JSON.stringify(ZoneCapabilities_data));
-	// }
+	async DoZoneCapabilities(HomeId,ZoneId){
+		const ZoneCapabilities_data = await this.getZoneCapabilities(HomeId, ZoneId);
+		this.log.debug('ZoneCapabilities_data Result : ' + JSON.stringify(ZoneCapabilities_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_11_ZoneCapabilities_' + ZoneId, ZoneCapabilities_data);
+
+	}
 
 	// Unclear purpose, ignore for now only 404 error
-	// async DoZoneOverlay(HomeId,ZoneId, state_root_states){
-	// 	try {
-			
-	// 		const ZoneOverlay_data = await this.getZoneOverlay(HomeId, ZoneId);
-	// 		this.log.info('ZoneZoneOverlay_data Result : ' + JSON.stringify(ZoneOverlay_data));
+	async DoZoneOverlay(HomeId,ZoneId){
 
-	// 	} catch (error) {
-	// 		this.log.error(error);
-	// 	}
-	// }
+		const ZoneOverlay_data = await this.getZoneOverlay(HomeId, ZoneId);
+		this.log.info('ZoneOverlay_data Result : ' + JSON.stringify(ZoneOverlay_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_12_ZoneOverlay_' + ZoneId, ZoneOverlay_data);
+
+	}
+
+	async DoTimeTables(HomeId,ZoneId){
+		const TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
+		this.log.debug('ZoneOverlay_data Result : ' + JSON.stringify(TimeTables_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_13_TimeTables_' + ZoneId, TimeTables_data);	
+	}
 
 	async DoAwayConfiguration(HomeId,ZoneId, state_root_states){
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result : ' + JSON.stringify(AwayConfiguration_data));
+		this.DoWriteJsonRespons(HomeId,'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
 
 		for (const i in AwayConfiguration_data){
 
@@ -1258,12 +1307,14 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async create_state(state, name, value){
+	async create_state(state, name, value, expire){
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name	 + ' with value : ' + value);
 		const intervall_time = (this.config.intervall * 4);
+		let writable  = false;
 
-		
+
+		// Define write state information
 		try {
 							
 			if (state_attr[name].write === true) {
@@ -1274,9 +1325,12 @@ class Tado extends utils.Adapter {
 			}	
 
 		} catch (error) {
-			state_attr[name].write = false;
+
+			writable = false;
 			
 		}
+
+		this.log.debug('Write value : ' + writable);
 
 		try {
 			await this.setObjectNotExistsAsync(state, {
@@ -1287,11 +1341,22 @@ class Tado extends utils.Adapter {
 					type: state_attr[name].type,
 					unit: state_attr[name].unit,
 					read : true,
-					write : state_attr[name].write
+					write : writable
 				},
 				native: {},
 			});
-			await this.setState(state, {val: value, ack: true, expire: intervall_time});
+			// await this.setState(state, {val: value, ack: true, expire: intervall_time});
+			try {
+				if (expire === false){
+					await this.setState(state, {val: value, ack: true});
+				} else {
+					await this.setState(state, {val: value, ack: true, expire: intervall_time});
+				}
+
+			} catch (error) {
+				await this.setState(state, {val: value, ack: true, expire: intervall_time});
+				
+			}
 
 
 			try {
@@ -1310,9 +1375,9 @@ class Tado extends utils.Adapter {
 			}
 			// if state has writable flag yes, subscribe on changes
 
-			if (state_attr[name].write === true) {
+			if (writable == true) {
 				this.subscribeStates(state);
-				this.log.debug('State subscribed!: ' + state);
+				this.log.info('State subscribed!: ' + state);
 			}
 			
 		} catch (error) {
@@ -1329,11 +1394,37 @@ class Tado extends utils.Adapter {
 				},
 				native: {},
 			});
-			await this.setState(state, {val: value, ack: true, expire: intervall_time});
+			// await this.setState(state, {val: value, ack: true, expire: intervall_time});
+			try {
+				if (expire === false){
+					await this.setState(state, {val: value, ack: true});
+				} else {
+					await this.setState(state, {val: value, ack: true, expire: intervall_time});
+				}
+			} catch (error) {
+				await this.setState(state, {val: value, ack: true, expire: intervall_time});
+				
+			}
 		}
+
 	}
 
+	async DoWriteJsonRespons(HomeId, state_name, value){
+		this.log.debug('JSON data written for '  + state_name + ' with values : ' + JSON.stringify(value));
+		this.log.debug('HomeId '  + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
+		await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
+			type: 'channel',
+			common: {
+				name: 'Plain JSON data from API',
+			},
+			native: {},
+		});
+
+		// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
+		await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
+
+	}
 
 }
 

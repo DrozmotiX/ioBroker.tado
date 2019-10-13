@@ -1,7 +1,7 @@
  # ioBroker.tado 
 <img src="./admin/tado.png" width="50" height="50">
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.tado.svg)](https://www.npmjs.com/package/iobroker.tado)
+![Number of Installations](http://iobroker.live/badges/tado-installed.svg) ![Number of Installations](http://iobroker.live/badges/tado-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.tado.svg)](https://www.npmjs.com/package/iobroker.tado)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.tado.svg)](https://www.npmjs.com/package/iobroker.tado)
 [![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.tado.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.tado)
 [![Known Vulnerabilities](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.tado/badge.svg)](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.tado)
@@ -16,19 +16,23 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 
 ## Changelog
 
+### 0.1.1 Write API information to states
+* (DutchmanNL) Write API information to states
+* (DutchmanNL) Keep temperature settings (do not reset to NULL)
+
 ### 0.1.0 Release public Beta & Implement heating on / off
-* (Dutchman) Release public Beta
-* (Dutchman) Implement heating on / off
+* (DutchmanNL) Release public Beta
+* (DutchmanNL) Implement heating on / off
 
 ### 0.0.9 Implemented room temperature settings
-* (Dutchman) Capability to change room temperature
-* (Dutchman) small code fixes
+* (DutchmanNL) Capability to change room temperature
+* (DutchmanNL) small code fixes
 
 ### 0.0.8 Implement overlay clear states & control
-* (Dutchman) implement capability to reset running polling timer
-* (Dutchman) implement clear overlay
-* (Dutchman) execute polling after overlay clear
-* (Dutchman) reset states to NULL when polling time * 2 no data is received
+* (DutchmanNL) implement capability to reset running polling timer
+* (DutchmanNL) implement clear overlay
+* (DutchmanNL) execute polling after overlay clear
+* (DutchmanNL) reset states to NULL when polling time * 2 no data is received
 
 ### 0.0.7 Improve overlay states
 * (DutchmanNL) improve overlay states  (https://github.com/iobroker-community-adapters/ioBroker.tado/issues/1)

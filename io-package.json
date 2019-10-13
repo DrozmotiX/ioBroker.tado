@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.0",
+		"version": "0.1.1",
 		"news": {
+			"0.1.1": {
+				"en": "Fix of set temperature reset and write API information to states.",
+				"de": "Korrektur des Zurücksetzens der eingestellten Temperatur und Schreiben von API-Informationen in Zustände.",
+				"ru": "Исправление сброса заданной температуры и запись информации API в состояния.",
+				"pt": "Correção da redefinição da temperatura definida e gravação das informações da API nos estados.",
+				"nl": "Herstel van ingestelde temperatuurreset en schrijf API-informatie naar toestanden.",
+				"fr": "Correction de la réinitialisation de la température définie et écriture des informations de l'API dans les états.",
+				"it": "Correzione del ripristino della temperatura impostata e scrittura delle informazioni API negli stati.",
+				"es": "Arreglo de restablecimiento de temperatura establecida y escribir información de API en estados.",
+				"pl": "Naprawiono resetowanie ustawionej temperatury i zapisywanie informacji API do stanów.",
+				"zh-cn": "修复设定温度重置并将API信息写入状态。"
+			},
 			"0.1.0": {
 				"en": "Implemented room temperature change and enable/disable heating control",
 				"de": "Raumtemperaturänderung implementiert und Heizungsregelung aktivieren / deaktivieren",
