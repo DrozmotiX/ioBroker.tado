@@ -1,9 +1,9 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.1",
+		"version": "0.1.2",
 		"news": {
-			"0.1.1": {
+			"0.1.2": {
 				"en": "Fix of set temperature reset and write API information to states.",
 				"de": "Korrektur des Zurücksetzens der eingestellten Temperatur und Schreiben von API-Informationen in Zustände.",
 				"ru": "Исправление сброса заданной температуры и запись информации API в состояния.",

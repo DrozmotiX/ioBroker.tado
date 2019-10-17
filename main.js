@@ -1200,7 +1200,6 @@ class Tado extends utils.Adapter {
 
 					}
 
-					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
 					break;
 
 				case ('overlayType'):
@@ -1271,7 +1270,7 @@ class Tado extends utils.Adapter {
 	async DoZoneOverlay(HomeId,ZoneId){
 
 		const ZoneOverlay_data = await this.getZoneOverlay(HomeId, ZoneId);
-		this.log.info('ZoneOverlay_data Result : ' + JSON.stringify(ZoneOverlay_data));
+		this.log.debug('ZoneOverlay_data Result : ' + JSON.stringify(ZoneOverlay_data));
 		this.DoWriteJsonRespons(HomeId,'Stage_12_ZoneOverlay_' + ZoneId, ZoneOverlay_data);
 
 	}
@@ -1319,6 +1318,7 @@ class Tado extends utils.Adapter {
 							
 			if (state_attr[name].write === true) {
 				this.subscribeStates(state);
+				writable = true;
 				this.log.debug('State subscribed!: ' + state);
 			} else {
 				state_attr[name].write = false;
@@ -1372,12 +1372,6 @@ class Tado extends utils.Adapter {
 
 				// no states attributes found for state
 				
-			}
-			// if state has writable flag yes, subscribe on changes
-
-			if (writable == true) {
-				this.subscribeStates(state);
-				this.log.info('State subscribed!: ' + state);
 			}
 			
 		} catch (error) {

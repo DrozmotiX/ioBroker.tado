@@ -49,5 +49,17 @@ systemDictionary = {
 		'es': 'Actualizar intervalo en segundo',
 		'pl': 'Odśwież interwał w sekundę',
 		'zh-cn': '刷新间隔秒'
-	}
+	},
+	"Tado adapter settings": {
+		"en": "Tado adapter settings",
+		"de": "Tado-Adaptereinstellungen",
+		"ru": "Настройки адаптера Tado",
+		"pt": "Configurações do adaptador Tado",
+		"nl": "Tado adapter instellingen",
+		"fr": "Paramètres de l'adaptateur Tado",
+		"it": "Impostazioni dell'adattatore Tado",
+		"es": "Configuraciones del adaptador Tado",
+		"pl": "Ustawienia adaptera Tado",
+		"zh-cn": "Tado适配器设置"
+	  }
 };
