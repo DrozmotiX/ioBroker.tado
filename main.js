@@ -172,7 +172,7 @@ class Tado extends utils.Adapter {
 
 		} else {
 			this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
-			this.setForeignState('system.this.' + this.namespace + '.alive', false);
+			this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
 		}
 
 	}
@@ -515,6 +515,10 @@ class Tado extends utils.Adapter {
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
 					break;
 
+				case ('boilerId'):
+					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);				
+					break;	
+
 				case ('dateTimeZone'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);				
 					break;		
@@ -534,7 +538,11 @@ class Tado extends utils.Adapter {
 				case ('partner'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
 					break;		
-						
+
+				case ('usePreSkillsApps'):
+					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
+					break;						
+
 				case ('simpleSmartScheduleEnabled'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
 					break;		
@@ -760,7 +768,11 @@ class Tado extends utils.Adapter {
 				case ('geoTrackingEnabled'):
 					this.create_state(HomeId + '.Mobile_Devices.' + DeviceId +  '.Device_Setting.' +  i, i, MobileDeviceSettings_data[i]);
 					break;
-				
+
+				case ('onDemandLogRetrievalEnabled'):
+					this.create_state(HomeId + '.Mobile_Devices.' + DeviceId +  '.Device_Setting.' +  i, i, MobileDeviceSettings_data[i]);
+					break;					
+
 				case ('pushNotifications'):
 					await this.setObjectNotExistsAsync(HomeId + '.Mobile_Devices.' + DeviceId +  '.Device_Setting.' + i, {
 						type: 'channel',
@@ -1010,6 +1022,10 @@ class Tado extends utils.Adapter {
 					case ('mountingState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;						
+
+					case ('openWindowDetected'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
+						break;	
 
 					case ('serialNo'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
