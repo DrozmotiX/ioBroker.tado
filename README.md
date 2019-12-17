@@ -21,6 +21,10 @@ If you like my work, please feel free to provide a personal donation
 
 ## Changelog
 
+### 0.1.5  
+* (DutchmanNL) Fix switching on/off heating & related auto mode
+* (DutchmanNL) Fix switching some incorrect logging
+
 ### 0.1.4 Fixed Clear Overlay, Open Window & log error's
 * (DutchmanNL) Fixed Clear Overlay to Boolean
 * (DutchmanNL) Fixed datapoints for OpenWindow 

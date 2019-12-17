@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.4",
+		"version": "0.1.5",
 		"news": {
+			"0.1.5": {
+				"en": "Stable release candidate",
+				"de": "Stabiler Release-Kandidat",
+				"ru": "Стабильный релиз кандидата",
+				"pt": "Candidato de liberação estável",
+				"nl": "Kandidaat voor stabiele release",
+				"fr": "Candidat à la version stable",
+				"it": "Candidato al rilascio stabile",
+				"es": "Candidato de liberación estable",
+				"pl": "Kandydat do wydania stabilnego",
+				"zh-cn": "稳定释放候选"
+			},
 			"0.1.4": {
 				"en": "Fixed Clear Overlay, Open Window & log error's",
 				"de": "Überlagerung löschen, Fenster öffnen & Fehler protokollieren behoben",
