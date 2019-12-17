@@ -13,7 +13,6 @@ const EXPIRATION_WINDOW_IN_SECONDS = 300;
 
 const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
-const oauth_path = '/oauth/token';
 const tado_config = {
 	client: {
 		id: 'tado-web-app',
@@ -90,31 +89,54 @@ class Tado extends utils.Adapter {
 					// let stateNameToSend = '';
 					for (const x in deviceId){
 						this.log.debug('Device id channel : ' + deviceId[x]);
+
+						let set_temp = null;
+						let set_mode = null;
+						const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
+						const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.type');
+
+						if (temperature !== null && temperature !== undefined){
+							set_temp = temperature.val;
+						} else {
+							set_temp = '20';
+						}
+
+						this.log.info('Room Temperature set : ' + set_temp);
+
+						if (mode !== null && mode !== undefined){
+							set_mode = 'auto';
+						} else {
+							set_mode = mode;
+						}
+
+						this.log.info('Room mode set : ' + set_mode);
+
 						switch (deviceId[x]) {
 
 							case ('clearZoneOverlay'):
-								this.log.warn('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
+								this.log.info('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
 								this.clearZoneOverlay(deviceId[2],deviceId[4]);
 								this.DoConnect();
 
 								break;
 														
 							case ('temperature'):
-								this.log.warn('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val);							
-								this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, 'manual');
+								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val);							
+								this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, set_mode);
 
 								this.DoConnect();
 
 								break;
 
 							case ('power'):
-								try {
-									const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
-									this.log.warn('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + ' and Temperature : ' + temperature.val);
-									this.setZoneOverlay(deviceId[2], deviceId[4],state.val,temperature.val, 'manual');
 
+								try {
+
+									this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
+									this.setZoneOverlay(deviceId[2], deviceId[4],state.val,set_temp, mode);
+										
 								} catch (error) {
-									this.log.warn('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + '  error from temperature : ' + error);
+									this.log.error('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + '  error from temperature : ' + error);
 									this.setZoneOverlay(deviceId[2], deviceId[4],  state.val, '20', 'manual');
 								}
 
@@ -200,7 +222,9 @@ class Tado extends utils.Adapter {
 			}
 
 			// Get Basic data needed for all other querys and store to global variable
-			this.getMe_data = await this.getMe();
+			if(this.getMe_data === null){
+				this.getMe_data = await this.getMe();
+			}
 			this.log.debug('GetMe result : ' + JSON.stringify(this.getMe_data));
 			
 			for (const i in this.getMe_data.homes) {
@@ -220,9 +244,6 @@ class Tado extends utils.Adapter {
 				await this.DoWeather(this.getMe_data.homes[i].id);
 				await this.DoInstallations(this.getMe_data.homes[i].id);
 				
-				
-				
-				
 				// this.getInstallations(this.getMe_data.homes[i].id);	
 				// await this.DoUsers(this.getMe_data.homes[i].id) 	// User information equal to Weather, ignoring function but keep for history/feature functionality
 				try {
@@ -230,7 +251,6 @@ class Tado extends utils.Adapter {
 				} catch (error) {
 					//  no info
 				}
-
 				
 				this.log.silly('Get all mobile devices');
 				try {
@@ -244,7 +264,7 @@ class Tado extends utils.Adapter {
 					
 					await this.DoZones(this.getMe_data.homes[i].id);
 				} catch (error) {
-					this.log.error('Issue in Get all rooms' + error);
+					this.log.error('Issue in Get all rooms ' + error);
 				}
 
 			}
@@ -488,7 +508,9 @@ class Tado extends utils.Adapter {
 
 	async DoHome(HomeId){
 		// Get additional basic data for all homes
-		this.Home_data = await this.getHome(HomeId);
+		if (this.Home_data  === null){
+			this.Home_data = await this.getHome(HomeId);
+		}
 		this.log.debug('Home_data Result : ' + JSON.stringify(this.Home_data));
 		
 		this.DoWriteJsonRespons(HomeId,'Stage_02_HomeData', this.Home_data);
@@ -521,6 +543,20 @@ class Tado extends utils.Adapter {
 
 				case ('dateTimeZone'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);				
+					break;		
+
+				case ('consentRequired'):
+					// handle all contact details and write to states
+					for (const y in this.Home_data[i]){
+						this.create_state(HomeId + '._info.' + i + '.' + y, y, this.Home_data[i][y]);
+					}
+					break;	
+
+				case ('consentGranted'):
+					// handle all contact details and write to states
+					for (const y in this.Home_data[i]){
+						this.create_state(HomeId + '._info.' + i + '.' + y, y, this.Home_data[i][y]);
+					}
 					break;		
 
 				case ('dateCreated'):
@@ -605,7 +641,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoHome : ' + JSON.stringify(i) + ' with value : ' + this.Home_data[i]);
+					this.log.error('Send this info to developer !!! { Unhandable information found in DoHome : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(this.Home_data[i]));
 
 
 			}
@@ -644,7 +680,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoHWeather : ' + JSON.stringify(i) + ' with value : ' + weather_data[i]);
+					this.log.error('Send this info to developer !!! { Unhandable information found in DoHWeather : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(weather_data[i]));
 
 			}	
 		}					
@@ -922,9 +958,20 @@ class Tado extends utils.Adapter {
 				}
 			}
 			const basic_tree = HomeId + '.Rooms.' + this.Zones_data [i].id;
-			await this.DoZoneStates(HomeId, this.Zones_data [i].id, basic_tree);
+			try {
+				await this.DoZoneStates(HomeId, this.Zones_data [i].id, basic_tree);	
+			} catch (error) {
+				this.log.error('Issue getting ZoneStates ' + error);
+			}
+
+
+			try {
 			// Unclear purpose, ignore for now
-			await this.DoZoneCapabilities(HomeId, this.Zones_data [i].id);
+				await this.DoZoneCapabilities(HomeId, this.Zones_data [i].id);
+				
+			} catch (error) {
+				this.log.error('Issue getting ZoneCapabilities ' + error);
+			}
 
 
 			try {
@@ -1019,6 +1066,10 @@ class Tado extends utils.Adapter {
 						}
 						break;					
 
+					case ('isDriverConfigured'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
+						break;		
+
 					case ('mountingState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;						
@@ -1045,231 +1096,243 @@ class Tado extends utils.Adapter {
 
 	async DoZoneStates(HomeId,ZoneId, state_root_states){
 		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
-		this.log.debug('ZoneStates_data Result : ' + JSON.stringify(ZonesState_data));
+		
+		this.log.debug('ZoneStates_data Result for zone : ' + ZoneId + ' and value : ' + JSON.stringify(ZonesState_data));
 		this.DoWriteJsonRespons(HomeId,'Stage_09_ZoneStates_data_' +  ZoneId, ZonesState_data);
 
 		for (const i in ZonesState_data){
-
-			switch (i){
+			if (ZonesState_data[i] !== null && JSON.stringify(ZonesState_data[i]) !== '{}' ){
+			
+				switch (i){
 				
-				case ('activityDataPoints'):
-					this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
-					break;
-
-				case ('geolocationOverride'):
-					this.create_state(state_root_states + '.' + i, i, state_root_states[i]);
-					break;						
-
-
-				case ('geolocationOverrideDisableTime'):
-					this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-					break;				
-
-				case ('link'):
-					this.create_state(state_root_states + '.' + i, i, ZonesState_data[i].state);
-					break;
-
-				case ('nextScheduleChange'):
-					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-					break;
-
-				case ('nextTimeBlock'):
-					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-					break;
-
-				case ('openWindow'):
-					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-					break;						
-
-
-				case ('overlay'):
-
-					this.log.debug('API data of overlay : ' + JSON.stringify(ZonesState_data[i]));
-					this.log.debug('API data : ' + JSON.stringify(ZonesState_data[i]));
-					await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
-						type: 'channel',
-						common: {
-							name: i,
-						},
-						native: {},
-					});
-
-					this.create_state(state_root_states + '.' + i  + '.clearZoneOverlay', 'clearZoneOverlay', '');
-				
-					for (const x in ZonesState_data[i]){
+					case ('activityDataPoints'):
 						
-						switch (x){
+						this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
+						break;
 
-							case ('type'):
-								this.create_state(state_root_states + '.' + i  + '.' + x, x, JSON.stringify(ZonesState_data[i][x]));
-								break;	
-
-							case ('setting'):
-
-								for (const y in ZonesState_data[i]){
-
-									try {
-
-										await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + x, {
-											type: 'channel',
-											common: {
-												name: x,
-											},
-											native: {},
-										});
-			
-										switch (y){
-				
-											case ('temperature'): 
-												if (ZonesState_data[i][x][y].celsius === null) {
-													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, null);
-												} else {
-													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius, false);
-												}
-											
-												break;
-
-											case ('type'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-												break;
-
-											case ('power'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].toLowerCase());
-
-												break;
-
-											default:
-
-										}		
-
-									} catch (error) {
-										// this.log.error(error);
-					
-									}
-								}
-								break;	
-		
-							case ('termination'):
-								for (const y in ZonesState_data[i][x]){
-
-									try {
-
-										await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + x, {
-											type: 'channel',
-											common: {
-												name: y,
-											},
-											native: {},
-										});
-			
-										switch (y){
-											
-											case ('projectedExpiry'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-												break;
+					case ('geolocationOverride'):
+						this.create_state(state_root_states + '.' + i, i, state_root_states[i]);
+						break;						
 
 
-											case ('type'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+					case ('geolocationOverrideDisableTime'):
+						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
+						break;				
 
-												break;
+					case ('link'):
+						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i].state);
+						break;
 
-											case ('typeSkillBasedApp'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+					case ('nextScheduleChange'):
+						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
+						break;
 
-												break;
+					case ('nextTimeBlock'):
+						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
+						break;
 
-											case ('remainingTimeInSeconds'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+					case ('openWindow'):
 
-												break;
-											
-											case ('durationInSeconds'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-												break;
-								
-											case ('expiry'):
-												this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-												break;
-															
-
-											default:
-												this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay termination : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(ZonesState_data[i][x][y]));
-
-										}
-
-									} catch (error) {
-										this.log.error(error);
-					
-									}
-								}
-								break;	
-
-
-							default:
-								this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+						for (const x in ZonesState_data[i]){
+							// this.log.info(x + '   |   ' + y)
+							this.create_state(state_root_states + '.' +  i + '.' + x, x, ZonesState_data[i][x]);
 						}
+						break;						
 
-					}
 
-					break;
+					case ('overlay'):
 
-				case ('overlayType'):
-					this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-					break;						
-										
-				case ('preparation'):
-					this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-					break;
+						this.log.debug('API data of overlay : ' + JSON.stringify(ZonesState_data[i]));
+						this.log.debug('API data : ' + JSON.stringify(ZonesState_data[i]));
+						await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
+							type: 'channel',
+							common: {
+								name: i,
+							},
+							native: {},
+						});
 
-				case ('sensorDataPoints'):
-					this.create_state(state_root_states + '.' + 'Actual_Temperature', 'Actual_Temperature', ZonesState_data[i].insideTemperature.celsius);
-					this.create_state(state_root_states + '.' + 'Actual_Humidity', 'Actual_Humidity', ZonesState_data[i].humidity.percentage);
-					break;		
+						this.create_state(state_root_states + '.' + i  + '.clearZoneOverlay', 'clearZoneOverlay', '');
+					
+						for (const x in ZonesState_data[i]){
+							
+							switch (x){
 
-				case ('setting'):
-					this.log.debug('ZoneStates_data settings Result : ' + JSON.stringify(ZonesState_data[i]));
-					await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
-						type: 'channel',
-						common: {
-							name: i,
-						},
-						native: {},
-					});
+								case ('type'):
+									this.create_state(state_root_states + '.' + i  + '.' + x, x, JSON.stringify(ZonesState_data[i][x]));
+									break;								
 
-					for (const y in ZonesState_data[i]){
+								case ('openWindowDetected'):
+									this.create_state(state_root_states + '.' + i  + '.' + x, x, JSON.stringify(ZonesState_data[i][x]));
+									break;	
 
-						try {
+								case ('setting'):
 
-							if (y === 'temperature') {
-								if (ZonesState_data[i][y].celsius === null) {
-									this.create_state(state_root_states + '.' + i + '.' + y, y, null);
-								} else {
-									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius, false);
-								}
-							} else {
-								this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y]);
+									for (const y in ZonesState_data[i]){
+
+										try {
+
+											await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + x, {
+												type: 'channel',
+												common: {
+													name: x,
+												},
+												native: {},
+											});
+				
+											switch (y){
+					
+												case ('temperature'): 
+													if (ZonesState_data[i][x][y].celsius === null) {
+														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, null);
+													} else {
+														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius, false);
+													}
+												
+													break;
+
+												case ('type'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+
+												case ('power'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y].toLowerCase());
+
+													break;
+
+												default:
+
+											}		
+
+										} catch (error) {
+											// this.log.error(error);
+						
+										}
+									}
+									break;	
+			
+								case ('termination'):
+									for (const y in ZonesState_data[i][x]){
+
+										try {
+
+											await this.setObjectNotExistsAsync(state_root_states + '.' + i  + '.' + x, {
+												type: 'channel',
+												common: {
+													name: y,
+												},
+												native: {},
+											});
+				
+											switch (y){
+												
+												case ('projectedExpiry'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+
+
+												case ('type'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+
+												case ('typeSkillBasedApp'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+
+												case ('remainingTimeInSeconds'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+												
+												case ('durationInSeconds'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+									
+												case ('expiry'):
+													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+
+													break;
+																
+
+												default:
+													this.log.error('Send this info to developer !!! { Unhandable information found in DoZoneStates overlay termination : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(ZonesState_data[i][x][y]));
+
+											}
+
+										} catch (error) {
+											this.log.error(error);
+						
+										}
+									}
+									break;	
+
+
+								default:
+									this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 							}
 
-						} catch (error) {
-							// this.log.error(error);
-		
 						}
-					}
-					break;	
+
+						break;
+
+					case ('overlayType'):
+						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
+						break;						
+											
+					case ('preparation'):
+						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
+						break;
+
+					case ('sensorDataPoints'):
+						this.create_state(state_root_states + '.' + 'Actual_Temperature', 'Actual_Temperature', ZonesState_data[i].insideTemperature.celsius);
+						this.create_state(state_root_states + '.' + 'Actual_Humidity', 'Actual_Humidity', ZonesState_data[i].humidity.percentage);
+						break;		
+
+					case ('setting'):
+						this.log.debug('ZoneStates_data settings Result : ' + JSON.stringify(ZonesState_data[i]));
+						await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
+							type: 'channel',
+							common: {
+								name: i,
+							},
+							native: {},
+						});
+
+						for (const y in ZonesState_data[i]){
+
+							try {
+
+								if (y === 'temperature') {
+									if (ZonesState_data[i][y].celsius === null) {
+										this.create_state(state_root_states + '.' + i + '.' + y, y, null);
+									} else {
+										this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius, false);
+									}
+								} else {
+									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y]);
+								}
+
+							} catch (error) {
+								// this.log.error(error);
+			
+							}
+						}
+						break;	
 
 
-				case ('tadoMode'):
-					this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-					break;	
-					
-				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
-			}
+					case ('tadoMode'):
+						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
+						break;	
+						
+					default:
+						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+				}
+			} 
 		}
 
 	}
@@ -1312,10 +1375,16 @@ class Tado extends utils.Adapter {
 				case ('preheatingLevel'):
 					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
 					break;
+				case ('setting'):
+
+					for (const x in AwayConfiguration_data[i]){
+						// this.log.info(x + '   |   ' + y)
+						this.create_state(state_root_states + '.AwayConfiguration.' +  i + '.' + x, x, AwayConfiguration_data[i][x]);
+					}
+					break;
 				case ('type'):
 					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
 					break;
-
 				default:
 					this.log.error('Send this info to developer !!! { Unhandable information found in DoAwayConfiguration : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(AwayConfiguration_data[i]));
 			}
