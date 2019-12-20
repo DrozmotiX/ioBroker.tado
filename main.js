@@ -762,7 +762,7 @@ class Tado extends utils.Adapter {
 						break;
 
 					case ('settings'):
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.geoTrackingEnabled', y, this.MobileDevices_data[i][y].geoTrackingEnabled);
+						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.geoTrackingEnabled', 'geoTrackingEnabled', this.MobileDevices_data[i][y].geoTrackingEnabled);
 						break;
 
 					case ('deviceMetadata'):
