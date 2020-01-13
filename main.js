@@ -121,7 +121,7 @@ class Tado extends utils.Adapter {
 								break;
 														
 							case ('temperature'):
-								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val);							
+								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val);							
 								await this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, set_mode);
 
 								this.DoConnect();
@@ -138,11 +138,11 @@ class Tado extends utils.Adapter {
 
 									try {
 
-										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
+										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
 										await this.setZoneOverlay(deviceId[2], deviceId[4],state.val,set_temp, mode);
 											
 									} catch (error) {
-										this.log.error('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + '  error from temperature : ' + error);
+										this.log.error('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + '  error from temperature : ' + error);
 										await  this.setZoneOverlay(deviceId[2], deviceId[4],  state.val, '20', 'manual');
 									}
 								}
@@ -593,6 +593,10 @@ class Tado extends utils.Adapter {
 				case ('awayRadiusInMeters'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
 					break;		
+
+				case ('preventFromSubscribing'):
+					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
+					break;	
 
 				case ('skills'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);

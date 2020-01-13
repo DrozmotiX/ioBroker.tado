@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.5",
+		"version": "0.1.6",
 		"news": {
 			"0.1.5": {
 				"en": "Stable release candidate",
