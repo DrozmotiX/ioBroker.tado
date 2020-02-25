@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.6",
+		"version": "0.1.7",
 		"news": {
+			"0.1.7": {
+				"en": "Fix Unhandable information found in DoZoneState : \"openWindowDetected\" ",
+				"de": "In DoZoneState gefundene nicht handhabbare Informationen wurden behoben: \"openWindowDetected\"",
+				"ru": "Исправить недоступную информацию, найденную в DoZoneState: \"openWindowDetected\"",
+				"pt": "Corrija as informações não entregues encontradas no DoZoneState: \"openWindowDetected\"",
+				"nl": "Onhandige informatie in DoZoneState herstellen: \"openWindowDetected\"",
+				"fr": "Correction des informations non maniables trouvées dans DoZoneState: \"openWindowDetected\"",
+				"it": "Correzione delle informazioni non gestibili rilevate in DoZoneState: \"openWindowDetected\"",
+				"es": "Se corrigió la información inmanejable que se encuentra en DoZoneState: \"openWindowDetected\"",
+				"pl": "Napraw nieprzydatne informacje znalezione w DoZoneState: „openWindowDetected”",
+				"zh-cn": "修复在DoZoneState中找到的无法处理的信息：“ openWindowDetected”"
+			},
 			"0.1.5": {
 				"en": "Stable release candidate",
 				"de": "Stabiler Release-Kandidat",

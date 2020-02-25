@@ -1084,7 +1084,7 @@ class Tado extends utils.Adapter {
 					case ('mountingState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;						
-
+						   openWindowDetected
 					case ('openWindowDetected'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;	
@@ -1099,6 +1099,7 @@ class Tado extends utils.Adapter {
 
 					default:
 						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
+						this.DoWriteJsonRespons(state_root + '.Test_Data','Test_Data', Devices_data);
 				}
 			}
 		}
@@ -1293,7 +1294,11 @@ class Tado extends utils.Adapter {
 
 					case ('overlayType'):
 						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-						break;						
+						break;		
+						
+					case ('openWindowDetected'):
+						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
+						break;	
 											
 					case ('preparation'):
 						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
@@ -1341,7 +1346,7 @@ class Tado extends utils.Adapter {
 						break;	
 						
 					default:
-						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+						this.log.error('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 				}
 			} 
 		}
