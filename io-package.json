@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.7",
+		"version": "0.1.8",
 		"news": {
+			"0.1.8": {
+				"en": "Correct countdown of \"remainingtimeinseconds\" implemented.",
+				"de": "Richtiger Countdown für \"verbleibende Zeit in Sekunden\" implementiert.",
+				"ru": "Правильный обратный отсчет оставшегося времени в секундах.",
+				"pt": "Contagem regressiva correta de \"tempo restante em segundos\" implementada.",
+				"nl": "Correct aftellen van \"resterende timeinseconds\" geïmplementeerd.",
+				"fr": "Compte à rebours correct des «secondes restantes» implémenté.",
+				"it": "Implementato il conto alla rovescia corretto di \"rimanentiinsecondi\".",
+				"es": "Cuenta atrás correcta de \"tiempo restante en segundos\" implementado.",
+				"pl": "Zaimplementowano poprawne odliczanie „pozostały czas w sekundach”.",
+				"zh-cn": "正确倒计时“剩余时间（秒）”。"
+			},
 			"0.1.7": {
 				"en": "Fix Unhandable information found in DoZoneState : \"openWindowDetected\" ",
 				"de": "In DoZoneState gefundene nicht handhabbare Informationen wurden behoben: \"openWindowDetected\"",

@@ -27,6 +27,7 @@ const oauth2 = require('simple-oauth2').create(tado_config);
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
 let polling; // Polling timer
+let counter = []; // counter timer
 
 // const fs = require('fs');
 
@@ -1256,8 +1257,14 @@ class Tado extends utils.Adapter {
 													break;
 
 												case ('remainingTimeInSeconds'):
-													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
 
+													if (ZonesState_data[i][x][y] === null || ZonesState_data[i][x][y] === undefined  || ZonesState_data[i][x][y] == '0'){
+														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+													} else {
+														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+														this.Count_remainingTimeInSeconds(state_root_states + '.' + i  + '.' + x + '.' + y, ZonesState_data[i][x][y]);
+
+													}
 													break;
 												
 												case ('durationInSeconds'):
@@ -1518,6 +1525,20 @@ class Tado extends utils.Adapter {
 
 		// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
 		await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
+
+	}
+
+	async Count_remainingTimeInSeconds(state, value){
+
+		(function () {if (counter[state]) {clearTimeout(counter[state]); counter[state] = null;}})();
+		// timer
+		counter[state] = setTimeout( () => {
+			value = value - 1;
+			this.setState(state, {val: value, ack: true});
+			if (value > 0 ) {
+				this.Count_remainingTimeInSeconds(state,value);
+			}
+		}, 1000);
 
 	}
 
