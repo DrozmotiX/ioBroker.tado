@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "tado",
-		"version": "0.1.8",
+		"version": "0.1.9",
 		"news": {
 			"0.1.8": {
 				"en": "Correct countdown of \"remainingtimeinseconds\" implemented.",
@@ -176,7 +176,12 @@
 			{
 				"js-controller": ">=1.4.2"
 			}
-		]
+		],
+		"plugins": {
+			"sentry": {
+				"dsn": "https://a0058391f5f840cca1559675ece2de59@sentry.iobroker.net/20"
+			}
+		}
 	},
 	"native": {
 		"Username": "",
