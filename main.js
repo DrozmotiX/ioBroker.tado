@@ -56,7 +56,6 @@ class Tado extends utils.Adapter {
 
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
-		setTimeout(huhu, 10000)
 		await this.DoConnect();
 
 	}
