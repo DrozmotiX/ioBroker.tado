@@ -27,7 +27,7 @@ const oauth2 = require('simple-oauth2').create(tado_config);
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
 let polling; // Polling timer
-let counter = []; // counter timer
+const counter = []; // counter timer
 
 // const fs = require('fs');
 
@@ -237,7 +237,7 @@ class Tado extends utils.Adapter {
 			for (const i in this.getMe_data.homes) {
 				this.DoWriteJsonRespons(this.getMe_data.homes[i].id,'Stage_01_GetMe_Data', this.getMe_data);						
 				// create device channel for each Home found in getMe
-				await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id, {
+				await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id.toString(), {
 					type: 'device',
 					common: {
 						name: this.getMe_data.homes[i].name,
@@ -298,6 +298,8 @@ class Tado extends utils.Adapter {
 			}, intervall_time);
 
 		} catch (error) {
+			
+			this.log.error(`Error in data refresh : ${error}`);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
 			// retry connection
@@ -1085,7 +1087,7 @@ class Tado extends utils.Adapter {
 					case ('mountingState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;						
-						   openWindowDetected
+						
 					case ('openWindowDetected'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;	
@@ -1540,6 +1542,16 @@ class Tado extends utils.Adapter {
 			}
 		}, 1000);
 
+	}
+
+	async errorHandling (codePart, error) {
+		this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
+		if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+			const sentryInstance = this.getPluginInstance('sentry');
+			if (sentryInstance) {
+				sentryInstance.getSentryObject().captureException(error);
+			}
+		}
 	}
 
 }
