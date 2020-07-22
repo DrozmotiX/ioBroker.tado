@@ -20,7 +20,8 @@ If you like my work, please feel free to provide a personal donation
 [![Donate](https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.tado/master/admin/button.png)](http://paypal.me/DutchmanNL)
 
 ## Changelog
-
+### 0.2.0
+* (LutzHelling) Added new information "accessPointWiFi" and "commandTableUploadState"
 ### 0.1.9
 * (DutchmanNL) Implement Sentry
 * (DutchmanNL) Bugfix : Better error handling

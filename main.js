@@ -1100,6 +1100,14 @@ class Tado extends utils.Adapter {
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
 
+					case ('accessPointWiFi'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						break;
+
+					case ('commandTableUploadState'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						break;
+
 					default:
 						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
 						this.DoWriteJsonRespons(state_root + '.Test_Data','Test_Data', Devices_data);
@@ -1122,6 +1130,8 @@ class Tado extends utils.Adapter {
 				
 					case ('activityDataPoints'):
 						
+						this.log.debug("this activityDataPoint is eventually null: " + ZonesState_data[i]);
+
 						this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
 						break;
 
