@@ -1101,7 +1101,7 @@ class Tado extends utils.Adapter {
 						break;
 
 					case ('accessPointWiFi'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].ssid);
 						break;
 
 					case ('commandTableUploadState'):
