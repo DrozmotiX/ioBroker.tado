@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.1.9",
+        "version": "0.2.0",
         "news": {
+            "0.2.0": {
+                "en": "Added accessPointWiFi and commandTableUploadState",
+                "de": "Ergänzung accessPointWiFi und commandTableUploadState"
+            },
             "0.1.9": {
                 "en": "Fix issues for JS-Controller 3.x, Sentry implemented",
                 "de": "Behebung von Problemen mit JS-Controller 3.x, Sentry implementiert",
