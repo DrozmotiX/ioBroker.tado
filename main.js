@@ -1108,6 +1108,10 @@ class Tado extends utils.Adapter {
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
 
+					case ('orientation'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						break;
+
 					default:
 						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
 						this.DoWriteJsonRespons(state_root + '.Test_Data','Test_Data', Devices_data);
