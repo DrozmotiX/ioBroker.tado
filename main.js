@@ -647,11 +647,12 @@ class Tado extends utils.Adapter {
 				case ('geolocation'):
 					this.create_state(HomeId + '._info.latitude', i, this.Home_data[i].latitude);
 					this.create_state(HomeId + '._info.longitude', i, this.Home_data[i].longitude);
-				
 					break;		
 
 				case ('consentGrantSkippable'):
-				
+					break;
+
+				case ('legacyHeatingInstallationsEnabled'):
 					break;
 
 				default:
@@ -1040,6 +1041,10 @@ class Tado extends utils.Adapter {
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
 
+					case ('orientation'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						break;
+
 					case ('characteristics'):
 						// await this.setObjectNotExistsAsync(state_root + y, {
 						// 	type: 'channel',
@@ -1105,10 +1110,6 @@ class Tado extends utils.Adapter {
 						break;
 
 					case ('commandTableUploadState'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('orientation'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
 
