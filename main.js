@@ -641,8 +641,13 @@ class Tado extends utils.Adapter {
 					this.create_state(HomeId + '._info.latitude', i, this.Home_data[i].latitude);
 					this.create_state(HomeId + '._info.longitude', i, this.Home_data[i].longitude);
 				
-					break;		
-
+					break;
+				
+				case ('legacyHeatingInstallationsEnabled'):
+                                        this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
+                                        
+					break;
+					
 				case ('consentGrantSkippable'):
 				
 					break;
