@@ -27,6 +27,7 @@ const oauth2 = require('simple-oauth2').create(tado_config);
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
 let polling; // Polling timer
+const counter = []; // counter timer
 
 // const fs = require('fs');
 
@@ -121,7 +122,7 @@ class Tado extends utils.Adapter {
 								break;
 														
 							case ('temperature'):
-								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val);							
+								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val);							
 								await this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, set_mode);
 
 								this.DoConnect();
@@ -138,11 +139,11 @@ class Tado extends utils.Adapter {
 
 									try {
 
-										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
+										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
 										await this.setZoneOverlay(deviceId[2], deviceId[4],state.val,set_temp, mode);
 											
 									} catch (error) {
-										this.log.error('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + 'to API with : ' + state.val + '  error from temperature : ' + error);
+										this.log.error('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + '  error from temperature : ' + error);
 										await  this.setZoneOverlay(deviceId[2], deviceId[4],  state.val, '20', 'manual');
 									}
 								}
@@ -236,7 +237,7 @@ class Tado extends utils.Adapter {
 			for (const i in this.getMe_data.homes) {
 				this.DoWriteJsonRespons(this.getMe_data.homes[i].id,'Stage_01_GetMe_Data', this.getMe_data);						
 				// create device channel for each Home found in getMe
-				await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id, {
+				await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id.toString(), {
 					type: 'device',
 					common: {
 						name: this.getMe_data.homes[i].name,
@@ -297,6 +298,8 @@ class Tado extends utils.Adapter {
 			}, intervall_time);
 
 		} catch (error) {
+			
+			this.log.error(`Error in data refresh : ${error}`);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
 			// retry connection
@@ -594,6 +597,10 @@ class Tado extends utils.Adapter {
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
 					break;		
 
+				case ('preventFromSubscribing'):
+					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
+					break;	
+
 				case ('skills'):
 					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
 					break;		
@@ -641,15 +648,14 @@ class Tado extends utils.Adapter {
 					this.create_state(HomeId + '._info.latitude', i, this.Home_data[i].latitude);
 					this.create_state(HomeId + '._info.longitude', i, this.Home_data[i].longitude);
 				
-					break;
-				
-				case ('legacyHeatingInstallationsEnabled'):
-                                        this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
-                                        
-					break;
-					
+					break;		
+
 				case ('consentGrantSkippable'):
 				
+					break;
+
+				case ('legacyHeatingInstallationsEnabled'):
+					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
 					break;
 
 				default:
@@ -1085,7 +1091,7 @@ class Tado extends utils.Adapter {
 					case ('mountingState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;						
-
+						
 					case ('openWindowDetected'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
 						break;	
@@ -1100,6 +1106,7 @@ class Tado extends utils.Adapter {
 
 					default:
 						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
+						this.DoWriteJsonRespons(state_root + '.Test_Data','Test_Data', Devices_data);
 				}
 			}
 		}
@@ -1256,8 +1263,14 @@ class Tado extends utils.Adapter {
 													break;
 
 												case ('remainingTimeInSeconds'):
-													this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
 
+													if (ZonesState_data[i][x][y] === null || ZonesState_data[i][x][y] === undefined  || ZonesState_data[i][x][y] == '0'){
+														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+													} else {
+														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
+														this.Count_remainingTimeInSeconds(state_root_states + '.' + i  + '.' + x + '.' + y, ZonesState_data[i][x][y]);
+
+													}
 													break;
 												
 												case ('durationInSeconds'):
@@ -1294,7 +1307,11 @@ class Tado extends utils.Adapter {
 
 					case ('overlayType'):
 						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-						break;						
+						break;		
+						
+					case ('openWindowDetected'):
+						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
+						break;	
 											
 					case ('preparation'):
 						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
@@ -1342,7 +1359,7 @@ class Tado extends utils.Adapter {
 						break;	
 						
 					default:
-						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+						this.log.error('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 				}
 			} 
 		}
@@ -1515,6 +1532,30 @@ class Tado extends utils.Adapter {
 		// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
 		await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
 
+	}
+
+	async Count_remainingTimeInSeconds(state, value){
+
+		(function () {if (counter[state]) {clearTimeout(counter[state]); counter[state] = null;}})();
+		// timer
+		counter[state] = setTimeout( () => {
+			value = value - 1;
+			this.setState(state, {val: value, ack: true});
+			if (value > 0 ) {
+				this.Count_remainingTimeInSeconds(state,value);
+			}
+		}, 1000);
+
+	}
+
+	async errorHandling (codePart, error) {
+		this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
+		if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+			const sentryInstance = this.getPluginInstance('sentry');
+			if (sentryInstance) {
+				sentryInstance.getSentryObject().captureException(error);
+			}
+		}
 	}
 
 }
