@@ -21,6 +21,21 @@ If you like my work, please feel free to provide a personal donation
 
 ## Changelog
 
+### 0.1.9
+* (DutchmanNL) Implement Sentry
+* (DutchmanNL) Bugfix : Better error handling
+* (DutchmanNL) Bugfix : state creation with JS-controller 3.x
+
+### 0.1.8
+* (DutchmanNL) Correct countdown of "remainingtimeinseconds" implemented.
+
+### 0.1.7
+* (DutchmanNL) Fix Unhandable information found in DoZoneState : "openWindowDetected" 
+
+### 0.1.6
+* (DutchmanNL) fix geoTrackingEnabled & atHome
+* (DutchmanNL) fix error preventFromSubscribing
+
 ### 0.1.5  
 * (DutchmanNL) Fix switching on/off heating & related auto mode
 * (DutchmanNL) Fix switching some incorrect logging
@@ -81,7 +96,7 @@ If you like my work, please feel free to provide a personal donation
 ## License
 MIT License
 
-Copyright (c) 2019 DutchmanNL <rdrozda@hotmail.com>
+Copyright (c) 2020 DutchmanNL <rdrozda@hotmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

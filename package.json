@@ -1,28 +1,40 @@
 {
-  "name": "iobroker.tado",
-  "version": "0.1.5",
-  "description": "Tado cloud connector to control Tado devices",
+  "_from": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f",
+  "_id": "iobroker.tado@0.1.9",
+  "_inBundle": false,
+  "_integrity": "sha512-S4Ei559MuM+mLe5j7dWfVswPPJb0cOxAfgZ5hp20dvgnh1Rf972m6XwXqgV8qtXCIO0zp17uU6qzBWcMRJqd1Q==",
+  "_location": "/iobroker.tado",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "remote",
+    "raw": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f",
+    "rawSpec": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f",
+    "saveSpec": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f",
+    "fetchSpec": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f",
+  "_shasum": "94efd81b309bc4261dd32899b4818b767bb2a0ca",
+  "_spec": "https://github.com/iobroker-community-adapters/ioBroker.tado/tarball/1c4eee6fb7cebae68715c20dfedfe667893d498f",
+  "_where": "/opt/iobroker",
   "author": {
     "name": "DutchmanNL",
     "email": "rdrozda@hotmail.com"
   },
-  "homepage": "https://github.com/iobroker-community-adapters/ioBroker.tado",
-  "license": "MIT",
-  "keywords": [
-    "energy",
-    "tado",
-    "thermostat",
-    "climate",
-    "temperature"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/iobroker-community-adapters/ioBroker.tado"
+  "bugs": {
+    "url": "https://github.com/iobroker-community-adapters/ioBroker.tado/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {
     "@iobroker/adapter-core": "^1.0.3",
+    "axios": "^0.19.2",
     "simple-oauth2": "2.5.2"
   },
+  "deprecated": false,
+  "description": "Tado cloud connector to control Tado devices",
   "devDependencies": {
     "@iobroker/testing": "^1.3.0",
     "@types/chai": "^4.2.5",
@@ -33,7 +45,7 @@
     "@types/proxyquire": "^1.3.28",
     "@types/sinon": "^7.5.0",
     "@types/sinon-chai": "^3.2.3",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "eslint": "^6.6.0",
@@ -43,17 +55,28 @@
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0"
   },
+  "homepage": "https://github.com/iobroker-community-adapters/ioBroker.tado",
+  "keywords": [
+    "energy",
+    "tado",
+    "thermostat",
+    "climate",
+    "temperature"
+  ],
+  "license": "MIT",
   "main": "main.js",
+  "name": "iobroker.tado",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iobroker-community-adapters/ioBroker.tado.git"
+  },
   "scripts": {
+    "lint": "eslint",
+    "test": "npm run test:js && npm run test:package",
+    "test:integration": "mocha test/integration --exit",
     "test:js": "mocha --opts test/mocha.custom.opts",
     "test:package": "mocha test/package --exit",
-    "test:unit": "mocha test/unit --exit",
-    "test:integration": "mocha test/integration --exit",
-    "test": "npm run test:js && npm run test:package",
-    "lint": "eslint"
+    "test:unit": "mocha test/unit --exit"
   },
-  "bugs": {
-    "url": "https://github.com/iobroker-community-adapters/ioBroker.tado/issues"
-  },
-  "readmeFilename": "README.md"
+  "version": "0.1.9"
 }
