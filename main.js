@@ -1099,6 +1099,24 @@ class Tado extends utils.Adapter {
 					case ('shortSerialNo'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
+					
+					case ('commandTableUploadState'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						break;
+
+					case ('accessPointWiFi'):
+						await this.setObjectNotExistsAsync(state_root_device +  '.'  + y, {
+							type: 'channel',
+							common: {
+								name: y,
+							},
+							native: {},
+						});
+						
+						for (const x in Devices_data[i][y]){
+							this.create_state(state_root_device + '.' + y + '.' + x, y, Devices_data[i][y][x]);
+						}
+						break;
 
 					default:
 						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
