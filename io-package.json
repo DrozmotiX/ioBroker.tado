@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.1.9",
+        "version": "0.2.0-beta.0",
         "news": {
+            "0.2.0-beta.0": {
+                "en": "Update dependency's\nUpdate testing, remove node 8 and add node 14\nImplement automated deployment with githubActions\nBugfix : Fix unhandled information found in DoReadDevices \nBugfix : Add legacyHeatingInstallationsEnabled to DoHome",
+                "de": "Abhängigkeiten aktualisieren\nAktualisieren Sie die Tests, entfernen Sie Knoten 8 und fügen Sie Knoten 14 hinzu\nImplementieren Sie die automatisierte Bereitstellung mit githubActions\nBugfix: Nicht behandelte Informationen in DoReadDevices korrigieren\nBugfix: LegacyHeatingInstallationsEnabled zu DoHome hinzufügen",
+                "ru": "Обновить зависимость\nОбновите тестирование, удалите узел 8 и добавьте узел 14\nРеализуйте автоматическое развертывание с помощью githubActions\nИсправление: исправление необработанной информации, обнаруженной в DoReadDevices.\nИсправление: добавление legacyHeatingInstallationsEnabled в DoHome",
+                "pt": "Atualizar dependências\nTeste de atualização, remova o nó 8 e adicione o nó 14\nImplementar implantação automatizada com githubActions\nCorreção de bug: corrigir informações não manipuladas encontradas em DoReadDevices\nCorreção de bug: adicionar legacyHeatingInstallationsEnabled a DoHome",
+                "nl": "Update afhankelijkheden\nUpdate testen, verwijder knooppunt 8 en voeg knooppunt 14 toe\nImplementeer geautomatiseerde implementatie met githubActions\nBugfix: reparatie van onverwerkte informatie gevonden in DoReadDevices\nBugfix: legacyHeatingInstallationsEnabled toegevoegd aan DoHome",
+                "fr": "Mettre à jour les dépendances\nMettre à jour les tests, supprimer le nœud 8 et ajouter le nœud 14\nMettre en œuvre un déploiement automatisé avec githubActions\nCorrection de bug: correction des informations non gérées trouvées dans DoReadDevices\nCorrectif: ajouter des installations de chauffage héritées activées à DoHome",
+                "it": "Aggiorna la dipendenza\nAggiorna il test, rimuovi il nodo 8 e aggiungi il nodo 14\nImplementa la distribuzione automatizzata con githubActions\nBugfix: correzione delle informazioni non gestite trovate in DoReadDevices\nBugfix: aggiungi legacyHeatingInstallationsEnabled a DoHome",
+                "es": "Actualizar las dependencias\nActualice las pruebas, elimine el nodo 8 y agregue el nodo 14\nImplementar la implementación automatizada con githubActions\nCorrección de errores: corrige la información no controlada que se encuentra en DoReadDevices\nCorrección de error: agregar legacyHeatingInstallationsEnabled a DoHome",
+                "pl": "Zaktualizuj zależności\nZaktualizuj testy, usuń węzeł 8 i dodaj węzeł 14\nZaimplementuj automatyczne wdrażanie za pomocą githubActions\nPoprawka: Napraw nieobsłużone informacje znalezione w DoReadDevices\nPoprawka: Dodaj legacyHeatingInstallationsEnabled do DoHome",
+                "zh-cn": "更新依赖项\n更新测试，删除节点8并添加节点14\n使用githubActions实现自动部署\n错误修正：修正在DoReadDevices中发现的未处理信息\n错误修正：添加legacyHeatingInstallationsEnabled到DoHome"
+            },
             "0.1.9": {
                 "en": "Fix issues for JS-Controller 3.x, Sentry implemented",
                 "de": "Behebung von Problemen mit JS-Controller 3.x, Sentry implementiert",
