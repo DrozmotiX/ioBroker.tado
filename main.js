@@ -655,6 +655,20 @@ class Tado extends utils.Adapter {
 				case ('legacyHeatingInstallationsEnabled'):
 					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
 					break;
+					
+				case ('incidentDetection'):
+					await this.setObjectNotExistsAsync(HomeId + '._info.incidentDetection', {
+						type: 'channel',
+						common: {
+							name: 'Incident Detection',
+						},
+						native: {},
+					});
+
+					for (const y in this.Home_data[i]){
+						this.create_state(HomeId + '._info.incidentDetection.' + y, y, this.Home_data[i][y]);
+					}
+					break;
 
 				default:
 					this.log.error('Send this info to developer !!! { Unhandable information found in DoHome : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(this.Home_data[i]));
