@@ -1,6 +1,6 @@
 {
   "name": "iobroker.tado",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Tado cloud connector to control Tado devices",
   "author": {
     "name": "DutchmanNL",
@@ -31,7 +31,7 @@
     "@types/chai-as-promised": "^7.1.3",
     "@types/gulp": "^4.0.6",
     "@types/mocha": "^8.0.3",
-    "@types/node": "^14.6.2",
+    "@types/node": "^14.14.2",
     "@types/proxyquire": "^1.3.28",
     "@types/sinon": "^9.0.5",
     "@types/sinon-chai": "^3.2.4",
