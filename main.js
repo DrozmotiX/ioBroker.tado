@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 
 
 /*
 * Created with @iobroker/create-adapter v1.16.0
