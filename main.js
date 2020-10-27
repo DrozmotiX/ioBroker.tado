@@ -1403,7 +1403,7 @@ class Tado extends utils.Adapter {
 						if(ZonesState_data[i] == null) {
 							const states = await this.getStatesAsync(state_root_states + '.' + i + '.*');
 							for (const idS in states) {
-								this.log.info('State to null for ' + idS);
+								this.log.debug('State to null for ' + idS);
 								await this.setStateAsync(idS, null);
 							}
 						}
