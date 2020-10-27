@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 /*
 * Created with @iobroker/create-adapter v1.16.0
@@ -668,6 +668,10 @@ class Tado extends utils.Adapter {
 					for (const y in this.Home_data[i]){
 						this.create_state(HomeId + '._info.incidentDetection.' + y, y, this.Home_data[i][y]);
 					}
+					break;
+					
+				case ('autoAssistFreeTrialEnabled'):
+					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
 					break;
 
 				default:
