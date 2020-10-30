@@ -1395,26 +1395,9 @@ class Tado extends utils.Adapter {
 					default:
 						this.log.error('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 				}
-			}
-			else {
-				switch (i){
-					case ('overlayType'):
-						this.log.debug('State to null for ' + state_root_states + '.' + i);
-						await this.setStateAsync(state_root_states + '.' + i, {val: null, ack: true});
-					case ('overlay'):
-					case ('openWindow'):
-						if(ZonesState_data[i] == null) {
-							const states = await this.getStatesAsync(state_root_states + '.' + i + '.*');
-							for (const idS in states) {
-								this.log.debug('State to null for ' + idS);
-								await this.setStateAsync(idS, {val: null, ack: true});
-							}
-						}
-						break;
-					default:
-				}
-			}
+			} 
 		}
+
 	}
 
 	// Unclear purpose, ignore for now
