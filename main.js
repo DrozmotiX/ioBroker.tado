@@ -91,26 +91,34 @@ class Tado extends utils.Adapter {
 					for (const x in deviceId){
 						this.log.debug('Device id channel : ' + deviceId[x]);
 
-						let set_temp = null;
-						let set_mode = null;
+						let set_temp = 0;
+						let set_mode = '';
+						let set_power = '';
+
 						const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
-						const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.type');
+						const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
+						const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
 
 						if (temperature !== null && temperature !== undefined){
 							set_temp = temperature.val;
 						} else {
 							set_temp = '20';
 						}
-
 						this.log.debug('Room Temperature set : ' + set_temp);
 
-						if (mode !== null || mode !== undefined){
-							set_mode = 'auto';
+						if (mode == null || mode == undefined || mode.val == null) {
+							set_mode = 'NO_OVERLAY';
 						} else {
-							set_mode = mode;
+							if (mode.val != '') {
+								set_mode = mode.val.toString().toUpperCase();
+							} else {
+								set_mode = 'NEXT_TIME_BLOCK';
+							}
 						}
-
 						this.log.debug('Room mode set : ' + set_mode);
+
+						set_power = power.val.toString().toUpperCase();
+						this.log.debug('Room power set : ' + set_power);
 
 						switch (deviceId[x]) {
 
@@ -118,37 +126,39 @@ class Tado extends utils.Adapter {
 								this.log.info('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
 								await this.clearZoneOverlay(deviceId[2],deviceId[4]);
 								await this.DoConnect();
-
+								await this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp',null);
 								break;
 														
 							case ('temperature'):
-								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val);							
-								await this.setZoneOverlay(deviceId[2], deviceId[4],'on',state.val, set_mode);
-
+								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK' }
+								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_temp);							
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode);
 								this.DoConnect();
+								break;
 
+							case ('typeSkillBasedApp'):
+								if (set_mode == 'NO_OVERLAY') { break }
+								this.log.info('TypeSkillBasedApp changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_mode);							
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode);
+								this.DoConnect();
 								break;
 
 							case ('power'):
-
-								if(set_mode  === 'auto' && state.val === 'ON' ) {
-
-									await this.clearZoneOverlay(deviceId[2],deviceId[4]);
-
-								} else {
-
-									try {
-
-										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
-										await this.setZoneOverlay(deviceId[2], deviceId[4],state.val,set_temp, mode);
-											
-									} catch (error) {
-										this.log.error('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + '  error from temperature : ' + error);
-										await  this.setZoneOverlay(deviceId[2], deviceId[4],  state.val, '20', 'manual');
+								if(set_mode  == 'NO_OVERLAY') {
+									if (state.val.toUpperCase() == 'ON') {
+										this.log.info('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
+										await this.clearZoneOverlay(deviceId[2],deviceId[4]);
 									}
+									else {
+										set_mode = 'MANUAL';
+										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
+										await this.setZoneOverlay(deviceId[2], deviceId[4],'off',set_temp, set_mode);		
+									}
+								} else {
+									this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
+									await this.setZoneOverlay(deviceId[2], deviceId[4],state.val,set_temp, set_mode);
 								}
 								this.DoConnect();
-
 								break;
 
 							default:
@@ -454,7 +464,7 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
 	}
 
-	setZoneOverlay(home_id, zone_id, power, temperature, termination) {
+	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp) {
 		const config = {
 			setting: {
 				type: 'HEATING',
@@ -473,16 +483,8 @@ class Tado extends utils.Adapter {
 		} else {
 			config.setting.power = 'OFF';
 		}
-		// if (!isNaN(parseInt(termination))) {
-		// config.termination.type = 'TIMER';
-		// config.termination.durationInSeconds = termination;
-		// } else 
-		if(termination === 'manual') {
-			config.termination.type = 'MANUAL';
 
-		} else {
-			config.termination.type = 'TADO_MODE';
-		}
+		config.termination.typeSkillBasedApp = typeSkillBasedApp;
 		this.log.debug('Send API ZoneOverlay API call Home : ' + home_id + ' zone : ' + zone_id + ' config : ' + JSON.stringify(config));
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
 	}
@@ -669,9 +671,13 @@ class Tado extends utils.Adapter {
 						this.create_state(HomeId + '._info.incidentDetection.' + y, y, this.Home_data[i][y]);
 					}
 					break;
+					
+				case ('autoAssistFreeTrialEnabled'):
+					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
+					break;
 
 				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoHome : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(this.Home_data[i]));
+					this.log.warn('Send this info to developer !!! { Unhandable information found in DoHome : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(this.Home_data[i]));
 
 
 			}
@@ -710,7 +716,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoHWeather : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(weather_data[i]));
+					this.log.warn('Send this info to developer !!! { Unhandable information found in DoHWeather : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(weather_data[i]));
 
 			}	
 		}					
@@ -808,7 +814,7 @@ class Tado extends utils.Adapter {
 					
 
 					default:
-						this.log.error('Send this info to developer !!! { Unhandable information found in DoMobile_Devices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(this.MobileDevices_data[i][y]));
+						this.log.warn('Send this info to developer !!! { Unhandable information found in DoMobile_Devices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(this.MobileDevices_data[i][y]));
 				}
 			}
 			await this.DoMobileDeviceSettings(HomeId,this.MobileDevices_data[i].id);		
@@ -854,7 +860,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoMobileDeviceSettings : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(MobileDeviceSettings_data[i]));
+					this.log.warn('Send this info to developer !!! { Unhandable information found in DoMobileDeviceSettings : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(MobileDeviceSettings_data[i]));
 
 			}
 
@@ -984,7 +990,7 @@ class Tado extends utils.Adapter {
 						
 
 					default:
-						this.log.error('Send this info to developer !!! { Unhandable information found in DoZones : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(this.Zones_data [i][y]));
+						this.log.warn('Send this info to developer !!! { Unhandable information found in DoZones : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(this.Zones_data [i][y]));
 				}
 			}
 			const basic_tree = HomeId + '.Rooms.' + this.Zones_data [i].id;
@@ -1139,7 +1145,7 @@ class Tado extends utils.Adapter {
 						break;
 
 					default:
-						this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
+						this.log.warn('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
 						this.DoWriteJsonRespons(state_root + '.Test_Data','Test_Data', Devices_data);
 				}
 			}
@@ -1302,7 +1308,7 @@ class Tado extends utils.Adapter {
 														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
 													} else {
 														this.create_state(state_root_states + '.' + i  + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-														this.Count_remainingTimeInSeconds(state_root_states + '.' + i  + '.' + x + '.' + y, ZonesState_data[i][x][y]);
+														//this.Count_remainingTimeInSeconds(state_root_states + '.' + i  + '.' + x + '.' + y, ZonesState_data[i][x][y]);
 
 													}
 													break;
@@ -1319,7 +1325,7 @@ class Tado extends utils.Adapter {
 																
 
 												default:
-													this.log.error('Send this info to developer !!! { Unhandable information found in DoZoneStates overlay termination : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(ZonesState_data[i][x][y]));
+													this.log.warn('Send this info to developer !!! { Unhandable information found in DoZoneStates overlay termination : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(ZonesState_data[i][x][y]));
 
 											}
 
@@ -1332,7 +1338,7 @@ class Tado extends utils.Adapter {
 
 
 								default:
-									this.log.error('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+									this.log.warn('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 							}
 
 						}
@@ -1393,7 +1399,7 @@ class Tado extends utils.Adapter {
 						break;	
 						
 					default:
-						this.log.error('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+						this.log.warn('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 				}
 			} 
 		}
@@ -1449,7 +1455,7 @@ class Tado extends utils.Adapter {
 					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
 					break;
 				default:
-					this.log.error('Send this info to developer !!! { Unhandable information found in DoAwayConfiguration : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(AwayConfiguration_data[i]));
+					this.log.warn('Send this info to developer !!! { Unhandable information found in DoAwayConfiguration : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(AwayConfiguration_data[i]));
 			}
 		}
 	}
