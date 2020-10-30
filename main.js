@@ -1398,6 +1398,9 @@ class Tado extends utils.Adapter {
 			}
 			else {
 				switch (i){
+					case ('overlayType'):
+						this.log.debug('State to null for ' + state_root_states + '.' + i);
+						await this.setStateAsync(state_root_states + '.' + i, {val: null, ack: true});
 					case ('overlay'):
 					case ('openWindow'):
 						if(ZonesState_data[i] == null) {
