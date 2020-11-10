@@ -1415,7 +1415,6 @@ class Tado extends utils.Adapter {
 							for (const idS in states) {
 								this.log.debug('State to null for ' + idS);
 								//await this.setStateAsync(idS, {val: null, ack: true});
-								this.log.info(idS.substr(idS.lastIndexOf('.'), idS.length));
 								this.create_state(idS, idS.substr(idS.lastIndexOf('.') + 1, idS.length), null);
 							}
 						}
