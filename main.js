@@ -103,7 +103,7 @@ class Tado extends utils.Adapter {
 					} else {
 						set_durationInSeconds = parseInt(durationInSeconds.val);
 					}
-					this.log.info('DurationInSeconds set : ' + set_durationInSeconds);
+					this.log.debug('DurationInSeconds set : ' + set_durationInSeconds);
 
 
 					if (temperature !== null && temperature !== undefined) {
