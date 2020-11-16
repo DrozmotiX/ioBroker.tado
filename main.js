@@ -88,37 +88,47 @@ class Tado extends utils.Adapter {
 					// const deviceId = id.split('.');
 					const deviceId = id.split('.');
 					// let stateNameToSend = '';
+					let set_temp = 0;
+					let set_mode = '';
+					let set_power = '';
+					let set_durationInSeconds = 0;
+
+					const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
+					const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
+					const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
+					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
+
+					if (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) {
+						set_durationInSeconds = 1800;
+					} else {
+						set_durationInSeconds = parseInt(durationInSeconds.val);
+					}
+					this.log.info('DurationInSeconds set : ' + set_durationInSeconds);
+
+
+					if (temperature !== null && temperature !== undefined) {
+						set_temp = parseInt(temperature.val);
+					} else {
+						set_temp = 20;
+					}
+					this.log.debug('Room Temperature set : ' + set_temp);
+
+					if (mode == null || mode == undefined || mode.val == null) {
+						set_mode = 'NO_OVERLAY';
+					} else {
+						if (mode.val != '') {
+							set_mode = mode.val.toString().toUpperCase();
+						} else {
+							set_mode = 'NEXT_TIME_BLOCK';
+						}
+					}
+					this.log.debug('Room mode set : ' + set_mode);
+
+					set_power = power.val.toString().toUpperCase();
+					this.log.debug('Room power set : ' + set_power);
+
 					for (const x in deviceId){
 						this.log.debug('Device id channel : ' + deviceId[x]);
-
-						let set_temp = 0;
-						let set_mode = '';
-						let set_power = '';
-
-						const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
-						const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
-						const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
-
-						if (temperature !== null && temperature !== undefined){
-							set_temp = temperature.val;
-						} else {
-							set_temp = '20';
-						}
-						this.log.debug('Room Temperature set : ' + set_temp);
-
-						if (mode == null || mode == undefined || mode.val == null) {
-							set_mode = 'NO_OVERLAY';
-						} else {
-							if (mode.val != '') {
-								set_mode = mode.val.toString().toUpperCase();
-							} else {
-								set_mode = 'NEXT_TIME_BLOCK';
-							}
-						}
-						this.log.debug('Room mode set : ' + set_mode);
-
-						set_power = power.val.toString().toUpperCase();
-						this.log.debug('Room power set : ' + set_power);
 
 						switch (deviceId[x]) {
 
@@ -132,14 +142,21 @@ class Tado extends utils.Adapter {
 							case ('temperature'):
 								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK' }
 								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_temp);							
-								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode);
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
+								this.DoConnect();
+								break;
+
+							case ('durationInSeconds'):
+								set_mode = 'TIMER';
+								this.log.info('DurationInSecond changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_durationInSeconds);							
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
 								this.DoConnect();
 								break;
 
 							case ('typeSkillBasedApp'):
 								if (set_mode == 'NO_OVERLAY') { break }
 								this.log.info('TypeSkillBasedApp changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_mode);							
-								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode);
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
 								this.DoConnect();
 								break;
 
@@ -152,11 +169,11 @@ class Tado extends utils.Adapter {
 									else {
 										set_mode = 'MANUAL';
 										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
-										await this.setZoneOverlay(deviceId[2], deviceId[4],'off',set_temp, set_mode);		
+										await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);		
 									}
 								} else {
 									this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
-									await this.setZoneOverlay(deviceId[2], deviceId[4],state.val,set_temp, set_mode);
+									await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
 								}
 								this.DoConnect();
 								break;
@@ -464,7 +481,7 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
 	}
 
-	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp) {
+	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds) {
 		const config = {
 			setting: {
 				type: 'HEATING',
@@ -485,6 +502,14 @@ class Tado extends utils.Adapter {
 		}
 
 		config.termination.typeSkillBasedApp = typeSkillBasedApp;
+
+		if (typeSkillBasedApp != 'TIMER') {
+			config.termination.durationInSeconds = null;	
+		}
+		else {
+			config.termination.durationInSeconds = durationInSeconds;
+		}
+
 		this.log.debug('Send API ZoneOverlay API call Home : ' + home_id + ' zone : ' + zone_id + ' config : ' + JSON.stringify(config));
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
 	}
@@ -1401,7 +1426,7 @@ class Tado extends utils.Adapter {
 					default:
 						this.log.warn('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
 				}
-			} 
+			}
 		}
 
 	}
