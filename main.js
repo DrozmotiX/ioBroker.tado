@@ -88,8 +88,6 @@ class Tado extends utils.Adapter {
 					// const deviceId = id.split('.');
 					const deviceId = id.split('.');
 					// let stateNameToSend = '';
-//					for (const x in deviceId){
-//						this.log.debug('Device id channel : ' + deviceId[x]);
 
 					let set_temp = 0;
 					let set_mode = '';
@@ -110,9 +108,9 @@ class Tado extends utils.Adapter {
 
 
 					if (temperature !== null && temperature !== undefined) {
-						set_temp = temperature.val;
+						set_temp = parseInt(temperature.val);
 					} else {
-						set_temp = '20';
+						set_temp = 20;
 					}
 					this.log.debug('Room Temperature set : ' + set_temp);
 
