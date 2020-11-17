@@ -1165,8 +1165,9 @@ class Tado extends utils.Adapter {
 				switch (i){
 				
 					case ('activityDataPoints'):
-						
-						this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
+						if (ZonesState_data[i].heatingPower != undefined) {
+							this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
+						}
 						break;
 
 					case ('geolocationOverride'):
