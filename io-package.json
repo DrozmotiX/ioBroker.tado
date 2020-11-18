@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.2",
+        "version": "0.2.3",
         "news": {
+            "0.2.3": {
+                "en": "add overlay methods 'timer'\ndeal with JSON object overlay or openWindow is null\nBugfix : Cannot read property 'percentage' of undefined",
+                "de": "Overlay-Methoden hinzufügen 'Timer'\nUmgang mit JSON-Objekt-Overlay oder openWindow ist null\nBugfix: Eigenschaft 'Prozentsatz' von undefiniert kann nicht gelesen werden",
+                "ru": "добавить методы наложения 'таймер'\nиметь дело с наложением объекта JSON или openWindow имеет значение null\nИсправление: не удавалось прочитать свойство \"процент\" неопределенного значения.",
+                "pt": "adicionar métodos de sobreposição 'temporizador'\nlidar com sobreposição de objeto JSON ou openWindow é nulo\nCorreção: não é possível ler a propriedade 'porcentagem' de indefinido",
+                "nl": "voeg overlay-methoden 'timer' toe\nomgaan met JSON-objectoverlay of openWindow is null\nBugfix: Kan eigenschap 'percentage' van ongedefinieerd niet lezen",
+                "fr": "ajouter des méthodes de superposition 'timer'\ntraiter la superposition d'objets JSON ou openWindow est nul\nCorrectif: impossible de lire la propriété 'pourcentage' de non défini",
+                "it": "aggiungi metodi di sovrapposizione \"timer\"\ntrattare con la sovrapposizione di oggetti JSON o openWindow è nullo\nErrore corretto: impossibile leggere la 'percentuale' della proprietà di undefined",
+                "es": "agregar métodos de superposición 'temporizador'\ntratar con la superposición de objetos JSON o openWindow es nulo\nCorrección de error: no se puede leer la propiedad 'porcentaje' de indefinido",
+                "pl": "dodaj stoper metod nakładania\nradzić sobie z nakładką obiektu JSON lub openWindow ma wartość null\nPoprawka: nie można odczytać wartości „procent” wartości niezdefiniowanej",
+                "zh-cn": "添加叠加方法“计时器”\n处理JSON对象覆盖或openWindow为null\n错误修正：无法读取未定义的属性“百分比”"
+            },
             "0.2.2": {
                 "en": "add typeSkillBasedApp\nadd autoAssistFreeTrialEnabled\nAdd support for autoAssistFreeTrialEnabled\nOverlay methods 'manual' and 'next time block'",
                 "de": "Fügen Sie typeSkillBasedApp hinzu\nFügen Sie autoAssistFreeTrialEnabled hinzu\nUnterstützung für autoAssistFreeTrialEnabled hinzufügen\nÜberlagerungsmethoden 'manuell' und 'nächster Zeitblock'",
