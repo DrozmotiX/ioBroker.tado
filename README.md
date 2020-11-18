@@ -26,12 +26,16 @@ If you like my work, please feel free to provide a personal donation
     ## __WORK IN PROGRESS__
 -->
 
-### 0.2.2 (2020-11-18)
-* (HGlab01) add durationInSeconds
+### 0.2.3 (2020-11-18)
+* (HGlab01) add overlay methods 'timer'
 * (HGlab01) deal with JSON object overlay or openWindow is null
 * (HGlab01) Bugfix : Cannot read property 'percentage' of undefined
-* (HGlab01) Bugfix : Replace parseInt with parseFloat for temperature
 
+### 0.2.2 (2020-11-02)
+* (HGlab01) add typeSkillBasedApp
+* (HGlab01) add autoAssistFreeTrialEnabled
+* (HGlab01) Add support for autoAssistFreeTrialEnabled
+* (HGlab01) Overlay methods 'manual' and 'next time block'
 
 ### 0.2.1 (2020-10-22)
 * (DutchmanNL) Update dependency's
