@@ -26,6 +26,13 @@ If you like my work, please feel free to provide a personal donation
     ## __WORK IN PROGRESS__
 -->
 
+### 0.2.2 (2020-11-18)
+* (HGlab01) add durationInSeconds
+* (HGlab01) deal with JSON object overlay or openWindow is null
+* (HGlab01) Bugfix : Cannot read property 'percentage' of undefined
+* (HGlab01) Bugfix : Replace parseInt with parseFloat for temperature
+
+
 ### 0.2.1 (2020-10-22)
 * (DutchmanNL) Update dependency's
 * (DutchmanNL) Update testing, remove node 8 and add node 14

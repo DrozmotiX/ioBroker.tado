@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "news": {
+            "0.2.2": {
+                "en": "add durationInSeconds\ndeal with JSON object overlay or openWindow is null\nBugfix : Cannot read property 'percentage' of undefined\nBugfix : Replace parseInt with parseFloat for temperature",
+                "de": "füge durationInSeconds hinzu\nUmgang mit JSON-Objekt-Overlay oder openWindow ist null\nBugfix: Eigenschaft 'Prozentsatz' von undefiniert kann nicht gelesen werden\nBugfix: Ersetzen Sie parseInt durch parseFloat für die Temperatur",
+                "ru": "добавить durationInSeconds\nиметь дело с наложением объекта JSON или openWindow имеет значение null\nИсправление: не удавалось прочитать свойство \"процент\" неопределенного значения.\nИсправление: замените parseInt на parseFloat для температуры.",
+                "pt": "adicionar durationInSeconds\nlidar com sobreposição de objeto JSON ou openWindow é nulo\nCorreção: não é possível ler a propriedade 'porcentagem' de indefinido\nCorreção de bug: Substitua parseInt por parseFloat para temperatura",
+                "nl": "voeg durationInSeconds toe\nomgaan met JSON-objectoverlay of openWindow is null\nBugfix: Kan eigenschap 'percentage' van ongedefinieerd niet lezen\nBugfix: vervang parseInt door parseFloat voor temperatuur",
+                "fr": "ajouter une durée en secondes\ntraiter la superposition d'objets JSON ou openWindow est nul\nCorrectif: impossible de lire la propriété 'pourcentage' de non défini\nCorrectif: remplacez parseInt par parseFloat pour la température",
+                "it": "aggiungi durationInSeconds\ntrattare con la sovrapposizione di oggetti JSON o openWindow è nullo\nErrore corretto: impossibile leggere la 'percentuale' della proprietà di undefined\nErrore corretto: sostituire parseInt con parseFloat per la temperatura",
+                "es": "añadir durationInSeconds\ntratar con la superposición de objetos JSON o openWindow es nulo\nCorrección de error: no se puede leer la propiedad 'porcentaje' de indefinido\nCorrección de error: reemplace parseInt con parseFloat para la temperatura",
+                "pl": "dodaj durationInSeconds\nradzić sobie z nakładką obiektu JSON lub openWindow ma wartość null\nPoprawka: nie można odczytać wartości „procent” wartości niezdefiniowanej\nPoprawka: Zastąp parseInt parametrem parseFloat dla temperatury",
+                "zh-cn": "添加durationInSeconds\n处理JSON对象覆盖或openWindow为null\n错误修正：无法读取未定义的属性“百分比”\n错误修正：用parseFloat替换parseInt的温度"
+            },
             "0.2.1": {
                 "en": "Update dependency's\nUpdate testing, remove node 8 and add node 14\nImplement automated deployment with githubActions\nSupport incident Detection\nBugfix : Add orientation\nBugfix : legacyHeatingInstallationsEnabled\nBugfix : Add legacyHeatingInstallationsEnabled to DoHome\nBugfix : Fix unhandled information found in DoReadDevices",
                 "de": "Abhängigkeiten aktualisieren\nAktualisieren Sie die Tests, entfernen Sie Knoten 8 und fügen Sie Knoten 14 hinzu\nImplementieren Sie die automatisierte Bereitstellung mit githubActions\nSupport Incident Detection\nBugfix: Orientierung hinzufügen\nBugfix: LegacyHeatingInstallationsEnabled\nBugfix: LegacyHeatingInstallationsEnabled zu DoHome hinzufügen\nBugfix: Nicht behandelte Informationen in DoReadDevices korrigieren",

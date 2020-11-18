@@ -1,0 +1,6 @@
+chore: release v0.2.2
+
+add durationInSeconds
+deal with JSON object overlay or openWindow is null
+Bugfix : Cannot read property 'percentage' of undefined
+Bugfix : Replace parseInt with parseFloat for temperature
