@@ -1190,8 +1190,9 @@ class Tado extends utils.Adapter {
 				switch (i){
 				
 					case ('activityDataPoints'):
-						
-						this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
+						if (ZonesState_data[i].heatingPower != undefined) {
+							this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
+						}
 						break;
 
 					case ('geolocationOverride'):
@@ -1425,6 +1426,26 @@ class Tado extends utils.Adapter {
 						
 					default:
 						this.log.warn('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
+				}
+			} 
+			else {
+				switch (i){
+					case ('overlayType'):
+						this.log.debug('State to null for ' + state_root_states + '.' + i);
+						await this.setStateAsync(state_root_states + '.' + i, {val: null, ack: true});
+						break;
+					case ('overlay'):
+					case ('openWindow'):
+						if(ZonesState_data[i] == null) {
+							const states = await this.getStatesAsync(state_root_states + '.' + i + '.*');
+							for (const idS in states) {
+								this.log.debug('State to null for ' + idS);
+								//await this.setStateAsync(idS, {val: null, ack: true});
+								this.create_state(idS, idS.substr(idS.lastIndexOf('.') + 1, idS.length), null);
+							}
+						}
+						break;
+					default:
 				}
 			}
 		}
