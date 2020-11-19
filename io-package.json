@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.3",
+        "version": "0.2.4",
         "news": {
+            "0.2.4": {
+                "en": "Improve overlay modes + solve merge issue of version 0.2.3",
+                "de": "Verbessern Sie die Overlay-Modi und lösen Sie das Zusammenführungsproblem von Version 0.2.3",
+                "ru": "Улучшение режимов наложения + решение проблемы слияния версии 0.2.3",
+                "pt": "Melhorar os modos de sobreposição + resolver o problema de mesclagem da versão 0.2.3",
+                "nl": "Verbeter de overlay-modi + los het samenvoegprobleem van versie 0.2.3 op",
+                "fr": "Améliorer les modes de superposition + résoudre le problème de fusion de la version 0.2.3",
+                "it": "Migliora le modalità di sovrapposizione + risolvi il problema di unione della versione 0.2.3",
+                "es": "Mejorar los modos de superposición + resolver el problema de fusión de la versión 0.2.3",
+                "pl": "Popraw tryby nakładania + rozwiąż problem scalania wersji 0.2.3",
+                "zh-cn": "改进覆盖模式+解决0.2.3版的合并问题"
+            },
             "0.2.3": {
                 "en": "add overlay methods 'timer'\ndeal with JSON object overlay or openWindow is null\nBugfix : Cannot read property 'percentage' of undefined",
                 "de": "Overlay-Methoden hinzufügen 'Timer'\nUmgang mit JSON-Objekt-Overlay oder openWindow ist null\nBugfix: Eigenschaft 'Prozentsatz' von undefiniert kann nicht gelesen werden",
