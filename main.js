@@ -107,7 +107,7 @@ class Tado extends utils.Adapter {
 
 
 					if (temperature !== null && temperature !== undefined) {
-						set_temp = parseInt(temperature.val);
+						set_temp = parseFloat(temperature.val);
 					} else {
 						set_temp = 20;
 					}
