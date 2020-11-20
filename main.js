@@ -150,6 +150,7 @@ class Tado extends utils.Adapter {
 							case ('durationInSeconds'):
 								set_mode = 'TIMER';
 								this.log.info('DurationInSecond changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_durationInSeconds);
+								this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds',set_mode,true);
 								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
 								this.DoConnect();
 								break;
