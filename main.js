@@ -532,7 +532,7 @@ class Tado extends utils.Adapter {
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
 				that.log.info('NACH APICALL: ' + JSON.stringify(config) + ' mit '+ home_id+zone_id);
 				resolve(apiResponse);
-			}, 1000)
+			}, 5000)
 		});
 	}
 
