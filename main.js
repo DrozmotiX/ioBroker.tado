@@ -27,7 +27,7 @@ const oauth2 = require('simple-oauth2').create(tado_config);
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
 let polling; // Polling timer
-let pooltimer=null;
+let pooltimer = [];
 const counter = []; // counter timer
 
 // const fs = require('fs');
@@ -524,13 +524,13 @@ class Tado extends utils.Adapter {
 	}
 	
 	poolApiCall(home_id, zone_id, config) {
-		(function () { if (pooltimer) { clearTimeout(pooltimer); pooltimer = null; } })();
+		(function () { if (pooltimer[home_id+zone_id]) { clearTimeout(pooltimer[home_id+zone_id]); pooltimer[home_id+zone_id] = null; } })();
 		let that = this;
 		return new Promise(function (resolve, reject) {
-			pooltimer = setTimeout(async () => {
+			pooltimer[home_id+zone_id] = setTimeout(async () => {
 				that.log.info('VOR APICALL');
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
-				that.log.info('NACH APICALL: ' + JSON.stringify(config));
+				that.log.info('NACH APICALL: ' + JSON.stringify(config) + ' mit '+ home_id+zone_id);
 				resolve(apiResponse);
 			}, 1000)
 		});
