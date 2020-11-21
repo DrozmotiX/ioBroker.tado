@@ -74,6 +74,20 @@ class Tado extends utils.Adapter {
 		}
 	}
 
+	async resetTimer() {
+		const states = await this.getStatesAsync('*.Rooms.*.link');
+		for (const idS in states) {
+			let deviceId = idS.split('.');
+			let pooltimerid = deviceId[2]+deviceId[4];
+			this.log.info(`Check if timer ${pooltimerid} to be cleared.`);
+			if (pooltimer[pooltimerid]) {
+                clearTimeout(pooltimer[pooltimerid]);
+				pooltimer[pooltimerid] = null;
+				this.log.info(`Timer ${pooltimerid} cleared.`);
+            }
+		}
+	}
+
 	/**
 	 * Is called if a subscribed state changes
 	 * @param {string} id
@@ -1651,7 +1665,7 @@ class Tado extends utils.Adapter {
 			if (value > 0 ) {
 				this.Count_remainingTimeInSeconds(state,value);
 			}
-		}, 1000);
+		}, 19000);
 
 	}
 
