@@ -67,6 +67,7 @@ class Tado extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
+			this.resetTimer();
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
