@@ -87,6 +87,11 @@ class Tado extends utils.Adapter {
 				this.log.debug(`Timer ${pooltimerid} cleared.`);
 			}
 		}
+		if (polling) {
+			clearTimeout(polling);
+			polling = null;
+			this.log.debug(`Polling-Timer cleared.`);
+		}
 	}
 
 	/**
