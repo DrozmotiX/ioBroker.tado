@@ -555,7 +555,7 @@ class Tado extends utils.Adapter {
 			pooltimer[pooltimerid] = setTimeout(async () => {
 				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
-				that.log.debug(`API called with  ${JSON.stringify(config)}`);
+				that.log.info(`API called with  ${JSON.stringify(config)}`);
 				that.DoConnect();
 				that.log.debug('Data refreshed (DoConnect()) called');
 				resolve(apiResponse);
