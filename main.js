@@ -27,6 +27,7 @@ const oauth2 = require('simple-oauth2').create(tado_config);
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
 let polling; // Polling timer
+let pooltimer = [];
 const counter = []; // counter timer
 
 // const fs = require('fs');
@@ -66,10 +67,25 @@ class Tado extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
+			this.resetTimer();
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
 			callback();
+		}
+	}
+
+	async resetTimer() {
+		const states = await this.getStatesAsync('*.Rooms.*.link');
+		for (const idS in states) {
+			let deviceId = idS.split('.');
+			let pooltimerid = deviceId[2] + deviceId[4];
+			this.log.debug(`Check if timer ${pooltimerid} to be cleared.`);
+			if (pooltimer[pooltimerid]) {
+				clearTimeout(pooltimer[pooltimerid]);
+				pooltimer[pooltimerid] = null;
+				this.log.debug(`Timer ${pooltimerid} cleared.`);
+			}
 		}
 	}
 
@@ -135,30 +151,30 @@ class Tado extends utils.Adapter {
 							case ('clearZoneOverlay'):
 								this.log.info('Overlay cleared for room : ' + deviceId[4] + ' in home : ' + deviceId[2]);
 								await this.clearZoneOverlay(deviceId[2],deviceId[4]);
-								this.DoConnect();
+								//this.DoConnect();
 								break;
 
 							case ('temperature'):
 								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK' }
 								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_temp);
 								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
-								this.DoConnect();
+								//this.DoConnect();
 								break;
 
 							case ('durationInSeconds'):
 								set_mode = 'TIMER';
 								this.log.info('DurationInSecond changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_durationInSeconds);
+								this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp',set_mode,true);
 								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
-								this.DoConnect();
+								//this.DoConnect();
 								break;
 
 							case ('typeSkillBasedApp'):
 								if (set_mode == 'NO_OVERLAY') { break }
 								this.log.info('TypeSkillBasedApp changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_mode);
 								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
-								this.DoConnect();
+								//this.DoConnect();
 								if (set_mode == 'MANUAL') {
-									this.cre
 									this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.expiry',null,true);
 									this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds',null,true);
 									this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.remainingTimeInSeconds',null,true);
@@ -180,7 +196,7 @@ class Tado extends utils.Adapter {
 									this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
 									await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
 								}
-								this.DoConnect();
+								//this.DoConnect();
 								break;
 
 							default:
@@ -483,9 +499,11 @@ class Tado extends utils.Adapter {
 	}
 
 	clearZoneOverlay(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+		let response = this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+		this.DoConnect();
+		return response;
 	}
-
+	
 	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds) {
 		const config = {
 			setting: {
@@ -516,7 +534,28 @@ class Tado extends utils.Adapter {
 		}
 
 		this.log.debug('Send API ZoneOverlay API call Home : ' + home_id + ' zone : ' + zone_id + ' config : ' + JSON.stringify(config));
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
+		return this.poolApiCall(home_id,zone_id,config);
+	}
+	
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {object} config
+	 */
+	poolApiCall(home_id, zone_id, config) {
+		let pooltimerid = home_id + zone_id;
+		(function () { if (pooltimer[pooltimerid]) { clearTimeout(pooltimer[pooltimerid]); pooltimer[pooltimerid] = null; } })();
+		let that = this;
+		return new Promise(function (resolve, reject) {
+			pooltimer[pooltimerid] = setTimeout(async () => {
+				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
+				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
+				that.log.debug(`API called with  ${JSON.stringify(config)}`);
+				that.DoConnect();
+				that.log.debug('Data refreshed (DoConnect()) called');
+				resolve(apiResponse);
+			}, 750)
+		});
 	}
 
 	// Unclear purpose, ignore for now
