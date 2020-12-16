@@ -9,7 +9,7 @@
 
 [![NPM](https://nodei.co/npm/iobroker.tado.png?downloads=true)](https://nodei.co/npm/iobroker.tado/)
 
-**Tests:**: [![Travis-CI](http://img.shields.io/travis/iobroker-community-adapters/ioBroker.tado/master.svg)](https://travis-ci.org/iobroker-community-adapters/ioBroker.tado)
+![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.tado/workflows/Test%20and%20Release/badge.svg)
 
 ## tado adapter for ioBroker
 
