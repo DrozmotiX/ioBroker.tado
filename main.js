@@ -1159,6 +1159,10 @@ class Tado extends utils.Adapter {
 					case ('commandTableUploadState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
+					
+					case ('childLockEnabled'):
+						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
+						break;
 
 					case ('accessPointWiFi'):
 						await this.setObjectNotExistsAsync(state_root_device +  '.'  + y, {
