@@ -1,4 +1,4 @@
- # ioBroker.tado 
+# ioBroker.tado 
 <img src="./admin/tado.png" width="50" height="50">
 
 ![Number of Installations](http://iobroker.live/badges/tado-installed.svg) ![Number of Installations](http://iobroker.live/badges/tado-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.tado.svg)](https://www.npmjs.com/package/iobroker.tado)
@@ -6,6 +6,7 @@
 [![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.tado.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.tado)
 [![Known Vulnerabilities](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.tado/badge.svg)](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.tado)
 [![Translation status](https://weblate.iobroker.net/widgets/adapters/-/tado/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fiobroker-community-adapters%2FioBroker.tado.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fiobroker-community-adapters%2FioBroker.tado?ref=badge_shield)
 
 [![NPM](https://nodei.co/npm/iobroker.tado.png?downloads=true)](https://nodei.co/npm/iobroker.tado/)
 
@@ -147,3 +148,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fiobroker-community-adapters%2FioBroker.tado.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fiobroker-community-adapters%2FioBroker.tado?ref=badge_large)
