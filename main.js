@@ -113,7 +113,7 @@ class Tado extends utils.Adapter {
 					let set_mode = '';
 					let set_power = '';
 					let set_durationInSeconds = 0;
-					let set_type = ';'
+					let set_type = '';
 
 					const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
 					const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
