@@ -113,11 +113,16 @@ class Tado extends utils.Adapter {
 					let set_mode = '';
 					let set_power = '';
 					let set_durationInSeconds = 0;
+					let set_type = ';'
 
 					const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
 					const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
 					const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
+					const type = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.type');
 					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
+
+					set_type = type.val;
+					this.log.info('TYPE ' + set_type);
 
 					if (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) {
 						set_durationInSeconds = 1800;
@@ -162,7 +167,7 @@ class Tado extends utils.Adapter {
 							case ('temperature'):
 								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK' }
 								this.log.info('Temperature changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_temp);
-								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds,set_type);
 								//this.DoConnect();
 								break;
 
@@ -170,14 +175,14 @@ class Tado extends utils.Adapter {
 								set_mode = 'TIMER';
 								this.log.info('DurationInSecond changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_durationInSeconds);
 								this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp',set_mode,true);
-								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds,set_type);
 								//this.DoConnect();
 								break;
 
 							case ('typeSkillBasedApp'):
 								if (set_mode == 'NO_OVERLAY') { break }
 								this.log.info('TypeSkillBasedApp changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + set_mode);
-								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
+								await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds,set_type);
 								//this.DoConnect();
 								if (set_mode == 'MANUAL') {
 									this.setStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.expiry',null,true);
@@ -195,11 +200,11 @@ class Tado extends utils.Adapter {
 									else {
 										set_mode = 'MANUAL';
 										this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
-										await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
+										await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds,set_type);
 									}
 								} else {
 									this.log.info('Power changed for room : ' + deviceId[4] + ' in home : ' + deviceId[2] + ' to API with : ' + state.val + ' and Temperature : ' + set_temp + ' and mode : ' + set_mode);
-									await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds);
+									await this.setZoneOverlay(deviceId[2], deviceId[4],set_power,set_temp,set_mode,set_durationInSeconds,set_type);
 								}
 								//this.DoConnect();
 								break;
@@ -509,10 +514,10 @@ class Tado extends utils.Adapter {
 		return response;
 	}
 	
-	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds) {
+	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds,type) {
 		const config = {
 			setting: {
-				type: 'HEATING',
+				type: type,
 			},
 			termination: {
 			}
