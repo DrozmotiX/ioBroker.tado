@@ -122,7 +122,6 @@ class Tado extends utils.Adapter {
 					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
 
 					set_type = type.val;
-					this.log.info('TYPE ' + set_type);
 
 					if (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) {
 						set_durationInSeconds = 1800;
