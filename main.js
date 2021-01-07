@@ -120,8 +120,10 @@ class Tado extends utils.Adapter {
 					const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
 					const type = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.type');
 					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
-
+					
+					this.log.info('GETS INTERESSTING!!!');
 					set_type = type.val;
+					this.log.debug('Type set : ' + set_type);
 
 					if (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) {
 						set_durationInSeconds = 1800;
