@@ -121,7 +121,7 @@ class Tado extends utils.Adapter {
 					const type = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.type');
 					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
 					
-					this.log.info('GETS INTERESSTING!!!');
+					this.log.debug('GETS INTERESSTING!!!');
 					set_type = type.val;
 					this.log.debug('Type set : ' + set_type);
 
