@@ -126,8 +126,6 @@ class Tado extends utils.Adapter {
 					const fanSpeed = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.fanSpeed');
 
 					this.log.debug('GETS INTERESSTING!!!');
-					set_type = type.val;
-					this.log.debug('Type set : ' + set_type);
 
 					if (tadomode == null || tadomode == undefined || tadomode.val == null) {
 						set_tadomode = 'COOL';
@@ -139,7 +137,7 @@ class Tado extends utils.Adapter {
 					if (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) {
 						set_fanSpeed = 'AUTO';
 					} else {
-						set_fanSpeed = fanSpeed.val.toString().toUpperCase();;
+						set_fanSpeed = fanSpeed.val.toString().toUpperCase();
 					}
 					this.log.debug('FanSpeed set : ' + set_tadomode);
 
@@ -151,14 +149,14 @@ class Tado extends utils.Adapter {
 					}
 					this.log.debug('DurationInSeconds set : ' + set_durationInSeconds);
 
-					if (temperature !== null && temperature !== undefined && temperature.val !== 0) {
+					if (temperature !== null && temperature !== undefined && temperature.val != 0) {
 						set_temp = parseFloat(temperature.val);
 					} else {
 						set_temp = 20;
 					}
 					this.log.debug(`Room Temperature set: ${set_temp}`);
 
-					if (mode == null || mode == undefined || mode.val == null) {
+					if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
 						set_mode = 'NO_OVERLAY';
 					} else {
 						if (mode.val != '') {
@@ -169,8 +167,19 @@ class Tado extends utils.Adapter {
 					}
 					this.log.debug('Room mode set : ' + set_mode);
 
-					set_power = power.val.toString().toUpperCase();
+					if (power == null || power == undefined || power.val == null || power.val == '') {
+						set_power = 'OFF';
+					} else {
+						set_power = power.val.toString().toUpperCase();
+					}
 					this.log.debug('Room power set : ' + set_power);
+
+					if (type == null || type == undefined || type.val == null || type.val == '') {
+						set_type = 'HEATING';
+					} else {
+						set_type = type.val.toString().toUpperCase();
+					}
+					this.log.debug('Type set : ' + set_type);
 
 					for (const x in deviceId) {
 						this.log.debug('Device id channel : ' + deviceId[x]);
