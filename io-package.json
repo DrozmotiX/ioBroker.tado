@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.6-1",
+        "version": "0.2.6-2",
         "news": {
             "0.2.4": {
                 "en": "Improve overlay modes + solve merge issue of version 0.2.3",
