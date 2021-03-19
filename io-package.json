@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.5",
+        "version": "0.2.6-2",
         "news": {
             "0.2.5": {
                 "en": "add childLockEnabled",
