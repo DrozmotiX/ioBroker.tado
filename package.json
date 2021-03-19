@@ -6,7 +6,7 @@
     "name": "DutchmanNL",
     "email": "rdrozda@hotmail.com"
   },
-  "homepage": "https://github.com/iobroker-community-adapters/ioBroker.tado",
+  "homepage": "https://github.com/DrozmotiX/ioBroker.tado",
   "license": "MIT",
   "keywords": [
     "energy",
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/iobroker-community-adapters/ioBroker.tado"
+    "url": "https://github.com/DrozmotiX/ioBroker.tado"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.4.0",
@@ -56,7 +56,7 @@
     "release": "release-script"
   },
   "bugs": {
-    "url": "https://github.com/iobroker-community-adapters/ioBroker.tado/issues"
+    "url": "https://github.com/DrozmotiX/ioBroker.tado/issues"
   },
   "readmeFilename": "README.md"
 }
