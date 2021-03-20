@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 'use strict';
 
 /*
@@ -38,6 +39,7 @@ class Tado extends utils.Adapter {
 	 * @param {Partial<ioBroker.AdapterOptions>} [options={}]
 	 */
 	constructor(options) {
+		// @ts-ignore
 		super({
 			...options,
 			name: 'tado',
@@ -130,7 +132,7 @@ class Tado extends utils.Adapter {
 					if (tadomode == null || tadomode == undefined || tadomode.val == null) {
 						set_tadomode = 'COOL';
 					} else {
-						set_tadomode = tadomode.val.toString().toUpperCase();;
+						set_tadomode = tadomode.val.toString().toUpperCase();
 					}
 					this.log.debug('Mode set : ' + set_tadomode);
 
@@ -141,15 +143,16 @@ class Tado extends utils.Adapter {
 					}
 					this.log.debug('FanSpeed set : ' + set_tadomode);
 
-
 					if (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) {
 						set_durationInSeconds = 1800;
 					} else {
+						// @ts-ignore
 						set_durationInSeconds = parseInt(durationInSeconds.val);
 					}
 					this.log.debug('DurationInSeconds set : ' + set_durationInSeconds);
 
 					if (temperature !== null && temperature !== undefined && temperature.val != 0) {
+						// @ts-ignore
 						set_temp = parseFloat(temperature.val);
 					} else {
 						set_temp = 20;
@@ -193,7 +196,7 @@ class Tado extends utils.Adapter {
 								break;
 
 							case ('temperature'):
-								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK' }
+								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
 								this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
 								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								//this.DoConnect();
@@ -231,7 +234,7 @@ class Tado extends utils.Adapter {
 
 							case ('power'):
 								if (set_mode == 'NO_OVERLAY') {
-									if (state.val.toUpperCase() == 'ON') {
+									if (set_power == 'ON') {
 										this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
 										await this.clearZoneOverlay(deviceId[2], deviceId[4]);
 									}
@@ -403,10 +406,10 @@ class Tado extends utils.Adapter {
 				this.DoConnect();
 			}, 30000);
 		}
-
 	}
 
 	// Function to decrypt passwords
+	// @ts-ignore
 	decrypt(key, value) {
 		let result = '';
 		for (let i = 0; i < value.length; ++i) {
@@ -466,6 +469,7 @@ class Tado extends utils.Adapter {
 		return new Promise((resolve, reject) => {
 			if (this._accessToken) {
 				this._refreshToken().then(() => {
+					// @ts-ignore
 					axios({
 						url: tado_url + url,
 						method: method,
@@ -602,7 +606,7 @@ class Tado extends utils.Adapter {
 		let pooltimerid = home_id + zone_id;
 		(function () { if (pooltimer[pooltimerid]) { clearTimeout(pooltimer[pooltimerid]); pooltimer[pooltimerid] = null; } })();
 		let that = this;
-		return new Promise(function (resolve, reject) {
+		return new Promise(function (resolve) {
 			pooltimer[pooltimerid] = setTimeout(async () => {
 				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
@@ -610,7 +614,7 @@ class Tado extends utils.Adapter {
 				that.DoConnect();
 				that.log.debug('Data refreshed (DoConnect()) called');
 				resolve(apiResponse);
-			}, 750)
+			}, 750);
 		});
 	}
 
@@ -1258,7 +1262,7 @@ class Tado extends utils.Adapter {
 					case ('commandTableUploadState'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
-					
+
 					case ('childLockEnabled'):
 						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
 						break;
@@ -1540,7 +1544,8 @@ class Tado extends utils.Adapter {
 				switch (i) {
 					case ('overlayType'):
 						this.log.debug('State to null for ' + state_root_states + '.' + i);
-						await this.setStateAsync(state_root_states + '.' + i, { val: null, ack: true });
+						//await this.setStateAsync(state_root_states + '.' + i, { val: null, ack: true });
+						this.create_state(state_root_states + '.' + i, i, null);
 						break;
 					case ('overlay'):
 					case ('openWindow'):
