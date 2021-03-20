@@ -1,6 +1,6 @@
 {
   "name": "iobroker.tado",
-  "version": "0.2.6-2",
+  "version": "0.2.6",
   "description": "Tado cloud connector to control Tado devices",
   "author": {
     "name": "DutchmanNL",
@@ -47,13 +47,14 @@
   },
   "main": "main.js",
   "scripts": {
-    "test:js": "mocha --opts test/mocha.custom.opts",
+    "release": "release-script",
+    "test:js": "mocha --config test/mocharc.custom.json \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
     "test:package": "mocha test/package --exit",
     "test:unit": "mocha test/unit --exit",
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:js && npm run test:package",
-    "lint": "eslint",
-    "release": "release-script"
+    "check": "tsc --noEmit -p tsconfig.check.json",
+    "lint": "eslint"
   },
   "bugs": {
     "url": "https://github.com/DrozmotiX/ioBroker.tado/issues"

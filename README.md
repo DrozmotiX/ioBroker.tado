@@ -26,15 +26,15 @@ If you like my work, please feel free to provide a personal donation
     ### __WORK IN PROGRESS__
 -->
 
-### __WORK IN PROGRESS__
-* (HGlab01) Implement pool handling for setZoneOverlay
-* (HGlab01) add cleaning function for existing timer 'polling'
+### 0.2.6 (2021-03-20)
+* (HGlab01) apply formatting for main.js
+* (HGlab01) add quickActionsEnabled (#164)
 * (HGlab01) support HOT_WATER devices (#138)
 * (HGlab01) support AIR_CONDITIONING devices (#146)
-* (HGlab01) apply formatting for main.js
-* (HGlab01) state_attr.js: attribute 'support' was defined twice
-* (HGlab01) add quickActionsEnabled (#164)
+* (HGlab01) Implement pool handling for setZoneOverlay
 * (HGlab01) fix issue: state has no existing object (#184)
+* (HGlab01) add cleaning function for existing timer 'polling'
+* (HGlab01) state_attr.js: attribute 'support' was defined twice
 
 ### 0.2.5 (2020-12-16)
 * (HGlab01) add childLockEnabled

@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.6-2",
+        "version": "0.2.6",
         "news": {
+            "0.2.6": {
+                "en": "apply formatting for main.js\nadd quickActionsEnabled (#164)\nsupport HOT_WATER devices (#138)\nsupport AIR_CONDITIONING devices (#146)\nImplement pool handling for setZoneOverlay\nfix issue: state has no existing object (#184)\nadd cleaning function for existing timer 'polling'\nstate_attr.js: attribute 'support' was defined twice",
+                "de": "Formatierung für main.js anwenden\nfüge quickActionsEnabled hinzu (# 164)\nunterstützt HOT_WATER-Geräte (# 138)\nunterstützt AIR_CONDITIONING-Geräte (# 146)\nImplementieren Sie die Poolbehandlung für setZoneOverlay\nProblem behoben: Status hat kein vorhandenes Objekt (# 184)\nReinigungsfunktion für vorhandene Timer-Abfrage hinzufügen '\nstate_attr.js: Das Attribut 'support' wurde zweimal definiert",
+                "ru": "применить форматирование для main.js\nдобавить quickActionsEnabled (# 164)\nподдержка устройств HOT_WATER (# 138)\nподдержка устройств AIR_CONDITIONING (# 146)\nРеализовать обработку пула для setZoneOverlay\nисправить проблему: у состояния нет существующего объекта (# 184)\nдобавить функцию очистки для существующего таймера 'опроса'\nstate_attr.js: атрибут 'support' был определен дважды",
+                "pt": "aplicar formatação para main.js\nadicionar quickActionsEnabled (# 164)\nsuporta dispositivos HOT_WATER (# 138)\nsuporte para dispositivos AIR_CONDITIONING (# 146)\nImplementar manuseio de pool para setZoneOverlay\ncorrigir o problema: o estado não tem objeto existente (# 184)\nadicionar função de limpeza para temporizador existente 'polling'\nstate_attr.js: o atributo 'suporte' foi definido duas vezes",
+                "nl": "pas opmaak toe voor main.js\nvoeg quickActionsEnabled (# 164) toe\nondersteunen HOT_WATER-apparaten (# 138)\nondersteuning voor AIR_CONDITIONING-apparaten (# 146)\nImplementeer poolafhandeling voor setZoneOverlay\nprobleem oplossen: staat heeft geen bestaand object (# 184)\nvoeg reinigingsfunctie toe voor bestaande timer 'polling'\nstate_attr.js: attribuut 'support' is twee keer gedefinieerd",
+                "fr": "appliquer la mise en forme pour main.js\najouter quickActionsEnabled (# 164)\nprend en charge les appareils HOT_WATER (# 138)\nprend en charge les appareils AIR_CONDITIONING (# 146)\nImplémenter la gestion du pool pour setZoneOverlay\nproblème résolu: l'état n'a pas d'objet existant (# 184)\najouter une fonction de nettoyage pour la minuterie existante 'interrogation'\nstate_attr.js: l'attribut 'support' a été défini deux fois",
+                "it": "applica la formattazione per main.js\naggiungi quickActionsEnabled (# 164)\nsupporta i dispositivi HOT_WATER (# 138)\nsupporta i dispositivi AIR_CONDITIONING (# 146)\nImplementare la gestione del pool per setZoneOverlay\ncorrezione del problema: lo stato non ha un oggetto esistente (# 184)\naggiungere la funzione di pulizia per il timer esistente 'polling'\nstate_attr.js: l'attributo \"support\" è stato definito due volte",
+                "es": "aplicar formato para main.js\nagregar quickActionsEnabled (# 164)\nadmite dispositivos HOT_WATER (# 138)\nadmite dispositivos AIR_CONDITIONING (# 146)\nImplementar el manejo de grupos para setZoneOverlay\nsolucionar problema: el estado no tiene ningún objeto existente (# 184)\nagregue la función de limpieza para el 'sondeo' del temporizador existente\nstate_attr.js: el atributo 'soporte' se definió dos veces",
+                "pl": "zastosuj formatowanie dla main.js.\nadd quickActionsEnabled (# 164)\nobsługa urządzeń HOT_WATER (# 138)\nobsługa urządzeń AIR_CONDITIONING (nr 146)\nZaimplementuj obsługę puli dla setZoneOverlay\nnaprawiono problem: stan nie ma istniejącego obiektu (# 184)\ndodaj funkcję czyszczenia dla istniejącego `` odpytywania '' timera\nstate_attr.js: atrybut „support” został zdefiniowany dwukrotnie",
+                "zh-cn": "为main.js应用格式\n添加quickActionsEnabled（＃164）\n支持HOT_WATER设备（＃138）\n支持AIR_CONDITIONING设备（＃146）\n实现setZoneOverlay的池处理\n修复问题：状态没有现有对象（＃184）\n为现有计时器“轮询”添加清理功能\nstate_attr.js：属性“ support”定义了两次"
+            },
             "0.2.5": {
                 "en": "add childLockEnabled",
                 "de": "füge childLockEnabled hinzu",
