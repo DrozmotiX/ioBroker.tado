@@ -1540,7 +1540,8 @@ class Tado extends utils.Adapter {
 				switch (i) {
 					case ('overlayType'):
 						this.log.debug('State to null for ' + state_root_states + '.' + i);
-						await this.setStateAsync(state_root_states + '.' + i, { val: null, ack: true });
+						//await this.setStateAsync(state_root_states + '.' + i, { val: null, ack: true });
+						this.create_state(state_root_states + '.' + i, i, null);
 						break;
 					case ('overlay'):
 					case ('openWindow'):
