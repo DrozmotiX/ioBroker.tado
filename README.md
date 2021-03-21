@@ -26,6 +26,10 @@ If you like my work, please feel free to provide a personal donation
     ### __WORK IN PROGRESS__
 -->
 
+### __WORK IN PROGRESS__
+* (DutchmanNL) Change password encryption to JS-Controller framework
+* (DutchmanNL) Update dependency's, requires node >= 12.x, JS-Controller >= 3.x and Admin 4.0.10 !
+
 ### 0.2.6 (2021-03-20)
 * (HGlab01) apply formatting for main.js
 * (HGlab01) add quickActionsEnabled (#164)

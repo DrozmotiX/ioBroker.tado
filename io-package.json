@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.6",
+        "version": "0.2.7-0",
         "news": {
             "0.2.6": {
                 "en": "apply formatting for main.js\nadd quickActionsEnabled (#164)\nsupport HOT_WATER devices (#138)\nsupport AIR_CONDITIONING devices (#146)\nImplement pool handling for setZoneOverlay\nfix issue: state has no existing object (#184)\nadd cleaning function for existing timer 'polling'\nstate_attr.js: attribute 'support' was defined twice",
@@ -267,6 +267,9 @@
             }
         }
     },
+    "encryptedNative": [
+        "Password"
+    ],
     "native": {
         "Username": "",
         "Password": "",
