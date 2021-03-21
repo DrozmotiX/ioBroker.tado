@@ -11,23 +11,22 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 const EXPIRATION_WINDOW_IN_SECONDS = 300;
-
-const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
-const tado_config = {
+const config = {
 	client: {
 		id: 'tado-web-app',
 		secret: 'wZaRN7rpjn3FoNyF5IFuxg9uMzYJcvOoQ8QWiIqS3hfk6gLhVlG57j5YNoZL2Rtc',
 	},
 	auth: {
-		tokenHost: tado_auth_url,
+		tokenHost: 'https://auth.tado.com',
 	}
 };
 
-const oauth2 = require('simple-oauth2').create(tado_config);
+// const oauth2 = require('simple-oauth2').create(tado_config);
+const { ClientCredentials, ResourceOwnerPassword, AuthorizationCode } = require('simple-oauth2');
 const state_attr = require(__dirname + '/lib/state_attr.js');
 const axios = require('axios');
-let polling; // Polling timer
+let polling, client = {}; // Polling timer
 let pooltimer = [];
 const counter = []; // counter timer
 
@@ -444,25 +443,20 @@ class Tado extends utils.Adapter {
 		});
 	}
 
-	login(username, password) {
-		return new Promise((resolve, reject) => {
-			const credentials = {
-				scope: 'home.user',
-				username: username,
-				password: password
-			};
-			oauth2.ownerPassword.getToken(credentials)
-				.then(result => {
-					this._accessToken = oauth2.accessToken.create(result);
-					// const token = oauth2.accessToken.create(result);
-					// JSON.stringify(result);
-					// JSON.stringify(this._accessToken);
-					resolve(this._accessToken);
-				})
-				.catch(error => {
-					reject(error);
-				});
-		});
+	async login(username, password) {
+		client = new ResourceOwnerPassword(config);
+
+		const tokenParams = {
+			username: username,
+			password: password,
+			scope: 'home.user',
+		};
+
+		try {
+			this._accessToken = await client.getToken(tokenParams);
+		} catch (error) {
+			console.log('Access Token Error', error.message);
+		}
 	}
 
 	apiCall(url, method = 'get', data = {}) {
