@@ -45,11 +45,10 @@
 		}
 
 		// This will be called by the admin adapter when the settings page loads
-		// This will be called by the admin adapter when the settings page loads
 		function load(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
 			if (!settings) return;
-
+			loadHelper(settings, onChange)
 			onChange(false);
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
