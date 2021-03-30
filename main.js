@@ -25,7 +25,8 @@ const tado_config = {
 };
 
 const oauth2 = require('simple-oauth2').create(tado_config);
-const state_attr = require(__dirname + '/lib/state_attr.js');
+const JsonExplorer = require('iobroker-jsonexplorer');
+const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
 let polling; // Polling timer
 let pooltimer = [];
@@ -50,6 +51,7 @@ class Tado extends utils.Adapter {
 		this._accessToken = null;
 		this.getMe_data = null;
 		this.Home_data = null;
+		JsonExplorer.init(this, state_attr);
 	}
 
 	/**
@@ -1383,7 +1385,7 @@ class Tado extends utils.Adapter {
 													if (ZonesState_data[i][x][y].celsius === null) {
 														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, null);
 													} else {
-														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius, false);
+														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius);
 													}
 
 													break;
@@ -1518,7 +1520,7 @@ class Tado extends utils.Adapter {
 									if (ZonesState_data[i][y].celsius === null) {
 										this.create_state(state_root_states + '.' + i + '.' + y, y, null);
 									} else {
-										this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius, false);
+										this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius);
 									}
 								} else {
 									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y]);
@@ -1622,97 +1624,8 @@ class Tado extends utils.Adapter {
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name + ' with value : ' + value);
 		const intervall_time = (this.config.intervall * 4);
-		let writable = false;
 
-
-		// Define write state information
-		try {
-
-			if (state_attr[name].write === true) {
-				this.subscribeStates(state);
-				writable = true;
-				this.log.debug('State subscribed!: ' + state);
-			} else {
-				state_attr[name].write = false;
-			}
-
-		} catch (error) {
-
-			writable = false;
-
-		}
-
-		this.log.debug('Write value : ' + writable);
-
-		try {
-			await this.setObjectNotExistsAsync(state, {
-				type: 'state',
-				common: {
-					name: state_attr[name].name,
-					role: state_attr[name].role,
-					type: state_attr[name].type,
-					unit: state_attr[name].unit,
-					read: true,
-					write: writable
-				},
-				native: {},
-			});
-			// await this.setState(state, {val: value, ack: true, expire: intervall_time});
-			try {
-				if (expire === false) {
-					await this.setState(state, { val: value, ack: true });
-				} else {
-					await this.setState(state, { val: value, ack: true, expire: intervall_time });
-				}
-
-			} catch (error) {
-				await this.setState(state, { val: value, ack: true, expire: intervall_time });
-
-			}
-
-
-			try {
-
-				await this.extendObjectAsync(state, {
-					type: 'state',
-					common: {
-						states: state_attr[name].states
-					}
-				});
-
-			} catch (error) {
-
-				// no states attributes found for state
-
-			}
-
-		} catch (error) {
-
-			this.log.debug('No type defined for name : ' + name + '|value : |' + value);
-			await this.setObjectNotExistsAsync(state, {
-				type: 'state',
-				common: {
-					name: name,
-					read: true,
-					write: false,
-					role: 'state',
-					type: 'mixed'
-				},
-				native: {},
-			});
-			// await this.setState(state, {val: value, ack: true, expire: intervall_time});
-			try {
-				if (expire === false) {
-					await this.setState(state, { val: value, ack: true });
-				} else {
-					await this.setState(state, { val: value, ack: true, expire: intervall_time });
-				}
-			} catch (error) {
-				await this.setState(state, { val: value, ack: true, expire: intervall_time });
-
-			}
-		}
-
+		JsonExplorer.stateSetCreate(state, name, value, intervall_time);
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
