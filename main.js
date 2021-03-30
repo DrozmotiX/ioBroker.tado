@@ -1310,7 +1310,7 @@ class Tado extends utils.Adapter {
 						break;
 
 					case ('geolocationOverride'):
-						this.create_state(state_root_states + '.' + i, i, state_root_states[i]);
+						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
 						break;
 
 
@@ -1620,12 +1620,18 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async create_state(state, name, value, expire) {
+	/**
+	 * @param {string} state
+	 * @param {string} name
+	 * @param {string | null} value
+	 */
+	async create_state(state, name, value) {
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name + ' with value : ' + value);
 		const intervall_time = (this.config.intervall * 4);
-
-		JsonExplorer.stateSetCreate(state, name, value, intervall_time);
+		if (value) {
+			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
+		}
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
