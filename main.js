@@ -323,9 +323,9 @@ class Tado extends utils.Adapter {
 				} catch (error) {
 					this.log.error('Issue in Get all rooms ' + error);
 				}
+				//set all outdated states to NULL
+				await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.*');
 			}
-			//set all outdated states to NULL
-			await JsonExplorer.checkExpire('*');
 
 			if (conn_state === undefined || conn_state === null) {
 				return;
@@ -730,7 +730,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
-		if (this.log.level == 'info' || this.log.level == 'silly') {
+		if (this.log.level == 'debug' || this.log.level == 'silly') {
 			this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
 			this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
