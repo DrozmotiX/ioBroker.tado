@@ -31,7 +31,6 @@ const axios = require('axios');
 
 let polling; // Polling timer
 let pooltimer = [];
-const counter = []; // counter timer
 
 class Tado extends utils.Adapter {
 
@@ -659,9 +658,8 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
 
 		for (const i in this.Zones_data) {
-			let basic_tree = this.Zones_data[i].id;
-			await this.DoZoneStates(HomeId, this.Zones_data[i].id, basic_tree);
-			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id, basic_tree);
+			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
+			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
 			//await this.DoTimeTables(HomeId, this.Zones_data[i].id);
 		}
 	}
@@ -679,12 +677,12 @@ class Tado extends utils.Adapter {
 		this.log.debug('Devices_data Result : ' + JSON.stringify(Devices_data));
 	}*/
 
-	async DoZoneStates(HomeId, ZoneId, state_root_states) {
+	async DoZoneStates(HomeId, ZoneId) {
 		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
 		this.log.debug('ZoneStates_data Result for zone : ' + ZoneId + ' and value : ' + JSON.stringify(ZonesState_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
-		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + state_root_states, true, true, 0, 1);
+		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 1);
 	}
 
 	/*
@@ -709,11 +707,11 @@ class Tado extends utils.Adapter {
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
 	}
 
-	async DoAwayConfiguration(HomeId, ZoneId, state_root_states) {
+	async DoAwayConfiguration(HomeId, ZoneId) {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result : ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + state_root_states + '.AwayConfig', true, true, 0, 0);
+		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 0);
 	}
 
 	/**
