@@ -49,6 +49,7 @@ class Tado extends utils.Adapter {
 		this._accessToken = null;
 		this.getMe_data = null;
 		this.Home_data = null;
+		this.startprocedure = null;
 		JsonExplorer.init(this, state_attr);
 	}
 
@@ -56,7 +57,8 @@ class Tado extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-
+		this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
+		this.startprocedure = true;
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
@@ -160,7 +162,7 @@ class Tado extends utils.Adapter {
 								//this.DoConnect();
 								break;
 
-							case ('temperature'):
+							case ('celsius'):
 								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
 								this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
 								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
@@ -262,9 +264,11 @@ class Tado extends utils.Adapter {
 
 	async DoData_Refresh(user, pass) {
 		const intervall_time = (this.config.intervall * 1000);
+		let step = 'start';
 
 		// Get login token
 		try {
+			step = 'login';
 			await this.login(user, pass);
 			const conn_state = await this.getStateAsync('info.connection');
 			if (conn_state === undefined || conn_state === null) {
@@ -276,6 +280,7 @@ class Tado extends utils.Adapter {
 			}
 
 			// Get Basic data needed for all other querys and store to global variable
+			step = 'getMet_data';
 			if (this.getMe_data === null) {
 				this.getMe_data = await this.getMe();
 			}
@@ -285,45 +290,26 @@ class Tado extends utils.Adapter {
 
 			for (const i in this.getMe_data.homes) {
 				this.DoWriteJsonRespons(this.getMe_data.homes[i].id, 'Stage_01_GetMe_Data', this.getMe_data);
-				// create device channel for each Home found in getMe
-				/*await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id.toString(), {
-					type: 'device',
-					common: {
-						name: this.getMe_data.homes[i].name,
-					},
-					native: {},
-				});*/
-
-				// Write basic data to home specific info channel states
-				await this.DoHome(this.getMe_data.homes[i].id);
-				await this.DoDevices(this.getMe_data.homes[i].id);
-				await this.DoWeather(this.getMe_data.homes[i].id);
-				//await this.DoInstallations(this.getMe_data.homes[i].id);
-
-				// this.getInstallations(this.getMe_data.homes[i].id);
-				// await this.DoUsers(this.getMe_data.homes[i].id) 	// User information equal to Weather, ignoring function but keep for history/feature functionality
-				try {
-					await this.DoStates(this.getMe_data.homes[i].id);
-				} catch (error) {
-					this.log.error('Issue in DoStates' + error);
-				}
-
-				this.log.silly('Get all mobile devices');
-				try {
+				if (this.startprocedure) {
+					step = 'DoHome';
+					await this.DoHome(this.getMe_data.homes[i].id);
+					step = 'DoDevices';
+					await this.DoDevices(this.getMe_data.homes[i].id);
+					step = 'DoMobileDevices';
 					await this.DoMobileDevices(this.getMe_data.homes[i].id);
-				} catch (error) {
-					this.log.error('Issue in Get all mobile devices' + error);
 				}
+				step = 'DoZones';
+				await this.DoZones(this.getMe_data.homes[i].id);
+				step = 'DoWeather';
+				await this.DoWeather(this.getMe_data.homes[i].id);
 
-				this.log.silly('Get all rooms');
-				try {
-
-					await this.DoZones(this.getMe_data.homes[i].id);
-				} catch (error) {
-					this.log.error('Issue in Get all rooms ' + error);
-				}
 				//set all outdated states to NULL
-				await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.*');
+				step = 'Set to null';
+				if (this.startprocedure) {
+					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.*');
+				} else {
+					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Rooms.*');
+				}
 			}
 
 			if (conn_state === undefined || conn_state === null) {
@@ -335,6 +321,7 @@ class Tado extends utils.Adapter {
 					this.setState('info.connection', true, true);
 				}
 			}
+			this.startprocedure = false;
 
 			// Clear running timer
 			(function () { if (polling) { clearTimeout(polling); polling = null; } })();
@@ -343,7 +330,7 @@ class Tado extends utils.Adapter {
 				this.DoConnect();
 			}, intervall_time);
 		} catch (error) {
-			this.log.error(`Error in data refresh : ${error}`);
+			this.log.error(`Error in data refresh at step ${step}: ${error}`);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
 			// retry connection
@@ -493,13 +480,14 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	}
 
-	clearZoneOverlay(home_id, zone_id) {
-		let response = this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
-		this.DoConnect();
-		return response;
+	async clearZoneOverlay(home_id, zone_id) {
+		await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
-	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
+	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
 		const config = {
 			setting: {
 				type: type,
@@ -536,7 +524,11 @@ class Tado extends utils.Adapter {
 		}
 
 		this.log.info(`Send API ZoneOverlay API call Home: ${home_id} zone : ${zone_id} config: ${JSON.stringify(config)}`);
-		return this.poolApiCall(home_id, zone_id, config);
+		let result = await this.poolApiCall(home_id, zone_id, config);
+		await JsonExplorer.setLastStartTime();
+		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 1);
+		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 1);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
 	/**
@@ -553,8 +545,8 @@ class Tado extends utils.Adapter {
 				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
 				that.log.info(`API called with  ${JSON.stringify(config)}`);
-				that.DoConnect();
-				that.log.debug('Data refreshed (DoConnect()) called');
+				//that.DoConnect();
+				//that.log.debug('Data refreshed (DoConnect()) called');
 				resolve(apiResponse);
 			}, 750);
 		});
