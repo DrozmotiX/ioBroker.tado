@@ -33,7 +33,6 @@ let polling; // Polling timer
 let pooltimer = [];
 
 class Tado extends utils.Adapter {
-
 	/**
 	 * @param {Partial<ioBroker.AdapterOptions>} [options={}]
 	 */
@@ -152,74 +151,68 @@ class Tado extends utils.Adapter {
 					}
 					this.log.debug('Room mode set : ' + set_mode);
 
-					for (const x in deviceId) {
-						this.log.debug('Device id channel : ' + deviceId[x]);
+					let x = deviceId.length - 1;
+					this.log.info(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
 
-						switch (deviceId[x]) {
-							case ('overlayClearZone'):
-								this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
-								await this.clearZoneOverlay(deviceId[2], deviceId[4]);
-								//this.DoConnect();
-								break;
+					switch (deviceId[x]) {
+						case ('overlayClearZone'):
+							this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
+							await this.clearZoneOverlay(deviceId[2], deviceId[4]);
+							break;
 
-							case ('celsius'):
-								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
-								this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								//this.DoConnect();
-								break;
+						case ('celsius'):
+							if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
+							this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
+							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+							break;
 
-							case ('durationInSeconds'):
-								set_mode = 'TIMER';
-								this.log.info(`DurationInSecond changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_durationInSeconds}`);
-								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.typeSkillBasedApp`, set_mode, true);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								//this.DoConnect();
-								break;
+						case ('durationInSeconds'):
+							set_mode = 'TIMER';
+							this.log.info(`DurationInSecond changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_durationInSeconds}`);
+							this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.typeSkillBasedApp`, set_mode, true);
+							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+							break;
 
-							case ('fanSpeed'):
-								this.log.info(`FanSpeed changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_fanSpeed}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								break;
+						case ('fanSpeed'):
+							this.log.info(`FanSpeed changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_fanSpeed}`);
+							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+							break;
 
-							case ('mode'):
-								this.log.info(`Mode changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_tadomode}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								break;
+						case ('mode'):
+							this.log.info(`Mode changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_tadomode}`);
+							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+							break;
 
-							case ('typeSkillBasedApp'):
-								if (set_mode == 'NO_OVERLAY') { break; }
-								this.log.info(`TypeSkillBasedApp changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_mode}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								//this.DoConnect();
-								if (set_mode == 'MANUAL') {
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+						case ('typeSkillBasedApp'):
+							if (set_mode == 'NO_OVERLAY') { break; }
+							this.log.info(`TypeSkillBasedApp changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_mode}`);
+							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+							if (set_mode == 'MANUAL') {
+								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
+								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
+								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+							}
+							break;
+
+						case ('power'):
+							if (set_mode == 'NO_OVERLAY') {
+								if (set_power == 'ON') {
+									this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
+									await this.clearZoneOverlay(deviceId[2], deviceId[4]);
 								}
-								break;
-
-							case ('power'):
-								if (set_mode == 'NO_OVERLAY') {
-									if (set_power == 'ON') {
-										this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
-										await this.clearZoneOverlay(deviceId[2], deviceId[4]);
-									}
-									else {
-										set_mode = 'MANUAL';
-										this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
-										await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-									}
-								} else {
+								else {
+									set_mode = 'MANUAL';
 									this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
 									await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								}
-								//this.DoConnect();
-								break;
-							default:
-						}
+							} else {
+								this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
+								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+							}
+							break;
+						default:
 					}
-					this.log.debug('State change detected from different source then adapter');
+					this.log.debug('State change detected from different source than adapter');
 					this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 				} catch (error) {
 					this.log.error(`Issue at state change: ${error}`);
@@ -526,8 +519,8 @@ class Tado extends utils.Adapter {
 		this.log.info(`Send API ZoneOverlay API call Home: ${home_id} zone : ${zone_id} config: ${JSON.stringify(config)}`);
 		let result = await this.poolApiCall(home_id, zone_id, config);
 		await JsonExplorer.setLastStartTime();
-		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 1);
-		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 1);
+		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
+		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
@@ -640,7 +633,7 @@ class Tado extends utils.Adapter {
 		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
 		this.log.debug('MobileDeviceSettings_Data Result : ' + JSON.stringify(MobileDeviceSettings_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		JsonExplorer.TraverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.setting`, true, true, 0, 0);
+		JsonExplorer.TraverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true, 0, 2);
 	}
 
 	async DoZones(HomeId) {
@@ -674,7 +667,7 @@ class Tado extends utils.Adapter {
 		this.log.debug('ZoneStates_data Result for zone : ' + ZoneId + ' and value : ' + JSON.stringify(ZonesState_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
-		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 1);
+		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
 	}
 
 	/*
@@ -703,7 +696,7 @@ class Tado extends utils.Adapter {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result : ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 0);
+		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 2);
 	}
 
 	/**
@@ -724,14 +717,14 @@ class Tado extends utils.Adapter {
 			this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
 			this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
-			await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
-				type: 'channel',
+			await this.setObjectNotExistsAsync(HomeId + '._JSON_response', {
+				type: 'device',
 				common: {
 					name: 'Plain JSON data from API',
 				},
 				native: {},
 			});
-			await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
+			await this.create_state(HomeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
 		}
 	}
 
