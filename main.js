@@ -60,6 +60,7 @@ class Tado extends utils.Adapter {
 	async onReady() {
 
 		// Reset the connection indicator during startup
+		this.log.info(`Started with JSON-Explorer version "${JsonExplorer.version}"`);
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
 
@@ -1351,7 +1352,7 @@ class Tado extends utils.Adapter {
 							native: {},
 						});
 
-						this.create_state(state_root_states + '.' + i + '.clearZoneOverlay', 'clearZoneOverlay', '');
+						this.create_state(state_root_states + '.' + i + '.clearZoneOverlay', 'clearZoneOverlay', false);
 
 						for (const x in ZonesState_data[i]) {
 
@@ -1623,32 +1624,33 @@ class Tado extends utils.Adapter {
 	/**
 	 * @param {string} state
 	 * @param {string} name
-	 * @param {string | null} value
+	 * @param {string | null | boolean} value
 	 */
 	async create_state(state, name, value) {
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name + ' with value : ' + value);
 		const intervall_time = (this.config.intervall * 4);
-		if (value) {
+		if (value != undefined) {
 			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
 		}
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
-		this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
-		this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
+		if (this.log.level == 'debug' || this.log.level == 'silly') {
+			this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
+			this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
-		await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
-			type: 'channel',
-			common: {
-				name: 'Plain JSON data from API',
-			},
-			native: {},
-		});
+			await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
+				type: 'channel',
+				common: {
+					name: 'Plain JSON data from API',
+				},
+				native: {},
+			});
 
-		// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
-		await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
-
+			// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
+			await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
+		}
 	}
 
 	async Count_remainingTimeInSeconds(state, value) {

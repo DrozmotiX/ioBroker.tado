@@ -26,6 +26,10 @@ If you like my work, please feel free to provide a personal donation
     ### __WORK IN PROGRESS__
 -->
 
+### __WORK IN PROGRESS__
+* (HGlab01) prepare for js-controller v3.3.1 (has wrong type "xxxx" but has to be "yyyy")
+* improve state creation
+
 ### 0.2.6 (2021-03-20)
 * (HGlab01) apply formatting for main.js
 * (HGlab01) add quickActionsEnabled (#164)
