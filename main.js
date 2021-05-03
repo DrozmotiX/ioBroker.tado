@@ -1555,9 +1555,11 @@ class Tado extends utils.Adapter {
 						if (ZonesState_data[i] == null) {
 							const states = await this.getStatesAsync(state_root_states + '.' + i + '.*');
 							for (const idS in states) {
-								this.log.debug('State to null for ' + idS);
-								//await this.setStateAsync(idS, {val: null, ack: true});
-								this.create_state(idS, idS.substr(idS.lastIndexOf('.') + 1, idS.length), null);
+								let name = idS.substr(idS.lastIndexOf('.') + 1, idS.length);
+								if (name != 'clearZoneOverlay') {
+									this.log.debug('State to null for ' + idS);
+									this.create_state(idS, name, null);
+								}
 							}
 						}
 						break;
@@ -1624,7 +1626,7 @@ class Tado extends utils.Adapter {
 	/**
 	 * @param {string} state
 	 * @param {string} name
-	 * @param {string | null | boolean} value
+	 * @param {any} value
 	 */
 	async create_state(state, name, value) {
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
