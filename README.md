@@ -27,8 +27,9 @@ If you like my work, please feel free to provide a personal donation
 -->
 
 ### __WORK IN PROGRESS__
-* (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy")
+* (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy") (#214)
 * (HGlab01) improve state creation
+* (HGlab01) Decrease CPU consumption (#192)
 
 ### 0.2.6 (2021-03-20)
 * (HGlab01) apply formatting for main.js
