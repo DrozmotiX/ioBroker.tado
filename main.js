@@ -1630,7 +1630,7 @@ class Tado extends utils.Adapter {
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name + ' with value : ' + value);
 		const intervall_time = (this.config.intervall * 4);
-		if (value != undefined) {
+		if (value !== undefined) {
 			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
 		}
 	}
