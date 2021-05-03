@@ -736,7 +736,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				case ('skills'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
+					this.create_state(HomeId + '._info.' + i, i, JSON.stringify(this.Home_data[i]));
 					break;
 
 				case ('christmasModeEnabled'):
