@@ -229,9 +229,12 @@ class Tado extends utils.Adapter {
 								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								//this.DoConnect();
 								if (set_mode == 'MANUAL') {
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
+									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
+									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`,`expiry`, null);
+									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`,`durationInSeconds`, null);
+									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`,`remainingTimeInSeconds`, null);
 								}
 								break;
 
