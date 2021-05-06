@@ -816,13 +816,11 @@ class Tado extends utils.Adapter {
 					break;
 
 				case ('enabledFeatures'):
-					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
+					this.create_state(HomeId + '._info. ' + i, i, JSON.stringify(this.Home_data[i]));
 					break;
-					
+
 				default:
 					this.log.warn(`Send this info to developer !!! { Unhandable information found in DoHome: ${JSON.stringify(i)} with value: ${JSON.stringify(this.Home_data[i])}`);
-
-
 			}
 			// }
 		}
