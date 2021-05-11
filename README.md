@@ -26,6 +26,12 @@ If you like my work, please feel free to provide a personal donation
     ### __WORK IN PROGRESS__
 -->
 
+### 0.2.7-2 (2021-05-11)
+* (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy") (#214)
+* (HGlab01) improve state creation by using iobroker-jsonexplorer
+* (HGlab01) improve CPU usage (#192)
+* (HGlab01) add attribute enabledFeatures (#226)
+
 ### 0.2.6 (2021-03-20)
 * (HGlab01) apply formatting for main.js
 * (HGlab01) add quickActionsEnabled (#164)

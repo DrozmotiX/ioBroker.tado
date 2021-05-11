@@ -25,7 +25,8 @@ const tado_config = {
 };
 
 const oauth2 = require('simple-oauth2').create(tado_config);
-const state_attr = require(__dirname + '/lib/state_attr.js');
+const JsonExplorer = require('iobroker-jsonexplorer');
+const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
 let polling; // Polling timer
 let pooltimer = [];
@@ -50,6 +51,7 @@ class Tado extends utils.Adapter {
 		this._accessToken = null;
 		this.getMe_data = null;
 		this.Home_data = null;
+		JsonExplorer.init(this, state_attr);
 	}
 
 	/**
@@ -58,6 +60,7 @@ class Tado extends utils.Adapter {
 	async onReady() {
 
 		// Reset the connection indicator during startup
+		this.log.info(`Started with JSON-Explorer version "${JsonExplorer.version}"`);
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
 
@@ -226,9 +229,12 @@ class Tado extends utils.Adapter {
 								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								//this.DoConnect();
 								if (set_mode == 'MANUAL') {
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
-									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
+									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
+									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`,`expiry`, null);
+									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`,`durationInSeconds`, null);
+									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`,`remainingTimeInSeconds`, null);
 								}
 								break;
 
@@ -733,7 +739,7 @@ class Tado extends utils.Adapter {
 					break;
 
 				case ('skills'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
+					this.create_state(HomeId + '._info.' + i, i, JSON.stringify(this.Home_data[i]));
 					break;
 
 				case ('christmasModeEnabled'):
@@ -809,10 +815,12 @@ class Tado extends utils.Adapter {
 					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
 					break;
 
+				case ('enabledFeatures'):
+					this.create_state(HomeId + '._info. ' + i, i, JSON.stringify(this.Home_data[i]));
+					break;
+
 				default:
 					this.log.warn(`Send this info to developer !!! { Unhandable information found in DoHome: ${JSON.stringify(i)} with value: ${JSON.stringify(this.Home_data[i])}`);
-
-
 			}
 			// }
 		}
@@ -1308,7 +1316,7 @@ class Tado extends utils.Adapter {
 						break;
 
 					case ('geolocationOverride'):
-						this.create_state(state_root_states + '.' + i, i, state_root_states[i]);
+						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
 						break;
 
 
@@ -1349,7 +1357,7 @@ class Tado extends utils.Adapter {
 							native: {},
 						});
 
-						this.create_state(state_root_states + '.' + i + '.clearZoneOverlay', 'clearZoneOverlay', '');
+						this.create_state(state_root_states + '.' + i + '.clearZoneOverlay', 'clearZoneOverlay', false);
 
 						for (const x in ZonesState_data[i]) {
 
@@ -1383,7 +1391,7 @@ class Tado extends utils.Adapter {
 													if (ZonesState_data[i][x][y].celsius === null) {
 														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, null);
 													} else {
-														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius, false);
+														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius);
 													}
 
 													break;
@@ -1518,7 +1526,7 @@ class Tado extends utils.Adapter {
 									if (ZonesState_data[i][y].celsius === null) {
 										this.create_state(state_root_states + '.' + i + '.' + y, y, null);
 									} else {
-										this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius, false);
+										this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius);
 									}
 								} else {
 									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y]);
@@ -1552,9 +1560,11 @@ class Tado extends utils.Adapter {
 						if (ZonesState_data[i] == null) {
 							const states = await this.getStatesAsync(state_root_states + '.' + i + '.*');
 							for (const idS in states) {
-								this.log.debug('State to null for ' + idS);
-								//await this.setStateAsync(idS, {val: null, ack: true});
-								this.create_state(idS, idS.substr(idS.lastIndexOf('.') + 1, idS.length), null);
+								let name = idS.substr(idS.lastIndexOf('.') + 1, idS.length);
+								if (name != 'clearZoneOverlay') {
+									this.log.debug('State to null for ' + idS);
+									this.create_state(idS, name, null);
+								}
 							}
 						}
 						break;
@@ -1618,118 +1628,36 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async create_state(state, name, value, expire) {
+	/**
+	 * @param {string} state
+	 * @param {string} name
+	 * @param {any} value
+	 */
+	async create_state(state, name, value) {
 		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
 		this.log.debug('Create_state called for : ' + name + ' with value : ' + value);
 		const intervall_time = (this.config.intervall * 4);
-		let writable = false;
-
-
-		// Define write state information
-		try {
-
-			if (state_attr[name].write === true) {
-				this.subscribeStates(state);
-				writable = true;
-				this.log.debug('State subscribed!: ' + state);
-			} else {
-				state_attr[name].write = false;
-			}
-
-		} catch (error) {
-
-			writable = false;
-
+		if (value !== undefined) {
+			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
 		}
-
-		this.log.debug('Write value : ' + writable);
-
-		try {
-			await this.setObjectNotExistsAsync(state, {
-				type: 'state',
-				common: {
-					name: state_attr[name].name,
-					role: state_attr[name].role,
-					type: state_attr[name].type,
-					unit: state_attr[name].unit,
-					read: true,
-					write: writable
-				},
-				native: {},
-			});
-			// await this.setState(state, {val: value, ack: true, expire: intervall_time});
-			try {
-				if (expire === false) {
-					await this.setState(state, { val: value, ack: true });
-				} else {
-					await this.setState(state, { val: value, ack: true, expire: intervall_time });
-				}
-
-			} catch (error) {
-				await this.setState(state, { val: value, ack: true, expire: intervall_time });
-
-			}
-
-
-			try {
-
-				await this.extendObjectAsync(state, {
-					type: 'state',
-					common: {
-						states: state_attr[name].states
-					}
-				});
-
-			} catch (error) {
-
-				// no states attributes found for state
-
-			}
-
-		} catch (error) {
-
-			this.log.debug('No type defined for name : ' + name + '|value : |' + value);
-			await this.setObjectNotExistsAsync(state, {
-				type: 'state',
-				common: {
-					name: name,
-					read: true,
-					write: false,
-					role: 'state',
-					type: 'mixed'
-				},
-				native: {},
-			});
-			// await this.setState(state, {val: value, ack: true, expire: intervall_time});
-			try {
-				if (expire === false) {
-					await this.setState(state, { val: value, ack: true });
-				} else {
-					await this.setState(state, { val: value, ack: true, expire: intervall_time });
-				}
-			} catch (error) {
-				await this.setState(state, { val: value, ack: true, expire: intervall_time });
-
-			}
-		}
-
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
-		this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
-		this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
+		if (this.log.level == 'debug' || this.log.level == 'silly') {
+			this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
+			this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
-		await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
-			type: 'channel',
-			common: {
-				name: 'Plain JSON data from API',
-			},
-			native: {},
-		});
+			await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
+				type: 'channel',
+				common: {
+					name: 'Plain JSON data from API',
+				},
+				native: {},
+			});
 
-		// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
-		await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
-
+			// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
+			await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
+		}
 	}
 
 	async Count_remainingTimeInSeconds(state, value) {
