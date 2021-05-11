@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.7-0",
+        "version": "0.2.7-2",
         "news": {
-            "0.2.7-0": {
+            "0.2.7-2": {
                 "en": "prepare for js-controller v3.3.x (has wrong type \"xxxx\" but has to be \"yyyy\") (#214)\nimprove state creation\nimprove CPU usage (#192) (#192)\nadd attribute enabledFeatures (#226)",
                 "de": "bereite dich auf js-controller v3.3.x vor (hat den falschen Typ \"xxxx\", muss aber \"yyyy\" sein) (# 214)\ndie Schaffung von Staaten verbessern\nVerbesserung der CPU-Auslastung (# 192) (# 192)\nAttribut enabledFeatures hinzufügen (# 226)",
                 "ru": "подготовиться к js-контроллеру v3.3.x (имеет неправильный тип \"xxxx\", но должен быть \"yyyy\") (# 214)\nулучшить создание государства\nулучшить использование ЦП (# 192) (# 192)\nдобавить атрибут enabledFeatures (# 226)",

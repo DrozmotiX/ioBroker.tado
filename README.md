@@ -26,7 +26,7 @@ If you like my work, please feel free to provide a personal donation
     ### __WORK IN PROGRESS__
 -->
 
-### 0.2.7-0 (2021-05-11)
+### 0.2.7-2 (2021-05-11)
 * (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy") (#214)
 * (HGlab01) improve state creation
 * (HGlab01) improve CPU usage (#192) (#192)
