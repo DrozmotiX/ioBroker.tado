@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.7-alpha1",
+        "version": "0.2.7-0",
         "news": {
+            "0.2.7-0": {
+                "en": "prepare for js-controller v3.3.x (has wrong type \"xxxx\" but has to be \"yyyy\") (#214)\nimprove state creation\nimprove CPU usage (#192) (#192)\nadd attribute enabledFeatures (#226)",
+                "de": "bereite dich auf js-controller v3.3.x vor (hat den falschen Typ \"xxxx\", muss aber \"yyyy\" sein) (# 214)\ndie Schaffung von Staaten verbessern\nVerbesserung der CPU-Auslastung (# 192) (# 192)\nAttribut enabledFeatures hinzufügen (# 226)",
+                "ru": "подготовиться к js-контроллеру v3.3.x (имеет неправильный тип \"xxxx\", но должен быть \"yyyy\") (# 214)\nулучшить создание государства\nулучшить использование ЦП (# 192) (# 192)\nдобавить атрибут enabledFeatures (# 226)",
+                "pt": "prepare-se para js-controller v3.3.x (tem tipo errado \"xxxx\", mas tem que ser \"yyyy\") (# 214)\nmelhorar a criação de estado\nmelhorar o uso da CPU (# 192) (# 192)\nadicionar atributo enabledFeatures (# 226)",
+                "nl": "bereid je voor op js-controller v3.3.x (heeft het verkeerde type \"xxxx\" maar moet \"yyyy\" zijn) (# 214)\nde creatie van de staat verbeteren\nCPU-gebruik verbeteren (# 192) (# 192)\nkenmerk toevoegen enabledFeatures (# 226)",
+                "fr": "se préparer pour js-controller v3.3.x (le type \"xxxx\" est incorrect mais doit être \"yyyy\") (# 214)\naméliorer la création d'état\naméliorer l'utilisation du processeur (# 192) (# 192)\najouter un attribut activéFeatures (# 226)",
+                "it": "prepararsi per js-controller v3.3.x (ha un tipo sbagliato \"xxxx\" ma deve essere \"yyyy\") (# 214)\nmigliorare la creazione dello stato\nmigliorare l'utilizzo della CPU (# 192) (# 192)\naggiungi attributo enabledFeatures (# 226)",
+                "es": "prepárese para js-controller v3.3.x (tiene el tipo incorrecto \"xxxx\" pero tiene que ser \"yyyy\") (# 214)\nmejorar la creación de estados\nmejorar el uso de la CPU (# 192) (# 192)\nagregar atributo enabledFeatures (# 226)",
+                "pl": "przygotuj się na js-controller v3.3.x (ma zły typ „xxxx”, ale musi być „yyyy”) (# 214)\npoprawić tworzenie państw\npopraw wykorzystanie procesora (# 192) (# 192)\ndodaj atrybut włączony",
+                "zh-cn": "为js-controller v3.3.x做准备（类型“ xxxx”错误，但必须为“ yyyy”）（＃214）\n改善国家创造\n提高CPU使用率（＃192）（＃192）\n添加属性enabledFeatures（＃226）"
+            },
             "0.2.6": {
                 "en": "apply formatting for main.js\nadd quickActionsEnabled (#164)\nsupport HOT_WATER devices (#138)\nsupport AIR_CONDITIONING devices (#146)\nImplement pool handling for setZoneOverlay\nfix issue: state has no existing object (#184)\nadd cleaning function for existing timer 'polling'\nstate_attr.js: attribute 'support' was defined twice",
                 "de": "Formatierung für main.js anwenden\nfüge quickActionsEnabled hinzu (# 164)\nunterstützt HOT_WATER-Geräte (# 138)\nunterstützt AIR_CONDITIONING-Geräte (# 146)\nImplementieren Sie die Poolbehandlung für setZoneOverlay\nProblem behoben: Status hat kein vorhandenes Objekt (# 184)\nReinigungsfunktion für vorhandene Timer-Abfrage hinzufügen '\nstate_attr.js: Das Attribut 'support' wurde zweimal definiert",
