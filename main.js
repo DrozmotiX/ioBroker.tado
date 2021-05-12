@@ -420,9 +420,9 @@ class Tado extends utils.Adapter {
 
 	// Read account information and all home related data
 	getHome(home_id) {
+		let result = this.getTemperatureOffset('RU2948924928');
+		this.log.info(JSON.stringify(result));
 		return this.apiCall(`/api/v2/homes/${home_id}`);
-		let result = getTemperatureOffset('DIE RICHTIGE ID');
-		this.log.info(JSON.STRINGIFY(result));
 	}
 
 	// Get weather information for home location
@@ -564,7 +564,7 @@ class Tado extends utils.Adapter {
 	}
 	
 	getTemperatureOffset(device_id) {
-        	return this.apiCall(/api/v2/devices/${device_id}/temperatureOffset);
+		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
 	}
 
 	/*
