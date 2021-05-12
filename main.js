@@ -662,7 +662,7 @@ class Tado extends utils.Adapter {
 				for (const l in this.Zones_data[j][k]) {
 					let ZoneId = this.Zones_data[j].id;
 					let DeviceId = this.Zones_data[j][k][l].serialNo;
-					if (DeviceId != undefined) {
+					if (DeviceId != undefined && this.Zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
 						this.log.info('DeviceID found: ' + JSON.stringify(this.Zones_data[j][k][l].serialNo));
 						this.DoTemperatureOffset(HomeId, ZoneId, DeviceId);
 						this.Zones_data[j][k][l].id = this.Zones_data[j][k][l].serialNo;
