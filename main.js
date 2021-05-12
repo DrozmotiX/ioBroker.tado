@@ -424,7 +424,7 @@ class Tado extends utils.Adapter {
 	}
 
 	// Get weather information for home location
-	async getWeather(home_id) {
+	getWeather(home_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/weather`);
 	}
 
