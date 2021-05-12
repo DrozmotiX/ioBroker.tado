@@ -425,8 +425,6 @@ class Tado extends utils.Adapter {
 
 	// Get weather information for home location
 	async getWeather(home_id) {
-		let result = await this.getTemperatureOffset('RU2948924928');
-		this.log.info('AAAAAA: ' + JSON.stringify(result));
 		return this.apiCall(`/api/v2/homes/${home_id}/weather`);
 	}
 
@@ -562,11 +560,9 @@ class Tado extends utils.Adapter {
 	getTimeTables(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
 	}
-	
+
 	getTemperatureOffset(device_id) {
-		this.log.info(`/api/v2/devices/${device_id}/temperatureOffset`);
-		//return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
-		return this.apiCall(`/api/v2/devices/RU2948924928/temperatureOffset`);
+		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
 	}
 
 	/*
@@ -599,6 +595,17 @@ class Tado extends utils.Adapter {
 		this.log.debug('Weather_data Result : ' + JSON.stringify(weather_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
 		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
+	}
+
+	async DoTemperatureOffset(HomeId, ZoneId, DeviceId) {
+		const offset = await this.getTemperatureOffset(DeviceId);
+		this.log.info(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
+		this.DoWriteJsonRespons(HomeId, `Stage_99_Offset_${HomeId}`, offset);
+		if (offset.celsius) offset.offsetCelsius = offset.celsius;
+		if (offset.fahrenheit) offset.offsetFahrenheit = offset.fahrenheit;
+		delete offset.celsius;
+		delete offset.fahrenheit;
+		JsonExplorer.TraverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
 	}
 
 	async DoDevices(HomeId) {
@@ -648,6 +655,22 @@ class Tado extends utils.Adapter {
 		this.Zones_data = await this.getZones(HomeId);
 		this.log.debug('Zones_data Result : ' + JSON.stringify(this.Zones_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_08_ZonesData', this.Zones_data);
+
+		//Search for DeviceIDs to get Offset
+		for (const j in this.Zones_data) {
+			for (const k in this.Zones_data[j]) {
+				for (const l in this.Zones_data[j][k]) {
+					let ZoneId = this.Zones_data[j].id;
+					let DeviceId = this.Zones_data[j][k][l].serialNo;
+					if (DeviceId != undefined) {
+						this.log.info('DeviceID found: ' + JSON.stringify(this.Zones_data[j][k][l].serialNo));
+						this.DoTemperatureOffset(HomeId, ZoneId, DeviceId);
+						this.Zones_data[j][k][l].id = this.Zones_data[j][k][l].serialNo;
+					}
+				}
+			}
+		}
+
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
 
 		for (const i in this.Zones_data) {
