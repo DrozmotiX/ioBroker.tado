@@ -114,8 +114,12 @@ class Tado extends utils.Adapter {
 					let set_type = '';
 					let set_fanSpeed = '';
 					let set_tadomode = '';
+					let offset = null;
+					let set_offset = 0;
 
 					this.log.debug('GETS INTERESSTING!!!');
+
+					//if (deviceId[x])   //ACT HERE!!!
 
 					const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature.celsius');
 					const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
@@ -155,6 +159,13 @@ class Tado extends utils.Adapter {
 					this.log.info(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
 
 					switch (deviceId[x]) {
+						case ('offsetCelsius'):
+							offset = await this.getStateAsync(id);
+							// @ts-ignore
+							set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
+							this.log.info('OFFSET changed: ' + id);
+							this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${deviceId[4]}' to value '${set_offset}'`);
+							break;
 						case ('overlayClearZone'):
 							this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
 							await this.clearZoneOverlay(deviceId[2], deviceId[4]);
