@@ -621,12 +621,13 @@ class Tado extends utils.Adapter {
 
 	async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
 		if (offset == null) {
+			this.log.info('Call getTemperatureOffset');
 			offset = await this.getTemperatureOffset(DeviceId);
 		}
 		this.log.info(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
 		this.DoWriteJsonRespons(HomeId, `Stage_99_Offset_${HomeId}`, offset);
-		if (offset.celsius) offset.offsetCelsius = offset.celsius;
-		if (offset.fahrenheit) offset.offsetFahrenheit = offset.fahrenheit;
+		if (offset.celsius != undefined) offset.offsetCelsius = offset.celsius;
+		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
 		delete offset.celsius;
 		delete offset.fahrenheit;
 		JsonExplorer.TraverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
