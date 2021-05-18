@@ -114,114 +114,112 @@ class Tado extends utils.Adapter {
 					let set_type = '';
 					let set_fanSpeed = '';
 					let set_tadomode = '';
-					let offset = null;
 					let set_offset = 0;
 
 					this.log.debug('GETS INTERESSTING!!!');
 
-					//if (deviceId[x])   //ACT HERE!!!
-
-					const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature.celsius');
-					const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
-					const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
-					const type = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.type');
-					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
-					const tadomode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.mode');
-					const fanSpeed = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.fanSpeed');
-
-					set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
-					this.log.debug('Mode set : ' + set_tadomode);
-					set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
-					this.log.debug('FanSpeed set : ' + set_tadomode);
-					// @ts-ignore
-					set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
-					this.log.debug('DurationInSeconds set : ' + set_durationInSeconds);
-					// @ts-ignore
-					set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
-					this.log.debug(`Room Temperature set: ${set_temp}`);
-					set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
-					this.log.debug('Room power set : ' + set_power);
-					set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
-					this.log.debug('Type set : ' + set_type);
-
-					if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
-						set_mode = 'NO_OVERLAY';
-					} else {
-						if (mode.val != '') {
-							set_mode = mode.val.toString().toUpperCase();
-						} else {
-							set_mode = 'NEXT_TIME_BLOCK';
-						}
-					}
-					this.log.debug('Room mode set : ' + set_mode);
-
 					let x = deviceId.length - 1;
 					this.log.info(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
 
-					switch (deviceId[x]) {
-						case ('offsetCelsius'):
-							offset = await this.getStateAsync(id);
-							// @ts-ignore
-							set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
-							this.log.info('OFFSET changed: ' + id);
-							this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${deviceId[4]}' to value '${set_offset}'`);
-							break;
-						case ('overlayClearZone'):
-							this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
-							await this.clearZoneOverlay(deviceId[2], deviceId[4]);
-							break;
+					if (deviceId[x] == 'offsetCelsius') {
+						const offset = await this.getStateAsync(id);
+						// @ts-ignore
+						set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
+						this.log.info('OFFSET changed: ' + id);
+						this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${deviceId[4]}' to value '${set_offset}'`);
+					} else {
+						const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature.celsius');
+						const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
+						const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
+						const type = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.type');
+						const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
+						const tadomode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.mode');
+						const fanSpeed = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.fanSpeed');
 
-						case ('celsius'):
-							if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
-							this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
-							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-							break;
+						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
+						this.log.debug('Mode set: ' + set_tadomode);
+						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
+						this.log.debug('FanSpeed set: ' + set_tadomode);
+						// @ts-ignore
+						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
+						this.log.debug('DurationInSeconds set: ' + set_durationInSeconds);
+						// @ts-ignore
+						set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
+						this.log.debug(`Room Temperature set: ${set_temp}`);
+						set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
+						this.log.debug('Room power set : ' + set_power);
+						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
+						this.log.debug('Type set : ' + set_type);
 
-						case ('durationInSeconds'):
-							set_mode = 'TIMER';
-							this.log.info(`DurationInSecond changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_durationInSeconds}`);
-							this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.typeSkillBasedApp`, set_mode, true);
-							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-							break;
-
-						case ('fanSpeed'):
-							this.log.info(`FanSpeed changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_fanSpeed}`);
-							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-							break;
-
-						case ('mode'):
-							this.log.info(`Mode changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_tadomode}`);
-							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-							break;
-
-						case ('typeSkillBasedApp'):
-							if (set_mode == 'NO_OVERLAY') { break; }
-							this.log.info(`TypeSkillBasedApp changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_mode}`);
-							await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-							if (set_mode == 'MANUAL') {
-								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
-								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
-								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
+						if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
+							set_mode = 'NO_OVERLAY';
+						} else {
+							if (mode.val != '') {
+								set_mode = mode.val.toString().toUpperCase();
+							} else {
+								set_mode = 'NEXT_TIME_BLOCK';
 							}
-							break;
+						}
+						this.log.debug('Room mode set : ' + set_mode);
 
-						case ('power'):
-							if (set_mode == 'NO_OVERLAY') {
-								if (set_power == 'ON') {
-									this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
-									await this.clearZoneOverlay(deviceId[2], deviceId[4]);
+						switch (deviceId[x]) {
+							case ('overlayClearZone'):
+								this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
+								await this.clearZoneOverlay(deviceId[2], deviceId[4]);
+								break;
+
+							case ('celsius'):
+								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
+								this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
+								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								break;
+
+							case ('durationInSeconds'):
+								set_mode = 'TIMER';
+								this.log.info(`DurationInSecond changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_durationInSeconds}`);
+								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.typeSkillBasedApp`, set_mode, true);
+								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								break;
+
+							case ('fanSpeed'):
+								this.log.info(`FanSpeed changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_fanSpeed}`);
+								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								break;
+
+							case ('mode'):
+								this.log.info(`Mode changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_tadomode}`);
+								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								break;
+
+							case ('typeSkillBasedApp'):
+								if (set_mode == 'NO_OVERLAY') { break; }
+								this.log.info(`TypeSkillBasedApp changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_mode}`);
+								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								if (set_mode == 'MANUAL') {
+									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
+									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
+									this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
 								}
-								else {
-									set_mode = 'MANUAL';
+								break;
+
+							case ('power'):
+								if (set_mode == 'NO_OVERLAY') {
+									if (set_power == 'ON') {
+										this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
+										await this.clearZoneOverlay(deviceId[2], deviceId[4]);
+									}
+									else {
+										set_mode = 'MANUAL';
+										this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
+										await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+									}
+								} else {
 									this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
 									await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								}
-							} else {
-								this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-							}
-							break;
-						default:
+								break;
+							default:
+						}
 					}
 					this.log.debug('State change detected from different source than adapter');
 					this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
