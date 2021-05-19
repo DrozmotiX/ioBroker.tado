@@ -28,14 +28,11 @@ const oauth2 = require('simple-oauth2').create(tado_config);
 const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
+
 let polling; // Polling timer
 let pooltimer = [];
-const counter = []; // counter timer
-
-// const fs = require('fs');
 
 class Tado extends utils.Adapter {
-
 	/**
 	 * @param {Partial<ioBroker.AdapterOptions>} [options={}]
 	 */
@@ -51,6 +48,7 @@ class Tado extends utils.Adapter {
 		this._accessToken = null;
 		this.getMe_data = null;
 		this.Home_data = null;
+		this.startprocedure = null;
 		JsonExplorer.init(this, state_attr);
 	}
 
@@ -58,12 +56,11 @@ class Tado extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-
+		this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
+		this.startprocedure = true;
 		// Reset the connection indicator during startup
-		this.log.info(`Started with JSON-Explorer version "${JsonExplorer.version}"`);
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
-
 	}
 
 	/**
@@ -108,12 +105,7 @@ class Tado extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			if (state.ack === false) {
-
 				try {
-
-					// const deviceId = id.split('.');
-					const deviceId = id.split('.');
-
 					let set_temp = 0;
 					let set_mode = '';
 					let set_power = '';
@@ -121,159 +113,127 @@ class Tado extends utils.Adapter {
 					let set_type = '';
 					let set_fanSpeed = '';
 					let set_tadomode = '';
-
-					const temperature = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.temperature');
-					const mode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.typeSkillBasedApp');
-					const power = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.power');
-					const type = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.type');
-					const durationInSeconds = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.overlay.termination.durationInSeconds');
-					const tadomode = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.mode');
-					const fanSpeed = await this.getStateAsync(deviceId[2] + '.Rooms.' + deviceId[4] + '.setting.fanSpeed');
+					let set_offset = 0;
 
 					this.log.debug('GETS INTERESSTING!!!');
+					const deviceId = id.split('.');
+					let x = deviceId.length - 1;
+					this.log.info(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
 
-					if (tadomode == null || tadomode == undefined || tadomode.val == null) {
-						set_tadomode = 'COOL';
-					} else {
-						set_tadomode = tadomode.val.toString().toUpperCase();
-					}
-					this.log.debug('Mode set : ' + set_tadomode);
+					const home_id = deviceId[2];
+					const zone_id = deviceId[4];
 
-					if (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) {
-						set_fanSpeed = 'AUTO';
-					} else {
-						set_fanSpeed = fanSpeed.val.toString().toUpperCase();
-					}
-					this.log.debug('FanSpeed set : ' + set_tadomode);
-
-					if (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) {
-						set_durationInSeconds = 1800;
-					} else {
+					if (deviceId[x] == 'offsetCelsius') {
+						const offset = await this.getStateAsync(id);
+						const device_id = deviceId[6];
 						// @ts-ignore
-						set_durationInSeconds = parseInt(durationInSeconds.val);
-					}
-					this.log.debug('DurationInSeconds set : ' + set_durationInSeconds);
+						set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
+						this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
+						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
+					} else {
+						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
+						const mode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.typeSkillBasedApp');
+						const power = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.power');
+						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
+						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
+						const tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
+						const fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
 
-					if (temperature !== null && temperature !== undefined && temperature.val != 0) {
+						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
+						this.log.debug('Mode set: ' + set_tadomode);
+						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
+						this.log.debug('FanSpeed set: ' + set_tadomode);
 						// @ts-ignore
-						set_temp = parseFloat(temperature.val);
-					} else {
-						set_temp = 20;
-					}
-					this.log.debug(`Room Temperature set: ${set_temp}`);
+						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
+						this.log.debug('DurationInSeconds set: ' + set_durationInSeconds);
+						// @ts-ignore
+						set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
+						this.log.debug(`Room Temperature set: ${set_temp}`);
+						set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
+						this.log.debug('Room power set: ' + set_power);
+						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
+						this.log.debug('Type set: ' + set_type);
 
-					if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
-						set_mode = 'NO_OVERLAY';
-					} else {
-						if (mode.val != '') {
-							set_mode = mode.val.toString().toUpperCase();
+						if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
+							set_mode = 'NO_OVERLAY';
 						} else {
-							set_mode = 'NEXT_TIME_BLOCK';
+							if (mode.val != '') {
+								set_mode = mode.val.toString().toUpperCase();
+							} else {
+								set_mode = 'NEXT_TIME_BLOCK';
+							}
 						}
-					}
-					this.log.debug('Room mode set : ' + set_mode);
-
-					if (power == null || power == undefined || power.val == null || power.val == '') {
-						set_power = 'OFF';
-					} else {
-						set_power = power.val.toString().toUpperCase();
-					}
-					this.log.debug('Room power set : ' + set_power);
-
-					if (type == null || type == undefined || type.val == null || type.val == '') {
-						set_type = 'HEATING';
-					} else {
-						set_type = type.val.toString().toUpperCase();
-					}
-					this.log.debug('Type set : ' + set_type);
-
-					for (const x in deviceId) {
-						this.log.debug('Device id channel : ' + deviceId[x]);
+						this.log.debug('Room mode set: ' + set_mode);
 
 						switch (deviceId[x]) {
-
-							case ('clearZoneOverlay'):
-								this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
-								await this.clearZoneOverlay(deviceId[2], deviceId[4]);
-								//this.DoConnect();
+							case ('overlayClearZone'):
+								this.log.info(`Overlay cleared for room '${zone_id}' in home '${home_id}'`);
+								await this.clearZoneOverlay(home_id, zone_id);
 								break;
 
-							case ('temperature'):
+							case ('celsius'):
 								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
-								this.log.info(`Temperature changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_temp}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								//this.DoConnect();
+								set_power = 'ON';
+								this.log.info(`Temperature changed for room '${zone_id}' in home '${home_id}' to '${set_temp}'`);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('durationInSeconds'):
 								set_mode = 'TIMER';
-								this.log.info(`DurationInSecond changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_durationInSeconds}`);
-								this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.typeSkillBasedApp`, set_mode, true);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								//this.DoConnect();
+								this.log.info(`DurationInSecond changed for room: ${zone_id} in home: ${home_id} to API with: ${set_durationInSeconds}`);
+								this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.typeSkillBasedApp`, set_mode, true);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('fanSpeed'):
-								this.log.info(`FanSpeed changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_fanSpeed}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								this.log.info(`FanSpeed changed for room: ${zone_id} in home: ${home_id} to API with: ${set_fanSpeed}`);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('mode'):
-								this.log.info(`Mode changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_tadomode}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								this.log.info(`Mode changed for room: ${zone_id} in home: ${home_id} to API with: ${set_tadomode}`);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('typeSkillBasedApp'):
 								if (set_mode == 'NO_OVERLAY') { break; }
-								this.log.info(`TypeSkillBasedApp changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${set_mode}`);
-								await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								//this.DoConnect();
+								this.log.info(`TypeSkillBasedApp changed for room: ${zone_id} in home: ${home_id} to API with: ${set_mode}`);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								if (set_mode == 'MANUAL') {
-									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`, null, true);
-									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`, null, true);
-									//this.setStateAsync(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`, null, true);
-									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.expiry`,`expiry`, null);
-									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.durationInSeconds`,`durationInSeconds`, null);
-									this.create_state(`${deviceId[2]}.Rooms.${deviceId[4]}.overlay.termination.remainingTimeInSeconds`,`remainingTimeInSeconds`, null);
+									this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.expiry`, null, true);
+									this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.durationInSeconds`, null, true);
+									this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.remainingTimeInSeconds`, null, true);
 								}
 								break;
 
 							case ('power'):
 								if (set_mode == 'NO_OVERLAY') {
 									if (set_power == 'ON') {
-										this.log.info(`Overlay cleared for room: ${deviceId[4]} in home: ${deviceId[2]}`);
-										await this.clearZoneOverlay(deviceId[2], deviceId[4]);
+										this.log.info(`Overlay cleared for room: ${zone_id} in home: ${home_id}`);
+										await this.clearZoneOverlay(home_id, zone_id);
 									}
 									else {
 										set_mode = 'MANUAL';
-										this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
-										await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+										this.log.info(`Power changed for room: ${zone_id} in home: ${home_id} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
+										await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 									}
 								} else {
-									this.log.info(`Power changed for room: ${deviceId[4]} in home: ${deviceId[2]} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
-									await this.setZoneOverlay(deviceId[2], deviceId[4], set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+									this.log.info(`Power changed for room: ${zone_id} in home: ${home_id} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
+									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								}
-								//this.DoConnect();
 								break;
-
 							default:
-
 						}
-
 					}
-
-					this.log.debug('State change detected from different source then adapter');
+					this.log.debug('State change detected from different source than adapter');
 					this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-
 				} catch (error) {
-					this.log.error('Issue at state  change : ' + error);
+					this.log.error(`Issue at state change: ${error}`);
 				}
 
 			} else {
 				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-
 			}
-
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
@@ -281,8 +241,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async DoConnect() {
-		// this.log.info('Username : ' + user + ' Password : ' + pass);
-
+		// this.log.info('Username: ' + user + ' Password: ' + pass);
 		const user = this.config.Username;
 		let pass = this.config.Password;
 
@@ -303,97 +262,72 @@ class Tado extends utils.Adapter {
 					this.log.error(error);
 				}
 			});
-
 		} else {
 			this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
 			this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
 		}
-
 	}
 
 	async DoData_Refresh(user, pass) {
-
 		const intervall_time = (this.config.intervall * 1000);
+		let step = 'start';
 
 		// Get login token
 		try {
-
+			step = 'login';
 			await this.login(user, pass);
-
 			const conn_state = await this.getStateAsync('info.connection');
 			if (conn_state === undefined || conn_state === null) {
 				return;
 			} else {
-
 				if (conn_state.val === false) {
-
 					this.log.info('Connected to Tado cloud, initialyzing ... ');
-
 				}
-
 			}
 
 			// Get Basic data needed for all other querys and store to global variable
+			step = 'getMet_data';
 			if (this.getMe_data === null) {
 				this.getMe_data = await this.getMe();
 			}
-			this.log.debug('GetMe result : ' + JSON.stringify(this.getMe_data));
+			this.log.debug('GetMe result: ' + JSON.stringify(this.getMe_data));
+			//set timestamp for 'Online'-state
+			await JsonExplorer.setLastStartTime();
 
 			for (const i in this.getMe_data.homes) {
 				this.DoWriteJsonRespons(this.getMe_data.homes[i].id, 'Stage_01_GetMe_Data', this.getMe_data);
-				// create device channel for each Home found in getMe
-				await this.setObjectNotExistsAsync(this.getMe_data.homes[i].id.toString(), {
-					type: 'device',
-					common: {
-						name: this.getMe_data.homes[i].name,
-					},
-					native: {},
-				});
-
-				// Write basic data to home specific info channel states
-				await this.DoHome(this.getMe_data.homes[i].id);
-				await this.DoDevices(this.getMe_data.homes[i].id);
-				await this.DoWeather(this.getMe_data.homes[i].id);
-				await this.DoInstallations(this.getMe_data.homes[i].id);
-
-				// this.getInstallations(this.getMe_data.homes[i].id);
-				// await this.DoUsers(this.getMe_data.homes[i].id) 	// User information equal to Weather, ignoring function but keep for history/feature functionality
-				try {
-					await this.DoStates(this.getMe_data.homes[i].id);
-				} catch (error) {
-					//  no info
-				}
-
-				this.log.silly('Get all mobile devices');
-				try {
+				if (this.startprocedure) {
+					step = 'DoHome';
+					await this.DoHome(this.getMe_data.homes[i].id);
+					step = 'DoDevices';
+					await this.DoDevices(this.getMe_data.homes[i].id);
+					step = 'DoMobileDevices';
 					await this.DoMobileDevices(this.getMe_data.homes[i].id);
-				} catch (error) {
-					this.log.silly('Issue in Get all mobile devices' + error);
 				}
+				step = 'DoZones';
+				await this.DoZones(this.getMe_data.homes[i].id);
+				step = 'DoWeather';
+				await this.DoWeather(this.getMe_data.homes[i].id);
 
-				this.log.silly('Get all rooms');
-				try {
-
-					await this.DoZones(this.getMe_data.homes[i].id);
-				} catch (error) {
-					this.log.error('Issue in Get all rooms ' + error);
+				//set all outdated states to NULL
+				step = 'Set to null';
+				if (this.startprocedure) {
+					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.*');
+				} else {
+					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Rooms.*');
 				}
-
 			}
-
 
 			if (conn_state === undefined || conn_state === null) {
 				return;
 			} else {
 
 				if (conn_state.val === false) {
-
-					this.log.info('Initialisation finished,  connected to Tado Cloud service refreshing every : ' + this.config.intervall + ' seconds');
+					this.log.info('Initialisation finished,  connected to Tado Cloud service refreshing every: ' + this.config.intervall + ' seconds');
 					this.setState('info.connection', true, true);
-
 				}
-
 			}
+			this.startprocedure = false;
 
 			// Clear running timer
 			(function () { if (polling) { clearTimeout(polling); polling = null; } })();
@@ -401,10 +335,8 @@ class Tado extends utils.Adapter {
 			polling = setTimeout(() => {
 				this.DoConnect();
 			}, intervall_time);
-
 		} catch (error) {
-
-			this.log.error(`Error in data refresh : ${error}`);
+			this.log.error(`Error in data refresh at step ${step}: ${error}`);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
 			// retry connection
@@ -546,8 +478,6 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones`);
 	}
 
-	// Coding break point of functionality
-
 	getZoneState(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
 	}
@@ -556,13 +486,24 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	}
 
-	clearZoneOverlay(home_id, zone_id) {
-		let response = this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
-		this.DoConnect();
-		return response;
+	async clearZoneOverlay(home_id, zone_id) {
+		await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
-	setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
+	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
+		const offset = {
+			celsius: set_offset
+		};
+		this.log.info(JSON.stringify(offset));
+		let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
+		this.log.info(`RESPONSE: ${JSON.stringify(apiResponse)}`);
+		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+	}
+
+	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
 		const config = {
 			setting: {
 				type: type,
@@ -591,7 +532,6 @@ class Tado extends utils.Adapter {
 		}
 
 		config.termination.typeSkillBasedApp = typeSkillBasedApp;
-
 		if (typeSkillBasedApp != 'TIMER') {
 			config.termination.durationInSeconds = null;
 		}
@@ -599,8 +539,17 @@ class Tado extends utils.Adapter {
 			config.termination.durationInSeconds = durationInSeconds;
 		}
 
-		this.log.info(`Send API ZoneOverlay API call Home: ${home_id} zone : ${zone_id} config: ${JSON.stringify(config)}`);
-		return this.poolApiCall(home_id, zone_id, config);
+		this.log.info(`Send API ZoneOverlay API call Home: ${home_id} zone: ${zone_id} config: ${JSON.stringify(config)}`);
+		let result = await this.poolApiCall(home_id, zone_id, config);
+		if (result.setting.temperature == null) {
+			result.setting.temperature = {};
+			result.setting.temperature.celsius = null;
+			result.setting.temperature.fahrenheit = null;
+		}
+		await JsonExplorer.setLastStartTime();
+		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
+		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
 	/**
@@ -616,33 +565,39 @@ class Tado extends utils.Adapter {
 			pooltimer[pooltimerid] = setTimeout(async () => {
 				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
-				that.log.info(`API called with  ${JSON.stringify(config)}`);
-				that.DoConnect();
-				that.log.debug('Data refreshed (DoConnect()) called');
+				that.log.debug(`API called with  ${JSON.stringify(config)}`);
+				//that.DoConnect();
+				//that.log.debug('Data refreshed (DoConnect()) called');
 				resolve(apiResponse);
 			}, 750);
 		});
 	}
 
+	/*
 	// Unclear purpose, ignore for now
 	getZoneCapabilities(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
-	}
+	}*/
 
+	/*
 	// Unclear purpose, ignore for now
 	getZoneOverlay(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
-	}
-
-
-	// Coding break point of functionality
-	// getZoneDayReport(home_id, zone_id, reportDate) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/dayReport?date=${reportDate}`);
-	// }
+	}*/
 
 	getTimeTables(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
 	}
+
+	getTemperatureOffset(device_id) {
+		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+	}
+
+	/*
+	// Coding break point of functionality
+	getZoneDayReport(home_id, zone_id, reportDate) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/dayReport?date=${reportDate}`);
+	} */
 
 	// getTimeTable(home_id, zone_id, timetable_id) {
 	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
@@ -658,974 +613,157 @@ class Tado extends utils.Adapter {
 		if (this.Home_data === null) {
 			this.Home_data = await this.getHome(HomeId);
 		}
-		this.log.debug('Home_data Result : ' + JSON.stringify(this.Home_data));
-
+		this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
-
-
-		for (const i in this.Home_data) {
-			this.log.debug('Home_data ' + i + ' with value : ' + JSON.stringify(this.Home_data[i]));
-			// Info channel for Each Home
-			await this.setObjectNotExistsAsync(HomeId + '._info', {
-				type: 'channel',
-				common: {
-					name: 'Basic information',
-				},
-				native: {},
-			});
-			// if(this.Home_data[i] != 'null'){ ==> issue in IF repair later
-			switch (i) {
-
-				case ('id'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('name'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('boilerId'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('dateTimeZone'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('consentRequired'):
-					// handle all contact details and write to states
-					for (const y in this.Home_data[i]) {
-						this.create_state(HomeId + '._info.' + i + '.' + y, y, this.Home_data[i][y]);
-					}
-					break;
-
-				case ('consentGranted'):
-					// handle all contact details and write to states
-					for (const y in this.Home_data[i]) {
-						this.create_state(HomeId + '._info.' + i + '.' + y, y, this.Home_data[i][y]);
-					}
-					break;
-
-				case ('dateCreated'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('temperatureUnit'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('installationCompleted'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('partner'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('usePreSkillsApps'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('simpleSmartScheduleEnabled'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('awayRadiusInMeters'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('preventFromSubscribing'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('skills'):
-					this.create_state(HomeId + '._info.' + i, i, JSON.stringify(this.Home_data[i]));
-					break;
-
-				case ('christmasModeEnabled'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('showAutoAssistReminders'):
-					this.create_state(HomeId + '._info.' + i, i, this.Home_data[i]);
-					break;
-
-				case ('contactDetails'):
-					await this.setObjectNotExistsAsync(HomeId + '._info.contactDetails', {
-						type: 'channel',
-						common: {
-							name: 'Contact Details',
-						},
-						native: {},
-					});
-
-					// handle all contact details and write to states
-					for (const y in this.Home_data[i]) {
-						this.create_state(HomeId + '._info.contactDetails.' + y, y, this.Home_data[i][y]);
-					}
-
-					break;
-
-				case ('address'):
-					await this.setObjectNotExistsAsync(HomeId + '._info.address', {
-						type: 'channel',
-						common: {
-							name: 'Contact Details',
-						},
-						native: {},
-					});
-
-					// handle all adress details and write to states
-					for (const y in this.Home_data[i]) {
-						this.create_state(HomeId + '._info.address.' + y, y, this.Home_data[i][y]);
-					}
-					break;
-
-				case ('geolocation'):
-					this.create_state(HomeId + '._info.latitude', i, this.Home_data[i].latitude);
-					this.create_state(HomeId + '._info.longitude', i, this.Home_data[i].longitude);
-					break;
-
-				case ('consentGrantSkippable'):
-					break;
-
-				case ('legacyHeatingInstallationsEnabled'):
-					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
-					break;
-
-				case ('incidentDetection'):
-					await this.setObjectNotExistsAsync(HomeId + '._info.incidentDetection', {
-						type: 'channel',
-						common: {
-							name: 'Incident Detection',
-						},
-						native: {},
-					});
-
-					for (const y in this.Home_data[i]) {
-						this.create_state(HomeId + '._info.incidentDetection.' + y, y, this.Home_data[i][y]);
-					}
-					break;
-
-				case ('autoAssistFreeTrialEnabled'):
-					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
-					break;
-
-				case ('quickActionsEnabled'):
-					this.create_state(HomeId + '._info. ' + i, i, this.Home_data[i]);
-					break;
-
-				case ('enabledFeatures'):
-					this.create_state(HomeId + '._info. ' + i, i, JSON.stringify(this.Home_data[i]));
-					break;
-
-				default:
-					this.log.warn(`Send this info to developer !!! { Unhandable information found in DoHome: ${JSON.stringify(i)} with value: ${JSON.stringify(this.Home_data[i])}`);
-			}
-			// }
-		}
-
+		JsonExplorer.TraverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0, 0);
 	}
 
 	async DoWeather(HomeId) {
 		const weather_data = await this.getWeather(HomeId);
-		this.log.debug('Weather_data Result : ' + JSON.stringify(weather_data));
+		this.log.debug('Weather_data Result: ' + JSON.stringify(weather_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
-		for (const i in weather_data) {
-			this.log.debug('Weather' + i + ' with value : ' + JSON.stringify(weather_data[i]));
-			// Info channel for Each Home
-			await this.setObjectNotExistsAsync(HomeId + '.Weather', {
-				type: 'channel',
-				common: {
-					name: 'Local weather conditions',
-				},
-				native: {},
-			});
+		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
+	}
 
-			switch (i) {
-
-				case ('outsideTemperature'):
-					this.create_state(HomeId + '.Weather.' + i, i, weather_data[i].celsius);
-					break;
-
-				case ('solarIntensity'):
-					this.create_state(HomeId + '.Weather.' + i, i, weather_data[i].percentage);
-					break;
-
-				case ('weatherState'):
-					this.create_state(HomeId + '.Weather.' + i, i, weather_data[i].value);
-					break;
-
-				default:
-					this.log.warn('Send this info to developer !!! { Unhandable information found in DoHWeather : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(weather_data[i]));
-
-			}
+	async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
+		if (offset == null) {
+			offset = await this.getTemperatureOffset(DeviceId);
 		}
-
+		this.log.debug(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
+		this.DoWriteJsonRespons(HomeId, `Stage_99_Offset_${HomeId}`, offset);
+		if (offset.celsius != undefined) offset.offsetCelsius = offset.celsius;
+		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
+		delete offset.celsius;
+		delete offset.fahrenheit;
+		JsonExplorer.TraverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
 	}
 
 	async DoDevices(HomeId) {
 		const Devices_data = await this.getDevices(HomeId);
-		this.log.debug('Users_data Result : ' + JSON.stringify(Devices_data));
+		this.log.debug('Users_data Result: ' + JSON.stringify(Devices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
-
-
 	}
 
+	/*
 	async DoInstallations(HomeId) {
 		const Installations_data = await this.getInstallations(HomeId);
-		this.log.debug('Installations_data Result : ' + JSON.stringify(Installations_data));
+		this.log.debug('Installations_data Result: ' + JSON.stringify(Installations_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_05_Installations', Installations_data);
-	}
+	}*/
 
 
 	// Function disabled, no data in API ?
 	async DoStates(HomeId) {
 		this.States_data = await this.getState_info(HomeId);
-		this.log.debug('States_data Result : ' + JSON.stringify(this.States_data));
+		this.log.debug('States_data Result: ' + JSON.stringify(this.States_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_14_StatesData', this.States_data);
 	}
 
 	// User information equal to Weather, ignoring function but keep for history/feature functionality
 	// async DoUsers(HomeId){
 	// 	const users_data = await this.getWeather(HomeId);
-	// 	this.log.debug('Users_data Result : ' + JSON.stringify(users_data));
+	// 	this.log.debug('Users_data Result: ' + JSON.stringify(users_data));
 	// 	for (const i in users_data){
 	// 	}
 	// }
 
 	async DoMobileDevices(HomeId) {
 		this.MobileDevices_data = await this.getMobileDevices(HomeId);
-		this.log.debug('MobileDevices_data Result : ' + JSON.stringify(this.MobileDevices_data));
+		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
-		for (const i in this.MobileDevices_data) {
-			this.log.debug('Mobiel Device' + i + ' with value : ' + JSON.stringify(this.MobileDevices_data[i]));
-			// // Info channel for Each Home
-			await this.setObjectNotExistsAsync(HomeId + '.Mobile_Devices', {
-				type: 'channel',
-				common: {
-					name: 'Mobile devices connected to Tado',
-				},
-				native: {},
-			});
-
-			// Info channel for Each Home
-			await this.setObjectNotExistsAsync(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id, {
-				type: 'channel',
-				common: {
-					name: this.MobileDevices_data[i].name,
-				},
-				native: {},
-			});
-
-			for (const y in this.MobileDevices_data[i]) {
-				this.log.debug('Mobiel Device' + y + ' with value : ' + JSON.stringify(this.MobileDevices_data[i][y]));
-
-				switch (y) {
-
-					case ('name'):
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.' + y, y, this.MobileDevices_data[i][y]);
-						break;
-
-					case ('id'):
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.' + y, y, this.MobileDevices_data[i][y]);
-						break;
-
-					case ('settings'):
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.geoTrackingEnabled', 'geoTrackingEnabled', this.MobileDevices_data[i][y].geoTrackingEnabled);
-						break;
-
-					case ('deviceMetadata'):
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.locale', 'locale', this.MobileDevices_data[i][y].locale);
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.model', 'model', this.MobileDevices_data[i][y].model);
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.osVersion', 'osVersion', this.MobileDevices_data[i][y].osVersion);
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.platform', 'platform', this.MobileDevices_data[i][y].platform);
-						break;
-
-					case ('location'):
-						if (this.MobileDevices_data[i][y].stale === undefined || this.MobileDevices_data[i][y].stale === null) {
-							return;
-						} else {
-							this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.stale', 'stale', this.MobileDevices_data[i][y].stale);
-						}
-
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.atHome', 'atHome', this.MobileDevices_data[i][y].atHome);
-						this.create_state(HomeId + '.Mobile_Devices.' + this.MobileDevices_data[i].id + '.distance', 'distance', this.MobileDevices_data[i][y].relativeDistanceFromHomeFence);
-						break;
-
-
-					default:
-						this.log.warn('Send this info to developer !!! { Unhandable information found in DoMobile_Devices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(this.MobileDevices_data[i][y]));
-				}
-			}
-			await this.DoMobileDeviceSettings(HomeId, this.MobileDevices_data[i].id);
-		}
-
+		JsonExplorer.TraverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0, 0);
 	}
 
 	async DoMobileDeviceSettings(HomeId, DeviceId) {
 		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
-		this.log.debug('MobileDeviceSettings_Data Result : ' + JSON.stringify(MobileDeviceSettings_data));
+		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		// device setting channel for Each Home
-		await this.setObjectNotExistsAsync(HomeId + '.Mobile_Devices.' + DeviceId + '.Device_Setting', {
-			type: 'channel',
-			common: {
-				name: 'Mobile devices settings',
-			},
-			native: {},
-		});
-		for (const i in MobileDeviceSettings_data) {
-			switch (i) {
-
-				case ('geoTrackingEnabled'):
-					this.create_state(HomeId + '.Mobile_Devices.' + DeviceId + '.Device_Setting.' + i, i, MobileDeviceSettings_data[i]);
-					break;
-
-				case ('onDemandLogRetrievalEnabled'):
-					this.create_state(HomeId + '.Mobile_Devices.' + DeviceId + '.Device_Setting.' + i, i, MobileDeviceSettings_data[i]);
-					break;
-
-				case ('pushNotifications'):
-					await this.setObjectNotExistsAsync(HomeId + '.Mobile_Devices.' + DeviceId + '.Device_Setting.' + i, {
-						type: 'channel',
-						common: {
-							name: i,
-						},
-						native: {},
-					});
-					for (const y in MobileDeviceSettings_data[i]) {
-						this.create_state(HomeId + '.Mobile_Devices.' + DeviceId + '.Device_Setting.' + i + '.' + y, y, MobileDeviceSettings_data[i][y]);
-					}
-
-					break;
-
-				default:
-					this.log.warn('Send this info to developer !!! { Unhandable information found in DoMobileDeviceSettings : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(MobileDeviceSettings_data[i]));
-
-			}
-
-		}
-
+		JsonExplorer.TraverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true, 0, 2);
 	}
 
 	async DoZones(HomeId) {
 		this.Zones_data = await this.getZones(HomeId);
-		this.log.debug('Zones_data Result : ' + JSON.stringify(this.Zones_data));
+		this.log.debug('Zones_data Result: ' + JSON.stringify(this.Zones_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_08_ZonesData', this.Zones_data);
 
-		await this.setObjectNotExistsAsync(HomeId + '.Rooms', {
-			type: 'channel',
-			common: {
-				name: 'Rooms',
-			},
-			native: {},
-		});
+		//Search for DeviceIDs to get Offset
+		for (const j in this.Zones_data) {
+			for (const k in this.Zones_data[j]) {
+				for (const l in this.Zones_data[j][k]) {
+					let ZoneId = this.Zones_data[j].id;
+					let DeviceId = this.Zones_data[j][k][l].serialNo;
+					if (DeviceId != undefined) {
+						this.log.debug('DeviceID for offset found: ' + JSON.stringify(this.Zones_data[j][k][l].serialNo));
+						this.Zones_data[j][k][l].id = this.Zones_data[j][k][l].serialNo;
+						if (this.Zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
+							this.DoTemperatureOffset(HomeId, ZoneId, DeviceId);
+						}
+					}
+				}
+			}
+		}
+
+		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
 
 		for (const i in this.Zones_data) {
-
-			await this.setObjectNotExistsAsync(HomeId + '.Rooms.' + this.Zones_data[i].id, {
-				type: 'channel',
-				common: {
-					name: this.Zones_data[i].name,
-				},
-				native: {},
-			});
-
-			await this.setObjectNotExistsAsync(HomeId + '.Rooms.' + this.Zones_data[i].id + '.info', {
-				type: 'channel',
-				common: {
-					name: 'info',
-				},
-				native: {},
-			});
-
-
-			for (const y in this.Zones_data[i]) {
-
-				const state_root = HomeId + '.Rooms.' + this.Zones_data[i].id + '.info.' + y;
-
-				switch (y) {
-
-					case ('id'):
-						// ignore id, no added value in state
-						// this.create_state(state_root, y, this.Zones_data [i][y]);
-						break;
-
-					case ('name'):
-						// ignore name, no added value in state
-						// this.create_state(state_root, y, this.Zones_data [i][y]);
-						break;
-
-					case ('dateCreated'):
-
-						await this.create_state(state_root, y, this.Zones_data[i][y]);
-						break;
-
-					case ('dazzleEnabled'):
-
-						await this.create_state(state_root, y, this.Zones_data[i][y]);
-						break;
-
-					case ('dazzleMode'):
-
-						await this.setObjectNotExistsAsync(HomeId + '.Rooms.' + this.Zones_data[i].id + '.' + y, {
-							type: 'channel',
-							common: {
-								name: y,
-							},
-							native: {},
-						});
-
-						for (const x in this.Zones_data[i][y]) {
-							this.create_state(HomeId + '.Rooms.' + this.Zones_data[i].id + '.' + y + '.' + x, y, this.Zones_data[i][y][x]);
-						}
-						break;
-
-					case ('devices'):
-						await this.DoReadDevices(HomeId + '.Rooms.' + this.Zones_data[i].id + '.' + y, this.Zones_data[i][y]);
-						break;
-
-					case ('deviceTypes'):
-
-						// await this.setObjectNotExistsAsync(state_root, {
-						// 	type: 'channel',
-						// 	common: {
-						// 		name: y,
-						// 	},
-						// 	native: {},
-						// });
-
-						break;
-
-					case ('openWindowDetection'):
-
-						await this.setObjectNotExistsAsync(HomeId + '.Rooms.' + this.Zones_data[i].id + '.' + y, {
-							type: 'channel',
-							common: {
-								name: y,
-							},
-							native: {},
-						});
-
-						for (const x in this.Zones_data[i][y]) {
-							// this.log.info(x + '   |   ' + y)
-							this.create_state(HomeId + '.Rooms.' + this.Zones_data[i].id + '.' + y + '.' + x, x, this.Zones_data[i][y][x]);
-						}
-						break;
-
-					case ('reportAvailable'):
-
-						this.create_state(state_root, y, this.Zones_data[i][y]);
-						break;
-
-					case ('supportsDazzle'):
-
-						this.create_state(state_root, y, this.Zones_data[i][y]);
-						break;
-
-					case ('type'):
-
-						this.create_state(state_root, y, this.Zones_data[i][y]);
-						break;
-
-
-					default:
-						this.log.warn('Send this info to developer !!! { Unhandable information found in DoZones : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(this.Zones_data[i][y]));
-				}
-			}
-			const basic_tree = HomeId + '.Rooms.' + this.Zones_data[i].id;
-			try {
-				await this.DoZoneStates(HomeId, this.Zones_data[i].id, basic_tree);
-			} catch (error) {
-				this.log.error('Issue getting ZoneStates ' + error);
-			}
-
-
-			try {
-				// Unclear purpose, ignore for now
-				await this.DoZoneCapabilities(HomeId, this.Zones_data[i].id);
-
-			} catch (error) {
-				this.log.error('Issue getting ZoneCapabilities ' + error);
-			}
-
-
-			try {
-				await this.DoZoneOverlay(HomeId, this.Zones_data[i].id); //  only 404 error
-
-			} catch (error) {
-				// no info
-				// this.log.error(error);
-			}
-
-
-
-			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id, basic_tree);
-			await this.DoTimeTables(HomeId, this.Zones_data[i].id);
-
+			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
+			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
+			//await this.DoTimeTables(HomeId, this.Zones_data[i].id);
 		}
 	}
 
+	/*
 	async DoUser(HomeId) {
 		this.Users_data = await this.getZones(HomeId);
-		this.log.debug('Users_data Result : ' + JSON.stringify(this.Users_data));
+		this.log.debug('Users_data Result: ' + JSON.stringify(this.Users_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_15_ZonesData', this.Users_data);
-	}
+	}*/
 
+	/*
+	//can be deleted?
 	async DoReadDevices(state_root, Devices_data,) {
-		this.log.debug('Devices_data Result : ' + JSON.stringify(Devices_data));
+		this.log.debug('Devices_data Result: ' + JSON.stringify(Devices_data));
+	}*/
 
-		await this.setObjectNotExistsAsync(state_root, {
-			type: 'channel',
-			common: {
-				name: 'Devices',
-			},
-			native: {},
-		});
-
-		for (const i in Devices_data) {
-
-			await this.setObjectNotExistsAsync(state_root + '.' + Devices_data[i].serialNo, {
-				type: 'channel',
-				common: {
-					name: Devices_data[i].deviceType,
-				},
-				native: {},
-			});
-
-			for (const y in Devices_data[i]) {
-
-				const state_root_device = state_root + '.' + Devices_data[i].serialNo + '.info';
-				switch (y) {
-
-					case ('batteryState'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('orientation'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('characteristics'):
-						// await this.setObjectNotExistsAsync(state_root + y, {
-						// 	type: 'channel',
-						// 	common: {
-						// 		name: y,
-						// 	},
-						// 	native: {},
-						// });
-
-						// for (const x in Devices_data[i][y]){
-						// 	this.create_state(state_root + '.duties.' + x, y, Devices_data[i][y][x]);
-						// }
-						break;
-
-					case ('connectionState'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
-						break;
-
-					case ('currentFwVersion'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('deviceType'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('duties'):
-						await this.setObjectNotExistsAsync(state_root_device + '.' + y, {
-							type: 'channel',
-							common: {
-								name: y,
-							},
-							native: {},
-						});
-
-						for (const x in Devices_data[i][y]) {
-							this.create_state(state_root_device + '.' + y + '.' + x, y, Devices_data[i][y][x]);
-						}
-						break;
-
-					case ('isDriverConfigured'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
-						break;
-
-					case ('mountingState'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
-						break;
-
-					case ('openWindowDetected'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y].value);
-						break;
-
-					case ('serialNo'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('shortSerialNo'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('commandTableUploadState'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('childLockEnabled'):
-						this.create_state(state_root_device + '.' + y, y, Devices_data[i][y]);
-						break;
-
-					case ('accessPointWiFi'):
-						await this.setObjectNotExistsAsync(state_root_device + '.' + y, {
-							type: 'channel',
-							common: {
-								name: y,
-							},
-							native: {},
-						});
-
-						for (const x in Devices_data[i][y]) {
-							this.create_state(state_root_device + '.' + y + '.' + x, y, Devices_data[i][y][x]);
-						}
-						break;
-
-					default:
-						this.log.warn('Send this info to developer !!! { Unhandable information found in DoReadDevices : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(Devices_data[i][y]));
-						this.DoWriteJsonRespons(state_root + '.Test_Data', 'Test_Data', Devices_data);
-				}
-			}
-		}
-
-	}
-
-	async DoZoneStates(HomeId, ZoneId, state_root_states) {
+	async DoZoneStates(HomeId, ZoneId) {
 		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
-
-		this.log.debug('ZoneStates_data Result for zone : ' + ZoneId + ' and value : ' + JSON.stringify(ZonesState_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
-
-		for (const i in ZonesState_data) {
-			if (ZonesState_data[i] !== null && JSON.stringify(ZonesState_data[i]) !== '{}') {
-
-				switch (i) {
-
-					case ('activityDataPoints'):
-						if (ZonesState_data[i].heatingPower != undefined) {
-							this.create_state(state_root_states + '.heatingPower', 'heatingPower', ZonesState_data[i].heatingPower.percentage);
-						}
-						break;
-
-					case ('geolocationOverride'):
-						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-						break;
-
-
-					case ('geolocationOverrideDisableTime'):
-						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-						break;
-
-					case ('link'):
-						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i].state);
-						break;
-
-					case ('nextScheduleChange'):
-						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-						break;
-
-					case ('nextTimeBlock'):
-						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-						break;
-
-					case ('openWindow'):
-
-						for (const x in ZonesState_data[i]) {
-							// this.log.info(x + '   |   ' + y)
-							this.create_state(state_root_states + '.' + i + '.' + x, x, ZonesState_data[i][x]);
-						}
-						break;
-
-
-					case ('overlay'):
-
-						this.log.debug('API data of overlay : ' + JSON.stringify(ZonesState_data[i]));
-						this.log.debug('API data : ' + JSON.stringify(ZonesState_data[i]));
-						await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
-							type: 'channel',
-							common: {
-								name: i,
-							},
-							native: {},
-						});
-
-						this.create_state(state_root_states + '.' + i + '.clearZoneOverlay', 'clearZoneOverlay', false);
-
-						for (const x in ZonesState_data[i]) {
-
-							switch (x) {
-
-								case ('type'):
-									this.create_state(state_root_states + '.' + i + '.' + x, x, JSON.stringify(ZonesState_data[i][x]));
-									break;
-
-								case ('openWindowDetected'):
-									this.create_state(state_root_states + '.' + i + '.' + x, x, JSON.stringify(ZonesState_data[i][x]));
-									break;
-
-								case ('setting'):
-
-									for (const y in ZonesState_data[i]) {
-
-										try {
-
-											await this.setObjectNotExistsAsync(state_root_states + '.' + i + '.' + x, {
-												type: 'channel',
-												common: {
-													name: x,
-												},
-												native: {},
-											});
-
-											switch (y) {
-
-												case ('temperature'):
-													if (ZonesState_data[i][x][y].celsius === null) {
-														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, null);
-													} else {
-														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y].celsius);
-													}
-
-													break;
-
-												case ('type'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-													break;
-
-												case ('power'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y].toLowerCase());
-
-													break;
-
-												default:
-
-											}
-
-										} catch (error) {
-											// this.log.error(error);
-
-										}
-									}
-									break;
-
-								case ('termination'):
-									for (const y in ZonesState_data[i][x]) {
-
-										try {
-
-											await this.setObjectNotExistsAsync(state_root_states + '.' + i + '.' + x, {
-												type: 'channel',
-												common: {
-													name: y,
-												},
-												native: {},
-											});
-
-											switch (y) {
-
-												case ('projectedExpiry'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-													break;
-
-
-												case ('type'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-													break;
-
-												case ('typeSkillBasedApp'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-													break;
-
-												case ('remainingTimeInSeconds'):
-
-													if (ZonesState_data[i][x][y] === null || ZonesState_data[i][x][y] === undefined || ZonesState_data[i][x][y] == '0') {
-														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-													} else {
-														this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-														//this.Count_remainingTimeInSeconds(state_root_states + '.' + i  + '.' + x + '.' + y, ZonesState_data[i][x][y]);
-
-													}
-													break;
-
-												case ('durationInSeconds'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-													break;
-
-												case ('expiry'):
-													this.create_state(state_root_states + '.' + i + '.' + x + '.' + y, y, ZonesState_data[i][x][y]);
-
-													break;
-
-
-												default:
-													this.log.warn('Send this info to developer !!! { Unhandable information found in DoZoneStates overlay termination : ' + JSON.stringify(y) + ' with value : ' + JSON.stringify(ZonesState_data[i][x][y]));
-
-											}
-
-										} catch (error) {
-											this.log.error(error);
-
-										}
-									}
-									break;
-
-
-								default:
-									this.log.warn('Send this info to developer !!! { Unhandable information found in DoReadDevices overlay : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
-							}
-
-						}
-
-						break;
-
-					case ('overlayType'):
-						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-						break;
-
-					case ('openWindowDetected'):
-						this.create_state(state_root_states + '.' + i, i, JSON.stringify(ZonesState_data[i]));
-						break;
-
-					case ('preparation'):
-						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-						break;
-
-					case ('sensorDataPoints'):
-						this.create_state(state_root_states + '.' + 'Actual_Temperature', 'Actual_Temperature', ZonesState_data[i].insideTemperature.celsius);
-						this.create_state(state_root_states + '.' + 'Actual_Humidity', 'Actual_Humidity', ZonesState_data[i].humidity.percentage);
-						break;
-
-					case ('setting'):
-						this.log.debug('ZoneStates_data settings Result : ' + JSON.stringify(ZonesState_data[i]));
-						await this.setObjectNotExistsAsync(state_root_states + '.' + i, {
-							type: 'channel',
-							common: {
-								name: i,
-							},
-							native: {},
-						});
-
-						for (const y in ZonesState_data[i]) {
-
-							try {
-
-								if (y === 'temperature') {
-									if (ZonesState_data[i][y].celsius === null) {
-										this.create_state(state_root_states + '.' + i + '.' + y, y, null);
-									} else {
-										this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y].celsius);
-									}
-								} else {
-									this.create_state(state_root_states + '.' + i + '.' + y, y, ZonesState_data[i][y]);
-								}
-
-							} catch (error) {
-								// this.log.error(error);
-
-							}
-						}
-						break;
-
-
-					case ('tadoMode'):
-						this.create_state(state_root_states + '.' + i, i, ZonesState_data[i]);
-						break;
-
-					default:
-						this.log.warn('Send this info to developer !!! { Unhandable information found in DoZoneState : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(ZonesState_data[i]));
-				}
-			}
-			else {
-				switch (i) {
-					case ('overlayType'):
-						this.log.debug('State to null for ' + state_root_states + '.' + i);
-						//await this.setStateAsync(state_root_states + '.' + i, { val: null, ack: true });
-						this.create_state(state_root_states + '.' + i, i, null);
-						break;
-					case ('overlay'):
-					case ('openWindow'):
-						if (ZonesState_data[i] == null) {
-							const states = await this.getStatesAsync(state_root_states + '.' + i + '.*');
-							for (const idS in states) {
-								let name = idS.substr(idS.lastIndexOf('.') + 1, idS.length);
-								if (name != 'clearZoneOverlay') {
-									this.log.debug('State to null for ' + idS);
-									this.create_state(idS, name, null);
-								}
-							}
-						}
-						break;
-					default:
-				}
-			}
+		this.log.debug('ZoneStates_data Result for zone: ' + ZoneId + ' and value: ' + JSON.stringify(ZonesState_data));
+		if (ZonesState_data.setting.temperature == null) {
+			ZonesState_data.setting.temperature = {};
+			ZonesState_data.setting.temperature.celsius = null;
 		}
+		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
+		ZonesState_data.overlayClearZone = false;
+		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
 	}
 
+	/*
 	// Unclear purpose, ignore for now
 	async DoZoneCapabilities(HomeId, ZoneId) {
 		const ZoneCapabilities_data = await this.getZoneCapabilities(HomeId, ZoneId);
-		this.log.debug('ZoneCapabilities_data Result : ' + JSON.stringify(ZoneCapabilities_data));
+		this.log.debug('ZoneCapabilities_data Result: ' + JSON.stringify(ZoneCapabilities_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_11_ZoneCapabilities_' + ZoneId, ZoneCapabilities_data);
+	}*/
 
-	}
-
+	/*
 	// Unclear purpose, ignore for now only 404 error
 	async DoZoneOverlay(HomeId, ZoneId) {
-
 		const ZoneOverlay_data = await this.getZoneOverlay(HomeId, ZoneId);
-		this.log.debug('ZoneOverlay_data Result : ' + JSON.stringify(ZoneOverlay_data));
+		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(ZoneOverlay_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_12_ZoneOverlay_' + ZoneId, ZoneOverlay_data);
-
-	}
+	}*/
 
 	async DoTimeTables(HomeId, ZoneId) {
 		const TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
-		this.log.debug('ZoneOverlay_data Result : ' + JSON.stringify(TimeTables_data));
+		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
 	}
 
-	async DoAwayConfiguration(HomeId, ZoneId, state_root_states) {
+	async DoAwayConfiguration(HomeId, ZoneId) {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
-		this.log.debug('AwayConfiguration_data Result : ' + JSON.stringify(AwayConfiguration_data));
+		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-
-		for (const i in AwayConfiguration_data) {
-
-			switch (i) {
-
-				case ('minimumAwayTemperature'):
-					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i].celsius);
-					break;
-				case ('preheatingLevel'):
-					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
-					break;
-				case ('setting'):
-
-					for (const x in AwayConfiguration_data[i]) {
-						// this.log.info(x + '   |   ' + y)
-						this.create_state(state_root_states + '.AwayConfiguration.' + i + '.' + x, x, AwayConfiguration_data[i][x]);
-					}
-					break;
-				case ('type'):
-					this.create_state(state_root_states + '.AwayConfiguration.' + i, i, AwayConfiguration_data[i]);
-					break;
-				default:
-					this.log.warn('Send this info to developer !!! { Unhandable information found in DoAwayConfiguration : ' + JSON.stringify(i) + ' with value : ' + JSON.stringify(AwayConfiguration_data[i]));
-			}
-		}
+		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 2);
 	}
 
 	/**
@@ -1634,44 +772,27 @@ class Tado extends utils.Adapter {
 	 * @param {any} value
 	 */
 	async create_state(state, name, value) {
-		this.log.debug('Create_state called for : ' + state + ' with value : ' + value);
-		this.log.debug('Create_state called for : ' + name + ' with value : ' + value);
+		this.log.debug(`Create_state called for state '${state}' and name '${name}' with value '${value}'`);
 		const intervall_time = (this.config.intervall * 4);
-		if (value !== undefined) {
+		if (value) {
 			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
 		}
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
 		if (this.log.level == 'debug' || this.log.level == 'silly') {
-			this.log.debug('JSON data written for ' + state_name + ' with values : ' + JSON.stringify(value));
-			this.log.debug('HomeId ' + HomeId + ' name : ' + state_name + state_name + ' value ' + JSON.stringify(value));
+			this.log.debug('JSON data written for ' + state_name + ' with values: ' + JSON.stringify(value));
+			this.log.debug('HomeId ' + HomeId + ' name: ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
-			await this.setObjectNotExistsAsync(HomeId + '._info.JSON_response', {
-				type: 'channel',
+			await this.setObjectNotExistsAsync(HomeId + '._JSON_response', {
+				type: 'device',
 				common: {
 					name: 'Plain JSON data from API',
 				},
 				native: {},
 			});
-
-			// await this.setState(HomeId + '._info.JSON_response.' + name,name, {val: value, ack: true});
-			await this.create_state(HomeId + '._info.JSON_response.' + state_name, state_name, JSON.stringify(value));
+			await this.create_state(HomeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
 		}
-	}
-
-	async Count_remainingTimeInSeconds(state, value) {
-
-		(function () { if (counter[state]) { clearTimeout(counter[state]); counter[state] = null; } })();
-		// timer
-		counter[state] = setTimeout(() => {
-			value = value - 1;
-			this.setState(state, { val: value, ack: true });
-			if (value > 0) {
-				this.Count_remainingTimeInSeconds(state, value);
-			}
-		}, 1000);
-
 	}
 
 	async errorHandling(codePart, error) {
@@ -1683,7 +804,6 @@ class Tado extends utils.Adapter {
 			}
 		}
 	}
-
 }
 
 // @ts-ignore parent is a valid property on module
