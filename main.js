@@ -173,6 +173,7 @@ class Tado extends utils.Adapter {
 
 							case ('celsius'):
 								if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
+								set_power = 'ON';
 								this.log.info(`Temperature changed for room '${zone_id}' in home '${home_id}' to '${set_temp}'`);
 								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
@@ -540,6 +541,11 @@ class Tado extends utils.Adapter {
 
 		this.log.info(`Send API ZoneOverlay API call Home: ${home_id} zone: ${zone_id} config: ${JSON.stringify(config)}`);
 		let result = await this.poolApiCall(home_id, zone_id, config);
+		if (result.setting.temperature == null) {
+			result.setting.temperature = {};
+			result.setting.temperature.celsius = null;
+			result.setting.temperature.fahrenheit = null;
+		}
 		await JsonExplorer.setLastStartTime();
 		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
 		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
@@ -559,7 +565,7 @@ class Tado extends utils.Adapter {
 			pooltimer[pooltimerid] = setTimeout(async () => {
 				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
 				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
-				that.log.info(`API called with  ${JSON.stringify(config)}`);
+				that.log.debug(`API called with  ${JSON.stringify(config)}`);
 				//that.DoConnect();
 				//that.log.debug('Data refreshed (DoConnect()) called');
 				resolve(apiResponse);
@@ -665,7 +671,7 @@ class Tado extends utils.Adapter {
 		this.MobileDevices_data = await this.getMobileDevices(HomeId);
 		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
-		JsonExplorer.TraverseJson(this.MobileDevices_data, `${HomeId}.MobileDevices`, true, true, 0, 0);
+		JsonExplorer.TraverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0, 0);
 	}
 
 	async DoMobileDeviceSettings(HomeId, DeviceId) {
@@ -722,6 +728,10 @@ class Tado extends utils.Adapter {
 	async DoZoneStates(HomeId, ZoneId) {
 		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
 		this.log.debug('ZoneStates_data Result for zone: ' + ZoneId + ' and value: ' + JSON.stringify(ZonesState_data));
+		if (ZonesState_data.setting.temperature == null) {
+			ZonesState_data.setting.temperature = {};
+			ZonesState_data.setting.temperature.celsius = null;
+		}
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
