@@ -20,11 +20,18 @@ If you like my work, please feel free to provide a personal donation
 (this is an personal Donate link for DutchmanNL, no relation to the ioBroker Project !  
 [![Donate](https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/button.png)](http://paypal.me/DutchmanNL)
 
+## Breaking changes in v0.3.x
+Upgrade from 0.2.x to v0.3.x includes a technical re-factioring with braking changes (e.g. temperature setting is now located at tado.[x]].[yyyyy]].Rooms.[z].setting.temperature.celsius).
+
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) implement offset functionality
+* Technical re-factoring of state management !BREAKING CHANGES! (see above)
 
 ### 0.2.7 (2021-05-11)
 * (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy") (#214)
