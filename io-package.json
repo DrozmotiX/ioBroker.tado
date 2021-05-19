@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.7",
+        "version": "0.3.0-0",
         "news": {
+            "0.3.0-0": {
+                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
+                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
+                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
+                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
+                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
+                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
+                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
+                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
+                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
+                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
+            },
             "0.2.7": {
                 "en": "prepare for js-controller v3.3.x (has wrong type \"xxxx\" but has to be \"yyyy\") (#214)\nimprove state creation by using iobroker-jsonexplorer\nimprove CPU usage (#192)\nadd attribute enabledFeatures (#226)",
                 "de": "bereite dich auf js-controller v3.3.x vor (hat den falschen Typ \"xxxx\", muss aber \"yyyy\" sein) (# 214)\nVerbessern Sie die Statuserstellung mithilfe von iobroker-jsonexplorer\nVerbesserung der CPU-Auslastung (# 192)\nAttribut enabledFeatures hinzufügen (# 226)",
