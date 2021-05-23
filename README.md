@@ -29,7 +29,7 @@ Upgrade from 0.2.x to v0.3.x includes a technical re-factioring with breaking ch
     ### __WORK IN PROGRESS__
 -->
 
-### 0.3.0-1 (2021-05-23)
+### 0.3.0-2 (2021-05-23)
 * (HGlab01) implement offset functionality
 * (HGlab01) Technical re-factoring of state management !BREAKING CHANGES! (see above)
 
