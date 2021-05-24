@@ -29,6 +29,7 @@ const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
 
+const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
 let pooltimer = [];
 
@@ -48,7 +49,7 @@ class Tado extends utils.Adapter {
 		this._accessToken = null;
 		this.getMe_data = null;
 		this.Home_data = null;
-		this.startprocedure = null;
+		this.lastupdate = 0;
 		JsonExplorer.init(this, state_attr);
 	}
 
@@ -57,7 +58,6 @@ class Tado extends utils.Adapter {
 	 */
 	async onReady() {
 		this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
-		this.startprocedure = true;
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
@@ -269,9 +269,12 @@ class Tado extends utils.Adapter {
 	}
 
 	async DoData_Refresh(user, pass) {
-		const intervall_time = (this.config.intervall * 1000);
+		const intervall_time = Math.max(30, this.config.intervall) * 1000;
+		let outdated = false;
+		let now = new Date().getTime();
 		let step = 'start';
-
+		if (now - this.lastupdate > oneHour) outdated = true;
+		
 		// Get login token
 		try {
 			step = 'login';
@@ -296,7 +299,9 @@ class Tado extends utils.Adapter {
 
 			for (const i in this.getMe_data.homes) {
 				this.DoWriteJsonRespons(this.getMe_data.homes[i].id, 'Stage_01_GetMe_Data', this.getMe_data);
-				if (this.startprocedure) {
+				if (outdated) {
+					this.log.debug('Full refresh, data outdated (more than 60 minutes ago)');
+					this.lastupdate = now;
 					step = 'DoHome';
 					await this.DoHome(this.getMe_data.homes[i].id);
 					step = 'DoDevices';
@@ -310,11 +315,12 @@ class Tado extends utils.Adapter {
 				await this.DoWeather(this.getMe_data.homes[i].id);
 
 				//set all outdated states to NULL
-				step = 'Set to null';
-				if (this.startprocedure) {
+				step = `Set outdated states to null`;
+				if (outdated) {
 					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.*');
 				} else {
 					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Rooms.*');
+					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Weather.*');
 				}
 			}
 
@@ -323,11 +329,10 @@ class Tado extends utils.Adapter {
 			} else {
 
 				if (conn_state.val === false) {
-					this.log.info('Initialisation finished,  connected to Tado Cloud service refreshing every: ' + this.config.intervall + ' seconds');
+					this.log.info(`Initialisation finished,  connected to Tado cloud service refreshing every ${intervall_time / 1000} seconds`);
 					this.setState('info.connection', true, true);
 				}
 			}
-			this.startprocedure = false;
 
 			// Clear running timer
 			(function () { if (polling) { clearTimeout(polling); polling = null; } })();

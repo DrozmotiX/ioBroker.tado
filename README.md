@@ -29,9 +29,10 @@ Upgrade from 0.2.x to v0.3.x includes a technical re-factioring with breaking ch
     ### __WORK IN PROGRESS__
 -->
 
-### 0.3.0-2 (2021-05-23)
+### 0.3.0-3 (2021-05-24)
 * (HGlab01) implement offset functionality
 * (HGlab01) Technical re-factoring of state management !BREAKING CHANGES! (see above)
+* (HGlab01) Set minimum refresh time to 30 seconds
 
 ### 0.2.7 (2021-05-11)
 * (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy") (#214)
