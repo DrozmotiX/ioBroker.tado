@@ -1,8 +1,68 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.2.7",
+        "version": "0.3.0-4",
         "news": {
+            "0.3.0-4": {
+                "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
+                "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
+                "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
+                "pt": "Refatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nimplementar funcionalidade de deslocamento\nDefina o tempo mínimo de atualização para 30 segundos\nBump iobroker-jsonexplorer para v0.1.0",
+                "nl": "Technische re-factoring van het staatsbeheer !BREKENDE VERANDERINGEN! (zie hierboven)\noffset-functionaliteit implementeren\nStel de minimale verversingstijd in op 30 seconden\nBump iobroker-jsonexplorer naar v0.1.0",
+                "fr": "Refonte technique de la gestion de l'état ! CHANGEMENTS BRUTS ! (voir au dessus)\nimplémenter la fonctionnalité de décalage\nDéfinir le temps de rafraîchissement minimum à 30 secondes\nTransférez iobroker-jsonexplorer vers la v0.1.0",
+                "it": "Re-factoring tecnico della gestione statale !CAMBIAMENTI ROTANTI! (vedi sopra)\nimplementare la funzionalità di offset\nImposta il tempo di aggiornamento minimo su 30 secondi\nPassa iobroker-jsonexplorer alla v0.1.0",
+                "es": "¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nimplementar la funcionalidad de compensación\nEstablecer el tiempo de actualización mínimo en 30 segundos\nPase iobroker-jsonexplorer a v0.1.0",
+                "pl": "Refaktoryzacja techniczna zarządzania państwem !PRZEŁOMOWE ZMIANY! (patrz wyżej)\nwdrożyć funkcjonalność offsetową\nUstaw minimalny czas odświeżania na 30 sekund\nPodnieś iobroker-jsonexplorer do wersji 0.1.0",
+                "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
+            },
+            "0.3.0-3": {
+                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)\nSet minimum refresh time to 30 seconds",
+                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)\nStellen Sie die minimale Aktualisierungszeit auf 30 Sekunden ein",
+                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nУстановите минимальное время обновления на 30 секунд.",
+                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nDefina o tempo mínimo de atualização para 30 segundos",
+                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)\nStel de minimale verversingstijd in op 30 seconden",
+                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)\nDéfinissez le temps d'actualisation minimum sur 30 secondes",
+                "it": "implementare la funzionalità offset\nRifacimento tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)\nImposta il tempo di aggiornamento minimo su 30 secondi",
+                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nEstablecer el tiempo de actualización mínimo en 30 segundos",
+                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)\nUstaw minimalny czas odświeżania na 30 sekund",
+                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）\n将最小刷新时间设置为30秒"
+            },
+            "0.3.0-2": {
+                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
+                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
+                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
+                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
+                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
+                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
+                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
+                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
+                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
+                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
+            },
+            "0.3.0-1": {
+                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
+                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
+                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
+                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
+                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
+                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
+                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
+                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
+                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
+                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
+            },
+            "0.3.0-0": {
+                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
+                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
+                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
+                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
+                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
+                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
+                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
+                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
+                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
+                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
+            },
             "0.2.7": {
                 "en": "prepare for js-controller v3.3.x (has wrong type \"xxxx\" but has to be \"yyyy\") (#214)\nimprove state creation by using iobroker-jsonexplorer\nimprove CPU usage (#192)\nadd attribute enabledFeatures (#226)",
                 "de": "bereite dich auf js-controller v3.3.x vor (hat den falschen Typ \"xxxx\", muss aber \"yyyy\" sein) (# 214)\nVerbessern Sie die Statuserstellung mithilfe von iobroker-jsonexplorer\nVerbesserung der CPU-Auslastung (# 192)\nAttribut enabledFeatures hinzufügen (# 226)",
@@ -182,42 +242,6 @@
                 "es": "Se implementó el cambio de temperatura ambiente y se habilitó / deshabilitó el control de calefacción",
                 "pl": "Wdrożona zmiana temperatury w pomieszczeniu i włączenie / wyłączenie sterowania ogrzewaniem",
                 "zh-cn": "实现室内温度变化并启用/禁用加热控制"
-            },
-            "0.0.8": {
-                "en": "Implemented overlay clear states & control",
-                "de": "Overlay Clear States & Control implementiert",
-                "ru": "Реализовано наложение четких состояний и контроля",
-                "pt": "Sobreposição de estados claros e controle implementados",
-                "nl": "Geïmplementeerde overlay clear states & control geïmplementeerd",
-                "fr": "Superposition implémentée des états et contrôles clairs",
-                "it": "Implementati stati di sovrapposizione e controllo chiari",
-                "es": "Superposición implementada estados claros y control",
-                "pl": "Wdrożona nakładka kasuje stany i kontrolę",
-                "zh-cn": "实施叠加清除状态和控制"
-            },
-            "0.0.6": {
-                "en": "Implemented away status, attribute updates",
-                "de": "Abwesenheitsstatus implementiert, Attributaktualisierungen",
-                "ru": "Реализован статус отсутствия, обновления атрибутов",
-                "pt": "Status ausente implementado, atualizações de atributo",
-                "nl": "Geïmplementeerde afwezigheidsstatus, kenmerkupdates",
-                "fr": "Statut d'absence implémenté, mises à jour d'attributs",
-                "it": "Implementato lo stato via, aggiornamenti degli attributi",
-                "es": "Estado de ausencia implementado, actualizaciones de atributos",
-                "pl": "Wdrożono status nieobecności, aktualizacje atrybutów",
-                "zh-cn": "已实施的离开状态，属性更新"
-            },
-            "0.0.5": {
-                "en": "First beta release, read all information to states by configurable interval.",
-                "de": "Erste Beta-Version, lesen Sie alle Informationen in konfigurierbaren Intervallen.",
-                "ru": "Первый бета-релиз, прочитайте всю информацию для состояний через настраиваемый интервал",
-                "pt": "Primeira versão beta, leia todas as informações dos estados por intervalo configurável.",
-                "nl": "Eerste bètaversie, lees alle informatie naar toestanden volgens configureerbaar interval.",
-                "fr": "Première version bêta, lisez toutes les informations dans des états par intervalle configurable.",
-                "it": "Prima versione beta, leggi tutte le informazioni sugli stati per intervallo configurabile.",
-                "es": "Primera versión beta, lea toda la información a los estados por intervalo configurable.",
-                "pl": "Pierwsza wersja beta, czytaj wszystkie informacje do stanów według konfigurowalnego interwału.",
-                "zh-cn": "第一个beta版本，按可配置的间隔将所有信息读取到状态。"
             }
         },
         "title": "Tado",
