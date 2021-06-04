@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.0-3",
+        "version": "0.3.0-4",
         "news": {
+            "0.3.0-4": {
+                "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
+                "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
+                "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
+                "pt": "Refatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nimplementar funcionalidade de deslocamento\nDefina o tempo mínimo de atualização para 30 segundos\nBump iobroker-jsonexplorer para v0.1.0",
+                "nl": "Technische re-factoring van het staatsbeheer !BREKENDE VERANDERINGEN! (zie hierboven)\noffset-functionaliteit implementeren\nStel de minimale verversingstijd in op 30 seconden\nBump iobroker-jsonexplorer naar v0.1.0",
+                "fr": "Refonte technique de la gestion de l'état ! CHANGEMENTS BRUTS ! (voir au dessus)\nimplémenter la fonctionnalité de décalage\nDéfinir le temps de rafraîchissement minimum à 30 secondes\nTransférez iobroker-jsonexplorer vers la v0.1.0",
+                "it": "Re-factoring tecnico della gestione statale !CAMBIAMENTI ROTANTI! (vedi sopra)\nimplementare la funzionalità di offset\nImposta il tempo di aggiornamento minimo su 30 secondi\nPassa iobroker-jsonexplorer alla v0.1.0",
+                "es": "¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nimplementar la funcionalidad de compensación\nEstablecer el tiempo de actualización mínimo en 30 segundos\nPase iobroker-jsonexplorer a v0.1.0",
+                "pl": "Refaktoryzacja techniczna zarządzania państwem !PRZEŁOMOWE ZMIANY! (patrz wyżej)\nwdrożyć funkcjonalność offsetową\nUstaw minimalny czas odświeżania na 30 sekund\nPodnieś iobroker-jsonexplorer do wersji 0.1.0",
+                "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
+            },
             "0.3.0-3": {
                 "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)\nSet minimum refresh time to 30 seconds",
                 "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)\nStellen Sie die minimale Aktualisierungszeit auf 30 Sekunden ein",
@@ -230,18 +242,6 @@
                 "es": "Se implementó el cambio de temperatura ambiente y se habilitó / deshabilitó el control de calefacción",
                 "pl": "Wdrożona zmiana temperatury w pomieszczeniu i włączenie / wyłączenie sterowania ogrzewaniem",
                 "zh-cn": "实现室内温度变化并启用/禁用加热控制"
-            },
-            "0.0.8": {
-                "en": "Implemented overlay clear states & control",
-                "de": "Overlay Clear States & Control implementiert",
-                "ru": "Реализовано наложение четких состояний и контроля",
-                "pt": "Sobreposição de estados claros e controle implementados",
-                "nl": "Geïmplementeerde overlay clear states & control geïmplementeerd",
-                "fr": "Superposition implémentée des états et contrôles clairs",
-                "it": "Implementati stati di sovrapposizione e controllo chiari",
-                "es": "Superposición implementada estados claros y control",
-                "pl": "Wdrożona nakładka kasuje stany i kontrolę",
-                "zh-cn": "实施叠加清除状态和控制"
             }
         },
         "title": "Tado",
