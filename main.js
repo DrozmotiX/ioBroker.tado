@@ -142,7 +142,7 @@ class Tado extends utils.Adapter {
 						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
 						this.log.debug('Mode set: ' + set_tadomode);
 						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
-						this.log.debug('FanSpeed set: ' + set_tadomode);
+						this.log.debug('FanSpeed set: ' + set_fanSpeed);
 						// @ts-ignore
 						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
 						this.log.debug('DurationInSeconds set: ' + set_durationInSeconds);
@@ -163,7 +163,7 @@ class Tado extends utils.Adapter {
 								set_mode = 'NEXT_TIME_BLOCK';
 							}
 						}
-						this.log.debug('Room mode set: ' + set_mode);
+						this.log.debug('Room mode (typeSkillBasedApp) set: ' + set_mode);
 
 						switch (deviceId[x]) {
 							case ('overlayClearZone'):
@@ -274,7 +274,7 @@ class Tado extends utils.Adapter {
 		let now = new Date().getTime();
 		let step = 'start';
 		if (now - this.lastupdate > oneHour) outdated = true;
-		
+
 		// Get login token
 		try {
 			step = 'login';
@@ -306,9 +306,9 @@ class Tado extends utils.Adapter {
 					await this.DoHome(this.getMe_data.homes[i].id);
 					step = 'DoDevices';
 					await this.DoDevices(this.getMe_data.homes[i].id);
-					step = 'DoMobileDevices';
-					await this.DoMobileDevices(this.getMe_data.homes[i].id);
 				}
+				step = 'DoMobileDevices';
+				await this.DoMobileDevices(this.getMe_data.homes[i].id);
 				step = 'DoZones';
 				await this.DoZones(this.getMe_data.homes[i].id);
 				step = 'DoWeather';
@@ -321,6 +321,7 @@ class Tado extends utils.Adapter {
 				} else {
 					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Rooms.*');
 					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Weather.*');
+					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Mobile_Devices.*');
 				}
 			}
 
@@ -645,7 +646,7 @@ class Tado extends utils.Adapter {
 
 	async DoDevices(HomeId) {
 		const Devices_data = await this.getDevices(HomeId);
-		this.log.debug('Users_data Result: ' + JSON.stringify(Devices_data));
+		this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
 	}
 
