@@ -21,6 +21,7 @@ If you like my work, please feel free to provide a personal donation
 [![Donate](https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/button.png)](http://paypal.me/DutchmanNL)
 
 ## Breaking changes in v0.3.x
+Recommendation: If possible, delete old adapter installation first or delete all states so that no unsupported states keep in the installation.
 Upgrade from 0.2.x to v0.3.x includes a technical re-factioring with breaking changes. Some states changed there name/path, e.g.
 
 | v0.2.x | v0.3.x |
