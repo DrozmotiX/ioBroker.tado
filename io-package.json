@@ -1,8 +1,32 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.0-4",
+        "version": "0.3.0-6",
         "news": {
+            "0.3.0-6": {
+                "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
+                "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
+                "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
+                "pt": "Refatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nimplementar funcionalidade de deslocamento\nDefina o tempo mínimo de atualização para 30 segundos\nBump iobroker-jsonexplorer para v0.1.0",
+                "nl": "Technische re-factoring van het staatsbeheer !BREKENDE VERANDERINGEN! (zie hierboven)\noffset-functionaliteit implementeren\nStel de minimale verversingstijd in op 30 seconden\nBump iobroker-jsonexplorer naar v0.1.0",
+                "fr": "Refonte technique de la gestion de l'état ! CHANGEMENTS BRUTS ! (voir au dessus)\nimplémenter la fonctionnalité de décalage\nDéfinir le temps de rafraîchissement minimum à 30 secondes\nTransférez iobroker-jsonexplorer vers la v0.1.0",
+                "it": "Refactoring tecnico della gestione statale !CAMBIAMENTI ROTANTI! (vedi sopra)\nimplementare la funzionalità di offset\nImposta il tempo di aggiornamento minimo su 30 secondi\nPassa iobroker-jsonexplorer alla v0.1.0",
+                "es": "¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nimplementar la funcionalidad de compensación\nEstablecer el tiempo de actualización mínimo en 30 segundos\nPase iobroker-jsonexplorer a v0.1.0",
+                "pl": "Refaktoryzacja techniczna zarządzania państwem !PRZEŁOMOWE ZMIANY! (patrz wyżej)\nwdrożyć funkcjonalność offsetową\nUstaw minimalny czas odświeżania na 30 sekund\nPodnieś iobroker-jsonexplorer do wersji 0.1.0",
+                "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
+            },
+            "0.3.0-5": {
+                "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
+                "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
+                "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
+                "pt": "Refatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nimplementar funcionalidade de deslocamento\nDefina o tempo mínimo de atualização para 30 segundos\nBump iobroker-jsonexplorer para v0.1.0",
+                "nl": "Technische re-factoring van het staatsbeheer !BREKENDE VERANDERINGEN! (zie hierboven)\noffset-functionaliteit implementeren\nStel de minimale verversingstijd in op 30 seconden\nBump iobroker-jsonexplorer naar v0.1.0",
+                "fr": "Refonte technique de la gestion de l'état ! CHANGEMENTS BRUTS ! (voir au dessus)\nimplémenter la fonctionnalité de décalage\nDéfinir le temps de rafraîchissement minimum à 30 secondes\nTransférez iobroker-jsonexplorer vers la v0.1.0",
+                "it": "Refactoring tecnico della gestione statale !CAMBIAMENTI ROTANTI! (vedi sopra)\nimplementare la funzionalità di offset\nImposta il tempo di aggiornamento minimo su 30 secondi\nPassa iobroker-jsonexplorer alla v0.1.0",
+                "es": "¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nimplementar la funcionalidad de compensación\nEstablecer el tiempo de actualización mínimo en 30 segundos\nPase iobroker-jsonexplorer a v0.1.0",
+                "pl": "Refaktoryzacja techniczna zarządzania państwem !PRZEŁOMOWE ZMIANY! (patrz wyżej)\nwdrożyć funkcjonalność offsetową\nUstaw minimalny czas odświeżania na 30 sekund\nPodnieś iobroker-jsonexplorer do wersji 0.1.0",
+                "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
+            },
             "0.3.0-4": {
                 "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
                 "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
@@ -218,30 +242,6 @@
                 "es": "Se corrigieron los mensajes de registro de errores informados",
                 "pl": "Naprawiono zgłaszane komunikaty dziennika błędów",
                 "zh-cn": "修复了报告的错误日志消息"
-            },
-            "0.1.2": {
-                "en": "Fix of set temperature reset and write API information to states.",
-                "de": "Korrektur des Zurücksetzens der eingestellten Temperatur und Schreiben von API-Informationen in Zustände.",
-                "ru": "Исправление сброса заданной температуры и запись информации API в состояния.",
-                "pt": "Correção da redefinição da temperatura definida e gravação das informações da API nos estados.",
-                "nl": "Herstel van ingestelde temperatuurreset en schrijf API-informatie naar toestanden.",
-                "fr": "Correction de la réinitialisation de la température définie et écriture des informations de l'API dans les états.",
-                "it": "Correzione del ripristino della temperatura impostata e scrittura delle informazioni API negli stati.",
-                "es": "Arreglo de restablecimiento de temperatura establecida y escribir información de API en estados.",
-                "pl": "Naprawiono resetowanie ustawionej temperatury i zapisywanie informacji API do stanów.",
-                "zh-cn": "修复设定温度重置并将API信息写入状态。"
-            },
-            "0.1.0": {
-                "en": "Implemented room temperature change and enable/disable heating control",
-                "de": "Raumtemperaturänderung implementiert und Heizungsregelung aktivieren / deaktivieren",
-                "ru": "Реализовано изменение температуры в помещении и включение / отключение управления отоплением",
-                "pt": "Implementada mudança de temperatura ambiente e ativar / desativar o controle de aquecimento",
-                "nl": "Veranderde ruimtetemperatuurverandering en schakel de verwarmingsregeling in / uit",
-                "fr": "Mise en œuvre du changement de température ambiante et activation / désactivation du contrôle du chauffage",
-                "it": "Implementata la variazione della temperatura ambiente e abilita / disabilita il controllo del riscaldamento",
-                "es": "Se implementó el cambio de temperatura ambiente y se habilitó / deshabilitó el control de calefacción",
-                "pl": "Wdrożona zmiana temperatury w pomieszczeniu i włączenie / wyłączenie sterowania ogrzewaniem",
-                "zh-cn": "实现室内温度变化并启用/禁用加热控制"
             }
         },
         "title": "Tado",
