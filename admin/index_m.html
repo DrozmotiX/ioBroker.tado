@@ -1,7 +1,6 @@
 <html>
 
 <head>
-
 	<!-- Load ioBroker scripts and styles-->
 	<link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
 	<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
@@ -19,63 +18,36 @@
 
 	<script type="text/javascript">
 
-
-		// Create secrect for encrypted password storage
-		var secret;
-		function encrypt(key, value) {
-			var result = '';
-			for(var i = 0; i < value.length; ++i) {
-				result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-			}
-			return result;
-		}
-		function decrypt(key, value) {
-			var result = '';
-			for(var i = 0; i < value.length; ++i) {
-				result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-			}
-			return result;
-		}
-
 		function loadHelper(settings, onChange) {
-      // example: select elements with id=key and class=value and insert value
+			// example: select elements with id=key and class=value and insert value
 			if (!settings) return;
-         		$('.value').each(function () {
-					var $key = $(this);
-					var id = $key.attr('id');
-					if (id === 'Password') {
-						settings[id] = decrypt(secret, settings[id]);
-					}
-					if ($key.attr('type') === 'checkbox') {
+			$('.value').each(function () {
+				var $key = $(this);
+				var id = $key.attr('id');
+				if ($key.attr('type') === 'checkbox') {
 					// do not call onChange direct, because onChange could expect some arguments
-						$key.prop('checked', settings[id]).change(function() {
+					$key.prop('checked', settings[id]).change(function () {
 						onChange();
 					});
-					}	 else {
+				} else {
 					// do not call onChange direct, because onChange could expect some arguments
-						$key.val(settings[id]).change(function() {
+					$key.val(settings[id]).change(function () {
 						onChange();
-					}).keyup(function() {
+					}).keyup(function () {
 						onChange();
 					});
-					}
-				});
-   			onChange(false);
-   			// function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
-        	M.updateTextFields();
+				}
+			});
+			onChange(false);
+			// function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
+			M.updateTextFields();
 		}
 
-		// This will be called by the admin adapter when the settings page loads
 		// This will be called by the admin adapter when the settings page loads
 		function load(settings, onChange) {
 			// example: select elements with id=key and class=value and insert value
 			if (!settings) return;
-			socket.emit('getObject', 'system.config', function (err, obj) {
-             secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
-             loadHelper(settings, onChange);
-		   });
-		   
-		   
+			loadHelper(settings, onChange)
 			onChange(false);
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
@@ -83,42 +55,36 @@
 
 		// This will be called by the admin adapter when the user presses the save button
 		function save(callback) {
-         // example: select elements with class=value and build settings object
-         var obj = {};
-         $('.value').each(function () {
-             var $this = $(this);
-             var id = $this.attr('id');
-             if ($this.attr('type') === 'checkbox') {
-                 obj[id] = $this.prop('checked');
-             } else {
-                 var value = $this.val();
-                 if (id === 'Password') {
-                     value = encrypt(secret, value);
-                 }
-                 obj[id] = value;
-             }
-         });
-  
-		callback(obj);
+			// example: select elements with class=value and build settings object
+			var obj = {};
+			$('.value').each(function () {
+				var $this = $(this);
+				var id = $this.attr('id');
+				if ($this.attr('type') === 'checkbox') {
+					obj[id] = $this.prop('checked');
+				} else {
+					var value = $this.val();
+					obj[id] = value;
+				}
+			});
+
+			callback(obj);
 		}
 	</script>
-
 </head>
 
 <body>
-
 	<div class="m adapter-container">
-
-			<table>
-					<tbody>
-						<tr>
-							<td><img src="tado.png" width="64" height="64" /></td>
-							<td>
-								<h3 class="translate">Tado adapter settings</h3>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+		<table>
+			<tbody>
+				<tr>
+					<td><img src="tado.png" width="64" height="64" /></td>
+					<td>
+						<h3 class="translate">Tado adapter settings</h3>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<!-- For example two columns with settings: -->
 		<div class="row">

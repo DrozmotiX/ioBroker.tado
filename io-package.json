@@ -304,6 +304,9 @@
             }
         }
     },
+    "encryptedNative": [
+        "Password"
+    ],
     "native": {
         "Username": "",
         "Password": "",

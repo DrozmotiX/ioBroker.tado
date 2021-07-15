@@ -43,6 +43,9 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     ### __WORK IN PROGRESS__
 -->
 
+### __WORK IN PROGRESS__
+* (HGlab01) Use password handling from JS-Controller framework
+
 ### 0.3.1 (2021-07-15)
 * (HGlab01) Works with Node 12.x or higher (simple-oauth2 update dependency)
 * (HGlab01) Bump simple-oauth2 from 2.5.2 to 4.2.0
