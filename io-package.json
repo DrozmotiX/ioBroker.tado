@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.1-0",
+        "version": "0.3.1",
         "news": {
+            "0.3.1": {
+                "en": "Works with Node 12.x or higher (simple-oauth2 update dependency)\nBump simple-oauth2 from 2.5.2 to 4.2.0\nPrepare for first stable version",
+                "de": "Funktioniert mit Node 12.x oder höher (simple-oauth2-Update-Abhängigkeit)\nEinfach-oauth2 von 2.5.2 auf 4.2.0 heben\nBereiten Sie sich auf die erste stabile Version vor",
+                "ru": "Работает с Node 12.x и выше (зависимость обновления simple-oauth2)\nУвеличить simple-oauth2 с 2.5.2 до 4.2.0\nПодготовьтесь к первой стабильной версии",
+                "pt": "Funciona com o Node 12.x ou superior (dependência de atualização simple-oauth2)\nBump simple-oauth2 de 2.5.2 para 4.2.0\nPrepare-se para a primeira versão estável",
+                "nl": "Werkt met Node 12.x of hoger (simple-oauth2-update-afhankelijkheid)\nBump simple-oauth2 van 2.5.2 naar 4.2.0\nBereid je voor op de eerste stabiele versie",
+                "fr": "Fonctionne avec Node 12.x ou supérieur (dépendance de mise à jour simple-oauth2)\nBump simple-oauth2 de 2.5.2 à 4.2.0\nPréparer la première version stable",
+                "it": "Funziona con il nodo 12.x o successivo (dipendenza dall'aggiornamento semplice-oauth2)\nBump simple-oauth2 da 2.5.2 a 4.2.0\nPreparati per la prima versione stabile",
+                "es": "Funciona con Node 12.xo superior (dependencia de actualización simple-oauth2)\nBump simple-oauth2 de 2.5.2 a 4.2.0\nPrepárese para la primera versión estable",
+                "pl": "Działa z węzłem 12.x lub nowszym (zależność aktualizacji simple-oauth2)\nZmień simple-oauth2 z 2.5.2 na 4.2.0\nPrzygotuj się na pierwszą stabilną wersję",
+                "zh-cn": "适用于 Node 12.x 或更高版本（simple-oauth2 更新依赖项）\n将 simple-oauth2 从 2.5.2 提升到 4.2.0\n准备第一个稳定版本"
+            },
             "0.3.1-0": {
                 "en": "Works with Node 12.x or higher (simple-oauth2 update dependency)\nBump simple-oauth2 from 2.5.2 to 4.2.0\nPrepare for first stable version",
                 "de": "Funktioniert mit Node 12.x oder höher (simple-oauth2-Update-Abhängigkeit)\nEinfach-oauth2 von 2.5.2 auf 4.2.0 heben\nBereiten Sie sich auf die erste stabile Version vor",
@@ -230,18 +242,6 @@
                 "es": "Se corrigió la información inmanejable que se encuentra en DoZoneState: \"openWindowDetected\"",
                 "pl": "Napraw nieprzydatne informacje znalezione w DoZoneState: „openWindowDetected”",
                 "zh-cn": "修复在DoZoneState中找到的无法处理的信息：“ openWindowDetected”"
-            },
-            "0.1.5": {
-                "en": "Stable release candidate",
-                "de": "Stabiler Release-Kandidat",
-                "ru": "Стабильный релиз кандидата",
-                "pt": "Candidato de liberação estável",
-                "nl": "Kandidaat voor stabiele release",
-                "fr": "Candidat à la version stable",
-                "it": "Candidato al rilascio stabile",
-                "es": "Candidato de liberación estable",
-                "pl": "Kandydat do wydania stabilnego",
-                "zh-cn": "稳定释放候选"
             }
         },
         "title": "Tado",
