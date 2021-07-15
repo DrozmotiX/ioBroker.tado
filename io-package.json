@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.2-0",
+        "version": "0.3.2",
         "news": {
+            "0.3.2": {
+                "en": "Use password handling from JS-Controller framework",
+                "de": "Verwenden Sie die Passwortverwaltung aus dem JS-Controller-Framework",
+                "ru": "Использовать обработку паролей из JS-Controller framework",
+                "pt": "Use o tratamento de senha da estrutura JS-Controller",
+                "nl": "Gebruik wachtwoordafhandeling vanuit het JS-Controller-framework",
+                "fr": "Utiliser la gestion des mots de passe du framework JS-Controller",
+                "it": "Usa la gestione delle password dal framework JS-Controller",
+                "es": "Utilice el manejo de contraseñas del marco JS-Controller",
+                "pl": "Użyj obsługi haseł z frameworka JS-Controller",
+                "zh-cn": "使用来自 JS-Controller 框架的密码处理"
+            },
             "0.3.2-0": {
                 "en": "Use password handling from JS-Controller framework",
                 "de": "Verwenden Sie die Passwortverwaltung aus dem JS-Controller-Framework",
@@ -230,18 +242,6 @@
                 "es": "Solucionar problemas para JS-Controller 3.x, Sentry implementado",
                 "pl": "Napraw problemy dla JS-Controller 3.x, Sentry zaimplementowane",
                 "zh-cn": "修复JS-Controller 3.x的问题，Sentry已实现"
-            },
-            "0.1.8": {
-                "en": "Correct countdown of \"remainingtimeinseconds\" implemented.",
-                "de": "Richtiger Countdown für \"verbleibende Zeit in Sekunden\" implementiert.",
-                "ru": "Правильный обратный отсчет оставшегося времени в секундах.",
-                "pt": "Contagem regressiva correta de \"tempo restante em segundos\" implementada.",
-                "nl": "Correct aftellen van \"resterende timeinseconds\" geïmplementeerd.",
-                "fr": "Compte à rebours correct des «secondes restantes» implémenté.",
-                "it": "Implementato il conto alla rovescia corretto di \"rimanentiinsecondi\".",
-                "es": "Cuenta atrás correcta de \"tiempo restante en segundos\" implementado.",
-                "pl": "Zaimplementowano poprawne odliczanie „pozostały czas w sekundach”.",
-                "zh-cn": "正确倒计时“剩余时间（秒）”。"
             }
         },
         "title": "Tado",
