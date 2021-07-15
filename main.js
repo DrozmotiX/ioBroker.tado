@@ -23,7 +23,7 @@ const tado_config = {
 		tokenHost: tado_auth_url,
 	}
 };
-const ResourceOwnerPassword = require('simple-oauth2');
+const { ResourceOwnerPassword } = require('simple-oauth2');
 const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
