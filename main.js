@@ -240,27 +240,16 @@ class Tado extends utils.Adapter {
 	}
 
 	async DoConnect() {
-		// this.log.info('Username: ' + user + ' Password: ' + pass);
 		const user = this.config.Username;
 		let pass = this.config.Password;
 
-		// Check if credentials are not empty and decrypt stored password
+		// Check if credentials are not empty
 		if (user !== '' && pass !== '') {
-			this.getForeignObject('system.config', (err, obj) => {
-				if (obj && obj.native && obj.native.secret) {
-					//noinspection JSUnresolvedVariable
-					pass = this.decrypt(obj.native.secret, pass);
-				} else {
-					//noinspection JSUnresolvedVariable
-					pass = this.decrypt('Zgfr56gFe87jJOM', pass);
-				}
-
-				try {
-					this.DoData_Refresh(user, pass);
-				} catch (error) {
-					this.log.error(error);
-				}
-			});
+			try {
+				await this.DoData_Refresh(user, pass);
+			} catch (error) {
+				this.log.error(error);
+			}
 		} else {
 			this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
 			this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
@@ -349,17 +338,6 @@ class Tado extends utils.Adapter {
 				this.DoConnect();
 			}, 30000);
 		}
-	}
-
-	// Function to decrypt passwords
-	// @ts-ignore
-	decrypt(key, value) {
-		let result = '';
-		for (let i = 0; i < value.length; ++i) {
-			result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-		}
-		this.log.debug('client_secret decrypt ready');
-		return result;
 	}
 
 	_refreshToken() {

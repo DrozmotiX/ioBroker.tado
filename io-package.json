@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.1",
+        "version": "0.3.2-0",
         "news": {
+            "0.3.2-0": {
+                "en": "Use password handling from JS-Controller framework",
+                "de": "Verwenden Sie die Passwortverwaltung aus dem JS-Controller-Framework",
+                "ru": "Использовать обработку паролей из JS-Controller framework",
+                "pt": "Use o tratamento de senha da estrutura JS-Controller",
+                "nl": "Gebruik wachtwoordafhandeling vanuit het JS-Controller-framework",
+                "fr": "Utiliser la gestion des mots de passe du framework JS-Controller",
+                "it": "Usa la gestione delle password dal framework JS-Controller",
+                "es": "Utilice el manejo de contraseñas del marco JS-Controller",
+                "pl": "Użyj obsługi haseł z frameworka JS-Controller",
+                "zh-cn": "使用来自 JS-Controller 框架的密码处理"
+            },
             "0.3.1": {
                 "en": "Works with Node 12.x or higher (simple-oauth2 update dependency)\nBump simple-oauth2 from 2.5.2 to 4.2.0\nPrepare for first stable version",
                 "de": "Funktioniert mit Node 12.x oder höher (simple-oauth2-Update-Abhängigkeit)\nEinfach-oauth2 von 2.5.2 auf 4.2.0 heben\nBereiten Sie sich auf die erste stabile Version vor",
@@ -230,18 +242,6 @@
                 "es": "Cuenta atrás correcta de \"tiempo restante en segundos\" implementado.",
                 "pl": "Zaimplementowano poprawne odliczanie „pozostały czas w sekundach”.",
                 "zh-cn": "正确倒计时“剩余时间（秒）”。"
-            },
-            "0.1.7": {
-                "en": "Fix Unhandable information found in DoZoneState : \"openWindowDetected\" ",
-                "de": "In DoZoneState gefundene nicht handhabbare Informationen wurden behoben: \"openWindowDetected\"",
-                "ru": "Исправить недоступную информацию, найденную в DoZoneState: \"openWindowDetected\"",
-                "pt": "Corrija as informações não entregues encontradas no DoZoneState: \"openWindowDetected\"",
-                "nl": "Onhandige informatie in DoZoneState herstellen: \"openWindowDetected\"",
-                "fr": "Correction des informations non maniables trouvées dans DoZoneState: \"openWindowDetected\"",
-                "it": "Correzione delle informazioni non gestibili rilevate in DoZoneState: \"openWindowDetected\"",
-                "es": "Se corrigió la información inmanejable que se encuentra en DoZoneState: \"openWindowDetected\"",
-                "pl": "Napraw nieprzydatne informacje znalezione w DoZoneState: „openWindowDetected”",
-                "zh-cn": "修复在DoZoneState中找到的无法处理的信息：“ openWindowDetected”"
             }
         },
         "title": "Tado",
@@ -304,6 +304,9 @@
             }
         }
     },
+    "encryptedNative": [
+        "Password"
+    ],
     "native": {
         "Username": "",
         "Password": "",

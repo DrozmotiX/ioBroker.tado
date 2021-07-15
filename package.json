@@ -1,6 +1,6 @@
 {
   "name": "iobroker.tado",
-  "version": "0.3.1",
+  "version": "0.3.2-0",
   "description": "Tado cloud connector to control Tado devices",
   "author": {
     "name": "DutchmanNL",
