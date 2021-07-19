@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.2",
+        "version": "0.3.3-0",
         "news": {
+            "0.3.3-0": {
+                "en": "Add attributes title, ssid and code\nImprove sentry handling by bumping iobroker-jsonexplorer to v0.1.1",
+                "de": "Attribute title, ssid und code hinzufügen\nVerbessern Sie die Handhabung von Wachen, indem Sie iobroker-jsonexplorer auf v0.1.1 heben",
+                "ru": "Добавьте атрибуты title, ssid и code\nУлучшение обработки часовых, подняв iobroker-jsonexplorer до версии v0.1.1.",
+                "pt": "Adicione os atributos title, ssid e code\nMelhore o manuseio do sentinela passando o iobroker-jsonexplorer para a v0.1.1",
+                "nl": "Voeg attributen titel, ssid en code toe\nVerbeter de afhandeling van de schildwacht door iobroker-jsonexplorer naar v0.1.1 te stoten",
+                "fr": "Ajouter des attributs titre, ssid et code\nAméliorez la gestion des sentinelles en déplaçant iobroker-jsonexplorer vers la v0.1.1",
+                "it": "Aggiungi gli attributi titolo, ssid e codice\nMigliora la gestione delle sentinelle spostando iobroker-jsonexplorer su v0.1.1",
+                "es": "Agregue el título, el ssid y el código de los atributos\nMejore el manejo de centinelas al incorporar iobroker-jsonexplorer a v0.1.1",
+                "pl": "Dodaj tytuł atrybutów, ssid i kod\nPopraw obsługę wartowników, podskakując iobroker-jsonexplorer do wersji 0.1.1",
+                "zh-cn": "添加属性title、ssid和code\n通过将 iobroker-jsonexplorer 升级到 v0.1.1 来改进哨兵处理"
+            },
             "0.3.2": {
                 "en": "Use password handling from JS-Controller framework",
                 "de": "Verwenden Sie die Passwortverwaltung aus dem JS-Controller-Framework",
@@ -230,18 +242,6 @@
                 "es": "Actualizar las dependencias\nActualice las pruebas, elimine el nodo 8 y agregue el nodo 14\nImplementar la implementación automatizada con githubActions\nSoporte de detección de incidentes\nCorrección de error: agregar orientación\nCorrección de error: legacyHeatingInstallationsEnabled\nCorrección de error: agregar legacyHeatingInstallationsEnabled a DoHome\nCorrección de errores: corrige la información no controlada que se encuentra en DoReadDevices",
                 "pl": "Zaktualizuj zależności\nZaktualizuj testy, usuń węzeł 8 i dodaj węzeł 14\nZaimplementuj automatyczne wdrażanie za pomocą githubActions\nWspieraj wykrywanie incydentów\nPoprawka: Dodaj orientację\nBugfix: legacyHeatingInstallationsEnabled\nPoprawka: Dodaj legacyHeatingInstallationsEnabled do DoHome\nPoprawka: Napraw nieobsłużone informacje znalezione w DoReadDevices",
                 "zh-cn": "更新依赖项\n更新测试，删除节点8并添加节点14\n使用githubActions实现自动部署\n支持事件检测\n错误修正：添加方向\n错误修正：legacyHeatingInstallationsEnabled\n错误修正：添加legacyHeatingInstallationsEnabled到DoHome\n错误修正：修正在DoReadDevices中发现的未处理信息"
-            },
-            "0.1.9": {
-                "en": "Fix issues for JS-Controller 3.x, Sentry implemented",
-                "de": "Behebung von Problemen mit JS-Controller 3.x, Sentry implementiert",
-                "ru": "Исправлены проблемы с JS-Controller 3.x, реализован Sentry",
-                "pt": "Correção de problemas para o JS-Controller 3.x, Sentry implementado",
-                "nl": "Problemen oplossen voor JS-Controller 3.x, Sentry geïmplementeerd",
-                "fr": "Correction de problèmes pour JS-Controller 3.x, Sentry implémenté",
-                "it": "Risolve i problemi per JS-Controller 3.x, Sentry implementato",
-                "es": "Solucionar problemas para JS-Controller 3.x, Sentry implementado",
-                "pl": "Napraw problemy dla JS-Controller 3.x, Sentry zaimplementowane",
-                "zh-cn": "修复JS-Controller 3.x的问题，Sentry已实现"
             }
         },
         "title": "Tado",
