@@ -43,6 +43,10 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     ### __WORK IN PROGRESS__
 -->
 
+### __WORK IN PROGRESS__
+* (HGlab01) Add attributes title, ssid and code
+* Improve sentry handling by bumping iobroker-jsonexplorer to v0.1.1
+
 ### 0.3.2 (2021-07-15)
 * (HGlab01) Use password handling from JS-Controller framework
 
