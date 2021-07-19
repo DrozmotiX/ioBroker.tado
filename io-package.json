@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.3-0",
+        "version": "0.3.3",
         "news": {
+            "0.3.3": {
+                "en": "Add attributes title, ssid and code\nImprove sentry handling by bumping iobroker-jsonexplorer to v0.1.1",
+                "de": "Attribute title, ssid und code hinzufügen\nVerbessern Sie die Handhabung von Wachen, indem Sie iobroker-jsonexplorer auf v0.1.1 heben",
+                "ru": "Добавьте атрибуты title, ssid и code\nУлучшение обработки часовых, подняв iobroker-jsonexplorer до версии v0.1.1.",
+                "pt": "Adicione os atributos title, ssid e code\nMelhore o manuseio do sentinela passando o iobroker-jsonexplorer para a v0.1.1",
+                "nl": "Voeg attributen titel, ssid en code toe\nVerbeter de afhandeling van de schildwacht door iobroker-jsonexplorer naar v0.1.1 te stoten",
+                "fr": "Ajouter des attributs titre, ssid et code\nAméliorez la gestion des sentinelles en déplaçant iobroker-jsonexplorer vers la v0.1.1",
+                "it": "Aggiungi gli attributi titolo, ssid e codice\nMigliora la gestione delle sentinelle spostando iobroker-jsonexplorer su v0.1.1",
+                "es": "Agregue el título, el ssid y el código de los atributos\nMejore el manejo de centinelas al incorporar iobroker-jsonexplorer a v0.1.1",
+                "pl": "Dodaj tytuł atrybutów, ssid i kod\nPopraw obsługę wartowników, podskakując iobroker-jsonexplorer do wersji 0.1.1",
+                "zh-cn": "添加属性title、ssid和code\n通过将 iobroker-jsonexplorer 升级到 v0.1.1 来改进哨兵处理"
+            },
             "0.3.3-0": {
                 "en": "Add attributes title, ssid and code\nImprove sentry handling by bumping iobroker-jsonexplorer to v0.1.1",
                 "de": "Attribute title, ssid und code hinzufügen\nVerbessern Sie die Handhabung von Wachen, indem Sie iobroker-jsonexplorer auf v0.1.1 heben",
@@ -230,18 +242,6 @@
                 "es": "agregar typeSkillBasedApp\nagregar autoAssistFreeTrialEnabled\nAgregar soporte para autoAssistFreeTrialEnabled\nMétodos de superposición 'manual' y 'bloque de próxima vez'",
                 "pl": "dodaj typeSkillBasedApp\ndodaj autoAssistFreeTrialEnabled\nDodaj obsługę autoAssistFreeTrialEnabled\nMetody nakładania „ręczne” i „następny blok czasowy”",
                 "zh-cn": "添加typeSkillBasedApp\n添加autoAssistFreeTrialEnabled\n添加对autoAssistFreeTrialEnabled的支持\n叠加方法“手动”和“下一个时间段”"
-            },
-            "0.2.1": {
-                "en": "Update dependency's\nUpdate testing, remove node 8 and add node 14\nImplement automated deployment with githubActions\nSupport incident Detection\nBugfix : Add orientation\nBugfix : legacyHeatingInstallationsEnabled\nBugfix : Add legacyHeatingInstallationsEnabled to DoHome\nBugfix : Fix unhandled information found in DoReadDevices",
-                "de": "Abhängigkeiten aktualisieren\nAktualisieren Sie die Tests, entfernen Sie Knoten 8 und fügen Sie Knoten 14 hinzu\nImplementieren Sie die automatisierte Bereitstellung mit githubActions\nSupport Incident Detection\nBugfix: Orientierung hinzufügen\nBugfix: LegacyHeatingInstallationsEnabled\nBugfix: LegacyHeatingInstallationsEnabled zu DoHome hinzufügen\nBugfix: Nicht behandelte Informationen in DoReadDevices korrigieren",
-                "ru": "Обновить зависимость\nОбновите тестирование, удалите узел 8 и добавьте узел 14\nРеализуйте автоматическое развертывание с помощью githubActions\nПоддержка обнаружения инцидентов\nИсправление: добавить ориентацию\nИсправление: legacyHeatingInstallationsEnabled\nИсправление: добавление legacyHeatingInstallationsEnabled в DoHome\nИсправление: исправление необработанной информации, обнаруженной в DoReadDevices.",
-                "pt": "Atualizar dependências\nTeste de atualização, remova o nó 8 e adicione o nó 14\nImplementar implantação automatizada com githubActions\nSuporte à detecção de incidentes\nCorreção de bug: adicionar orientação\nCorreção de bug: legacyHeatingInstallationsEnabled\nCorreção de bug: adicionar legacyHeatingInstallationsEnabled a DoHome\nCorreção de bug: corrigir informações não manipuladas encontradas em DoReadDevices",
-                "nl": "Update afhankelijkheden\nUpdate testen, verwijder knooppunt 8 en voeg knooppunt 14 toe\nImplementeer geautomatiseerde implementatie met githubActions\nOndersteuning van incidentdetectie\nBugfix: Oriëntatie toevoegen\nBugfix: legacyHeatingInstallationsEnabled\nBugfix: legacyHeatingInstallationsEnabled toegevoegd aan DoHome\nBugfix: reparatie van onverwerkte informatie gevonden in DoReadDevices",
-                "fr": "Mettre à jour les dépendances\nMettre à jour les tests, supprimer le nœud 8 et ajouter le nœud 14\nMettre en œuvre un déploiement automatisé avec githubActions\nDétection des incidents de soutien\nCorrectif: ajouter une orientation\nCorrection de bug: legacyHeatingInstallationsEnabled\nCorrectif: ajouter des installations de chauffage héritées activées à DoHome\nCorrection de bug: correction des informations non gérées trouvées dans DoReadDevices",
-                "it": "Aggiorna la dipendenza\nAggiorna il test, rimuovi il nodo 8 e aggiungi il nodo 14\nImplementa la distribuzione automatizzata con githubActions\nSupportare il rilevamento degli incidenti\nBugfix: Aggiungi orientamento\nErrore corretto: legacyHeatingInstallationsEnabled\nBugfix: aggiungi legacyHeatingInstallationsEnabled a DoHome\nBugfix: correzione delle informazioni non gestite trovate in DoReadDevices",
-                "es": "Actualizar las dependencias\nActualice las pruebas, elimine el nodo 8 y agregue el nodo 14\nImplementar la implementación automatizada con githubActions\nSoporte de detección de incidentes\nCorrección de error: agregar orientación\nCorrección de error: legacyHeatingInstallationsEnabled\nCorrección de error: agregar legacyHeatingInstallationsEnabled a DoHome\nCorrección de errores: corrige la información no controlada que se encuentra en DoReadDevices",
-                "pl": "Zaktualizuj zależności\nZaktualizuj testy, usuń węzeł 8 i dodaj węzeł 14\nZaimplementuj automatyczne wdrażanie za pomocą githubActions\nWspieraj wykrywanie incydentów\nPoprawka: Dodaj orientację\nBugfix: legacyHeatingInstallationsEnabled\nPoprawka: Dodaj legacyHeatingInstallationsEnabled do DoHome\nPoprawka: Napraw nieobsłużone informacje znalezione w DoReadDevices",
-                "zh-cn": "更新依赖项\n更新测试，删除节点8并添加节点14\n使用githubActions实现自动部署\n支持事件检测\n错误修正：添加方向\n错误修正：legacyHeatingInstallationsEnabled\n错误修正：添加legacyHeatingInstallationsEnabled到DoHome\n错误修正：修正在DoReadDevices中发现的未处理信息"
             }
         },
         "title": "Tado",
