@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.3",
+        "version": "0.3.4-0",
         "news": {
+            "0.3.4-0": {
+                "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' (Sentry: IOBROKER-TADO-1M)",
+                "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' (Sentry: IOBROKER-TADO-1M)",
+                "ru": "добавить атрибут location в черный список (Sentry IOBROKER-TADO-2Y)\nподдержка атрибута 'качели' (Sentry: IOBROKER-TADO-2G)\nподдержка атрибута 'end' (Sentry: IOBROKER-TADO-1M)",
+                "pt": "adicionar o atributo 'local' à lista negra (Sentry IOBROKER-TADO-2Y)\natributo de suporte 'swing' (Sentinela: IOBROKER-TADO-2G)\natributo de suporte 'end' (Sentinela: IOBROKER-TADO-1M)",
+                "nl": "voeg kenmerk 'locatie' toe aan zwarte lijst (Sentry IOBROKER-TADO-2Y)\nondersteuningskenmerk 'swing' (Sentry: IOBROKER-TADO-2G)\nondersteuningskenmerk 'end' (Sentry: IOBROKER-TADO-1M)",
+                "fr": "ajouter l'attribut 'location' à la liste noire (Sentry IOBROKER-TADO-2Y)\nattribut de support « swing » (Sentinelle : IOBROKER-TADO-2G)\nattribut de support 'fin' (Sentry : IOBROKER-TADO-1M)",
+                "it": "aggiungi l'attributo 'posizione' alla lista nera (Sentry IOBROKER-TADO-2Y)\nsupporto attributo 'swing' (sentenza: IOBROKER-TADO-2G)\nattributo di supporto 'end' (Sentry: IOBROKER-TADO-1M)",
+                "es": "agregar atributo 'ubicación' a la lista negra (Sentry IOBROKER-TADO-2Y)\natributo de soporte 'swing' (Centinela: IOBROKER-TADO-2G)\natributo de soporte 'fin' (Sentry: IOBROKER-TADO-1M)",
+                "pl": "dodaj atrybut „lokalizacja” do czarnej listy (Sentry IOBROKER-TADO-2Y)\nwsparcie atrybutu 'swing' (Sentry: IOBROKER-TADO-2G)\nwsparcie atrybutu 'end' (Sentry: IOBROKER-TADO-1M)",
+                "zh-cn": "将属性“位置”添加到黑名单 (Sentry IOBROKER-TADO-2Y)\n支持属性“swing”（哨兵：IOBROKER-TADO-2G）\n支持属性“结束”（哨兵：IOBROKER-TADO-1M）"
+            },
             "0.3.3": {
                 "en": "Add attributes title, ssid and code\nImprove sentry handling by bumping iobroker-jsonexplorer to v0.1.1",
                 "de": "Attribute title, ssid und code hinzufügen\nVerbessern Sie die Handhabung von Wachen, indem Sie iobroker-jsonexplorer auf v0.1.1 heben",
@@ -230,18 +242,6 @@
                 "es": "agregar métodos de superposición 'temporizador'\ntratar con la superposición de objetos JSON o openWindow es nulo\nCorrección de error: no se puede leer la propiedad 'porcentaje' de indefinido",
                 "pl": "dodaj stoper metod nakładania\nradzić sobie z nakładką obiektu JSON lub openWindow ma wartość null\nPoprawka: nie można odczytać wartości „procent” wartości niezdefiniowanej",
                 "zh-cn": "添加叠加方法“计时器”\n处理JSON对象覆盖或openWindow为null\n错误修正：无法读取未定义的属性“百分比”"
-            },
-            "0.2.2": {
-                "en": "add typeSkillBasedApp\nadd autoAssistFreeTrialEnabled\nAdd support for autoAssistFreeTrialEnabled\nOverlay methods 'manual' and 'next time block'",
-                "de": "Fügen Sie typeSkillBasedApp hinzu\nFügen Sie autoAssistFreeTrialEnabled hinzu\nUnterstützung für autoAssistFreeTrialEnabled hinzufügen\nÜberlagerungsmethoden 'manuell' und 'nächster Zeitblock'",
-                "ru": "добавить typeSkillBasedApp\nдобавить autoAssistFreeTrialEnabled\nДобавить поддержку autoAssistFreeTrialEnabled\nМетоды наложения \"вручную\" и \"в следующий раз\"",
-                "pt": "adicionar typeSkillBasedApp\nadd autoAssistFreeTrialEnabled\nAdicionar suporte para autoAssistFreeTrialEnabled\nMétodos de sobreposição 'manual' e 'bloco da próxima vez'",
-                "nl": "voeg typeSkillBasedApp toe\nvoeg autoAssistFreeTrialEnabled toe\nOndersteuning toegevoegd voor autoAssistFreeTrialEnabled\nOverlay-methoden 'handmatig' en 'volgende tijdsblok'",
-                "fr": "ajouter le typeSkillBasedApp\najouter autoAssistFreeTrialEnabled\nAjouter la prise en charge de autoAssistFreeTrialEnabled\nMéthodes de superposition \"manuelle\" et \"bloc horaire suivant\"",
-                "it": "aggiungi typeSkillBasedApp\naggiungi autoAssistFreeTrialEnabled\nAggiungi il supporto per autoAssistFreeTrialEnabled\nMetodi di sovrapposizione \"manuale\" e \"blocco successivo\"",
-                "es": "agregar typeSkillBasedApp\nagregar autoAssistFreeTrialEnabled\nAgregar soporte para autoAssistFreeTrialEnabled\nMétodos de superposición 'manual' y 'bloque de próxima vez'",
-                "pl": "dodaj typeSkillBasedApp\ndodaj autoAssistFreeTrialEnabled\nDodaj obsługę autoAssistFreeTrialEnabled\nMetody nakładania „ręczne” i „następny blok czasowy”",
-                "zh-cn": "添加typeSkillBasedApp\n添加autoAssistFreeTrialEnabled\n添加对autoAssistFreeTrialEnabled的支持\n叠加方法“手动”和“下一个时间段”"
             }
         },
         "title": "Tado",
