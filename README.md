@@ -43,10 +43,10 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     ### __WORK IN PROGRESS__
 -->
 
-### 0.3.4-1 (2021-07-24)
+### __WORK IN PROGRESS__
 * (HGlab01) add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)
 * (HGlab01) support attribute 'swing' (Sentry: IOBROKER-TADO-2G)
-* (HGlab01) support attribute 'end' (Sentry: IOBROKER-TADO-1M)
+* (HGlab01) support attribute 'end' and 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)
 
 ### 0.3.3 (2021-07-19)
 * (HGlab01) Add attributes title, ssid and code
