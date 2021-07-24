@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.4-1",
+        "version": "0.3.4",
         "news": {
+            "0.3.4": {
+                "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' and 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' und 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "ru": "добавить атрибут location в черный список (Sentry IOBROKER-TADO-2Y)\nподдержка атрибута 'качели' (Sentry: IOBROKER-TADO-2G)\nатрибут поддержки 'end' и 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "pt": "adicionar o atributo 'local' à lista negra (Sentry IOBROKER-TADO-2Y)\natributo de suporte 'swing' (Sentinela: IOBROKER-TADO-2G)\nsuporte ao atributo 'end' e 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "nl": "voeg kenmerk 'locatie' toe aan zwarte lijst (Sentry IOBROKER-TADO-2Y)\nondersteuningskenmerk 'swing' (Sentry: IOBROKER-TADO-2G)\nondersteuningskenmerk 'end' en 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "fr": "ajouter l'attribut 'location' à la liste noire (Sentry IOBROKER-TADO-2Y)\nattribut de support « swing » (Sentinelle : IOBROKER-TADO-2G)\nattribut de support 'end' et 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "it": "aggiungi l'attributo 'posizione' alla lista nera (Sentry IOBROKER-TADO-2Y)\nsupporto attributo 'swing' (sentenza: IOBROKER-TADO-2G)\nsupporta l'attributo 'end' e 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "es": "agregar atributo 'ubicación' a la lista negra (Sentry IOBROKER-TADO-2Y)\natributo de soporte 'swing' (Centinela: IOBROKER-TADO-2G)\natributo de soporte 'end' y 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
+                "pl": "dodaj atrybut „lokalizacja” do czarnej listy (Sentry IOBROKER-TADO-2Y)\nwsparcie atrybutu 'swing' (Sentry: IOBROKER-TADO-2G)\nwsparcie atrybutów „end” i „commandTableUploadState” (Sentry: IOBROKER-TADO-1M)",
+                "zh-cn": "将属性“位置”添加到黑名单 (Sentry IOBROKER-TADO-2Y)\n支持属性“swing”（哨兵：IOBROKER-TADO-2G）\n支持属性“end”和“commandTableUploadState”（哨兵：IOBROKER-TADO-1M）"
+            },
             "0.3.4-1": {
                 "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' (Sentry: IOBROKER-TADO-1M)",
                 "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' (Sentry: IOBROKER-TADO-1M)",
@@ -230,18 +242,6 @@
                 "es": "agregar childLockEnabled",
                 "pl": "dodaj childLockEnabled",
                 "zh-cn": "添加childLockEnabled"
-            },
-            "0.2.4": {
-                "en": "Improve overlay modes + solve merge issue of version 0.2.3",
-                "de": "Verbessern Sie die Overlay-Modi und lösen Sie das Zusammenführungsproblem von Version 0.2.3",
-                "ru": "Улучшение режимов наложения + решение проблемы слияния версии 0.2.3",
-                "pt": "Melhorar os modos de sobreposição + resolver o problema de mesclagem da versão 0.2.3",
-                "nl": "Verbeter de overlay-modi + los het samenvoegprobleem van versie 0.2.3 op",
-                "fr": "Améliorer les modes de superposition + résoudre le problème de fusion de la version 0.2.3",
-                "it": "Migliora le modalità di sovrapposizione + risolvi il problema di unione della versione 0.2.3",
-                "es": "Mejorar los modos de superposición + resolver el problema de fusión de la versión 0.2.3",
-                "pl": "Popraw tryby nakładania + rozwiąż problem scalania wersji 0.2.3",
-                "zh-cn": "改进覆盖模式+解决0.2.3版的合并问题"
             }
         },
         "title": "Tado",
