@@ -43,7 +43,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     ### __WORK IN PROGRESS__
 -->
 
-### __WORK IN PROGRESS__
+### 0.3.4-1 (2021-07-24)
 * (HGlab01) add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)
 * (HGlab01) support attribute 'swing' (Sentry: IOBROKER-TADO-2G)
 * (HGlab01) support attribute 'end' (Sentry: IOBROKER-TADO-1M)
