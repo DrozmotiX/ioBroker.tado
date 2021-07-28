@@ -167,7 +167,13 @@ class Tado extends utils.Adapter {
 						switch (deviceId[x]) {
 							case ('overlayClearZone'):
 								this.log.info(`Overlay cleared for room '${zone_id}' in home '${home_id}'`);
-								await this.clearZoneOverlay(home_id, zone_id);
+								if (set_type == 'HOT_WATER') {
+									if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
+									set_power = 'ON';
+									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
+								} else {
+									await this.clearZoneOverlay(home_id, zone_id);
+								}
 								break;
 
 							case ('celsius'):
