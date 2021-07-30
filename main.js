@@ -139,21 +139,21 @@ class Tado extends utils.Adapter {
 						const fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
 
 						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
-						this.log.debug('Mode set: ' + set_tadomode);
 						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
-						this.log.debug('FanSpeed set: ' + set_fanSpeed);
 						// @ts-ignore
 						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
-						this.log.debug('DurationInSeconds set: ' + set_durationInSeconds);
 						// @ts-ignore
 						set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
-						this.log.debug(`Room Temperature set: ${set_temp}`);
 						set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
-						this.log.debug('Room power set: ' + set_power);
 						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
-						this.log.debug('Type set: ' + set_type);
+						set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 
-						if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
+						if (set_type == 'HOT_WATER' && set_temp < 30) {
+							this.log.debug(`Temperature set to 60° instead of ${set_temp} for HOT_WATER`);
+							set_temp = 60;
+						}
+
+						/* if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
 							set_mode = 'NO_OVERLAY';
 						} else {
 							if (mode.val != '') {
@@ -161,19 +161,23 @@ class Tado extends utils.Adapter {
 							} else {
 								set_mode = 'NEXT_TIME_BLOCK';
 							}
-						}
+						}*/
+
+						this.log.debug('Mode is: ' + set_tadomode);
+						this.log.debug('FanSpeed is: ' + set_fanSpeed);
+						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
+						this.log.debug(`Temperature is: ${set_temp}`);
+						this.log.debug('Power is: ' + set_power);
+						this.log.debug('Type is: ' + set_type);
+
+
+
 						this.log.debug('Room mode (typeSkillBasedApp) set: ' + set_mode);
 
 						switch (deviceId[x]) {
 							case ('overlayClearZone'):
 								this.log.info(`Overlay cleared for room '${zone_id}' in home '${home_id}'`);
-								if (set_type == 'HOT_WATER') {
-									if (set_mode == 'NO_OVERLAY') { set_mode = 'NEXT_TIME_BLOCK'; }
-									set_power = 'ON';
-									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
-								} else {
-									await this.clearZoneOverlay(home_id, zone_id);
-								}
+								await this.clearZoneOverlay(home_id, zone_id);
 								break;
 
 							case ('celsius'):
@@ -469,7 +473,9 @@ class Tado extends utils.Adapter {
 	}
 
 	async clearZoneOverlay(home_id, zone_id) {
-		await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
+		this.log.debug(`Called 'DELETE ${url}'`);
+		await this.apiCall(url, 'delete');
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
