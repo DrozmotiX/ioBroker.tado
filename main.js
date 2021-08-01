@@ -130,49 +130,40 @@ class Tado extends utils.Adapter {
 						this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
 					} else {
+						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
 						const mode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.typeSkillBasedApp');
 						const power = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.power');
-						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
-						const tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
-						const fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
+						let tadomode, fanSpeed;
 
-						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
-						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
+						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
 						// @ts-ignore
 						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
 						// @ts-ignore
 						set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
 						set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
-						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
 						set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
+
+						if (set_type == 'AIR_CONDITIONING') {
+							tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
+							fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
+						}
+						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
+						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null || fanSpeed.val == '') ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
 
 						if (set_type == 'HOT_WATER' && set_temp < 30) {
 							this.log.debug(`Temperature set to 60° instead of ${set_temp} for HOT_WATER`);
 							set_temp = 60;
 						}
 
-						/* if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
-							set_mode = 'NO_OVERLAY';
-						} else {
-							if (mode.val != '') {
-								set_mode = mode.val.toString().toUpperCase();
-							} else {
-								set_mode = 'NEXT_TIME_BLOCK';
-							}
-						}*/
-
+						this.log.debug('Type is: ' + set_type);
+						this.log.debug('Power is: ' + set_power);
+						this.log.debug(`Temperature is: ${set_temp}`);
+						this.log.debug('Execution mode (typeSkillBasedApp) is: ' + set_mode);
+						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
 						this.log.debug('Mode is: ' + set_tadomode);
 						this.log.debug('FanSpeed is: ' + set_fanSpeed);
-						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
-						this.log.debug(`Temperature is: ${set_temp}`);
-						this.log.debug('Power is: ' + set_power);
-						this.log.debug('Type is: ' + set_type);
-
-
-
-						this.log.debug('Room mode (typeSkillBasedApp) set: ' + set_mode);
 
 						switch (deviceId[x]) {
 							case ('overlayClearZone'):
