@@ -270,7 +270,8 @@
             "zh-cn": "Tado cloud connector to control Tado devices"
         },
         "authors": [
-            "DutchmanNL <rdrozda@hotmail.com>"
+            "DutchmanNL <rdrozda@hotmail.com>",
+            "HGlab01"
         ],
         "keywords": [
             "energy",
@@ -300,7 +301,7 @@
         ],
         "plugins": {
             "sentry": {
-                "dsn": "https://a0058391f5f840cca1559675ece2de59@sentry.iobroker.net/20"
+                "dsn": "https://9417776af8984b5090f8c4ff8635cead@sentry.iobroker.net/20"
             }
         }
     },
