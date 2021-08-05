@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.4",
+        "version": "0.3.5-0",
         "news": {
+            "0.3.5-0": {
+                "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn",
+                "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn",
+                "ru": "исправить проблему «невозможно включить горячую воду» (# 309)\nперейти на новый сторожевой dsn",
+                "pt": "corrigir o problema de 'água quente não pode ser ligada' (# 309)\nmudar para uma nova sentinela dsn",
+                "nl": "probleem oplossen 'heet water kan niet worden ingeschakeld' (#309)\nverander naar nieuwe schildwacht dsn",
+                "fr": "résoudre le problème « l'eau chaude ne peut pas être allumée » (#309)\nchanger pour le nouveau dsn de sentinelle",
+                "it": "risolto il problema \"Impossibile accendere l'acqua calda\" (#309)\ncambia a nuovo sentry dsn",
+                "es": "Solucione el problema 'no se puede encender el agua caliente' (# 309)\ncambiar a nuevo centinela dsn",
+                "pl": "naprawiono problem „nie można włączyć ciepłej wody” (#309)\nzmiana na nowy wartownik dsn",
+                "zh-cn": "修复“无法打开热水”的问题 (#309)\n更改为新的哨兵 dsn"
+            },
             "0.3.4": {
                 "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' and 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
                 "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' und 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
@@ -230,18 +242,6 @@
                 "es": "aplicar formato para main.js\nagregar quickActionsEnabled (# 164)\nadmite dispositivos HOT_WATER (# 138)\nadmite dispositivos AIR_CONDITIONING (# 146)\nImplementar el manejo de grupos para setZoneOverlay\nsolucionar problema: el estado no tiene ningún objeto existente (# 184)\nagregue la función de limpieza para el 'sondeo' del temporizador existente\nstate_attr.js: el atributo 'soporte' se definió dos veces",
                 "pl": "zastosuj formatowanie dla main.js.\nadd quickActionsEnabled (# 164)\nobsługa urządzeń HOT_WATER (# 138)\nobsługa urządzeń AIR_CONDITIONING (nr 146)\nZaimplementuj obsługę puli dla setZoneOverlay\nnaprawiono problem: stan nie ma istniejącego obiektu (# 184)\ndodaj funkcję czyszczenia dla istniejącego `` odpytywania '' timera\nstate_attr.js: atrybut „support” został zdefiniowany dwukrotnie",
                 "zh-cn": "为main.js应用格式\n添加quickActionsEnabled（＃164）\n支持HOT_WATER设备（＃138）\n支持AIR_CONDITIONING设备（＃146）\n实现setZoneOverlay的池处理\n修复问题：状态没有现有对象（＃184）\n为现有计时器“轮询”添加清理功能\nstate_attr.js：属性“ support”定义了两次"
-            },
-            "0.2.5": {
-                "en": "add childLockEnabled",
-                "de": "füge childLockEnabled hinzu",
-                "ru": "добавить childLockEnabled",
-                "pt": "adicionar childLockEnabled",
-                "nl": "toevoegen childLockEnabled",
-                "fr": "ajouter childLockEnabled",
-                "it": "aggiungi childLockEnabled",
-                "es": "agregar childLockEnabled",
-                "pl": "dodaj childLockEnabled",
-                "zh-cn": "添加childLockEnabled"
             }
         },
         "title": "Tado",

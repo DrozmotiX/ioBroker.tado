@@ -776,10 +776,12 @@ class Tado extends utils.Adapter {
 
 	async errorHandling(codePart, error) {
 		this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
-		if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
-			const sentryInstance = this.getPluginInstance('sentry');
-			if (sentryInstance) {
-				sentryInstance.getSentryObject().captureException(error);
+		if (this.log.level != 'debug' && this.log.level != 'silly') {
+			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+				const sentryInstance = this.getPluginInstance('sentry');
+				if (sentryInstance) {
+					sentryInstance.getSentryObject().captureException(error);
+				}
 			}
 		}
 	}
