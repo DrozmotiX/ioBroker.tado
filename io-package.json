@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.5-1",
+        "version": "0.3.5",
         "news": {
+            "0.3.5": {
+                "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn\nBump iobroker-jsonexplorer to v0.1.2",
+                "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn\nUpgrade von iobroker-jsonexplorer auf v0.1.2",
+                "ru": "исправить проблему «невозможно включить горячую воду» (# 309)\nперейти на новый сторожевой dsn\nПоднимите iobroker-jsonexplorer до версии v0.1.2",
+                "pt": "corrigir o problema de 'água quente não pode ser ligada' (# 309)\nmudar para uma nova sentinela dsn\nBump iobroker-jsonexplorer para v0.1.2",
+                "nl": "probleem oplossen 'heet water kan niet worden ingeschakeld' (#309)\nverander naar nieuwe schildwacht dsn\nBump iobroker-jsonexplorer naar v0.1.2",
+                "fr": "résoudre le problème « l'eau chaude ne peut pas être allumée » (#309)\nchanger pour le nouveau dsn de sentinelle\nTransférez iobroker-jsonexplorer vers la v0.1.2",
+                "it": "risolto il problema \"Impossibile accendere l'acqua calda\" (#309)\ncambia a nuovo sentry dsn\nPassa iobroker-jsonexplorer alla v0.1.2",
+                "es": "Solucione el problema 'no se puede encender el agua caliente' (# 309)\ncambiar a nuevo centinela dsn\nPase iobroker-jsonexplorer a v0.1.2",
+                "pl": "naprawiono problem „nie można włączyć ciepłej wody” (#309)\nzmiana na nowy wartownik dsn\nPodnieś iobroker-jsonexplorer do wersji 0.1.2",
+                "zh-cn": "修复“无法打开热水”的问题 (#309)\n更改为新的哨兵 dsn\n将 iobroker-jsonexplorer 升级到 v0.1.2"
+            },
             "0.3.5-1": {
                 "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn",
                 "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn",
@@ -230,18 +242,6 @@
                 "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
                 "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
                 "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
-            },
-            "0.2.7": {
-                "en": "prepare for js-controller v3.3.x (has wrong type \"xxxx\" but has to be \"yyyy\") (#214)\nimprove state creation by using iobroker-jsonexplorer\nimprove CPU usage (#192)\nadd attribute enabledFeatures (#226)",
-                "de": "bereite dich auf js-controller v3.3.x vor (hat den falschen Typ \"xxxx\", muss aber \"yyyy\" sein) (# 214)\nVerbessern Sie die Statuserstellung mithilfe von iobroker-jsonexplorer\nVerbesserung der CPU-Auslastung (# 192)\nAttribut enabledFeatures hinzufügen (# 226)",
-                "ru": "подготовиться к js-контроллеру v3.3.x (имеет неправильный тип \"xxxx\", но должен быть \"yyyy\") (# 214)\nулучшить создание состояния с помощью iobroker-jsonexplorer\nулучшить использование ЦП (# 192)\nдобавить атрибут enabledFeatures (# 226)",
-                "pt": "prepare-se para js-controller v3.3.x (tem tipo errado \"xxxx\", mas tem que ser \"yyyy\") (# 214)\nmelhorar a criação de estado usando iobroker-jsonexplorer\nmelhorar o uso da CPU (# 192)\nadicionar atributo enabledFeatures (# 226)",
-                "nl": "bereid je voor op js-controller v3.3.x (heeft het verkeerde type \"xxxx\" maar moet \"yyyy\" zijn) (# 214)\nverbeter de aanmaak van de staat door iobroker-jsonexplorer te gebruiken\nCPU-gebruik verbeteren (# 192)\nkenmerk toevoegen enabledFeatures (# 226)",
-                "fr": "se préparer pour js-controller v3.3.x (le type \"xxxx\" est incorrect mais doit être \"yyyy\") (# 214)\naméliorer la création d'état en utilisant iobroker-jsonexplorer\naméliorer l'utilisation du processeur (# 192)\najouter un attribut activéFeatures (# 226)",
-                "it": "prepararsi per js-controller v3.3.x (ha un tipo sbagliato \"xxxx\" ma deve essere \"yyyy\") (# 214)\nmigliorare la creazione dello stato utilizzando iobroker-jsonexplorer\nmigliorare l'utilizzo della CPU (# 192)\naggiungi attributo enabledFeatures (# 226)",
-                "es": "prepárese para js-controller v3.3.x (tiene el tipo incorrecto \"xxxx\" pero tiene que ser \"yyyy\") (# 214)\nmejorar la creación de estados usando iobroker-jsonexplorer\nmejorar el uso de la CPU (# 192)\nagregar atributo enabledFeatures (# 226)",
-                "pl": "przygotuj się na js-controller v3.3.x (ma zły typ „xxxx”, ale musi być „yyyy”) (# 214)\npopraw tworzenie stanu za pomocą iobroker-jsonexplorer\npopraw wykorzystanie procesora (# 192)\ndodaj atrybut włączony",
-                "zh-cn": "为js-controller v3.3.x做准备（类型“ xxxx”错误，但必须为“ yyyy”）（＃214）\n通过使用iobroker-jsonexplorer改善状态创建\n提高CPU使用率（＃192）\n添加属性enabledFeatures（＃226）"
             }
         },
         "title": "Tado",
