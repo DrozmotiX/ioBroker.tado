@@ -43,6 +43,11 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     ### __WORK IN PROGRESS__
 -->
 
+### 0.3.5-1 (2021-08-05)
+* (HGlab01) fix issue 'hot water cannot be switched on' (#309)
+* (HGlab01) change to new sentry dsn
+* (HGlab01) Bump iobroker-jsonexplorer to v0.1.2
+
 ### 0.3.4 (2021-07-24)
 * (HGlab01) add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)
 * (HGlab01) support attribute 'swing' (Sentry: IOBROKER-TADO-2G)

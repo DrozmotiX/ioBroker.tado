@@ -130,39 +130,40 @@ class Tado extends utils.Adapter {
 						this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
 					} else {
+						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
 						const mode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.typeSkillBasedApp');
 						const power = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.power');
-						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
-						const tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
-						const fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
+						let tadomode, fanSpeed;
 
-						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null) ? 'COOL' : tadomode.val.toString().toUpperCase();
-						this.log.debug('Mode set: ' + set_tadomode);
-						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null) ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
-						this.log.debug('FanSpeed set: ' + set_fanSpeed);
+						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
 						// @ts-ignore
 						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
-						this.log.debug('DurationInSeconds set: ' + set_durationInSeconds);
 						// @ts-ignore
 						set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
-						this.log.debug(`Room Temperature set: ${set_temp}`);
 						set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
-						this.log.debug('Room power set: ' + set_power);
-						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
-						this.log.debug('Type set: ' + set_type);
+						set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 
-						if (mode == null || mode == undefined || mode.val == null || mode.val == '') {
-							set_mode = 'NO_OVERLAY';
-						} else {
-							if (mode.val != '') {
-								set_mode = mode.val.toString().toUpperCase();
-							} else {
-								set_mode = 'NEXT_TIME_BLOCK';
-							}
+						if (set_type == 'AIR_CONDITIONING') {
+							tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
+							fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
 						}
-						this.log.debug('Room mode (typeSkillBasedApp) set: ' + set_mode);
+						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
+						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null || fanSpeed.val == '') ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
+
+						if (set_type == 'HOT_WATER' && set_temp < 30) {
+							this.log.debug(`Temperature set to 60° instead of ${set_temp} for HOT_WATER`);
+							set_temp = 60;
+						}
+
+						this.log.debug('Type is: ' + set_type);
+						this.log.debug('Power is: ' + set_power);
+						this.log.debug(`Temperature is: ${set_temp}`);
+						this.log.debug('Execution mode (typeSkillBasedApp) is: ' + set_mode);
+						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
+						this.log.debug('Mode is: ' + set_tadomode);
+						this.log.debug('FanSpeed is: ' + set_fanSpeed);
 
 						switch (deviceId[x]) {
 							case ('overlayClearZone'):
@@ -463,7 +464,9 @@ class Tado extends utils.Adapter {
 	}
 
 	async clearZoneOverlay(home_id, zone_id) {
-		await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'delete');
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
+		this.log.debug(`Called 'DELETE ${url}'`);
+		await this.apiCall(url, 'delete');
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
@@ -498,8 +501,8 @@ class Tado extends utils.Adapter {
 
 		if (power.toLowerCase() == 'on') {
 			config.setting.power = 'ON';
-			//Temperature not for hot water devices and not for aircondition if mode is DRY, AUTO, FAN
-			if (temperature && type != 'HOT_WATER' && mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
+			//Temperature not for for aircondition if mode is DRY, AUTO, FAN
+			if (temperature && !(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
 				config.setting.temperature = {};
 				config.setting.temperature.celsius = temperature;
 			}
@@ -773,10 +776,12 @@ class Tado extends utils.Adapter {
 
 	async errorHandling(codePart, error) {
 		this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
-		if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
-			const sentryInstance = this.getPluginInstance('sentry');
-			if (sentryInstance) {
-				sentryInstance.getSentryObject().captureException(error);
+		if (this.log.level != 'debug' && this.log.level != 'silly') {
+			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+				const sentryInstance = this.getPluginInstance('sentry');
+				if (sentryInstance) {
+					sentryInstance.getSentryObject().captureException(error);
+				}
 			}
 		}
 	}
