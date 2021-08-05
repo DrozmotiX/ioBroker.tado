@@ -189,7 +189,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 ## License
 MIT License
 
-Copyright (c) 2020 DutchmanNL <rdrozda@hotmail.com>
+Copyright (c) 2021 DutchmanNL <rdrozda@hotmail.com> & HGlab01
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
