@@ -286,7 +286,7 @@
         "icon": "tado.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/tado.png",
-        "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/blob/README.md",
+        "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/README.md",
         "loglevel": "info",
         "mode": "daemon",
         "type": "climate-control",
