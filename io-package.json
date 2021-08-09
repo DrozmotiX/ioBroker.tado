@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.5",
+        "version": "0.3.6-0",
         "news": {
+            "0.3.6-0": {
+                "en": "support attribute 'orientation' (Sentry: IOBROKER-TADO-35)",
+                "de": "Support-Attribut 'Orientation' (Sentry: IOBROKER-TADO-35)",
+                "ru": "поддержка атрибута 'ориентация' (Сторожевой: IOBROKER-TADO-35)",
+                "pt": "atributo de suporte 'orientação' (Sentinela: IOBROKER-TADO-35)",
+                "nl": "ondersteuningsattribuut 'oriëntatie' (Sentry: IOBROKER-TADO-35)",
+                "fr": "attribut de support 'orientation' (Sentinelle : IOBROKER-TADO-35)",
+                "it": "attributo di supporto 'orientamento' (Sentry: IOBROKER-TADO-35)",
+                "es": "atributo de soporte 'orientación' (Centinela: IOBROKER-TADO-35)",
+                "pl": "wsparcie atrybutu „orientacja” (Sentry: IOBROKER-TADO-35)",
+                "zh-cn": "支持属性“方向”（哨兵：IOBROKER-TADO-35）"
+            },
             "0.3.5": {
                 "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn\nBump iobroker-jsonexplorer to v0.1.2",
                 "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn\nUpgrade von iobroker-jsonexplorer auf v0.1.2",
@@ -230,18 +242,6 @@
                 "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
                 "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
                 "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
-            },
-            "0.3.0-0": {
-                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
-                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
-                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
-                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
-                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
-                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
-                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
-                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
-                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
-                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
             }
         },
         "title": "Tado",
@@ -286,7 +286,7 @@
         "icon": "tado.png",
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/tado.png",
-        "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/blob/README.md",
+        "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/README.md",
         "loglevel": "info",
         "mode": "daemon",
         "type": "climate-control",
