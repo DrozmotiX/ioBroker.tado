@@ -242,6 +242,18 @@
                 "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
                 "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
                 "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
+            },
+            "0.3.0-1": {
+                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
+                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
+                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
+                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
+                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
+                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
+                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
+                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
+                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
+                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
             }
         },
         "title": "Tado",
