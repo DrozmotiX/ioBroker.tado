@@ -113,6 +113,7 @@ class Tado extends utils.Adapter {
 					let set_fanSpeed = '';
 					let set_tadomode = '';
 					let set_offset = 0;
+					let set_tt_id = 0;
 
 					this.log.debug('GETS INTERESSTING!!!');
 					const deviceId = id.split('.');
@@ -129,6 +130,12 @@ class Tado extends utils.Adapter {
 						set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
 						this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
+					} else if (deviceId[x] == 'tt_id') {
+						const tt_id = await this.getStateAsync(id);
+						// @ts-ignore
+						set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null) ? 0 : parseInt(tt_id.val);
+						this.log.info(`TimeTable changed for room '${zone_id}' in home '${home_id}' to value '${set_tt_id}'`);
+						this.setActiveTimeTable(home_id, zone_id, set_tt_id);
 					} else {
 						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
@@ -476,10 +483,20 @@ class Tado extends utils.Adapter {
 		const offset = {
 			celsius: set_offset
 		};
-		this.log.info(JSON.stringify(offset));
+		this.log.debug('setTemperatureOffset JSON ' + JSON.stringify(offset));
 		let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
-		this.log.info(`RESPONSE: ${JSON.stringify(apiResponse)}`);
+		this.log.info(`Response setTemperatureOffset: ${JSON.stringify(apiResponse)}`);
 		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+	}
+
+	async setActiveTimeTable(home_id, zone_id, timetable_id) {
+		const timeTable = {
+			id: timetable_id
+		};
+		this.log.info('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
+		let apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+		this.log.info(`Response setActiveTimeTable: ${JSON.stringify(apiResponse)}`);
+		this.DoTimeTables(home_id, zone_id, apiResponse);
 	}
 
 	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
@@ -687,7 +704,7 @@ class Tado extends utils.Adapter {
 		for (const i in this.Zones_data) {
 			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
 			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
-			//await this.DoTimeTables(HomeId, this.Zones_data[i].id);
+			await this.DoTimeTables(HomeId, this.Zones_data[i].id);
 		}
 	}
 
@@ -732,10 +749,16 @@ class Tado extends utils.Adapter {
 		this.DoWriteJsonRespons(HomeId, 'Stage_12_ZoneOverlay_' + ZoneId, ZoneOverlay_data);
 	}*/
 
-	async DoTimeTables(HomeId, ZoneId) {
-		const TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
+	async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
+		if (TimeTables_data == null) {
+			TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
+		}
+		TimeTables_data.tt_id = TimeTables_data.id;
+		delete TimeTables_data.id;
 		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
+		this.log.info('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
+		JsonExplorer.TraverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.TimeTables', true, true, 0, 2);
 	}
 
 	async DoAwayConfiguration(HomeId, ZoneId) {

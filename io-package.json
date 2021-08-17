@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.6",
+        "version": "0.3.6+",
         "news": {
             "0.3.6": {
                 "en": "support attribute 'orientation' (Sentry: IOBROKER-TADO-35)",
