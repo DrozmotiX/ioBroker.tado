@@ -76,24 +76,9 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async resetTimer() {
-		const states = await this.getStatesAsync('*.Rooms.*.link');
-		for (const idS in states) {
-			let deviceId = idS.split('.');
-			let pooltimerid = deviceId[2] + deviceId[4];
-			this.log.debug(`Check if timer ${pooltimerid} to be cleared.`);
-			if (pooltimer[pooltimerid]) {
-				clearTimeout(pooltimer[pooltimerid]);
-				pooltimer[pooltimerid] = null;
-				this.log.debug(`Timer ${pooltimerid} cleared.`);
-			}
-		}
-		if (polling) {
-			clearTimeout(polling);
-			polling = null;
-			this.log.debug(`Polling-Timer cleared.`);
-		}
-	}
+	//////////////////////////////////////////////////////////////////////
+	/* ON STATE CHANGE													*/
+	//////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Is called if a subscribed state changes
@@ -118,7 +103,7 @@ class Tado extends utils.Adapter {
 					this.log.debug('GETS INTERESSTING!!!');
 					const deviceId = id.split('.');
 					let x = deviceId.length - 1;
-					this.log.info(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
+					this.log.debug(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
 
 					const home_id = deviceId[2];
 					const zone_id = deviceId[4];
@@ -128,7 +113,7 @@ class Tado extends utils.Adapter {
 						const device_id = deviceId[6];
 						// @ts-ignore
 						set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
-						this.log.info(`Offset changed for devive '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
+						this.log.info(`Offset changed for device '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
 					} else if (deviceId[x] == 'tt_id') {
 						const tt_id = await this.getStateAsync(id);
@@ -187,24 +172,24 @@ class Tado extends utils.Adapter {
 
 							case ('durationInSeconds'):
 								set_mode = 'TIMER';
-								this.log.info(`DurationInSecond changed for room: ${zone_id} in home: ${home_id} to API with: ${set_durationInSeconds}`);
+								this.log.info(`DurationInSecond changed for room '${zone_id}' in home '${home_id}' to '${set_durationInSeconds}'`);
 								this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.typeSkillBasedApp`, set_mode, true);
 								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('fanSpeed'):
-								this.log.info(`FanSpeed changed for room: ${zone_id} in home: ${home_id} to API with: ${set_fanSpeed}`);
+								this.log.info(`FanSpeed changed for room '${zone_id}' in home '${home_id}' to '${set_fanSpeed}'`);
 								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('mode'):
-								this.log.info(`Mode changed for room: ${zone_id} in home: ${home_id} to API with: ${set_tadomode}`);
+								this.log.info(`Mode changed for room '${zone_id}' in home '${home_id}' to '${set_tadomode}'`);
 								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								break;
 
 							case ('typeSkillBasedApp'):
 								if (set_mode == 'NO_OVERLAY') { break; }
-								this.log.info(`TypeSkillBasedApp changed for room: ${zone_id} in home: ${home_id} to API with: ${set_mode}`);
+								this.log.info(`TypeSkillBasedApp changed for room '${zone_id}' in home '${home_id}' to '${set_mode}'`);
 								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								if (set_mode == 'MANUAL') {
 									this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.expiry`, null, true);
@@ -216,16 +201,16 @@ class Tado extends utils.Adapter {
 							case ('power'):
 								if (set_mode == 'NO_OVERLAY') {
 									if (set_power == 'ON') {
-										this.log.info(`Overlay cleared for room: ${zone_id} in home: ${home_id}`);
+										this.log.info(`Overlay cleared for room '${zone_id}' in home '${home_id}'`);
 										await this.clearZoneOverlay(home_id, zone_id);
 									}
 									else {
 										set_mode = 'MANUAL';
-										this.log.info(`Power changed for room: ${zone_id} in home: ${home_id} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
+										this.log.info(`Power changed for room '${zone_id}' in home '${home_id}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`);
 										await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 									}
 								} else {
-									this.log.info(`Power changed for room: ${zone_id} in home: ${home_id} to API with: ${state.val} and Temperature: ${set_temp} and mode: ${set_mode}`);
+									this.log.info(`Power changed for room '${zone_id}' in home '${home_id}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`);
 									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_fanSpeed, set_tadomode);
 								}
 								break;
@@ -247,22 +232,111 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async DoConnect() {
-		const user = this.config.Username;
-		let pass = this.config.Password;
+	//////////////////////////////////////////////////////////////////////
+	/* API CALLS														*/
+	//////////////////////////////////////////////////////////////////////
 
-		// Check if credentials are not empty
-		if (user !== '' && pass !== '') {
-			try {
-				await this.DoData_Refresh(user, pass);
-			} catch (error) {
-				this.log.error(error);
+	async clearZoneOverlay(home_id, zone_id) {
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
+		this.log.debug(`Called 'DELETE ${url}'`);
+		await this.apiCall(url, 'delete');
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
+	}
+
+	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
+		const offset = {
+			celsius: set_offset
+		};
+		this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
+		let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
+		this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
+		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+	}
+
+	async setActiveTimeTable(home_id, zone_id, timetable_id) {
+		const timeTable = {
+			id: timetable_id
+		};
+		this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
+		this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
+		let apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+		this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
+		this.DoTimeTables(home_id, zone_id, apiResponse);
+	}
+
+	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
+		const config = {
+			setting: {
+				type: type,
+			},
+			termination: {
+			}
+		};
+
+		if (type == 'AIR_CONDITIONING') {
+			//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
+			if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
+				config.setting.fanSpeed = fanSpeed;
+			}
+			config.setting.mode = mode;
+		}
+
+		if (power.toLowerCase() == 'on') {
+			config.setting.power = 'ON';
+			//Temperature not for for aircondition if mode is DRY, AUTO, FAN
+			if (temperature && !(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
+				config.setting.temperature = {};
+				config.setting.temperature.celsius = temperature;
 			}
 		} else {
-			this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
-			this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+			config.setting.power = 'OFF';
 		}
+
+		config.termination.typeSkillBasedApp = typeSkillBasedApp;
+		if (typeSkillBasedApp != 'TIMER') {
+			config.termination.durationInSeconds = null;
+		}
+		else {
+			config.termination.durationInSeconds = durationInSeconds;
+		}
+
+		this.log.info(`Call API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)}`);
+		let result = await this.poolApiCall(home_id, zone_id, config);
+		if (result.setting.temperature == null) {
+			result.setting.temperature = {};
+			result.setting.temperature.celsius = null;
+			result.setting.temperature.fahrenheit = null;
+		}
+		await JsonExplorer.setLastStartTime();
+		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
+		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
+
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {object} config
+	 */
+	poolApiCall(home_id, zone_id, config) {
+		let pooltimerid = home_id + zone_id;
+		(function () { if (pooltimer[pooltimerid]) { clearTimeout(pooltimer[pooltimerid]); pooltimer[pooltimerid] = null; } })();
+		let that = this;
+		return new Promise(function (resolve) {
+			pooltimer[pooltimerid] = setTimeout(async () => {
+				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
+				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
+				that.log.debug(`API called with ${JSON.stringify(config)}`);
+				resolve(apiResponse);
+			}, 750);
+		});
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	/* DO Methods														*/
+	//////////////////////////////////////////////////////////////////////
 
 	async DoData_Refresh(user, pass) {
 		const intervall_time = Math.max(30, this.config.intervall) * 1000;
@@ -280,7 +354,7 @@ class Tado extends utils.Adapter {
 				return;
 			} else {
 				if (conn_state.val === false) {
-					this.log.info('Connected to Tado cloud, initialyzing ... ');
+					this.log.info('Connected to Tado cloud, initialyzing... ');
 				}
 			}
 
@@ -326,7 +400,7 @@ class Tado extends utils.Adapter {
 			} else {
 
 				if (conn_state.val === false) {
-					this.log.info(`Initialisation finished,  connected to Tado cloud service refreshing every ${intervall_time / 1000} seconds`);
+					this.log.info(`Initialisation finished, connected to Tado cloud service refreshing every ${intervall_time / 1000} seconds`);
 					this.setState('info.connection', true, true);
 				}
 			}
@@ -347,6 +421,155 @@ class Tado extends utils.Adapter {
 			}, 30000);
 		}
 	}
+
+	async DoConnect() {
+		const user = this.config.Username;
+		let pass = this.config.Password;
+
+		// Check if credentials are not empty
+		if (user !== '' && pass !== '') {
+			try {
+				await this.DoData_Refresh(user, pass);
+			} catch (error) {
+				this.log.error(error);
+			}
+		} else {
+			this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
+			this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+		}
+	}
+
+	async DoHome(HomeId) {
+		// Get additional basic data for all homes
+		if (this.Home_data === null) {
+			this.Home_data = await this.getHome(HomeId);
+		}
+		this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
+		JsonExplorer.TraverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0, 0);
+	}
+
+	async DoWeather(HomeId) {
+		const weather_data = await this.getWeather(HomeId);
+		this.log.debug('Weather_data Result: ' + JSON.stringify(weather_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
+		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
+	}
+
+	async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
+		if (offset == null) {
+			offset = await this.getTemperatureOffset(DeviceId);
+		}
+		this.log.debug(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
+		this.DoWriteJsonRespons(HomeId, `Stage_99_Offset_${HomeId}`, offset);
+		if (offset.celsius != undefined) offset.offsetCelsius = offset.celsius;
+		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
+		delete offset.celsius;
+		delete offset.fahrenheit;
+		JsonExplorer.TraverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
+	}
+
+	async DoDevices(HomeId) {
+		const Devices_data = await this.getDevices(HomeId);
+		this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
+	}
+
+	async DoMobileDevices(HomeId) {
+		this.MobileDevices_data = await this.getMobileDevices(HomeId);
+		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
+		JsonExplorer.TraverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0, 0);
+	}
+
+	async DoMobileDeviceSettings(HomeId, DeviceId) {
+		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
+		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
+		JsonExplorer.TraverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true, 0, 2);
+	}
+
+	async DoZones(HomeId) {
+		this.Zones_data = await this.getZones(HomeId);
+		this.log.debug('Zones_data Result: ' + JSON.stringify(this.Zones_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_08_ZonesData', this.Zones_data);
+
+		//Search for DeviceIDs to get Offset
+		for (const j in this.Zones_data) {
+			for (const k in this.Zones_data[j]) {
+				for (const l in this.Zones_data[j][k]) {
+					let ZoneId = this.Zones_data[j].id;
+					let DeviceId = this.Zones_data[j][k][l].serialNo;
+					if (DeviceId != undefined) {
+						this.log.debug('DeviceID for offset found: ' + JSON.stringify(this.Zones_data[j][k][l].serialNo));
+						this.Zones_data[j][k][l].id = this.Zones_data[j][k][l].serialNo;
+						if (this.Zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
+							this.DoTemperatureOffset(HomeId, ZoneId, DeviceId);
+						}
+					}
+				}
+			}
+		}
+
+		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
+
+		for (const i in this.Zones_data) {
+			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
+			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
+			await this.DoTimeTables(HomeId, this.Zones_data[i].id);
+		}
+	}
+
+	async DoZoneStates(HomeId, ZoneId) {
+		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
+		this.log.debug(`ZoneStates_data result for room '${ZoneId}' is ${JSON.stringify(ZonesState_data)}`);
+		if (ZonesState_data.setting.temperature == null) {
+			ZonesState_data.setting.temperature = {};
+			ZonesState_data.setting.temperature.celsius = null;
+		}
+		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
+		ZonesState_data.overlayClearZone = false;
+		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
+	}
+
+	async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
+		if (TimeTables_data == null) {
+			TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
+		}
+		TimeTables_data.tt_id = TimeTables_data.id;
+		delete TimeTables_data.id;
+		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
+		this.log.debug('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
+		JsonExplorer.TraverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.TimeTables', true, true, 0, 2);
+	}
+
+	async DoAwayConfiguration(HomeId, ZoneId) {
+		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
+		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
+		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 2);
+	}
+
+	async DoWriteJsonRespons(HomeId, state_name, value) {
+		if (this.log.level == 'debug' || this.log.level == 'silly') {
+			this.log.debug('JSON data written for ' + state_name + ' with values: ' + JSON.stringify(value));
+			this.log.debug('HomeId ' + HomeId + ' name: ' + state_name + state_name + ' value ' + JSON.stringify(value));
+
+			await this.setObjectNotExistsAsync(HomeId + '._JSON_response', {
+				type: 'device',
+				common: {
+					name: 'Plain JSON data from API',
+				},
+				native: {},
+			});
+			await this.create_state(HomeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	/* MISC																*/
+	//////////////////////////////////////////////////////////////////////
 
 	_refreshToken() {
 		const { token } = this._accessToken;
@@ -411,6 +634,54 @@ class Tado extends utils.Adapter {
 		});
 	}
 
+	/**
+	 * @param {string} state
+	 * @param {string} name
+	 * @param {any} value
+	 */
+	async create_state(state, name, value) {
+		this.log.debug(`Create_state called for state '${state}' and name '${name}' with value '${value}'`);
+		const intervall_time = (this.config.intervall * 4);
+		if (value) {
+			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
+		}
+	}
+
+	async errorHandling(codePart, error) {
+		this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
+		if (this.log.level != 'debug' && this.log.level != 'silly') {
+			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+				const sentryInstance = this.getPluginInstance('sentry');
+				if (sentryInstance) {
+					sentryInstance.getSentryObject().captureException(error);
+				}
+			}
+		}
+	}
+
+	async resetTimer() {
+		const states = await this.getStatesAsync('*.Rooms.*.link');
+		for (const idS in states) {
+			let deviceId = idS.split('.');
+			let pooltimerid = deviceId[2] + deviceId[4];
+			this.log.debug(`Check if timer ${pooltimerid} to be cleared.`);
+			if (pooltimer[pooltimerid]) {
+				clearTimeout(pooltimer[pooltimerid]);
+				pooltimer[pooltimerid] = null;
+				this.log.debug(`Timer ${pooltimerid} cleared.`);
+			}
+		}
+		if (polling) {
+			clearTimeout(polling);
+			polling = null;
+			this.log.debug(`Polling-Timer cleared.`);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	/* GET METHODS														*/
+	//////////////////////////////////////////////////////////////////////
+
 	getMe() {
 		return this.apiCall('/api/v2/me');
 	}
@@ -423,17 +694,6 @@ class Tado extends utils.Adapter {
 	// Get weather information for home location
 	getWeather(home_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/weather`);
-	}
-
-	// Function disabled, no data in API ?
-	// getDevices(home_id) {
-	// 	this.log.info('getDevices called')
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/devices`);
-	// }
-
-	// Function disabled, no data in API ?
-	getInstallations(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
 	}
 
 	// User information equal to Weather, ignoring function but keep for history/feature functionality
@@ -470,117 +730,6 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	}
 
-	async clearZoneOverlay(home_id, zone_id) {
-		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
-		this.log.debug(`Called 'DELETE ${url}'`);
-		await this.apiCall(url, 'delete');
-		await JsonExplorer.setLastStartTime();
-		await this.DoZoneStates(home_id, zone_id);
-		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
-	}
-
-	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
-		const offset = {
-			celsius: set_offset
-		};
-		this.log.debug('setTemperatureOffset JSON ' + JSON.stringify(offset));
-		let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
-		this.log.info(`Response setTemperatureOffset: ${JSON.stringify(apiResponse)}`);
-		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
-	}
-
-	async setActiveTimeTable(home_id, zone_id, timetable_id) {
-		const timeTable = {
-			id: timetable_id
-		};
-		this.log.info('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
-		let apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
-		this.log.info(`Response setActiveTimeTable: ${JSON.stringify(apiResponse)}`);
-		this.DoTimeTables(home_id, zone_id, apiResponse);
-	}
-
-	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
-		const config = {
-			setting: {
-				type: type,
-			},
-			termination: {
-			}
-		};
-
-		if (type == 'AIR_CONDITIONING') {
-			//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
-			if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
-				config.setting.fanSpeed = fanSpeed;
-			}
-			config.setting.mode = mode;
-		}
-
-		if (power.toLowerCase() == 'on') {
-			config.setting.power = 'ON';
-			//Temperature not for for aircondition if mode is DRY, AUTO, FAN
-			if (temperature && !(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
-				config.setting.temperature = {};
-				config.setting.temperature.celsius = temperature;
-			}
-		} else {
-			config.setting.power = 'OFF';
-		}
-
-		config.termination.typeSkillBasedApp = typeSkillBasedApp;
-		if (typeSkillBasedApp != 'TIMER') {
-			config.termination.durationInSeconds = null;
-		}
-		else {
-			config.termination.durationInSeconds = durationInSeconds;
-		}
-
-		this.log.info(`Send API ZoneOverlay API call Home: ${home_id} zone: ${zone_id} config: ${JSON.stringify(config)}`);
-		let result = await this.poolApiCall(home_id, zone_id, config);
-		if (result.setting.temperature == null) {
-			result.setting.temperature = {};
-			result.setting.temperature.celsius = null;
-			result.setting.temperature.fahrenheit = null;
-		}
-		await JsonExplorer.setLastStartTime();
-		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
-		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
-		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
-	}
-
-	/**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {object} config
-	 */
-	poolApiCall(home_id, zone_id, config) {
-		let pooltimerid = home_id + zone_id;
-		(function () { if (pooltimer[pooltimerid]) { clearTimeout(pooltimer[pooltimerid]); pooltimer[pooltimerid] = null; } })();
-		let that = this;
-		return new Promise(function (resolve) {
-			pooltimer[pooltimerid] = setTimeout(async () => {
-				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
-				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
-				that.log.debug(`API called with  ${JSON.stringify(config)}`);
-				//that.DoConnect();
-				//that.log.debug('Data refreshed (DoConnect()) called');
-				resolve(apiResponse);
-			}, 750);
-		});
-	}
-
-	/*
-	// Unclear purpose, ignore for now
-	getZoneCapabilities(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
-	}*/
-
-	/*
-	// Unclear purpose, ignore for now
-	getZoneOverlay(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
-	}*/
-
 	getTimeTables(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
 	}
@@ -589,225 +738,29 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
 	}
 
-	/*
-	// Coding break point of functionality
-	getZoneDayReport(home_id, zone_id, reportDate) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/dayReport?date=${reportDate}`);
-	} */
-
-	// getTimeTable(home_id, zone_id, timetable_id) {
-	// 	return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
-	// }
-
-	// identifyDevice(device_id) {
-	// 	return this.apiCall(`/api/v2/devices/${device_id}/identify`, 'post');
-	// }
-
-
-	async DoHome(HomeId) {
-		// Get additional basic data for all homes
-		if (this.Home_data === null) {
-			this.Home_data = await this.getHome(HomeId);
-		}
-		this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
-		JsonExplorer.TraverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0, 0);
-	}
-
-	async DoWeather(HomeId) {
-		const weather_data = await this.getWeather(HomeId);
-		this.log.debug('Weather_data Result: ' + JSON.stringify(weather_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
-		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
-	}
-
-	async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
-		if (offset == null) {
-			offset = await this.getTemperatureOffset(DeviceId);
-		}
-		this.log.debug(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
-		this.DoWriteJsonRespons(HomeId, `Stage_99_Offset_${HomeId}`, offset);
-		if (offset.celsius != undefined) offset.offsetCelsius = offset.celsius;
-		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
-		delete offset.celsius;
-		delete offset.fahrenheit;
-		JsonExplorer.TraverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
-	}
-
-	async DoDevices(HomeId) {
-		const Devices_data = await this.getDevices(HomeId);
-		this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
-	}
-
-	/*
-	async DoInstallations(HomeId) {
-		const Installations_data = await this.getInstallations(HomeId);
-		this.log.debug('Installations_data Result: ' + JSON.stringify(Installations_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_05_Installations', Installations_data);
+	/*getDevices(home_id) {
+		this.log.info('getDevices called')
+		return this.apiCall(`/api/v2/homes/${home_id}/devices`);
 	}*/
 
+	/*getTimeTable(home_id, zone_id, timetable_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
+	}*/
 
-	// Function disabled, no data in API ?
-	async DoStates(HomeId) {
-		this.States_data = await this.getState_info(HomeId);
-		this.log.debug('States_data Result: ' + JSON.stringify(this.States_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_14_StatesData', this.States_data);
-	}
-
-	// User information equal to Weather, ignoring function but keep for history/feature functionality
-	// async DoUsers(HomeId){
-	// 	const users_data = await this.getWeather(HomeId);
-	// 	this.log.debug('Users_data Result: ' + JSON.stringify(users_data));
-	// 	for (const i in users_data){
-	// 	}
-	// }
-
-	async DoMobileDevices(HomeId) {
-		this.MobileDevices_data = await this.getMobileDevices(HomeId);
-		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
-		JsonExplorer.TraverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0, 0);
-	}
-
-	async DoMobileDeviceSettings(HomeId, DeviceId) {
-		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
-		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		JsonExplorer.TraverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true, 0, 2);
-	}
-
-	async DoZones(HomeId) {
-		this.Zones_data = await this.getZones(HomeId);
-		this.log.debug('Zones_data Result: ' + JSON.stringify(this.Zones_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_08_ZonesData', this.Zones_data);
-
-		//Search for DeviceIDs to get Offset
-		for (const j in this.Zones_data) {
-			for (const k in this.Zones_data[j]) {
-				for (const l in this.Zones_data[j][k]) {
-					let ZoneId = this.Zones_data[j].id;
-					let DeviceId = this.Zones_data[j][k][l].serialNo;
-					if (DeviceId != undefined) {
-						this.log.debug('DeviceID for offset found: ' + JSON.stringify(this.Zones_data[j][k][l].serialNo));
-						this.Zones_data[j][k][l].id = this.Zones_data[j][k][l].serialNo;
-						if (this.Zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
-							this.DoTemperatureOffset(HomeId, ZoneId, DeviceId);
-						}
-					}
-				}
-			}
-		}
-
-		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
-
-		for (const i in this.Zones_data) {
-			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
-			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
-			await this.DoTimeTables(HomeId, this.Zones_data[i].id);
-		}
-	}
-
-	/*
-	async DoUser(HomeId) {
-		this.Users_data = await this.getZones(HomeId);
-		this.log.debug('Users_data Result: ' + JSON.stringify(this.Users_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_15_ZonesData', this.Users_data);
+	/*getZoneOverlay(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
 	}*/
 
 	/*
-	//can be deleted?
-	async DoReadDevices(state_root, Devices_data,) {
-		this.log.debug('Devices_data Result: ' + JSON.stringify(Devices_data));
+	getZoneCapabilities(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
 	}*/
 
-	async DoZoneStates(HomeId, ZoneId) {
-		const ZonesState_data = await this.getZoneState(HomeId, ZoneId);
-		this.log.debug('ZoneStates_data Result for zone: ' + ZoneId + ' and value: ' + JSON.stringify(ZonesState_data));
-		if (ZonesState_data.setting.temperature == null) {
-			ZonesState_data.setting.temperature = {};
-			ZonesState_data.setting.temperature.celsius = null;
-		}
-		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
-		ZonesState_data.overlayClearZone = false;
-		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
-	}
-
-	/*
-	// Unclear purpose, ignore for now
-	async DoZoneCapabilities(HomeId, ZoneId) {
-		const ZoneCapabilities_data = await this.getZoneCapabilities(HomeId, ZoneId);
-		this.log.debug('ZoneCapabilities_data Result: ' + JSON.stringify(ZoneCapabilities_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_11_ZoneCapabilities_' + ZoneId, ZoneCapabilities_data);
+	/*getInstallations(home_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
 	}*/
 
-	/*
-	// Unclear purpose, ignore for now only 404 error
-	async DoZoneOverlay(HomeId, ZoneId) {
-		const ZoneOverlay_data = await this.getZoneOverlay(HomeId, ZoneId);
-		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(ZoneOverlay_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_12_ZoneOverlay_' + ZoneId, ZoneOverlay_data);
-	}*/
 
-	async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
-		if (TimeTables_data == null) {
-			TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
-		}
-		TimeTables_data.tt_id = TimeTables_data.id;
-		delete TimeTables_data.id;
-		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
-		this.log.info('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
-		JsonExplorer.TraverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.TimeTables', true, true, 0, 2);
-	}
-
-	async DoAwayConfiguration(HomeId, ZoneId) {
-		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
-		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 2);
-	}
-
-	/**
-	 * @param {string} state
-	 * @param {string} name
-	 * @param {any} value
-	 */
-	async create_state(state, name, value) {
-		this.log.debug(`Create_state called for state '${state}' and name '${name}' with value '${value}'`);
-		const intervall_time = (this.config.intervall * 4);
-		if (value) {
-			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
-		}
-	}
-
-	async DoWriteJsonRespons(HomeId, state_name, value) {
-		if (this.log.level == 'debug' || this.log.level == 'silly') {
-			this.log.debug('JSON data written for ' + state_name + ' with values: ' + JSON.stringify(value));
-			this.log.debug('HomeId ' + HomeId + ' name: ' + state_name + state_name + ' value ' + JSON.stringify(value));
-
-			await this.setObjectNotExistsAsync(HomeId + '._JSON_response', {
-				type: 'device',
-				common: {
-					name: 'Plain JSON data from API',
-				},
-				native: {},
-			});
-			await this.create_state(HomeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
-		}
-	}
-
-	async errorHandling(codePart, error) {
-		this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
-		if (this.log.level != 'debug' && this.log.level != 'silly') {
-			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
-				const sentryInstance = this.getPluginInstance('sentry');
-				if (sentryInstance) {
-					sentryInstance.getSentryObject().captureException(error);
-				}
-			}
-		}
-	}
 }
 
 // @ts-ignore parent is a valid property on module
