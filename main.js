@@ -541,7 +541,7 @@ class Tado extends utils.Adapter {
 		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
 		this.log.debug('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
-		JsonExplorer.TraverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.TimeTables', true, true, 0, 2);
+		JsonExplorer.TraverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true, 0, 2);
 	}
 
 	async DoAwayConfiguration(HomeId, ZoneId) {
