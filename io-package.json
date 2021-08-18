@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.6+",
+        "version": "0.3.7-0",
         "news": {
+            "0.3.7-0": {
+                "en": "ActiveTimeTable can be set\nImprove logs and change code structure a little bit",
+                "de": "ActiveTimeTable kann eingestellt werden\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig",
+                "ru": "ActiveTimeTable можно установить\nУлучшить логи и немного изменить структуру кода",
+                "pt": "ActiveTimeTable pode ser definido\nMelhore os registros e altere um pouco a estrutura do código",
+                "nl": "ActiveTimeTable kan worden ingesteld\nVerbeter logs en verander de codestructuur een beetje",
+                "fr": "ActiveTimeTable peut être défini\nAméliorer les journaux et modifier un peu la structure du code",
+                "it": "ActiveTimeTable può essere impostato\nMigliora i log e cambia un po' la struttura del codice",
+                "es": "ActiveTimeTable se puede configurar\nMejore los registros y cambie un poco la estructura del código",
+                "pl": "Można ustawić ActiveTimeTable\nPopraw logi i trochę zmień strukturę kodu",
+                "zh-cn": "可以设置ActiveTimeTable\n改进日志并稍微改变代码结构"
+            },
             "0.3.6": {
                 "en": "support attribute 'orientation' (Sentry: IOBROKER-TADO-35)",
                 "de": "Support-Attribut 'Orientation' (Sentry: IOBROKER-TADO-35)",
@@ -230,18 +242,6 @@
                 "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nEstablecer el tiempo de actualización mínimo en 30 segundos",
                 "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)\nUstaw minimalny czas odświeżania na 30 sekund",
                 "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）\n将最小刷新时间设置为30秒"
-            },
-            "0.3.0-2": {
-                "en": "implement offset functionality\nTechnical re-factoring of state management !BREAKING CHANGES! (see above)",
-                "de": "Offset-Funktionalität implementieren\nTechnisches Re-Factoring der staatlichen Verwaltung! BREAKING CHANGES! (siehe oben)",
-                "ru": "реализовать функциональность смещения\nТехнический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)",
-                "pt": "implementar funcionalidade de deslocamento\nRefatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)",
-                "nl": "offset-functionaliteit implementeren\nTechnische re-factoring van het staatsbeheer! BREKENDE VERANDERINGEN! (zie hierboven)",
-                "fr": "mettre en œuvre la fonctionnalité de décalage\nRéaffacturage technique de la gestion de l'État! (voir au dessus)",
-                "it": "implementare la funzionalità offset\nRi-factoring tecnico della gestione statale! CAMBIAMENTI ROTTURANTI! (vedi sopra)",
-                "es": "implementar la funcionalidad de compensación\n¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)",
-                "pl": "wdrożyć funkcję offsetu\nTechniczne ponowne faktoring zarządzania państwem! PRZEŁOMOWE ZMIANY! (patrz wyżej)",
-                "zh-cn": "实现偏移功能\n状态管理的技术重构！BREAK更改！ （看上面）"
             }
         },
         "title": "Tado",
