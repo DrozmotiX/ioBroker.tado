@@ -1,15 +1,7 @@
 /* eslint-disable prefer-const */
 'use strict';
 
-/*
-* Created with @iobroker/create-adapter v1.16.0
-*/
-
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-
-// Load your modules here, e.g.:
 const EXPIRATION_WINDOW_IN_SECONDS = 300;
 
 const tado_auth_url = 'https://auth.tado.com';
@@ -79,7 +71,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* ON STATE CHANGE													*/
 	//////////////////////////////////////////////////////////////////////
-
 	/**
 	 * Is called if a subscribed state changes
 	 * @param {string} id
@@ -235,7 +226,10 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* API CALLS														*/
 	//////////////////////////////////////////////////////////////////////
-
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 */
 	async clearZoneOverlay(home_id, zone_id) {
 		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
 		this.log.debug(`Called 'DELETE ${url}'`);
@@ -245,6 +239,12 @@ class Tado extends utils.Adapter {
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {string} device_id
+	 * @param {number} set_offset
+	 */
 	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
 		const offset = {
 			celsius: set_offset
@@ -255,6 +255,11 @@ class Tado extends utils.Adapter {
 		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
 	}
 
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {number} timetable_id
+	 */
 	async setActiveTimeTable(home_id, zone_id, timetable_id) {
 		const timeTable = {
 			id: timetable_id
@@ -266,6 +271,17 @@ class Tado extends utils.Adapter {
 		this.DoTimeTables(home_id, zone_id, apiResponse);
 	}
 
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {string} power
+	 * @param {number} temperature
+	 * @param {string} typeSkillBasedApp
+	 * @param {number} durationInSeconds
+	 * @param {string} type
+	 * @param {string} fanSpeed
+	 * @param {string} mode
+	 */
 	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
 		const config = {
 			setting: {
@@ -337,7 +353,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* DO Methods														*/
 	//////////////////////////////////////////////////////////////////////
-
 	async DoData_Refresh(user, pass) {
 		const intervall_time = Math.max(30, this.config.intervall) * 1000;
 		let outdated = false;
@@ -406,7 +421,10 @@ class Tado extends utils.Adapter {
 			}
 
 			// Clear running timer
-			(function () { if (polling) { clearTimeout(polling); polling = null; } })();
+			if (polling) { 
+				clearTimeout(polling); 
+				polling = null;
+			}
 			// timer
 			polling = setTimeout(() => {
 				this.DoConnect();
@@ -570,7 +588,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* MISC																*/
 	//////////////////////////////////////////////////////////////////////
-
 	_refreshToken() {
 		const { token } = this._accessToken;
 		const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
@@ -610,6 +627,9 @@ class Tado extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * @param {string} url
+	 */
 	apiCall(url, method = 'get', data = {}) {
 		return new Promise((resolve, reject) => {
 			if (this._accessToken) {
@@ -681,7 +701,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* GET METHODS														*/
 	//////////////////////////////////////////////////////////////////////
-
 	getMe() {
 		return this.apiCall('/api/v2/me');
 	}
@@ -759,8 +778,6 @@ class Tado extends utils.Adapter {
 	/*getInstallations(home_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
 	}*/
-
-
 }
 
 // @ts-ignore parent is a valid property on module
