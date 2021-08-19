@@ -41,8 +41,8 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 | State | Description |
 | ----- | ----------- |
 | tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
-| tado.[x].[yyyyyy].Rooms.[z].overlayClearZone | Switch to automatic mode |
 | tado.[x].[yyyyyy].Rooms.[z].setting.temperature.celsius | Define temperature |
+| tado.[x].[yyyyyy].Rooms.[z].overlayClearZone | Switch to automatic mode |
 | tado.[x].[yyyyyy].Rooms.[z].overlay.termination.typeSkillBasedApp | Set time table mode |
 | tado.[x].[yyyyyy].Rooms.[z].overlay.termination.durationInSeconds | Set how long the time table mode shall apply |
 | tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].offset.offsetCelsius | Temperature offset |
