@@ -40,13 +40,13 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 ## Things you can steer
 | State | Description |
 | ----- | ----------- |
-| tado.[a].[xxxxxx].Rooms.[y].setting.power | Turn device on/off |
-| tado.[a].[xxxxxx].Rooms.[y].overlayClearZone | Switch to automatic mode |
-| tado.[a].[xxxxxx].Rooms.[y].setting.temperature.celsius | Define temperature |
-| tado.[a].[xxxxxx].Rooms.[y].overlay.termination.typeSkillBasedApp | Set time table mode |
-| tado.[a].[xxxxxx].Rooms.[y].overlay.termination.durationInSeconds | Set how long the time table mode shall apply |
-| tado.[a].[xxxxxx].Rooms.[y].devices.[RUzzzzzzzzzz].offset.offsetCelsius | Temperature offset |
-| tado.[a].[xxxxxx].Rooms.[y].timeTables.tt_id | Select actice time table |
+| tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
+| tado.[x].[yyyyyy].Rooms.[z].overlayClearZone | Switch to automatic mode |
+| tado.[x].[yyyyyy].Rooms.[z].setting.temperature.celsius | Define temperature |
+| tado.[x].[yyyyyy].Rooms.[z].overlay.termination.typeSkillBasedApp | Set time table mode |
+| tado.[x].[yyyyyy].Rooms.[z].overlay.termination.durationInSeconds | Set how long the time table mode shall apply |
+| tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].offset.offsetCelsius | Temperature offset |
+| tado.[x].[yyyyyy].Rooms.[z].timeTables.tt_id | Select actice time table |
 | fanspeed | Fanspeed (only AC devices) |
 | mode | AC mode (only AC devices |
 
