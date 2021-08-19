@@ -49,6 +49,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 | tado.[a].[xxxxxx].Rooms.[y].timeTables.tt_id | Select actice time table |
 | fanspeed | Fanspeed (only AC devices) |
 | mode | AC mode (only AC devices |
+
 **Feel free to provide concrete AC devices pathes for the last two lines if you have an AC device!**
 
 ## Changelog
