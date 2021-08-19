@@ -50,7 +50,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 | fanspeed | Fanspeed (only AC devices) |
 | mode | AC mode (only AC devices |
 
-**Feel free to provide concrete AC devices pathes for the last two lines if you have an AC device!**
+**Feel free to provide concrete AC device pathes for the last two lines if you have an AC device!**
 
 ## Changelog
 <!--
