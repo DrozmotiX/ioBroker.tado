@@ -1,15 +1,7 @@
 /* eslint-disable prefer-const */
 'use strict';
 
-/*
-* Created with @iobroker/create-adapter v1.16.0
-*/
-
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-
-// Load your modules here, e.g.:
 const EXPIRATION_WINDOW_IN_SECONDS = 300;
 
 const tado_auth_url = 'https://auth.tado.com';
@@ -79,7 +71,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* ON STATE CHANGE													*/
 	//////////////////////////////////////////////////////////////////////
-
 	/**
 	 * Is called if a subscribed state changes
 	 * @param {string} id
@@ -90,35 +81,24 @@ class Tado extends utils.Adapter {
 			// The state was changed
 			if (state.ack === false) {
 				try {
-					let set_temp = 0;
-					let set_mode = '';
-					let set_power = '';
-					let set_durationInSeconds = 0;
-					let set_type = '';
-					let set_fanSpeed = '';
-					let set_tadomode = '';
-					let set_offset = 0;
-					let set_tt_id = 0;
-
 					this.log.debug('GETS INTERESSTING!!!');
-					const deviceId = id.split('.');
-					let x = deviceId.length - 1;
-					this.log.debug(`Attribute '${deviceId}' changed. '${deviceId[x]}' will be checked.`);
+					const idSplitted = id.split('.');
+					const home_id = idSplitted[2];
+					const zone_id = idSplitted[4];
+					const device_id = idSplitted[6];
+					const statename = idSplitted[idSplitted.length - 1];
+					this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
 
-					const home_id = deviceId[2];
-					const zone_id = deviceId[4];
-
-					if (deviceId[x] == 'offsetCelsius') {
+					if (statename == 'offsetCelsius') {
 						const offset = await this.getStateAsync(id);
-						const device_id = deviceId[6];
 						// @ts-ignore
-						set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
-						this.log.info(`Offset changed for device '${deviceId[6]}' in home '${home_id}' to value '${set_offset}'`);
+						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
+						this.log.info(`Offset changed for device '${device_id}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
-					} else if (deviceId[x] == 'tt_id') {
+					} else if (statename == 'tt_id') {
 						const tt_id = await this.getStateAsync(id);
 						// @ts-ignore
-						set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null) ? 0 : parseInt(tt_id.val);
+						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null) ? 0 : parseInt(tt_id.val);
 						this.log.info(`TimeTable changed for room '${zone_id}' in home '${home_id}' to value '${set_tt_id}'`);
 						this.setActiveTimeTable(home_id, zone_id, set_tt_id);
 					} else {
@@ -129,24 +109,38 @@ class Tado extends utils.Adapter {
 						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
 						let tadomode, fanSpeed;
 
-						set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
+						let set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
 						// @ts-ignore
-						set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
+						let set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
 						// @ts-ignore
-						set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
-						set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
-						set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
+						let set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : parseFloat(temperature.val);
+						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
+						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 
 						if (set_type == 'AIR_CONDITIONING') {
 							tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
 							fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
 						}
-						set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
-						set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null || fanSpeed.val == '') ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
+						let set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
+						let set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null || fanSpeed.val == '') ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
 
-						if (set_type == 'HOT_WATER' && set_temp < 30) {
-							this.log.debug(`Temperature set to 60° instead of ${set_temp} for HOT_WATER`);
-							set_temp = 60;
+						if (set_type == 'HOT_WATER') {
+							if (set_temp < 30) {
+								this.log.info(`Temperature set to 60° instead of ${set_temp}° for HOT_WATER device`);
+								set_temp = 60;
+							} else if (set_temp > 80) {
+								this.log.info(`Temperature set to 60° instead of ${set_temp}° for HOT_WATER device`);
+								set_temp = 60;
+							}
+						}
+						if (set_type == 'HEATING') {
+							if (set_temp > 25) {
+								this.log.info(`Temperature set to 25° instead of ${set_temp}° for HEATING device`);
+								set_temp = 25;
+							} else if (set_temp < 5) {
+								this.log.info(`Temperature set to 5° instead of ${set_temp}° for HEATING device`);
+								set_temp = 5;
+							}
 						}
 
 						this.log.debug('Type is: ' + set_type);
@@ -157,7 +151,7 @@ class Tado extends utils.Adapter {
 						this.log.debug('Mode is: ' + set_tadomode);
 						this.log.debug('FanSpeed is: ' + set_fanSpeed);
 
-						switch (deviceId[x]) {
+						switch (statename) {
 							case ('overlayClearZone'):
 								this.log.info(`Overlay cleared for room '${zone_id}' in home '${home_id}'`);
 								await this.clearZoneOverlay(home_id, zone_id);
@@ -235,7 +229,10 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* API CALLS														*/
 	//////////////////////////////////////////////////////////////////////
-
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 */
 	async clearZoneOverlay(home_id, zone_id) {
 		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
 		this.log.debug(`Called 'DELETE ${url}'`);
@@ -245,6 +242,12 @@ class Tado extends utils.Adapter {
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {string} device_id
+	 * @param {number} set_offset
+	 */
 	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
 		const offset = {
 			celsius: set_offset
@@ -255,6 +258,11 @@ class Tado extends utils.Adapter {
 		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
 	}
 
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {number} timetable_id
+	 */
 	async setActiveTimeTable(home_id, zone_id, timetable_id) {
 		const timeTable = {
 			id: timetable_id
@@ -266,6 +274,17 @@ class Tado extends utils.Adapter {
 		this.DoTimeTables(home_id, zone_id, apiResponse);
 	}
 
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {string} power
+	 * @param {number} temperature
+	 * @param {string} typeSkillBasedApp
+	 * @param {number} durationInSeconds
+	 * @param {string} type
+	 * @param {string} fanSpeed
+	 * @param {string} mode
+	 */
 	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, fanSpeed, mode) {
 		const config = {
 			setting: {
@@ -285,7 +304,7 @@ class Tado extends utils.Adapter {
 
 		if (power.toLowerCase() == 'on') {
 			config.setting.power = 'ON';
-			//Temperature not for for aircondition if mode is DRY, AUTO, FAN
+			//Temperature not for aircondition if mode is DRY, AUTO, FAN
 			if (temperature && !(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
 				config.setting.temperature = {};
 				config.setting.temperature.celsius = temperature;
@@ -322,7 +341,10 @@ class Tado extends utils.Adapter {
 	 */
 	poolApiCall(home_id, zone_id, config) {
 		let pooltimerid = home_id + zone_id;
-		(function () { if (pooltimer[pooltimerid]) { clearTimeout(pooltimer[pooltimerid]); pooltimer[pooltimerid] = null; } })();
+		if (pooltimer[pooltimerid]) {
+			clearTimeout(pooltimer[pooltimerid]);
+			pooltimer[pooltimerid] = null;
+		}
 		let that = this;
 		return new Promise(function (resolve) {
 			pooltimer[pooltimerid] = setTimeout(async () => {
@@ -337,7 +359,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* DO Methods														*/
 	//////////////////////////////////////////////////////////////////////
-
 	async DoData_Refresh(user, pass) {
 		const intervall_time = Math.max(30, this.config.intervall) * 1000;
 		let outdated = false;
@@ -406,7 +427,10 @@ class Tado extends utils.Adapter {
 			}
 
 			// Clear running timer
-			(function () { if (polling) { clearTimeout(polling); polling = null; } })();
+			if (polling) {
+				clearTimeout(polling);
+				polling = null;
+			}
 			// timer
 			polling = setTimeout(() => {
 				this.DoConnect();
@@ -570,7 +594,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* MISC																*/
 	//////////////////////////////////////////////////////////////////////
-
 	_refreshToken() {
 		const { token } = this._accessToken;
 		const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
@@ -610,6 +633,9 @@ class Tado extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * @param {string} url
+	 */
 	apiCall(url, method = 'get', data = {}) {
 		return new Promise((resolve, reject) => {
 			if (this._accessToken) {
@@ -681,7 +707,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* GET METHODS														*/
 	//////////////////////////////////////////////////////////////////////
-
 	getMe() {
 		return this.apiCall('/api/v2/me');
 	}
@@ -759,8 +784,6 @@ class Tado extends utils.Adapter {
 	/*getInstallations(home_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
 	}*/
-
-
 }
 
 // @ts-ignore parent is a valid property on module
