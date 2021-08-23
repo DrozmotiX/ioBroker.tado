@@ -58,9 +58,10 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     ### __WORK IN PROGRESS__
 -->
 
-### __WORK IN PROGRESS__
+### 0.3.7-2 (2021-08-23)
 * (HGlab01) ActiveTimeTable can be set (#337)
 * (HGlab01) Improve logs and change code structure a little bit
+* (HGlab01) manage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)
 
 ### 0.3.6 (2021-08-16)
 * (HGlab01) support attribute 'orientation' (Sentry: IOBROKER-TADO-35)
@@ -68,7 +69,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 ### 0.3.5 (2021-08-05)
 * (HGlab01) fix issue 'hot water cannot be switched on' (#309)
 * (HGlab01) change to new sentry dsn
-* (HGlab01) Bump iobroker-jsonexplorer to v0.[y].2
+* (HGlab01) Bump iobroker-jsonexplorer to v0.1.2
 
 ### 0.3.4 (2021-07-24)
 * (HGlab01) add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)
@@ -77,7 +78,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 
 ### 0.3.3 (2021-07-19)
 * (HGlab01) Add attributes title, ssid and code
-* (HGlab01) Improve sentry handling by bumping iobroker-jsonexplorer to v0.[y].1
+* (HGlab01) Improve sentry handling by bumping iobroker-jsonexplorer to v0.1.1
 
 ### 0.3.2 (2021-07-15)
 * (HGlab01) Use password handling from JS-Controller framework
@@ -91,7 +92,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 * (HGlab01) Technical re-factoring of state management !BREAKING CHANGES! (see above)
 * (HGlab01) implement offset functionality
 * (HGlab01) Set minimum refresh time to 30 seconds
-* (HGlab01) Bump iobroker-jsonexplorer to v0.[y].0
+* (HGlab01) Bump iobroker-jsonexplorer to v0.1.0
 
 ### 0.2.7 (2021-05-11)
 * (HGlab01) prepare for js-controller v3.3.x (has wrong type "xxxx" but has to be "yyyy") (#214)
@@ -135,78 +136,6 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 * (LutzHelling) Bugfix : legacyHeatingInstallationsEnabled
 * (HGlab01) Bugfix : Add legacyHeatingInstallationsEnabled to DoHome
 * (HGlab01) Bugfix : Fix unhandled information found in DoReadDevices 
-
-### 0.[y].9
-* (DutchmanNL) Implement Sentry
-* (DutchmanNL) Bugfix : Better error handling
-* (DutchmanNL) Bugfix : state creation with JS-controller 3.x
-
-### 0.[y].8
-* (DutchmanNL) Correct countdown of "remainingtimeinseconds" implemented.
-
-### 0.[y].7
-* (DutchmanNL) Fix Unhandable information found in DoZoneState : "openWindowDetected" 
-
-### 0.[y].6
-* (DutchmanNL) fix geoTrackingEnabled & atHome
-* (DutchmanNL) fix error preventFromSubscribing
-
-### 0.[y].5  
-* (DutchmanNL) Fix switching on/off heating & related auto mode
-* (DutchmanNL) Fix switching some incorrect logging
-
-### 0.[y].4 Fixed Clear Overlay, Open Window & log error's
-* (DutchmanNL) Fixed Clear Overlay to Boolean
-* (DutchmanNL) Fixed datapoints for OpenWindow 
-* (DutchmanNL) Fixed setting overlay correctly for manuel temperature changes (use previous setting instead of always manual)
-* (DutchmanNL) Fixed error message Cannot read property 'percentage' of undefined"
-
-### 0.[y].3 Several fixes for reported error's
-* (DutchmanNL) boilerId / onDemandLogRetrievalEnabled / openWindowDetected / onDemandLogRetrievalEnabled
-* (DutchmanNL) Open Window detection implemented, only by device not by room
-
-### 0.[y].2 Bug fix
-* (DutchmanNL) Room temperature setting (overlay) fixed
-
-### 0.[y].1 Write API information to states
-* (DutchmanNL) Write API information to states
-* (DutchmanNL) Keep temperature settings (do not reset to NULL)
-
-### 0.[y].0 Release public Beta & Implement heating on / off
-* (DutchmanNL) Release public Beta
-* (DutchmanNL) Implement heating on / off
-
-### 0.0.9 Implemented room temperature settings
-* (DutchmanNL) Capability to change room temperature
-* (DutchmanNL) small code fixes
-
-### 0.0.8 Implement overlay clear states & control
-* (DutchmanNL) implement capability to reset running polling timer
-* (DutchmanNL) implement clear overlay
-* (DutchmanNL) execute polling after overlay clear
-* (DutchmanNL) reset states to NULL when polling time * 2 no data is received
-
-### 0.0.7 Improve overlay states
-* (DutchmanNL) improve overlay states  (https://github.com/DrozmotiX/ioBroker.tado/issues/1)
-
-### 0.0.6 Implemented away status
-* (DutchmanNL) Implemented away status
-* (DutchmanNL) fixed issue in state reading
-* (DutchmanNL) updated some attributes
-
-### 0.0.5 Public beta, released to latest repository
-* (DutchmanNL) add library to handle propper state and attribute creation
-* (DutchmanNL) beta release to latest repository
-* (DutchmanNL) released on NPM (installable by admin)
-
-### 0.0.3 
-* (DutchmanNL) implement all zone states & data refresh intervall
-
-### 0.0.2
-* (DutchmanNL) Alpha, read zones, their devices and related states
-
-### 0.0.1
-* (DutchmanNL) Alpha, read account and mobile device information
 
 ## License
 MIT License

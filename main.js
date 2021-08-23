@@ -89,7 +89,7 @@ class Tado extends utils.Adapter {
 					const statename = idSplitted[idSplitted.length - 1];
 					this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
 
-					if (statename== 'offsetCelsius') {
+					if (statename == 'offsetCelsius') {
 						const offset = await this.getStateAsync(id);
 						// @ts-ignore
 						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
@@ -113,7 +113,7 @@ class Tado extends utils.Adapter {
 						// @ts-ignore
 						let set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
 						// @ts-ignore
-						let set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : Math.max(5, parseFloat(temperature.val));
+						let set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : parseFloat(temperature.val);
 						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
 						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 
@@ -124,9 +124,23 @@ class Tado extends utils.Adapter {
 						let set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
 						let set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null || fanSpeed.val == '') ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
 
-						if (set_type == 'HOT_WATER' && set_temp < 30) {
-							this.log.debug(`Temperature set to 60° instead of ${set_temp} for HOT_WATER`);
-							set_temp = 60;
+						if (set_type == 'HOT_WATER') {
+							if (set_temp < 30) {
+								this.log.info(`Temperature set to 60° instead of ${set_temp}° for HOT_WATER device`);
+								set_temp = 60;
+							} else if (set_temp > 80) {
+								this.log.info(`Temperature set to 60° instead of ${set_temp}° for HOT_WATER device`);
+								set_temp = 60;
+							}
+						}
+						if (set_type == 'HEATING') {
+							if (set_temp > 25) {
+								this.log.info(`Temperature set to 25° instead of ${set_temp}° for HEATING device`);
+								set_temp = 25;
+							} else if (set_temp < 5) {
+								this.log.info(`Temperature set to 5° instead of ${set_temp}° for HEATING device`);
+								set_temp = 5;
+							}
 						}
 
 						this.log.debug('Type is: ' + set_type);
@@ -327,9 +341,9 @@ class Tado extends utils.Adapter {
 	 */
 	poolApiCall(home_id, zone_id, config) {
 		let pooltimerid = home_id + zone_id;
-		if (pooltimer[pooltimerid]) { 
-			clearTimeout(pooltimer[pooltimerid]); 
-			pooltimer[pooltimerid] = null; 
+		if (pooltimer[pooltimerid]) {
+			clearTimeout(pooltimer[pooltimerid]);
+			pooltimer[pooltimerid] = null;
 		}
 		let that = this;
 		return new Promise(function (resolve) {
@@ -413,8 +427,8 @@ class Tado extends utils.Adapter {
 			}
 
 			// Clear running timer
-			if (polling) { 
-				clearTimeout(polling); 
+			if (polling) {
+				clearTimeout(polling);
 				polling = null;
 			}
 			// timer
