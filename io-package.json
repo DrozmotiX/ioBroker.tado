@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.7-2",
+        "version": "0.3.7",
         "news": {
+            "0.3.7": {
+                "en": "ActiveTimeTable can be set (#337)\nImprove logs and change code structure a little bit\nmanage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)",
+                "de": "ActiveTimeTable kann eingestellt werden (#337)\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig\nVerwalten Sie die min./max. Temperatur für Heizung (5-25 Grad Celsius) und Warmwasser (30-80 Grad Celsius), um API-Abstürze zu vermeiden (#341)",
+                "ru": "ActiveTimeTable может быть установлен (# 337)\nУлучшить логи и немного изменить структуру кода\nуправлять минимальной / максимальной температурой для отопления (5-25 по Цельсию) и горячей воды (30-80 по Цельсию), чтобы избежать сбоев API (# 341)",
+                "pt": "ActiveTimeTable pode ser definido (# 337)\nMelhore os registros e altere um pouco a estrutura do código\ngerenciar a temperatura mín. / máx. para aquecimento (5-25 celsius) e água quente (30-80 celsius) para evitar falhas de API (# 341)",
+                "nl": "ActiveTimeTable kan worden ingesteld (#337)\nVerbeter logs en verander de codestructuur een beetje\nbeheer min/max temperatuur voor verwarming (5-25 Celsius) en warm water (30-80 Celsius) om API-crashes te voorkomen (#341)",
+                "fr": "ActiveTimeTable peut être défini (#337)\nAméliorer les journaux et modifier un peu la structure du code\ngérer la température min/max pour le chauffage (5-25 celsius) et l'eau chaude (30-80 celsius) pour éviter les plantages de l'API (#341)",
+                "it": "ActiveTimeTable può essere impostato (#337)\nMigliora i log e cambia un po' la struttura del codice\ngestire la temperatura min/max per il riscaldamento (5-25 gradi centigradi) e l'acqua calda (30-80 gradi centigradi) per evitare crash API (#341)",
+                "es": "ActiveTimeTable se puede configurar (# 337)\nMejore los registros y cambie un poco la estructura del código\nadministrar la temperatura mínima / máxima para calefacción (5-25 grados Celsius) y agua caliente (30-80 grados Celsius) para evitar fallas de API (# 341)",
+                "pl": "Można ustawić ActiveTimeTable (#337)\nPopraw logi i zmień trochę strukturę kodu\nzarządzaj minimalną/maksymalną temperaturą ogrzewania (5-25 stopni Celsjusza) i ciepłej wody (30-80 stopni Celsjusza), aby uniknąć awarii API (#341)",
+                "zh-cn": "可以设置 ActiveTimeTable (#337)\n改进日志并稍微改变代码结构\n管理加热 (5-25 摄氏度) 和热水 (30-80 摄氏度) 的最低/最高温度以避免 API 崩溃 (#341)"
+            },
             "0.3.7-2": {
                 "en": "ActiveTimeTable can be set (#337)\nImprove logs and change code structure a little bit\nmanage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)",
                 "de": "ActiveTimeTable kann eingestellt werden (#337)\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig\nVerwalten Sie die min./max. Temperatur für Heizung (5-25 Grad Celsius) und Warmwasser (30-80 Grad Celsius), um API-Abstürze zu vermeiden (#341)",
@@ -220,18 +232,6 @@
                 "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
             },
             "0.3.0-6": {
-                "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
-                "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
-                "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
-                "pt": "Refatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nimplementar funcionalidade de deslocamento\nDefina o tempo mínimo de atualização para 30 segundos\nBump iobroker-jsonexplorer para v0.1.0",
-                "nl": "Technische re-factoring van het staatsbeheer !BREKENDE VERANDERINGEN! (zie hierboven)\noffset-functionaliteit implementeren\nStel de minimale verversingstijd in op 30 seconden\nBump iobroker-jsonexplorer naar v0.1.0",
-                "fr": "Refonte technique de la gestion de l'état ! CHANGEMENTS BRUTS ! (voir au dessus)\nimplémenter la fonctionnalité de décalage\nDéfinir le temps de rafraîchissement minimum à 30 secondes\nTransférez iobroker-jsonexplorer vers la v0.1.0",
-                "it": "Refactoring tecnico della gestione statale !CAMBIAMENTI ROTANTI! (vedi sopra)\nimplementare la funzionalità di offset\nImposta il tempo di aggiornamento minimo su 30 secondi\nPassa iobroker-jsonexplorer alla v0.1.0",
-                "es": "¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nimplementar la funcionalidad de compensación\nEstablecer el tiempo de actualización mínimo en 30 segundos\nPase iobroker-jsonexplorer a v0.1.0",
-                "pl": "Refaktoryzacja techniczna zarządzania państwem !PRZEŁOMOWE ZMIANY! (patrz wyżej)\nwdrożyć funkcjonalność offsetową\nUstaw minimalny czas odświeżania na 30 sekund\nPodnieś iobroker-jsonexplorer do wersji 0.1.0",
-                "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
-            },
-            "0.3.0-5": {
                 "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
                 "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
                 "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
