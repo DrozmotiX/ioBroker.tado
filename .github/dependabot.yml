@@ -1,14 +1,11 @@
 version: 2
 updates:
-- package-ecosystem: "npm"
-  directory: "/"
-  schedule:
-    interval: "weekly"
-  allow:
-    - dependency-name: "*"
-      dependency-type: "production"
-  ignore:
-    - dependency-name: "*"
-      dependency-type: "development"
-  target-branch: "dependencyAutoUpdate"
-  open-pull-requests-limit: 30
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "*"
+        dependency-type: "production"
+    target-branch: "dependencyAutoUpdate"
