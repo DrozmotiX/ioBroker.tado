@@ -3,6 +3,12 @@ updates:
 - package-ecosystem: "npm"
   directory: "/"
   schedule:
-    interval: "daily"
+    interval: "weekly"
+  allow:
+    - dependency-name: "*"
+      dependency-type: "production"
+  ignore:
+    - dependency-name: "*"
+      dependency-type: "development"
   target-branch: "dependencyAutoUpdate"
   open-pull-requests-limit: 30
