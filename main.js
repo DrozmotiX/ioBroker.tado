@@ -294,44 +294,49 @@ class Tado extends utils.Adapter {
 			}
 		};
 
-		if (type == 'AIR_CONDITIONING') {
-			//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
-			if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
-				config.setting.fanSpeed = fanSpeed;
+		try {
+			if (type == 'AIR_CONDITIONING') {
+				//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
+				if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
+					config.setting.fanSpeed = fanSpeed;
+				}
+				config.setting.mode = mode;
 			}
-			config.setting.mode = mode;
-		}
 
-		if (power.toLowerCase() == 'on') {
-			config.setting.power = 'ON';
-			//Temperature not for aircondition if mode is DRY, AUTO, FAN
-			if (temperature && !(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
-				config.setting.temperature = {};
-				config.setting.temperature.celsius = temperature;
+			if (power.toLowerCase() == 'on') {
+				config.setting.power = 'ON';
+				//Temperature not for aircondition if mode is DRY, AUTO, FAN
+				if (temperature && !(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
+					config.setting.temperature = {};
+					config.setting.temperature.celsius = temperature;
+				}
+			} else {
+				config.setting.power = 'OFF';
 			}
-		} else {
-			config.setting.power = 'OFF';
-		}
 
-		config.termination.typeSkillBasedApp = typeSkillBasedApp;
-		if (typeSkillBasedApp != 'TIMER') {
-			config.termination.durationInSeconds = null;
-		}
-		else {
-			config.termination.durationInSeconds = durationInSeconds;
-		}
+			config.termination.typeSkillBasedApp = typeSkillBasedApp;
+			if (typeSkillBasedApp != 'TIMER') {
+				config.termination.durationInSeconds = null;
+			}
+			else {
+				config.termination.durationInSeconds = durationInSeconds;
+			}
 
-		this.log.info(`Call API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)}`);
-		let result = await this.poolApiCall(home_id, zone_id, config);
-		if (result.setting.temperature == null) {
-			result.setting.temperature = {};
-			result.setting.temperature.celsius = null;
-			result.setting.temperature.fahrenheit = null;
+			this.log.info(`Call API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)}`);
+			let result = await this.poolApiCall(home_id, zone_id, config);
+			if (result.setting.temperature == null) {
+				result.setting.temperature = {};
+				result.setting.temperature.celsius = null;
+				result.setting.temperature.fahrenheit = null;
+			}
+			await JsonExplorer.setLastStartTime();
+			await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
+			await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
+			await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 		}
-		await JsonExplorer.setLastStartTime();
-		await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
-		await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
-		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
+		catch (error) {
+			this.log.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
+		}
 	}
 
 	/**
@@ -346,10 +351,14 @@ class Tado extends utils.Adapter {
 			pooltimer[pooltimerid] = null;
 		}
 		let that = this;
-		return new Promise(function (resolve) {
+		return new Promise((resolve, reject) => {
 			pooltimer[pooltimerid] = setTimeout(async () => {
 				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
-				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config);
+				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config).then(apiResponse => {
+					resolve(apiResponse);
+				}).catch(error => {
+					reject(error);
+				});
 				that.log.debug(`API called with ${JSON.stringify(config)}`);
 				resolve(apiResponse);
 			}, 750);
@@ -455,7 +464,7 @@ class Tado extends utils.Adapter {
 			try {
 				await this.DoData_Refresh(user, pass);
 			} catch (error) {
-				this.log.error(error);
+				this.log.error(String(error));
 			}
 		} else {
 			this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
@@ -629,7 +638,7 @@ class Tado extends utils.Adapter {
 		try {
 			this._accessToken = await client.getToken(tokenParams);
 		} catch (error) {
-			console.log('Access Token Error', error.message);
+			console.log('Access Token Error', error);
 		}
 	}
 
