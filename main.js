@@ -679,15 +679,15 @@ class Tado extends utils.Adapter {
 							Authorization: 'Bearer ' + this._accessToken.token.access_token
 						}
 					}).then(response => {
-						this.apiCallinExecution = false;
+						if (method != 'get') this.apiCallinExecution = false;
 						resolve(response.data);
 					}).catch(error => {
-						this.apiCallinExecution = false;
+						if (method != 'get') this.apiCallinExecution = false;
 						reject(error);
 					});
 				});
 			} else {
-				this.apiCallinExecution = false;
+				if (method != 'get') this.apiCallinExecution = false;
 				reject(new Error('Not yet logged in'));
 			}
 		});
