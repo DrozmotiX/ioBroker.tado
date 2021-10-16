@@ -644,7 +644,7 @@ class Tado extends utils.Adapter {
 	}
 
 	sleep(msmin, msmax) {
-		let ms =  Math.random() * (msmax - msmin) + msmin;
+		let ms = Math.random() * (msmax - msmin) + msmin;
 		this.log.debug('Waiting time is ' + ms + 'ms');
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
@@ -657,7 +657,7 @@ class Tado extends utils.Adapter {
 		if (method != 'get' && this.apiCallinExecution == true) {
 			for (let i = 0; i < 10; i++) {
 				this.log.info('Other API Call in action, waiting.... ' + url);
-				await this.sleep(400,1200);
+				await this.sleep(400, 1200);
 				this.log.debug('Waiting done! ' + url);
 				if (this.apiCallinExecution != true) {
 					this.log.debug('Time to execute ' + url); break;
@@ -679,7 +679,7 @@ class Tado extends utils.Adapter {
 							Authorization: 'Bearer ' + this._accessToken.token.access_token
 						}
 					}).then(response => {
-						if (method != 'get') { setTimeout(function() {this.apiCallinExecution = false; }, 300); }
+						if (method != 'get') this.apiCallinExecution = false;
 						resolve(response.data);
 					}).catch(error => {
 						if (method != 'get') this.apiCallinExecution = false;
