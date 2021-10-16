@@ -41,6 +41,7 @@ class Tado extends utils.Adapter {
 		this.getMe_data = null;
 		this.Home_data = null;
 		this.lastupdate = 0;
+		this.apiCallinExecution = false;
 		JsonExplorer.init(this, state_attr);
 	}
 
@@ -642,10 +643,30 @@ class Tado extends utils.Adapter {
 		}
 	}
 
+	sleep(msmin, msmax) {
+		let ms = Math.random() * (msmax - msmin) + msmin;
+		this.log.debug('Waiting time is ' + ms + 'ms');
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
 	/**
 	 * @param {string} url
 	 */
-	apiCall(url, method = 'get', data = {}) {
+	async apiCall(url, method = 'get', data = {}) {
+		// check if other call is in progress and if yes loop and wait
+		if (method != 'get' && this.apiCallinExecution == true) {
+			for (let i = 0; i < 10; i++) {
+				this.log.info('Other API Call in action, waiting.... ' + url);
+				await this.sleep(400, 1200);
+				this.log.debug('Waiting done! ' + url);
+				if (this.apiCallinExecution != true) {
+					this.log.debug('Time to execute ' + url); break;
+				} else {
+					this.log.debug('Oh, no! One more loop! ' + url);
+				}
+			}
+		}
+		if (method != 'get') this.apiCallinExecution = true;
 		return new Promise((resolve, reject) => {
 			if (this._accessToken) {
 				this._refreshToken().then(() => {
@@ -658,12 +679,15 @@ class Tado extends utils.Adapter {
 							Authorization: 'Bearer ' + this._accessToken.token.access_token
 						}
 					}).then(response => {
+						if (method != 'get') this.apiCallinExecution = false;
 						resolve(response.data);
 					}).catch(error => {
+						if (method != 'get') this.apiCallinExecution = false;
 						reject(error);
 					});
 				});
 			} else {
+				if (method != 'get') this.apiCallinExecution = false;
 				reject(new Error('Not yet logged in'));
 			}
 		});
