@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "tado",
-        "version": "0.3.8",
+        "version": "0.3.9-0",
         "news": {
+            "0.3.9-0": {
+                "en": "force correct NodeJS dependency with error at install\nimplement queuing for API requests (avoids some status code 422 issues)",
+                "de": "Korrekte NodeJS-Abhängigkeit mit Fehler bei der Installation erzwingen\nImplementieren von Warteschlangen für API-Anfragen (vermeidet einige Probleme mit dem Statuscode 422)",
+                "ru": "принудительно исправить зависимость NodeJS с ошибкой при установке\nреализовать очередь для запросов API (позволяет избежать некоторых проблем с кодом состояния 422)",
+                "pt": "forçar dependência NodeJS correta com erro na instalação\nimplementar enfileiramento para solicitações de API (evita alguns problemas de código de status 422)",
+                "nl": "forceer correcte NodeJS-afhankelijkheid met fout bij installatie\nwachtrij voor API-verzoeken implementeren (vermijdt enkele problemen met statuscode 422)",
+                "fr": "forcer la dépendance correcte de NodeJS avec une erreur à l'installation\nimplémenter la file d'attente pour les demandes d'API (évite certains problèmes de code d'état 422)",
+                "it": "forza la dipendenza NodeJS corretta con errore durante l'installazione\nimplementare l'accodamento per le richieste API (evita alcuni problemi con il codice di stato 422)",
+                "es": "forzar la dependencia correcta de NodeJS con error en la instalación\nimplementar cola para solicitudes de API (evita algunos problemas del código de estado 422)",
+                "pl": "wymuś poprawną zależność NodeJS z błędem podczas instalacji\nzaimplementuj kolejkowanie żądań API (unika problemów z kodem statusu 422)",
+                "zh-cn": "强制正确的 NodeJS 依赖项在安装时出错\n实现 API 请求的排队（避免一些状态码 422 问题）"
+            },
             "0.3.8": {
                 "en": "support attributes 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncatch 422 issue in poolApiCall()",
                 "de": "Unterstützungsattribute 'fanLevel', 'vertikalSwing', 'horizontalSwing' (#352)\n422 Problem in poolApiCall() abfangen",
@@ -230,18 +242,6 @@
                 "es": "Funciona con Node 12.xo superior (dependencia de actualización simple-oauth2)\nBump simple-oauth2 de 2.5.2 a 4.2.0\nPrepárese para la primera versión estable",
                 "pl": "Działa z węzłem 12.x lub nowszym (zależność aktualizacji simple-oauth2)\nZmień simple-oauth2 z 2.5.2 na 4.2.0\nPrzygotuj się na pierwszą stabilną wersję",
                 "zh-cn": "适用于 Node 12.x 或更高版本（simple-oauth2 更新依赖项）\n将 simple-oauth2 从 2.5.2 提升到 4.2.0\n准备第一个稳定版本"
-            },
-            "0.3.0": {
-                "en": "Technical re-factoring of state management !BREAKING CHANGES! (see above)\nimplement offset functionality\nSet minimum refresh time to 30 seconds\nBump iobroker-jsonexplorer to v0.1.0",
-                "de": "Technisches Refactoring des Staatsmanagements !BRECHENDE VERÄNDERUNGEN! (siehe oben)\nOffset-Funktionalität implementieren\nStellen Sie die Mindestaktualisierungszeit auf 30 Sekunden ein\nUpgrade von iobroker-jsonexplorer auf v0.1.0",
-                "ru": "Технический рефакторинг госуправления! ГРОМКИЕ ИЗМЕНЕНИЯ! (см. выше)\nреализовать функциональность смещения\nУстановите минимальное время обновления на 30 секунд.\nПоднимите iobroker-jsonexplorer до версии v0.1.0",
-                "pt": "Refatoração técnica da gestão do estado! QUEBRANDO MUDANÇAS! (Veja acima)\nimplementar funcionalidade de deslocamento\nDefina o tempo mínimo de atualização para 30 segundos\nBump iobroker-jsonexplorer para v0.1.0",
-                "nl": "Technische re-factoring van het staatsbeheer !BREKENDE VERANDERINGEN! (zie hierboven)\noffset-functionaliteit implementeren\nStel de minimale verversingstijd in op 30 seconden\nBump iobroker-jsonexplorer naar v0.1.0",
-                "fr": "Refonte technique de la gestion de l'état ! CHANGEMENTS BRUTS ! (voir au dessus)\nimplémenter la fonctionnalité de décalage\nDéfinir le temps de rafraîchissement minimum à 30 secondes\nTransférez iobroker-jsonexplorer vers la v0.1.0",
-                "it": "Refactoring tecnico della gestione statale !CAMBIAMENTI ROTANTI! (vedi sopra)\nimplementare la funzionalità di offset\nImposta il tempo di aggiornamento minimo su 30 secondi\nPassa iobroker-jsonexplorer alla v0.1.0",
-                "es": "¡Refactorización técnica de la gestión estatal! ¡CAMBIOS IMPORTANTES! (véase más arriba)\nimplementar la funcionalidad de compensación\nEstablecer el tiempo de actualización mínimo en 30 segundos\nPase iobroker-jsonexplorer a v0.1.0",
-                "pl": "Refaktoryzacja techniczna zarządzania państwem !PRZEŁOMOWE ZMIANY! (patrz wyżej)\nwdrożyć funkcjonalność offsetową\nUstaw minimalny czas odświeżania na 30 sekund\nPodnieś iobroker-jsonexplorer do wersji 0.1.0",
-                "zh-cn": "状态管理的技术重构！突破性的变化！ （看上面）\n实现偏移功能\n将最小刷新时间设置为 30 秒\n将 iobroker-jsonexplorer 升级到 v0.1.0"
             }
         },
         "title": "Tado",

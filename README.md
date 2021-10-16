@@ -57,7 +57,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.3.9-0 (2021-10-16)
 * (DutchmanNL) force correct NodeJS dependency with error at install
 * (HGlab01) implement queuing for API requests (avoids some status code 422 issues)
 
