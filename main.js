@@ -253,10 +253,15 @@ class Tado extends utils.Adapter {
 		const offset = {
 			celsius: set_offset
 		};
-		this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
-		let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
-		this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
-		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+		try {
+			this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
+			let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
+			this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
+			this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+		}
+		catch (error) {
+			this.log.error(`Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`);
+		}
 	}
 
 	/**
