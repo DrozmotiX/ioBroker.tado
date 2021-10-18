@@ -254,8 +254,9 @@ class Tado extends utils.Adapter {
 			celsius: set_offset
 		};
 		try {
-			this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
+			//this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
 			let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
+			this.log.info(`API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)} called.`);
 			this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
 			this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
 		}
@@ -274,8 +275,9 @@ class Tado extends utils.Adapter {
 			id: timetable_id
 		};
 		this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
-		this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
+		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
 		let apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+		this.log.info(`API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)} called.`);
 		this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
 		this.DoTimeTables(home_id, zone_id, apiResponse);
 	}
@@ -328,8 +330,9 @@ class Tado extends utils.Adapter {
 				config.termination.durationInSeconds = durationInSeconds;
 			}
 
-			this.log.info(`Call API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)}`);
+			//this.log.info(`Call API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)}`);
 			let result = await this.poolApiCall(home_id, zone_id, config);
+			this.log.info(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 			if (result.setting.temperature == null) {
 				result.setting.temperature = {};
 				result.setting.temperature.celsius = null;
@@ -658,11 +661,12 @@ class Tado extends utils.Adapter {
 	 * @param {string} url
 	 */
 	async apiCall(url, method = 'get', data = {}) {
+		const waitingTime = 3000;
 		// check if other call is in progress and if yes loop and wait
 		if (method != 'get' && this.apiCallinExecution == true) {
 			for (let i = 0; i < 10; i++) {
-				this.log.info('Other API Call in action, waiting.... ' + url);
-				await this.sleep(400, 1200);
+				this.log.info('Other API call in action, waiting... ' + url);
+				await this.sleep(waitingTime - 500, waitingTime + 500);
 				this.log.debug('Waiting done! ' + url);
 				if (this.apiCallinExecution != true) {
 					this.log.debug('Time to execute ' + url); break;
@@ -684,7 +688,12 @@ class Tado extends utils.Adapter {
 							Authorization: 'Bearer ' + this._accessToken.token.access_token
 						}
 					}).then(response => {
-						if (method != 'get') this.apiCallinExecution = false;
+						if (method != 'get') {
+							setTimeout(() => {
+								this.apiCallinExecution = false;
+
+							}, waitingTime);
+						}
 						resolve(response.data);
 					}).catch(error => {
 						if (method != 'get') this.apiCallinExecution = false;
