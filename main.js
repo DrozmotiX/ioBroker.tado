@@ -19,6 +19,7 @@ const { ResourceOwnerPassword } = require('simple-oauth2');
 const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
+const ping = require('ping');
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
@@ -43,6 +44,7 @@ class Tado extends utils.Adapter {
 		this.lastupdate = 0;
 		this.apiCallinExecution = false;
 		JsonExplorer.init(this, state_attr);
+		this.intervall_time = 60;
 	}
 
 	/**
@@ -50,6 +52,7 @@ class Tado extends utils.Adapter {
 	 */
 	async onReady() {
 		this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
+		this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
@@ -237,7 +240,12 @@ class Tado extends utils.Adapter {
 	async clearZoneOverlay(home_id, zone_id) {
 		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
 		this.log.debug(`Called 'DELETE ${url}'`);
-		await this.apiCall(url, 'delete');
+		try {
+			await this.apiCall(url, 'delete');
+		}
+		catch (error) {
+			this.log.error(`Issue at clearZoneOverlay: '${error}'.`);
+		}
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
@@ -274,9 +282,15 @@ class Tado extends utils.Adapter {
 		const timeTable = {
 			id: timetable_id
 		};
+		let apiResponse;
 		this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
 		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
-		let apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+		try {
+			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+		}
+		catch (error) {
+			this.log.error(`Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`);
+		}
 		this.log.info(`API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)} called.`);
 		this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
 		this.DoTimeTables(home_id, zone_id, apiResponse);
@@ -378,7 +392,6 @@ class Tado extends utils.Adapter {
 	/* DO Methods														*/
 	//////////////////////////////////////////////////////////////////////
 	async DoData_Refresh(user, pass) {
-		const intervall_time = Math.max(30, this.config.intervall) * 1000;
 		let outdated = false;
 		let now = new Date().getTime();
 		let step = 'start';
@@ -439,7 +452,7 @@ class Tado extends utils.Adapter {
 			} else {
 
 				if (conn_state.val === false) {
-					this.log.info(`Initialisation finished, connected to Tado cloud service refreshing every ${intervall_time / 1000} seconds`);
+					this.log.info(`Initialisation finished, connected to Tado cloud service refreshing every ${this.intervall_time / 1000} seconds`);
 					this.setState('info.connection', true, true);
 				}
 			}
@@ -452,7 +465,7 @@ class Tado extends utils.Adapter {
 			// timer
 			polling = setTimeout(() => {
 				this.DoConnect();
-			}, intervall_time);
+			}, this.intervall_time);
 		} catch (error) {
 			this.log.error(`Error in data refresh at step ${step}: ${error}`);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
@@ -467,6 +480,23 @@ class Tado extends utils.Adapter {
 	async DoConnect() {
 		const user = this.config.Username;
 		let pass = this.config.Password;
+
+		if (await this.checkInternetConnection() == false) {
+			this.log.error(`No internet connection detected. Retry in ${this.intervall_time/1000} seconds.`);
+			// Clear running timer
+			if (polling) {
+				clearTimeout(polling);
+				polling = null;
+			}
+			// timer
+			polling = setTimeout(() => {
+				this.DoConnect();
+			}, this.intervall_time);
+			return;
+		}
+		else {
+			this.log.debug('Internet connection detected. Everything fine!');
+		}
 
 		// Check if credentials are not empty
 		if (user !== '' && pass !== '') {
@@ -498,6 +528,12 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
 	}
 
+	/**
+	 * @param {string} HomeId
+	 * @param {string} ZoneId
+	 * @param {string} DeviceId
+	 * @param {object} offset
+	 */
 	async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
 		if (offset == null) {
 			offset = await this.getTemperatureOffset(DeviceId);
@@ -574,6 +610,11 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
 	}
 
+	/**
+	 * @param {string} HomeId
+	 * @param {string} ZoneId
+	 * @param {object} TimeTables_data
+	 */
 	async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
 		if (TimeTables_data == null) {
 			TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
@@ -751,63 +792,133 @@ class Tado extends utils.Adapter {
 		}
 	}
 
+	async checkInternetConnection(host = 'dns.google') {
+		let res = await ping.promise.probe(host);
+		return (res.alive);
+	}
+
 	//////////////////////////////////////////////////////////////////////
 	/* GET METHODS														*/
 	//////////////////////////////////////////////////////////////////////
 	getMe() {
-		return this.apiCall('/api/v2/me');
+		try {
+			return this.apiCall('/api/v2/me');
+		}
+		catch (error) {
+			this.log.error(`Issue at getMe: '${error}'.`);
+		}
 	}
 
 	// Read account information and all home related data
 	getHome(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getHome: '${error}'.`);
+		}
 	}
 
 	// Get weather information for home location
 	getWeather(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/weather`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/weather`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getWeather: '${error}'.`);
+		}
 	}
 
 	// User information equal to Weather, ignoring function but keep for history/feature functionality
 	getUsers(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/users`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/users`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getUsers: '${error}'.`);
+		}
 	}
 
 	// Function disabled, no data in API ?
 	getState_info(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/state`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/state`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getState_info: '${error}'.`);
+		}
 	}
 
 	getMobileDevices(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getMobileDevices: '${error}'.`);
+		}
 	}
 
 	getMobileDevice(home_id, device_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getMobileDevice: '${error}'.`);
+		}
 	}
 
 	getMobileDeviceSettings(home_id, device_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}/settings`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}/settings`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getMobileDeviceSettings: '${error}'.`);
+		}
 	}
 
 	getZones(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/zones`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getZones: '${error}'.`);
+		}
 	}
 
 	getZoneState(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getZoneState: '${error}'.`);
+		}
 	}
 
 	getAwayConfiguration(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getAwayConfiguration: '${error}'.`);
+		}
 	}
 
 	getTimeTables(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
+		try {
+			return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getTimeTables: '${error}'.`);
+		}
 	}
 
 	getTemperatureOffset(device_id) {
-		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+		try {
+			return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+		}
+		catch (error) {
+			this.log.error(`Issue at getTemperatureOffset: '${error}'.`);
+		}
 	}
 
 	/*getDevices(home_id) {
