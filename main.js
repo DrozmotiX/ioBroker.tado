@@ -239,13 +239,11 @@ class Tado extends utils.Adapter {
 	 */
 	async clearZoneOverlay(home_id, zone_id) {
 		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
+		if (await this.checkInternetConnection() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'delete');
 		this.log.debug(`Called 'DELETE ${url}'`);
-		try {
-			await this.apiCall(url, 'delete');
-		}
-		catch (error) {
-			this.log.error(`Issue at clearZoneOverlay: '${error}'.`);
-		}
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
@@ -262,7 +260,9 @@ class Tado extends utils.Adapter {
 			celsius: set_offset
 		};
 		try {
-			//this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
+			if (await this.checkInternetConnection() == false) {
+				throw new Error('No internet connection detected!');
+			}
 			let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
 			this.log.info(`API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)} called.`);
 			this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
@@ -286,14 +286,18 @@ class Tado extends utils.Adapter {
 		this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
 		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
 		try {
+			if (await this.checkInternetConnection() == false) {
+				throw new Error('No internet connection detected!');
+			}
 			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+
+			this.DoTimeTables(home_id, zone_id, apiResponse);
+			this.log.info(`API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)} called.`);
+			this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
 		}
 		catch (error) {
 			this.log.error(`Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`);
 		}
-		this.log.info(`API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)} called.`);
-		this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
-		this.DoTimeTables(home_id, zone_id, apiResponse);
 	}
 
 	/**
@@ -367,11 +371,14 @@ class Tado extends utils.Adapter {
 	 * @param {string} zone_id
 	 * @param {object} config
 	 */
-	poolApiCall(home_id, zone_id, config) {
+	async poolApiCall(home_id, zone_id, config) {
 		let pooltimerid = home_id + zone_id;
 		if (pooltimer[pooltimerid]) {
 			clearTimeout(pooltimer[pooltimerid]);
 			pooltimer[pooltimerid] = null;
+		}
+		if (await this.checkInternetConnection() == false) {
+			throw new Error('No internet connection detected!');
 		}
 		let that = this;
 		return new Promise((resolve, reject) => {
