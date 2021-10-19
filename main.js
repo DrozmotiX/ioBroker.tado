@@ -482,7 +482,7 @@ class Tado extends utils.Adapter {
 		let pass = this.config.Password;
 
 		if (await this.checkInternetConnection() == false) {
-			this.log.error(`No internet connection detected. Retry in ${this.intervall_time/1000} seconds.`);
+			this.log.error(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
 			// Clear running timer
 			if (polling) {
 				clearTimeout(polling);
@@ -801,124 +801,59 @@ class Tado extends utils.Adapter {
 	/* GET METHODS														*/
 	//////////////////////////////////////////////////////////////////////
 	getMe() {
-		try {
-			return this.apiCall('/api/v2/me');
-		}
-		catch (error) {
-			this.log.error(`Issue at getMe: '${error}'.`);
-		}
+		return this.apiCall('/api/v2/me');
 	}
 
 	// Read account information and all home related data
 	getHome(home_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getHome: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}`);
 	}
 
 	// Get weather information for home location
 	getWeather(home_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/weather`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getWeather: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/weather`);
 	}
 
 	// User information equal to Weather, ignoring function but keep for history/feature functionality
 	getUsers(home_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/users`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getUsers: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/users`);
 	}
 
 	// Function disabled, no data in API ?
 	getState_info(home_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/state`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getState_info: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/state`);
 	}
 
 	getMobileDevices(home_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getMobileDevices: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
 	}
 
 	getMobileDevice(home_id, device_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getMobileDevice: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}`);
 	}
 
 	getMobileDeviceSettings(home_id, device_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}/settings`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getMobileDeviceSettings: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}/settings`);
 	}
 
 	getZones(home_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/zones`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getZones: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/zones`);
 	}
 
 	getZoneState(home_id, zone_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getZoneState: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
 	}
 
 	getAwayConfiguration(home_id, zone_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getAwayConfiguration: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	}
 
 	getTimeTables(home_id, zone_id) {
-		try {
-			return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getTimeTables: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
 	}
 
 	getTemperatureOffset(device_id) {
-		try {
-			return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
-		}
-		catch (error) {
-			this.log.error(`Issue at getTemperatureOffset: '${error}'.`);
-		}
+		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
 	}
 
 	/*getDevices(home_id) {
