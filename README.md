@@ -57,6 +57,11 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) request to set values are sent at intervals of 3 seconds
+* (HGlab01) unhandled errors are no handled
+
 ### 0.3.9 (2021-10-16)
 * (DutchmanNL) force correct NodeJS dependency with error at install
 * (HGlab01) implement queuing for API requests (avoids some status code 422 issues)
