@@ -19,6 +19,7 @@ const { ResourceOwnerPassword } = require('simple-oauth2');
 const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
+const ping = require('ping');
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
@@ -43,6 +44,7 @@ class Tado extends utils.Adapter {
 		this.lastupdate = 0;
 		this.apiCallinExecution = false;
 		JsonExplorer.init(this, state_attr);
+		this.intervall_time = 60 * 1000;
 	}
 
 	/**
@@ -50,6 +52,7 @@ class Tado extends utils.Adapter {
 	 */
 	async onReady() {
 		this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
+		this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
 		await this.DoConnect();
@@ -236,8 +239,11 @@ class Tado extends utils.Adapter {
 	 */
 	async clearZoneOverlay(home_id, zone_id) {
 		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
-		this.log.debug(`Called 'DELETE ${url}'`);
+		if (await this.checkInternetConnection() == false) {
+			throw new Error('No internet connection detected!');
+		}
 		await this.apiCall(url, 'delete');
+		this.log.debug(`Called 'DELETE ${url}'`);
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
@@ -253,10 +259,18 @@ class Tado extends utils.Adapter {
 		const offset = {
 			celsius: set_offset
 		};
-		this.log.info(`Call API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)}`);
-		let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
-		this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
-		this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+		try {
+			if (await this.checkInternetConnection() == false) {
+				throw new Error('No internet connection detected!');
+			}
+			let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
+			this.log.info(`API 'temperatureOffset' for home '${home_id}' and deviceID '${device_id}' with body ${JSON.stringify(offset)} called.`);
+			this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
+			this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
+		}
+		catch (error) {
+			this.log.error(`Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`);
+		}
 	}
 
 	/**
@@ -268,11 +282,22 @@ class Tado extends utils.Adapter {
 		const timeTable = {
 			id: timetable_id
 		};
+		let apiResponse;
 		this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
-		this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
-		let apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
-		this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
-		this.DoTimeTables(home_id, zone_id, apiResponse);
+		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
+		try {
+			if (await this.checkInternetConnection() == false) {
+				throw new Error('No internet connection detected!');
+			}
+			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
+
+			this.DoTimeTables(home_id, zone_id, apiResponse);
+			this.log.info(`API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)} called.`);
+			this.log.debug(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
+		}
+		catch (error) {
+			this.log.error(`Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`);
+		}
 	}
 
 	/**
@@ -323,8 +348,8 @@ class Tado extends utils.Adapter {
 				config.termination.durationInSeconds = durationInSeconds;
 			}
 
-			this.log.info(`Call API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)}`);
 			let result = await this.poolApiCall(home_id, zone_id, config);
+			this.log.info(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 			if (result.setting.temperature == null) {
 				result.setting.temperature = {};
 				result.setting.temperature.celsius = null;
@@ -345,11 +370,14 @@ class Tado extends utils.Adapter {
 	 * @param {string} zone_id
 	 * @param {object} config
 	 */
-	poolApiCall(home_id, zone_id, config) {
+	async poolApiCall(home_id, zone_id, config) {
 		let pooltimerid = home_id + zone_id;
 		if (pooltimer[pooltimerid]) {
 			clearTimeout(pooltimer[pooltimerid]);
 			pooltimer[pooltimerid] = null;
+		}
+		if (await this.checkInternetConnection() == false) {
+			throw new Error('No internet connection detected!');
 		}
 		let that = this;
 		return new Promise((resolve, reject) => {
@@ -370,7 +398,6 @@ class Tado extends utils.Adapter {
 	/* DO Methods														*/
 	//////////////////////////////////////////////////////////////////////
 	async DoData_Refresh(user, pass) {
-		const intervall_time = Math.max(30, this.config.intervall) * 1000;
 		let outdated = false;
 		let now = new Date().getTime();
 		let step = 'start';
@@ -431,7 +458,7 @@ class Tado extends utils.Adapter {
 			} else {
 
 				if (conn_state.val === false) {
-					this.log.info(`Initialisation finished, connected to Tado cloud service refreshing every ${intervall_time / 1000} seconds`);
+					this.log.info(`Initialisation finished, connected to Tado cloud service refreshing every ${this.intervall_time / 1000} seconds`);
 					this.setState('info.connection', true, true);
 				}
 			}
@@ -444,7 +471,7 @@ class Tado extends utils.Adapter {
 			// timer
 			polling = setTimeout(() => {
 				this.DoConnect();
-			}, intervall_time);
+			}, this.intervall_time);
 		} catch (error) {
 			this.log.error(`Error in data refresh at step ${step}: ${error}`);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
@@ -459,6 +486,23 @@ class Tado extends utils.Adapter {
 	async DoConnect() {
 		const user = this.config.Username;
 		let pass = this.config.Password;
+
+		if (await this.checkInternetConnection() == false) {
+			this.log.error(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
+			// Clear running timer
+			if (polling) {
+				clearTimeout(polling);
+				polling = null;
+			}
+			// timer
+			polling = setTimeout(() => {
+				this.DoConnect();
+			}, this.intervall_time);
+			return;
+		}
+		else {
+			this.log.debug('Internet connection detected. Everything fine!');
+		}
 
 		// Check if credentials are not empty
 		if (user !== '' && pass !== '') {
@@ -490,6 +534,12 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
 	}
 
+	/**
+	 * @param {string} HomeId
+	 * @param {string} ZoneId
+	 * @param {string} DeviceId
+	 * @param {object} offset
+	 */
 	async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
 		if (offset == null) {
 			offset = await this.getTemperatureOffset(DeviceId);
@@ -566,6 +616,11 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
 	}
 
+	/**
+	 * @param {string} HomeId
+	 * @param {string} ZoneId
+	 * @param {object} TimeTables_data
+	 */
 	async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
 		if (TimeTables_data == null) {
 			TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
@@ -653,11 +708,12 @@ class Tado extends utils.Adapter {
 	 * @param {string} url
 	 */
 	async apiCall(url, method = 'get', data = {}) {
+		const waitingTime = 3000;  //time in ms to wait between calls
 		// check if other call is in progress and if yes loop and wait
 		if (method != 'get' && this.apiCallinExecution == true) {
 			for (let i = 0; i < 10; i++) {
-				this.log.info('Other API Call in action, waiting.... ' + url);
-				await this.sleep(400, 1200);
+				this.log.info('Other API call in action, waiting... ' + url);
+				await this.sleep(waitingTime, waitingTime + 500);
 				this.log.debug('Waiting done! ' + url);
 				if (this.apiCallinExecution != true) {
 					this.log.debug('Time to execute ' + url); break;
@@ -679,7 +735,9 @@ class Tado extends utils.Adapter {
 							Authorization: 'Bearer ' + this._accessToken.token.access_token
 						}
 					}).then(response => {
-						if (method != 'get') this.apiCallinExecution = false;
+						if (method != 'get') {
+							setTimeout(() => { this.apiCallinExecution = false; }, waitingTime);
+						}
 						resolve(response.data);
 					}).catch(error => {
 						if (method != 'get') this.apiCallinExecution = false;
@@ -735,6 +793,11 @@ class Tado extends utils.Adapter {
 			polling = null;
 			this.log.debug(`Polling-Timer cleared.`);
 		}
+	}
+
+	async checkInternetConnection(host = 'dns.google') {
+		let res = await ping.promise.probe(host);
+		return (res.alive);
 	}
 
 	//////////////////////////////////////////////////////////////////////
