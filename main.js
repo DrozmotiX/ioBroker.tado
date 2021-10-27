@@ -488,7 +488,7 @@ class Tado extends utils.Adapter {
 		let pass = this.config.Password;
 
 		if (await this.checkInternetConnection() == false) {
-			this.log.error(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
+			this.log.warn(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
 			// Clear running timer
 			if (polling) {
 				clearTimeout(polling);
