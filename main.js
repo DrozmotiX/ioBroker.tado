@@ -797,6 +797,11 @@ class Tado extends utils.Adapter {
 
 	async checkInternetConnection(host = 'dns.google') {
 		let res = await ping.promise.probe(host);
+		if (res.alive == false) { //second try after 300ms
+			this.log.info('Ping second try');
+			await this.sleep(300,300);
+			res = await ping.promise.probe(host);
+		}
 		return (res.alive);
 	}
 
