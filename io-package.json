@@ -1,340 +1,184 @@
 {
-    "common": {
-        "name": "tado",
-        "version": "0.3.9",
-        "news": {
-            "0.3.9": {
-                "en": "force correct NodeJS dependency with error at install\nimplement queuing for API requests (avoids some status code 422 issues)",
-                "de": "Korrekte NodeJS-Abhängigkeit mit Fehler bei der Installation erzwingen\nImplementieren von Warteschlangen für API-Anfragen (vermeidet einige Probleme mit dem Statuscode 422)",
-                "ru": "принудительно исправить зависимость NodeJS с ошибкой при установке\nреализовать очередь для запросов API (позволяет избежать некоторых проблем с кодом состояния 422)",
-                "pt": "forçar dependência NodeJS correta com erro na instalação\nimplementar enfileiramento para solicitações de API (evita alguns problemas de código de status 422)",
-                "nl": "forceer correcte NodeJS-afhankelijkheid met fout bij installatie\nwachtrij voor API-verzoeken implementeren (vermijdt enkele problemen met statuscode 422)",
-                "fr": "forcer la dépendance correcte de NodeJS avec une erreur à l'installation\nimplémenter la file d'attente pour les demandes d'API (évite certains problèmes de code d'état 422)",
-                "it": "forza la dipendenza NodeJS corretta con errore durante l'installazione\nimplementare l'accodamento per le richieste API (evita alcuni problemi con il codice di stato 422)",
-                "es": "forzar la dependencia correcta de NodeJS con error en la instalación\nimplementar cola para solicitudes de API (evita algunos problemas del código de estado 422)",
-                "pl": "wymuś poprawną zależność NodeJS z błędem podczas instalacji\nzaimplementuj kolejkowanie żądań API (unika problemów z kodem statusu 422)",
-                "zh-cn": "强制正确的 NodeJS 依赖项在安装时出错\n实现 API 请求的排队（避免一些状态码 422 问题）"
-            },
-            "0.3.8": {
-                "en": "support attributes 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncatch 422 issue in poolApiCall()",
-                "de": "Unterstützungsattribute 'fanLevel', 'vertikalSwing', 'horizontalSwing' (#352)\n422 Problem in poolApiCall() abfangen",
-                "ru": "атрибуты поддержки 'fanLevel', 'verticalSwing', 'horizontalSwing' (# 352)\nпоймать 422 проблему в poolApiCall ()",
-                "pt": "suporta atributos 'fanLevel', 'verticalSwing', 'horizontalSwing' (# 352)\npegar o problema 422 em poolApiCall ()",
-                "nl": "ondersteuningsattributen 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncatch 422 probleem in poolApiCall()",
-                "fr": "prend en charge les attributs 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\nattraper le problème 422 dans poolApiCall()",
-                "it": "attributi di supporto 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncattura il problema 422 in poolApiCall()",
-                "es": "atributos de soporte 'fanLevel', 'verticalSwing', 'horizontalSwing' (# 352)\natrapa el problema 422 en poolApiCall ()",
-                "pl": "atrybuty wsparcia „fanLevel”, „verticalSwing”, „horizontalSwing” (#352)\nzłapać problem 422 w poolApiCall()",
-                "zh-cn": "支持属性“fanLevel”、“verticalSwing”、“horizontalSwing”（#352）\n在 poolApiCall() 中捕获 422 问题"
-            },
-            "0.3.7": {
-                "en": "ActiveTimeTable can be set (#337)\nImprove logs and change code structure a little bit\nmanage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)",
-                "de": "ActiveTimeTable kann eingestellt werden (#337)\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig\nVerwalten Sie die min./max. Temperatur für Heizung (5-25 Grad Celsius) und Warmwasser (30-80 Grad Celsius), um API-Abstürze zu vermeiden (#341)",
-                "ru": "ActiveTimeTable может быть установлен (# 337)\nУлучшить логи и немного изменить структуру кода\nуправлять минимальной / максимальной температурой для отопления (5-25 по Цельсию) и горячей воды (30-80 по Цельсию), чтобы избежать сбоев API (# 341)",
-                "pt": "ActiveTimeTable pode ser definido (# 337)\nMelhore os registros e altere um pouco a estrutura do código\ngerenciar a temperatura mín. / máx. para aquecimento (5-25 celsius) e água quente (30-80 celsius) para evitar falhas de API (# 341)",
-                "nl": "ActiveTimeTable kan worden ingesteld (#337)\nVerbeter logs en verander de codestructuur een beetje\nbeheer min/max temperatuur voor verwarming (5-25 Celsius) en warm water (30-80 Celsius) om API-crashes te voorkomen (#341)",
-                "fr": "ActiveTimeTable peut être défini (#337)\nAméliorer les journaux et modifier un peu la structure du code\ngérer la température min/max pour le chauffage (5-25 celsius) et l'eau chaude (30-80 celsius) pour éviter les plantages de l'API (#341)",
-                "it": "ActiveTimeTable può essere impostato (#337)\nMigliora i log e cambia un po' la struttura del codice\ngestire la temperatura min/max per il riscaldamento (5-25 gradi centigradi) e l'acqua calda (30-80 gradi centigradi) per evitare crash API (#341)",
-                "es": "ActiveTimeTable se puede configurar (# 337)\nMejore los registros y cambie un poco la estructura del código\nadministrar la temperatura mínima / máxima para calefacción (5-25 grados Celsius) y agua caliente (30-80 grados Celsius) para evitar fallas de API (# 341)",
-                "pl": "Można ustawić ActiveTimeTable (#337)\nPopraw logi i zmień trochę strukturę kodu\nzarządzaj minimalną/maksymalną temperaturą ogrzewania (5-25 stopni Celsjusza) i ciepłej wody (30-80 stopni Celsjusza), aby uniknąć awarii API (#341)",
-                "zh-cn": "可以设置 ActiveTimeTable (#337)\n改进日志并稍微改变代码结构\n管理加热 (5-25 摄氏度) 和热水 (30-80 摄氏度) 的最低/最高温度以避免 API 崩溃 (#341)"
-            },
-            "0.3.7-2": {
-                "en": "ActiveTimeTable can be set (#337)\nImprove logs and change code structure a little bit\nmanage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)",
-                "de": "ActiveTimeTable kann eingestellt werden (#337)\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig\nVerwalten Sie die min./max. Temperatur für Heizung (5-25 Grad Celsius) und Warmwasser (30-80 Grad Celsius), um API-Abstürze zu vermeiden (#341)",
-                "ru": "ActiveTimeTable может быть установлен (# 337)\nУлучшить логи и немного изменить структуру кода\nуправлять минимальной / максимальной температурой для отопления (5-25 по Цельсию) и горячей воды (30-80 по Цельсию), чтобы избежать сбоев API (# 341)",
-                "pt": "ActiveTimeTable pode ser definido (# 337)\nMelhore os registros e altere um pouco a estrutura do código\ngerenciar a temperatura mín. / máx. para aquecimento (5-25 celsius) e água quente (30-80 celsius) para evitar falhas de API (# 341)",
-                "nl": "ActiveTimeTable kan worden ingesteld (#337)\nVerbeter logs en verander de codestructuur een beetje\nbeheer min/max temperatuur voor verwarming (5-25 Celsius) en warm water (30-80 Celsius) om API-crashes te voorkomen (#341)",
-                "fr": "ActiveTimeTable peut être défini (#337)\nAméliorer les journaux et modifier un peu la structure du code\ngérer la température min/max pour le chauffage (5-25 celsius) et l'eau chaude (30-80 celsius) pour éviter les plantages de l'API (#341)",
-                "it": "ActiveTimeTable può essere impostato (#337)\nMigliora i log e cambia un po' la struttura del codice\ngestire la temperatura min/max per il riscaldamento (5-25 gradi centigradi) e l'acqua calda (30-80 gradi centigradi) per evitare crash API (#341)",
-                "es": "ActiveTimeTable se puede configurar (# 337)\nMejore los registros y cambie un poco la estructura del código\nadministrar la temperatura mínima / máxima para calefacción (5-25 grados Celsius) y agua caliente (30-80 grados Celsius) para evitar fallas de API (# 341)",
-                "pl": "Można ustawić ActiveTimeTable (#337)\nPopraw logi i zmień trochę strukturę kodu\nzarządzaj minimalną/maksymalną temperaturą ogrzewania (5-25 stopni Celsjusza) i ciepłej wody (30-80 stopni Celsjusza), aby uniknąć awarii API (#341)",
-                "zh-cn": "可以设置 ActiveTimeTable (#337)\n改进日志并稍微改变代码结构\n管理加热 (5-25 摄氏度) 和热水 (30-80 摄氏度) 的最低/最高温度以避免 API 崩溃 (#341)"
-            },
-            "0.3.7-1": {
-                "en": "ActiveTimeTable can be set\nImprove logs and change code structure a little bit",
-                "de": "ActiveTimeTable kann eingestellt werden\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig",
-                "ru": "ActiveTimeTable можно установить\nУлучшить логи и немного изменить структуру кода",
-                "pt": "ActiveTimeTable pode ser definido\nMelhore os registros e altere um pouco a estrutura do código",
-                "nl": "ActiveTimeTable kan worden ingesteld\nVerbeter logs en verander de codestructuur een beetje",
-                "fr": "ActiveTimeTable peut être défini\nAméliorer les journaux et modifier un peu la structure du code",
-                "it": "ActiveTimeTable può essere impostato\nMigliora i log e cambia un po' la struttura del codice",
-                "es": "ActiveTimeTable se puede configurar\nMejore los registros y cambie un poco la estructura del código",
-                "pl": "Można ustawić ActiveTimeTable\nPopraw logi i trochę zmień strukturę kodu",
-                "zh-cn": "可以设置ActiveTimeTable\n改进日志并稍微改变代码结构"
-            },
-            "0.3.7-0": {
-                "en": "ActiveTimeTable can be set\nImprove logs and change code structure a little bit",
-                "de": "ActiveTimeTable kann eingestellt werden\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig",
-                "ru": "ActiveTimeTable можно установить\nУлучшить логи и немного изменить структуру кода",
-                "pt": "ActiveTimeTable pode ser definido\nMelhore os registros e altere um pouco a estrutura do código",
-                "nl": "ActiveTimeTable kan worden ingesteld\nVerbeter logs en verander de codestructuur een beetje",
-                "fr": "ActiveTimeTable peut être défini\nAméliorer les journaux et modifier un peu la structure du code",
-                "it": "ActiveTimeTable può essere impostato\nMigliora i log e cambia un po' la struttura del codice",
-                "es": "ActiveTimeTable se puede configurar\nMejore los registros y cambie un poco la estructura del código",
-                "pl": "Można ustawić ActiveTimeTable\nPopraw logi i trochę zmień strukturę kodu",
-                "zh-cn": "可以设置ActiveTimeTable\n改进日志并稍微改变代码结构"
-            },
-            "0.3.6": {
-                "en": "support attribute 'orientation' (Sentry: IOBROKER-TADO-35)",
-                "de": "Support-Attribut 'Orientation' (Sentry: IOBROKER-TADO-35)",
-                "ru": "поддержка атрибута 'ориентация' (Сторожевой: IOBROKER-TADO-35)",
-                "pt": "atributo de suporte 'orientação' (Sentinela: IOBROKER-TADO-35)",
-                "nl": "ondersteuningsattribuut 'oriëntatie' (Sentry: IOBROKER-TADO-35)",
-                "fr": "attribut de support 'orientation' (Sentinelle : IOBROKER-TADO-35)",
-                "it": "attributo di supporto 'orientamento' (Sentry: IOBROKER-TADO-35)",
-                "es": "atributo de soporte 'orientación' (Centinela: IOBROKER-TADO-35)",
-                "pl": "wsparcie atrybutu „orientacja” (Sentry: IOBROKER-TADO-35)",
-                "zh-cn": "支持属性“方向”（哨兵：IOBROKER-TADO-35）"
-            },
-            "0.3.6-0": {
-                "en": "support attribute 'orientation' (Sentry: IOBROKER-TADO-35)",
-                "de": "Support-Attribut 'Orientation' (Sentry: IOBROKER-TADO-35)",
-                "ru": "поддержка атрибута 'ориентация' (Сторожевой: IOBROKER-TADO-35)",
-                "pt": "atributo de suporte 'orientação' (Sentinela: IOBROKER-TADO-35)",
-                "nl": "ondersteuningsattribuut 'oriëntatie' (Sentry: IOBROKER-TADO-35)",
-                "fr": "attribut de support 'orientation' (Sentinelle : IOBROKER-TADO-35)",
-                "it": "attributo di supporto 'orientamento' (Sentry: IOBROKER-TADO-35)",
-                "es": "atributo de soporte 'orientación' (Centinela: IOBROKER-TADO-35)",
-                "pl": "wsparcie atrybutu „orientacja” (Sentry: IOBROKER-TADO-35)",
-                "zh-cn": "支持属性“方向”（哨兵：IOBROKER-TADO-35）"
-            },
-            "0.3.5": {
-                "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn\nBump iobroker-jsonexplorer to v0.1.2",
-                "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn\nUpgrade von iobroker-jsonexplorer auf v0.1.2",
-                "ru": "исправить проблему «невозможно включить горячую воду» (# 309)\nперейти на новый сторожевой dsn\nПоднимите iobroker-jsonexplorer до версии v0.1.2",
-                "pt": "corrigir o problema de 'água quente não pode ser ligada' (# 309)\nmudar para uma nova sentinela dsn\nBump iobroker-jsonexplorer para v0.1.2",
-                "nl": "probleem oplossen 'heet water kan niet worden ingeschakeld' (#309)\nverander naar nieuwe schildwacht dsn\nBump iobroker-jsonexplorer naar v0.1.2",
-                "fr": "résoudre le problème « l'eau chaude ne peut pas être allumée » (#309)\nchanger pour le nouveau dsn de sentinelle\nTransférez iobroker-jsonexplorer vers la v0.1.2",
-                "it": "risolto il problema \"Impossibile accendere l'acqua calda\" (#309)\ncambia a nuovo sentry dsn\nPassa iobroker-jsonexplorer alla v0.1.2",
-                "es": "Solucione el problema 'no se puede encender el agua caliente' (# 309)\ncambiar a nuevo centinela dsn\nPase iobroker-jsonexplorer a v0.1.2",
-                "pl": "naprawiono problem „nie można włączyć ciepłej wody” (#309)\nzmiana na nowy wartownik dsn\nPodnieś iobroker-jsonexplorer do wersji 0.1.2",
-                "zh-cn": "修复“无法打开热水”的问题 (#309)\n更改为新的哨兵 dsn\n将 iobroker-jsonexplorer 升级到 v0.1.2"
-            },
-            "0.3.5-1": {
-                "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn",
-                "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn",
-                "ru": "исправить проблему «невозможно включить горячую воду» (# 309)\nперейти на новый сторожевой dsn",
-                "pt": "corrigir o problema de 'água quente não pode ser ligada' (# 309)\nmudar para uma nova sentinela dsn",
-                "nl": "probleem oplossen 'heet water kan niet worden ingeschakeld' (#309)\nverander naar nieuwe schildwacht dsn",
-                "fr": "résoudre le problème « l'eau chaude ne peut pas être allumée » (#309)\nchanger pour le nouveau dsn de sentinelle",
-                "it": "risolto il problema \"Impossibile accendere l'acqua calda\" (#309)\ncambia a nuovo sentry dsn",
-                "es": "Solucione el problema 'no se puede encender el agua caliente' (# 309)\ncambiar a nuevo centinela dsn",
-                "pl": "naprawiono problem „nie można włączyć ciepłej wody” (#309)\nzmiana na nowy wartownik dsn",
-                "zh-cn": "修复“无法打开热水”的问题 (#309)\n更改为新的哨兵 dsn"
-            },
-            "0.3.5-0": {
-                "en": "fix issue 'hot water cannot be switched on' (#309)\nchange to new sentry dsn",
-                "de": "Problem behoben 'Warmwasser kann nicht eingeschaltet werden' (#309)\nwechsel zu neuem Wachdienst dsn",
-                "ru": "исправить проблему «невозможно включить горячую воду» (# 309)\nперейти на новый сторожевой dsn",
-                "pt": "corrigir o problema de 'água quente não pode ser ligada' (# 309)\nmudar para uma nova sentinela dsn",
-                "nl": "probleem oplossen 'heet water kan niet worden ingeschakeld' (#309)\nverander naar nieuwe schildwacht dsn",
-                "fr": "résoudre le problème « l'eau chaude ne peut pas être allumée » (#309)\nchanger pour le nouveau dsn de sentinelle",
-                "it": "risolto il problema \"Impossibile accendere l'acqua calda\" (#309)\ncambia a nuovo sentry dsn",
-                "es": "Solucione el problema 'no se puede encender el agua caliente' (# 309)\ncambiar a nuevo centinela dsn",
-                "pl": "naprawiono problem „nie można włączyć ciepłej wody” (#309)\nzmiana na nowy wartownik dsn",
-                "zh-cn": "修复“无法打开热水”的问题 (#309)\n更改为新的哨兵 dsn"
-            },
-            "0.3.4": {
-                "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' and 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' und 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "ru": "добавить атрибут location в черный список (Sentry IOBROKER-TADO-2Y)\nподдержка атрибута 'качели' (Sentry: IOBROKER-TADO-2G)\nатрибут поддержки 'end' и 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "pt": "adicionar o atributo 'local' à lista negra (Sentry IOBROKER-TADO-2Y)\natributo de suporte 'swing' (Sentinela: IOBROKER-TADO-2G)\nsuporte ao atributo 'end' e 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "nl": "voeg kenmerk 'locatie' toe aan zwarte lijst (Sentry IOBROKER-TADO-2Y)\nondersteuningskenmerk 'swing' (Sentry: IOBROKER-TADO-2G)\nondersteuningskenmerk 'end' en 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "fr": "ajouter l'attribut 'location' à la liste noire (Sentry IOBROKER-TADO-2Y)\nattribut de support « swing » (Sentinelle : IOBROKER-TADO-2G)\nattribut de support 'end' et 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "it": "aggiungi l'attributo 'posizione' alla lista nera (Sentry IOBROKER-TADO-2Y)\nsupporto attributo 'swing' (sentenza: IOBROKER-TADO-2G)\nsupporta l'attributo 'end' e 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "es": "agregar atributo 'ubicación' a la lista negra (Sentry IOBROKER-TADO-2Y)\natributo de soporte 'swing' (Centinela: IOBROKER-TADO-2G)\natributo de soporte 'end' y 'commandTableUploadState' (Sentry: IOBROKER-TADO-1M)",
-                "pl": "dodaj atrybut „lokalizacja” do czarnej listy (Sentry IOBROKER-TADO-2Y)\nwsparcie atrybutu 'swing' (Sentry: IOBROKER-TADO-2G)\nwsparcie atrybutów „end” i „commandTableUploadState” (Sentry: IOBROKER-TADO-1M)",
-                "zh-cn": "将属性“位置”添加到黑名单 (Sentry IOBROKER-TADO-2Y)\n支持属性“swing”（哨兵：IOBROKER-TADO-2G）\n支持属性“end”和“commandTableUploadState”（哨兵：IOBROKER-TADO-1M）"
-            },
-            "0.3.4-1": {
-                "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' (Sentry: IOBROKER-TADO-1M)",
-                "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' (Sentry: IOBROKER-TADO-1M)",
-                "ru": "добавить атрибут location в черный список (Sentry IOBROKER-TADO-2Y)\nподдержка атрибута 'качели' (Sentry: IOBROKER-TADO-2G)\nподдержка атрибута 'end' (Sentry: IOBROKER-TADO-1M)",
-                "pt": "adicionar o atributo 'local' à lista negra (Sentry IOBROKER-TADO-2Y)\natributo de suporte 'swing' (Sentinela: IOBROKER-TADO-2G)\natributo de suporte 'end' (Sentinela: IOBROKER-TADO-1M)",
-                "nl": "voeg kenmerk 'locatie' toe aan zwarte lijst (Sentry IOBROKER-TADO-2Y)\nondersteuningskenmerk 'swing' (Sentry: IOBROKER-TADO-2G)\nondersteuningskenmerk 'end' (Sentry: IOBROKER-TADO-1M)",
-                "fr": "ajouter l'attribut 'location' à la liste noire (Sentry IOBROKER-TADO-2Y)\nattribut de support « swing » (Sentinelle : IOBROKER-TADO-2G)\nattribut de support 'fin' (Sentry : IOBROKER-TADO-1M)",
-                "it": "aggiungi l'attributo 'posizione' alla lista nera (Sentry IOBROKER-TADO-2Y)\nsupporto attributo 'swing' (sentenza: IOBROKER-TADO-2G)\nattributo di supporto 'end' (Sentry: IOBROKER-TADO-1M)",
-                "es": "agregar atributo 'ubicación' a la lista negra (Sentry IOBROKER-TADO-2Y)\natributo de soporte 'swing' (Centinela: IOBROKER-TADO-2G)\natributo de soporte 'fin' (Sentry: IOBROKER-TADO-1M)",
-                "pl": "dodaj atrybut „lokalizacja” do czarnej listy (Sentry IOBROKER-TADO-2Y)\nwsparcie atrybutu 'swing' (Sentry: IOBROKER-TADO-2G)\nwsparcie atrybutu 'end' (Sentry: IOBROKER-TADO-1M)",
-                "zh-cn": "将属性“位置”添加到黑名单 (Sentry IOBROKER-TADO-2Y)\n支持属性“swing”（哨兵：IOBROKER-TADO-2G）\n支持属性“结束”（哨兵：IOBROKER-TADO-1M）"
-            },
-            "0.3.4-0": {
-                "en": "add attribute 'location' to blacklist (Sentry IOBROKER-TADO-2Y)\nsupport attribute 'swing' (Sentry: IOBROKER-TADO-2G)\nsupport attribute 'end' (Sentry: IOBROKER-TADO-1M)",
-                "de": "Attribut 'location' zur Blacklist hinzufügen (Sentry IOBROKER-TADO-2Y)\nStützattribut 'Swing' (Wachposten: IOBROKER-TADO-2G)\nSupport-Attribut 'end' (Sentry: IOBROKER-TADO-1M)",
-                "ru": "добавить атрибут location в черный список (Sentry IOBROKER-TADO-2Y)\nподдержка атрибута 'качели' (Sentry: IOBROKER-TADO-2G)\nподдержка атрибута 'end' (Sentry: IOBROKER-TADO-1M)",
-                "pt": "adicionar o atributo 'local' à lista negra (Sentry IOBROKER-TADO-2Y)\natributo de suporte 'swing' (Sentinela: IOBROKER-TADO-2G)\natributo de suporte 'end' (Sentinela: IOBROKER-TADO-1M)",
-                "nl": "voeg kenmerk 'locatie' toe aan zwarte lijst (Sentry IOBROKER-TADO-2Y)\nondersteuningskenmerk 'swing' (Sentry: IOBROKER-TADO-2G)\nondersteuningskenmerk 'end' (Sentry: IOBROKER-TADO-1M)",
-                "fr": "ajouter l'attribut 'location' à la liste noire (Sentry IOBROKER-TADO-2Y)\nattribut de support « swing » (Sentinelle : IOBROKER-TADO-2G)\nattribut de support 'fin' (Sentry : IOBROKER-TADO-1M)",
-                "it": "aggiungi l'attributo 'posizione' alla lista nera (Sentry IOBROKER-TADO-2Y)\nsupporto attributo 'swing' (sentenza: IOBROKER-TADO-2G)\nattributo di supporto 'end' (Sentry: IOBROKER-TADO-1M)",
-                "es": "agregar atributo 'ubicación' a la lista negra (Sentry IOBROKER-TADO-2Y)\natributo de soporte 'swing' (Centinela: IOBROKER-TADO-2G)\natributo de soporte 'fin' (Sentry: IOBROKER-TADO-1M)",
-                "pl": "dodaj atrybut „lokalizacja” do czarnej listy (Sentry IOBROKER-TADO-2Y)\nwsparcie atrybutu 'swing' (Sentry: IOBROKER-TADO-2G)\nwsparcie atrybutu 'end' (Sentry: IOBROKER-TADO-1M)",
-                "zh-cn": "将属性“位置”添加到黑名单 (Sentry IOBROKER-TADO-2Y)\n支持属性“swing”（哨兵：IOBROKER-TADO-2G）\n支持属性“结束”（哨兵：IOBROKER-TADO-1M）"
-            },
-            "0.3.3": {
-                "en": "Add attributes title, ssid and code\nImprove sentry handling by bumping iobroker-jsonexplorer to v0.1.1",
-                "de": "Attribute title, ssid und code hinzufügen\nVerbessern Sie die Handhabung von Wachen, indem Sie iobroker-jsonexplorer auf v0.1.1 heben",
-                "ru": "Добавьте атрибуты title, ssid и code\nУлучшение обработки часовых, подняв iobroker-jsonexplorer до версии v0.1.1.",
-                "pt": "Adicione os atributos title, ssid e code\nMelhore o manuseio do sentinela passando o iobroker-jsonexplorer para a v0.1.1",
-                "nl": "Voeg attributen titel, ssid en code toe\nVerbeter de afhandeling van de schildwacht door iobroker-jsonexplorer naar v0.1.1 te stoten",
-                "fr": "Ajouter des attributs titre, ssid et code\nAméliorez la gestion des sentinelles en déplaçant iobroker-jsonexplorer vers la v0.1.1",
-                "it": "Aggiungi gli attributi titolo, ssid e codice\nMigliora la gestione delle sentinelle spostando iobroker-jsonexplorer su v0.1.1",
-                "es": "Agregue el título, el ssid y el código de los atributos\nMejore el manejo de centinelas al incorporar iobroker-jsonexplorer a v0.1.1",
-                "pl": "Dodaj tytuł atrybutów, ssid i kod\nPopraw obsługę wartowników, podskakując iobroker-jsonexplorer do wersji 0.1.1",
-                "zh-cn": "添加属性title、ssid和code\n通过将 iobroker-jsonexplorer 升级到 v0.1.1 来改进哨兵处理"
-            },
-            "0.3.3-0": {
-                "en": "Add attributes title, ssid and code\nImprove sentry handling by bumping iobroker-jsonexplorer to v0.1.1",
-                "de": "Attribute title, ssid und code hinzufügen\nVerbessern Sie die Handhabung von Wachen, indem Sie iobroker-jsonexplorer auf v0.1.1 heben",
-                "ru": "Добавьте атрибуты title, ssid и code\nУлучшение обработки часовых, подняв iobroker-jsonexplorer до версии v0.1.1.",
-                "pt": "Adicione os atributos title, ssid e code\nMelhore o manuseio do sentinela passando o iobroker-jsonexplorer para a v0.1.1",
-                "nl": "Voeg attributen titel, ssid en code toe\nVerbeter de afhandeling van de schildwacht door iobroker-jsonexplorer naar v0.1.1 te stoten",
-                "fr": "Ajouter des attributs titre, ssid et code\nAméliorez la gestion des sentinelles en déplaçant iobroker-jsonexplorer vers la v0.1.1",
-                "it": "Aggiungi gli attributi titolo, ssid e codice\nMigliora la gestione delle sentinelle spostando iobroker-jsonexplorer su v0.1.1",
-                "es": "Agregue el título, el ssid y el código de los atributos\nMejore el manejo de centinelas al incorporar iobroker-jsonexplorer a v0.1.1",
-                "pl": "Dodaj tytuł atrybutów, ssid i kod\nPopraw obsługę wartowników, podskakując iobroker-jsonexplorer do wersji 0.1.1",
-                "zh-cn": "添加属性title、ssid和code\n通过将 iobroker-jsonexplorer 升级到 v0.1.1 来改进哨兵处理"
-            },
-            "0.3.2": {
-                "en": "Use password handling from JS-Controller framework",
-                "de": "Verwenden Sie die Passwortverwaltung aus dem JS-Controller-Framework",
-                "ru": "Использовать обработку паролей из JS-Controller framework",
-                "pt": "Use o tratamento de senha da estrutura JS-Controller",
-                "nl": "Gebruik wachtwoordafhandeling vanuit het JS-Controller-framework",
-                "fr": "Utiliser la gestion des mots de passe du framework JS-Controller",
-                "it": "Usa la gestione delle password dal framework JS-Controller",
-                "es": "Utilice el manejo de contraseñas del marco JS-Controller",
-                "pl": "Użyj obsługi haseł z frameworka JS-Controller",
-                "zh-cn": "使用来自 JS-Controller 框架的密码处理"
-            },
-            "0.3.2-0": {
-                "en": "Use password handling from JS-Controller framework",
-                "de": "Verwenden Sie die Passwortverwaltung aus dem JS-Controller-Framework",
-                "ru": "Использовать обработку паролей из JS-Controller framework",
-                "pt": "Use o tratamento de senha da estrutura JS-Controller",
-                "nl": "Gebruik wachtwoordafhandeling vanuit het JS-Controller-framework",
-                "fr": "Utiliser la gestion des mots de passe du framework JS-Controller",
-                "it": "Usa la gestione delle password dal framework JS-Controller",
-                "es": "Utilice el manejo de contraseñas del marco JS-Controller",
-                "pl": "Użyj obsługi haseł z frameworka JS-Controller",
-                "zh-cn": "使用来自 JS-Controller 框架的密码处理"
-            },
-            "0.3.1": {
-                "en": "Works with Node 12.x or higher (simple-oauth2 update dependency)\nBump simple-oauth2 from 2.5.2 to 4.2.0\nPrepare for first stable version",
-                "de": "Funktioniert mit Node 12.x oder höher (simple-oauth2-Update-Abhängigkeit)\nEinfach-oauth2 von 2.5.2 auf 4.2.0 heben\nBereiten Sie sich auf die erste stabile Version vor",
-                "ru": "Работает с Node 12.x и выше (зависимость обновления simple-oauth2)\nУвеличить simple-oauth2 с 2.5.2 до 4.2.0\nПодготовьтесь к первой стабильной версии",
-                "pt": "Funciona com o Node 12.x ou superior (dependência de atualização simple-oauth2)\nBump simple-oauth2 de 2.5.2 para 4.2.0\nPrepare-se para a primeira versão estável",
-                "nl": "Werkt met Node 12.x of hoger (simple-oauth2-update-afhankelijkheid)\nBump simple-oauth2 van 2.5.2 naar 4.2.0\nBereid je voor op de eerste stabiele versie",
-                "fr": "Fonctionne avec Node 12.x ou supérieur (dépendance de mise à jour simple-oauth2)\nBump simple-oauth2 de 2.5.2 à 4.2.0\nPréparer la première version stable",
-                "it": "Funziona con il nodo 12.x o successivo (dipendenza dall'aggiornamento semplice-oauth2)\nBump simple-oauth2 da 2.5.2 a 4.2.0\nPreparati per la prima versione stabile",
-                "es": "Funciona con Node 12.xo superior (dependencia de actualización simple-oauth2)\nBump simple-oauth2 de 2.5.2 a 4.2.0\nPrepárese para la primera versión estable",
-                "pl": "Działa z węzłem 12.x lub nowszym (zależność aktualizacji simple-oauth2)\nZmień simple-oauth2 z 2.5.2 na 4.2.0\nPrzygotuj się na pierwszą stabilną wersję",
-                "zh-cn": "适用于 Node 12.x 或更高版本（simple-oauth2 更新依赖项）\n将 simple-oauth2 从 2.5.2 提升到 4.2.0\n准备第一个稳定版本"
-            },
-            "0.3.1-0": {
-                "en": "Works with Node 12.x or higher (simple-oauth2 update dependency)\nBump simple-oauth2 from 2.5.2 to 4.2.0\nPrepare for first stable version",
-                "de": "Funktioniert mit Node 12.x oder höher (simple-oauth2-Update-Abhängigkeit)\nEinfach-oauth2 von 2.5.2 auf 4.2.0 heben\nBereiten Sie sich auf die erste stabile Version vor",
-                "ru": "Работает с Node 12.x и выше (зависимость обновления simple-oauth2)\nУвеличить simple-oauth2 с 2.5.2 до 4.2.0\nПодготовьтесь к первой стабильной версии",
-                "pt": "Funciona com o Node 12.x ou superior (dependência de atualização simple-oauth2)\nBump simple-oauth2 de 2.5.2 para 4.2.0\nPrepare-se para a primeira versão estável",
-                "nl": "Werkt met Node 12.x of hoger (simple-oauth2-update-afhankelijkheid)\nBump simple-oauth2 van 2.5.2 naar 4.2.0\nBereid je voor op de eerste stabiele versie",
-                "fr": "Fonctionne avec Node 12.x ou supérieur (dépendance de mise à jour simple-oauth2)\nBump simple-oauth2 de 2.5.2 à 4.2.0\nPréparer la première version stable",
-                "it": "Funziona con il nodo 12.x o successivo (dipendenza dall'aggiornamento semplice-oauth2)\nBump simple-oauth2 da 2.5.2 a 4.2.0\nPreparati per la prima versione stabile",
-                "es": "Funciona con Node 12.xo superior (dependencia de actualización simple-oauth2)\nBump simple-oauth2 de 2.5.2 a 4.2.0\nPrepárese para la primera versión estable",
-                "pl": "Działa z węzłem 12.x lub nowszym (zależność aktualizacji simple-oauth2)\nZmień simple-oauth2 z 2.5.2 na 4.2.0\nPrzygotuj się na pierwszą stabilną wersję",
-                "zh-cn": "适用于 Node 12.x 或更高版本（simple-oauth2 更新依赖项）\n将 simple-oauth2 从 2.5.2 提升到 4.2.0\n准备第一个稳定版本"
-            }
-        },
-        "title": "Tado",
-        "titleLang": {
-            "en": "Tado",
-            "de": "Tado",
-            "ru": "Tado",
-            "pt": "Tado",
-            "nl": "Tado",
-            "fr": "Tado",
-            "it": "Tado",
-            "es": "Tado",
-            "pl": "Tado",
-            "zh-cn": "Tado"
-        },
-        "desc": {
-            "en": "Tado cloud connector to control Tado devices",
-            "de": "Tado cloud connector to control Tado devices",
-            "ru": "Tado cloud connector to control Tado devices",
-            "pt": "Tado cloud connector to control Tado devices",
-            "nl": "Tado cloud connector to control Tado devices",
-            "fr": "Tado cloud connector to control Tado devices",
-            "it": "Tado cloud connector to control Tado devices",
-            "es": "Tado cloud connector to control Tado devices",
-            "pl": "Tado cloud connector to control Tado devices",
-            "zh-cn": "Tado cloud connector to control Tado devices"
-        },
-        "authors": [
-            "DutchmanNL <rdrozda@hotmail.com>",
-            "HGlab01"
-        ],
-        "keywords": [
-            "energy",
-            "tado",
-            "thermostat",
-            "climate",
-            "temperature"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "main.js",
-        "icon": "tado.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/tado.png",
-        "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "climate-control",
-        "compact": true,
-        "connectionType": "cloud",
-        "dataSource": "poll",
-        "materialize": true,
-        "dependencies": [
-            {
-                "js-controller": ">=1.4.2"
-            }
-        ],
-        "plugins": {
-            "sentry": {
-                "dsn": "https://9417776af8984b5090f8c4ff8635cead@sentry.iobroker.net/20"
-            }
-        }
+  "common": {
+    "name": "tado",
+    "version": "0.3.10-alpha.0",
+    "news": {
+      "0.3.10-alpha.0": {
+        "en": "request to set values are sent at intervals of 3 seconds\nunhandled errors are now handled\nInternet connection is checked before requests are placed",
+        "de": "Aufforderung zum Einstellen von Werten werden im Abstand von 3 Sekunden gesendet\nnicht behandelte Fehler werden jetzt behandelt\nDie Internetverbindung wird überprüft, bevor Anfragen gestellt werden",
+        "ru": "запрос на установку значений отправляется с интервалом в 3 секунды\nнеобработанные ошибки теперь обрабатываются\nИнтернет-соединение проверяется перед размещением запросов",
+        "pt": "a solicitação para definir os valores são enviados em intervalos de 3 segundos\nerros não tratados agora são tratados\nA conexão com a Internet é verificada antes que as solicitações sejam feitas",
+        "nl": "verzoek om waarden in te stellen worden verzonden met tussenpozen van 3 seconden\nonverwerkte fouten worden nu afgehandeld\nInternetverbinding wordt gecontroleerd voordat aanvragen worden geplaatst",
+        "fr": "les demandes de réglage des valeurs sont envoyées à des intervalles de 3 secondes\nles erreurs non gérées sont désormais gérées\nLa connexion Internet est vérifiée avant que les demandes ne soient placées",
+        "it": "le richieste di impostazione dei valori vengono inviate ad intervalli di 3 secondi\ngli errori non gestiti ora vengono gestiti\nLa connessione a Internet viene verificata prima dell'invio delle richieste",
+        "es": "la solicitud para establecer valores se envía a intervalos de 3 segundos\nlos errores no manejados ahora se manejan\nSe comprueba la conexión a Internet antes de realizar las solicitudes.",
+        "pl": "żądanie ustawienia wartości wysyłane jest w odstępach co 3 sekundy\nnieobsłużone błędy są teraz obsługiwane\nPołączenie internetowe jest sprawdzane przed wysłaniem żądania",
+        "zh-cn": "设置值的请求以 3 秒的间隔发送\n现在处理未处理的错误\n在发出请求之前检查 Internet 连接"
+      },
+      "0.3.9": {
+        "en": "force correct NodeJS dependency with error at install\nimplement queuing for API requests (avoids some status code 422 issues)",
+        "de": "Korrekte NodeJS-Abhängigkeit mit Fehler bei der Installation erzwingen\nImplementieren von Warteschlangen für API-Anfragen (vermeidet einige Probleme mit dem Statuscode 422)",
+        "ru": "принудительно исправить зависимость NodeJS с ошибкой при установке\nреализовать очередь для запросов API (позволяет избежать некоторых проблем с кодом состояния 422)",
+        "pt": "forçar dependência NodeJS correta com erro na instalação\nimplementar enfileiramento para solicitações de API (evita alguns problemas de código de status 422)",
+        "nl": "forceer correcte NodeJS-afhankelijkheid met fout bij installatie\nwachtrij voor API-verzoeken implementeren (vermijdt enkele problemen met statuscode 422)",
+        "fr": "forcer la dépendance correcte de NodeJS avec une erreur à l'installation\nimplémenter la file d'attente pour les demandes d'API (évite certains problèmes de code d'état 422)",
+        "it": "forza la dipendenza NodeJS corretta con errore durante l'installazione\nimplementare l'accodamento per le richieste API (evita alcuni problemi con il codice di stato 422)",
+        "es": "forzar la dependencia correcta de NodeJS con error en la instalación\nimplementar cola para solicitudes de API (evita algunos problemas del código de estado 422)",
+        "pl": "wymuś poprawną zależność NodeJS z błędem podczas instalacji\nzaimplementuj kolejkowanie żądań API (unika problemów z kodem statusu 422)",
+        "zh-cn": "强制正确的 NodeJS 依赖项在安装时出错\n实现 API 请求的排队（避免一些状态码 422 问题）"
+      },
+      "0.3.8": {
+        "en": "support attributes 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncatch 422 issue in poolApiCall()",
+        "de": "Unterstützungsattribute 'fanLevel', 'vertikalSwing', 'horizontalSwing' (#352)\n422 Problem in poolApiCall() abfangen",
+        "ru": "атрибуты поддержки 'fanLevel', 'verticalSwing', 'horizontalSwing' (# 352)\nпоймать 422 проблему в poolApiCall ()",
+        "pt": "suporta atributos 'fanLevel', 'verticalSwing', 'horizontalSwing' (# 352)\npegar o problema 422 em poolApiCall ()",
+        "nl": "ondersteuningsattributen 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncatch 422 probleem in poolApiCall()",
+        "fr": "prend en charge les attributs 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\nattraper le problème 422 dans poolApiCall()",
+        "it": "attributi di supporto 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)\ncattura il problema 422 in poolApiCall()",
+        "es": "atributos de soporte 'fanLevel', 'verticalSwing', 'horizontalSwing' (# 352)\natrapa el problema 422 en poolApiCall ()",
+        "pl": "atrybuty wsparcia „fanLevel”, „verticalSwing”, „horizontalSwing” (#352)\nzłapać problem 422 w poolApiCall()",
+        "zh-cn": "支持属性“fanLevel”、“verticalSwing”、“horizontalSwing”（#352）\n在 poolApiCall() 中捕获 422 问题"
+      },
+      "0.3.7": {
+        "en": "ActiveTimeTable can be set (#337)\nImprove logs and change code structure a little bit\nmanage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)",
+        "de": "ActiveTimeTable kann eingestellt werden (#337)\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig\nVerwalten Sie die min./max. Temperatur für Heizung (5-25 Grad Celsius) und Warmwasser (30-80 Grad Celsius), um API-Abstürze zu vermeiden (#341)",
+        "ru": "ActiveTimeTable может быть установлен (# 337)\nУлучшить логи и немного изменить структуру кода\nуправлять минимальной / максимальной температурой для отопления (5-25 по Цельсию) и горячей воды (30-80 по Цельсию), чтобы избежать сбоев API (# 341)",
+        "pt": "ActiveTimeTable pode ser definido (# 337)\nMelhore os registros e altere um pouco a estrutura do código\ngerenciar a temperatura mín. / máx. para aquecimento (5-25 celsius) e água quente (30-80 celsius) para evitar falhas de API (# 341)",
+        "nl": "ActiveTimeTable kan worden ingesteld (#337)\nVerbeter logs en verander de codestructuur een beetje\nbeheer min/max temperatuur voor verwarming (5-25 Celsius) en warm water (30-80 Celsius) om API-crashes te voorkomen (#341)",
+        "fr": "ActiveTimeTable peut être défini (#337)\nAméliorer les journaux et modifier un peu la structure du code\ngérer la température min/max pour le chauffage (5-25 celsius) et l'eau chaude (30-80 celsius) pour éviter les plantages de l'API (#341)",
+        "it": "ActiveTimeTable può essere impostato (#337)\nMigliora i log e cambia un po' la struttura del codice\ngestire la temperatura min/max per il riscaldamento (5-25 gradi centigradi) e l'acqua calda (30-80 gradi centigradi) per evitare crash API (#341)",
+        "es": "ActiveTimeTable se puede configurar (# 337)\nMejore los registros y cambie un poco la estructura del código\nadministrar la temperatura mínima / máxima para calefacción (5-25 grados Celsius) y agua caliente (30-80 grados Celsius) para evitar fallas de API (# 341)",
+        "pl": "Można ustawić ActiveTimeTable (#337)\nPopraw logi i zmień trochę strukturę kodu\nzarządzaj minimalną/maksymalną temperaturą ogrzewania (5-25 stopni Celsjusza) i ciepłej wody (30-80 stopni Celsjusza), aby uniknąć awarii API (#341)",
+        "zh-cn": "可以设置 ActiveTimeTable (#337)\n改进日志并稍微改变代码结构\n管理加热 (5-25 摄氏度) 和热水 (30-80 摄氏度) 的最低/最高温度以避免 API 崩溃 (#341)"
+      },
+      "0.3.7-2": {
+        "en": "ActiveTimeTable can be set (#337)\nImprove logs and change code structure a little bit\nmanage min/max temperature for heating (5-25 celsius) and hotwater (30-80 celsius) to avoid API crashes (#341)",
+        "de": "ActiveTimeTable kann eingestellt werden (#337)\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig\nVerwalten Sie die min./max. Temperatur für Heizung (5-25 Grad Celsius) und Warmwasser (30-80 Grad Celsius), um API-Abstürze zu vermeiden (#341)",
+        "ru": "ActiveTimeTable может быть установлен (# 337)\nУлучшить логи и немного изменить структуру кода\nуправлять минимальной / максимальной температурой для отопления (5-25 по Цельсию) и горячей воды (30-80 по Цельсию), чтобы избежать сбоев API (# 341)",
+        "pt": "ActiveTimeTable pode ser definido (# 337)\nMelhore os registros e altere um pouco a estrutura do código\ngerenciar a temperatura mín. / máx. para aquecimento (5-25 celsius) e água quente (30-80 celsius) para evitar falhas de API (# 341)",
+        "nl": "ActiveTimeTable kan worden ingesteld (#337)\nVerbeter logs en verander de codestructuur een beetje\nbeheer min/max temperatuur voor verwarming (5-25 Celsius) en warm water (30-80 Celsius) om API-crashes te voorkomen (#341)",
+        "fr": "ActiveTimeTable peut être défini (#337)\nAméliorer les journaux et modifier un peu la structure du code\ngérer la température min/max pour le chauffage (5-25 celsius) et l'eau chaude (30-80 celsius) pour éviter les plantages de l'API (#341)",
+        "it": "ActiveTimeTable può essere impostato (#337)\nMigliora i log e cambia un po' la struttura del codice\ngestire la temperatura min/max per il riscaldamento (5-25 gradi centigradi) e l'acqua calda (30-80 gradi centigradi) per evitare crash API (#341)",
+        "es": "ActiveTimeTable se puede configurar (# 337)\nMejore los registros y cambie un poco la estructura del código\nadministrar la temperatura mínima / máxima para calefacción (5-25 grados Celsius) y agua caliente (30-80 grados Celsius) para evitar fallas de API (# 341)",
+        "pl": "Można ustawić ActiveTimeTable (#337)\nPopraw logi i zmień trochę strukturę kodu\nzarządzaj minimalną/maksymalną temperaturą ogrzewania (5-25 stopni Celsjusza) i ciepłej wody (30-80 stopni Celsjusza), aby uniknąć awarii API (#341)",
+        "zh-cn": "可以设置 ActiveTimeTable (#337)\n改进日志并稍微改变代码结构\n管理加热 (5-25 摄氏度) 和热水 (30-80 摄氏度) 的最低/最高温度以避免 API 崩溃 (#341)"
+      },
+      "0.3.7-1": {
+        "en": "ActiveTimeTable can be set\nImprove logs and change code structure a little bit",
+        "de": "ActiveTimeTable kann eingestellt werden\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig",
+        "ru": "ActiveTimeTable можно установить\nУлучшить логи и немного изменить структуру кода",
+        "pt": "ActiveTimeTable pode ser definido\nMelhore os registros e altere um pouco a estrutura do código",
+        "nl": "ActiveTimeTable kan worden ingesteld\nVerbeter logs en verander de codestructuur een beetje",
+        "fr": "ActiveTimeTable peut être défini\nAméliorer les journaux et modifier un peu la structure du code",
+        "it": "ActiveTimeTable può essere impostato\nMigliora i log e cambia un po' la struttura del codice",
+        "es": "ActiveTimeTable se puede configurar\nMejore los registros y cambie un poco la estructura del código",
+        "pl": "Można ustawić ActiveTimeTable\nPopraw logi i trochę zmień strukturę kodu",
+        "zh-cn": "可以设置ActiveTimeTable\n改进日志并稍微改变代码结构"
+      },
+      "0.3.7-0": {
+        "en": "ActiveTimeTable can be set\nImprove logs and change code structure a little bit",
+        "de": "ActiveTimeTable kann eingestellt werden\nVerbessern Sie die Protokolle und ändern Sie die Codestruktur ein wenig",
+        "ru": "ActiveTimeTable можно установить\nУлучшить логи и немного изменить структуру кода",
+        "pt": "ActiveTimeTable pode ser definido\nMelhore os registros e altere um pouco a estrutura do código",
+        "nl": "ActiveTimeTable kan worden ingesteld\nVerbeter logs en verander de codestructuur een beetje",
+        "fr": "ActiveTimeTable peut être défini\nAméliorer les journaux et modifier un peu la structure du code",
+        "it": "ActiveTimeTable può essere impostato\nMigliora i log e cambia un po' la struttura del codice",
+        "es": "ActiveTimeTable se puede configurar\nMejore los registros y cambie un poco la estructura del código",
+        "pl": "Można ustawić ActiveTimeTable\nPopraw logi i trochę zmień strukturę kodu",
+        "zh-cn": "可以设置ActiveTimeTable\n改进日志并稍微改变代码结构"
+      }
     },
-    "encryptedNative": [
-        "Password"
+    "title": "Tado",
+    "titleLang": {
+      "en": "Tado",
+      "de": "Tado",
+      "ru": "Tado",
+      "pt": "Tado",
+      "nl": "Tado",
+      "fr": "Tado",
+      "it": "Tado",
+      "es": "Tado",
+      "pl": "Tado",
+      "zh-cn": "Tado"
+    },
+    "desc": {
+      "en": "Tado cloud connector to control Tado devices",
+      "de": "Tado cloud connector to control Tado devices",
+      "ru": "Tado cloud connector to control Tado devices",
+      "pt": "Tado cloud connector to control Tado devices",
+      "nl": "Tado cloud connector to control Tado devices",
+      "fr": "Tado cloud connector to control Tado devices",
+      "it": "Tado cloud connector to control Tado devices",
+      "es": "Tado cloud connector to control Tado devices",
+      "pl": "Tado cloud connector to control Tado devices",
+      "zh-cn": "Tado cloud connector to control Tado devices"
+    },
+    "authors": [
+      "DutchmanNL <rdrozda@hotmail.com>",
+      "HGlab01"
     ],
-    "native": {
-        "Username": "",
-        "Password": "",
-        "intervall": 30
+    "keywords": [
+      "energy",
+      "tado",
+      "thermostat",
+      "climate",
+      "temperature"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "tado.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/tado.png",
+    "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "climate-control",
+    "compact": true,
+    "connectionType": "cloud",
+    "dataSource": "poll",
+    "materialize": true,
+    "dependencies": [
+      {
+        "js-controller": ">=1.4.2"
+      }
+    ],
+    "plugins": {
+      "sentry": {
+        "dsn": "https://9417776af8984b5090f8c4ff8635cead@sentry.iobroker.net/20"
+      }
+    }
+  },
+  "encryptedNative": [
+    "Password"
+  ],
+  "native": {
+    "Username": "",
+    "Password": "",
+    "intervall": 30
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
-    ]
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
