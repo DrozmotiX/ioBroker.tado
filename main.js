@@ -797,12 +797,13 @@ class Tado extends utils.Adapter {
 
 	async checkInternetConnection(host = 'dns.google') {
 		let res = await ping.promise.probe(host);
-		if (res.alive == false) { //second try after 300ms
-			this.log.info('Ping second try');
-			await this.sleep(300,300);
+		if (res.alive != true) { //second try after 300ms
+			this.log.debug(`Retry 'Ping' before saying there is no internet connection...`);
+			await this.sleep(300, 300);
 			res = await ping.promise.probe(host);
 		}
-		return (res.alive);
+		this.log.debug(`Result checkInternetConnection() is ${res.alive}`);
+		return Boolean(res.alive);
 	}
 
 	//////////////////////////////////////////////////////////////////////
