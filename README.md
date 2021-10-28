@@ -61,13 +61,14 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 * (HGlab01) request to set values are sent at intervals of 3 seconds
 * (HGlab01) unhandled errors are now handled
 * (HGlab01) Internet connection is checked before requests are placed
+* (HGlab01) support attribute 'fanLevel' (Sentry: IOBROKER-TADO-35)
 
 ### 0.3.9 (2021-10-16)
 * (DutchmanNL) force correct NodeJS dependency with error at install
 * (HGlab01) implement queuing for API requests (avoids some status code 422 issues)
 
 ### 0.3.8 (2021-10-06)
-* (HGlab01) support attributes 'fanLevel', 'verticalSwing', 'horizontalSwing' (#352)
+* (HGlab01) support attributes 'orientfanLevelation', 'verticalSwing', 'horizontalSwing' (#352)
 * (HGlab01) catch 422 issue in poolApiCall()
 
 ### 0.3.7 (2021-08-24)
