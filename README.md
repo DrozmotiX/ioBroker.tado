@@ -57,11 +57,14 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.3.10-alpha.1 (2021-10-28)
-* (HGlab01) request to set values are sent at intervals of 3 seconds
+### __WORK IN PROGRESS__
+* (HGlab01) API calls (except read) are queued and send at intervals of 3 seconds
 * (HGlab01) unhandled errors are now handled
 * (HGlab01) Internet connection is checked before requests are placed
 * (HGlab01) support attribute 'fanLevel' (Sentry: IOBROKER-TADO-35)
+* (HGlab01) support structure element "folder", so now it is folder-->device-->channel
+* (HGlab01) add home-states presence and presenceLock
+* (HGlab01) Bump iobroker-jsonexplorer to 0.1.5
 
 ### 0.3.9 (2021-10-16)
 * (DutchmanNL) force correct NodeJS dependency with error at install

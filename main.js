@@ -426,30 +426,40 @@ class Tado extends utils.Adapter {
 			await JsonExplorer.setLastStartTime();
 
 			for (const i in this.getMe_data.homes) {
-				this.DoWriteJsonRespons(this.getMe_data.homes[i].id, 'Stage_01_GetMe_Data', this.getMe_data);
+				let homeID = String(this.getMe_data.homes[i].id);
+				this.DoWriteJsonRespons(homeID, 'Stage_01_GetMe_Data', this.getMe_data);
+				this.setObjectAsync(homeID, {
+					'type': 'folder',
+					'common': {
+						'name': homeID,
+					},
+					'native': {},
+				});
 				if (outdated) {
 					this.log.debug('Full refresh, data outdated (more than 60 minutes ago)');
 					this.lastupdate = now;
 					step = 'DoHome';
-					await this.DoHome(this.getMe_data.homes[i].id);
+					await this.DoHome(homeID);
 					step = 'DoDevices';
-					await this.DoDevices(this.getMe_data.homes[i].id);
+					await this.DoDevices(homeID);
 				}
 				step = 'DoMobileDevices';
-				await this.DoMobileDevices(this.getMe_data.homes[i].id);
+				await this.DoMobileDevices(homeID);
 				step = 'DoZones';
-				await this.DoZones(this.getMe_data.homes[i].id);
+				await this.DoZones(homeID);
 				step = 'DoWeather';
-				await this.DoWeather(this.getMe_data.homes[i].id);
+				await this.DoWeather(homeID);
+				step = 'DoHomeState';
+				await this.DoHomeState(homeID);
 
 				//set all outdated states to NULL
 				step = `Set outdated states to null`;
 				if (outdated) {
-					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.*');
+					await JsonExplorer.checkExpire(homeID + '.*');
 				} else {
-					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Rooms.*');
-					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Weather.*');
-					await JsonExplorer.checkExpire(this.getMe_data.homes[i].id + '.Mobile_Devices.*');
+					await JsonExplorer.checkExpire(homeID + '.Rooms.*');
+					await JsonExplorer.checkExpire(homeID + '.Weather.*');
+					await JsonExplorer.checkExpire(homeID + '.Mobile_Devices.*');
 				}
 			}
 
@@ -545,7 +555,7 @@ class Tado extends utils.Adapter {
 			offset = await this.getTemperatureOffset(DeviceId);
 		}
 		this.log.debug(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
-		this.DoWriteJsonRespons(HomeId, `Stage_99_Offset_${HomeId}`, offset);
+		this.DoWriteJsonRespons(HomeId, `Stage_12_Offset_${HomeId}`, offset);
 		if (offset.celsius != undefined) offset.offsetCelsius = offset.celsius;
 		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
 		delete offset.celsius;
@@ -654,6 +664,13 @@ class Tado extends utils.Adapter {
 			});
 			await this.create_state(HomeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
 		}
+	}
+
+	async DoHomeState(HomeId) {
+		const homeState_data = await this.getHomeState(HomeId);
+		this.log.debug('HomeState_data Result: ' + JSON.stringify(homeState_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
+		JsonExplorer.TraverseJson(homeState_data, HomeId + '.Home.state', true, true, 0, 1);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -863,6 +880,10 @@ class Tado extends utils.Adapter {
 
 	getTemperatureOffset(device_id) {
 		return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+	}
+
+	getHomeState(home_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/state`);
 	}
 
 	/*getDevices(home_id) {
