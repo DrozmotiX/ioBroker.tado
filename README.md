@@ -57,6 +57,10 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' and 'additionalConsents'
+
 ### 0.3.10 (2021-10-29)
 * (HGlab01) API calls (except read) are queued and send at intervals of 3 seconds
 * (HGlab01) unhandled errors are now handled
