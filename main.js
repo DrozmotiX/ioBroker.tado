@@ -121,7 +121,7 @@ class Tado extends utils.Adapter {
 						let set_temp = (temperature == null || temperature == undefined || temperature.val == null) ? 20 : parseFloat(temperature.val);
 						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
 						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
-						let setNextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
+						let set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
 
 						if (set_type == 'AIR_CONDITIONING') {
 							tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
@@ -130,25 +130,6 @@ class Tado extends utils.Adapter {
 						let set_tadomode = (tadomode == null || tadomode == undefined || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
 						let set_fanSpeed = (fanSpeed == null || fanSpeed == undefined || fanSpeed.val == null || fanSpeed.val == '') ? 'AUTO' : fanSpeed.val.toString().toUpperCase();
 
-						if (set_type == 'HOT_WATER') {
-							if (set_temp < 30) {
-								this.log.info(`Temperature set to 60° instead of ${set_temp}° for HOT_WATER device`);
-								set_temp = 60;
-							} else if (set_temp > 80) {
-								this.log.info(`Temperature set to 60° instead of ${set_temp}° for HOT_WATER device`);
-								set_temp = 60;
-							}
-						}
-						if (set_type == 'HEATING') {
-							if (set_temp > 25) {
-								this.log.info(`Temperature set to 25° instead of ${set_temp}° for HEATING device`);
-								set_temp = 25;
-							} else if (set_temp < 5) {
-								this.log.info(`Temperature set to 5° instead of ${set_temp}° for HEATING device`);
-								set_temp = 5;
-							}
-						}
-
 						this.log.debug('Type is: ' + set_type);
 						this.log.debug('Power is: ' + set_power);
 						this.log.debug(`Temperature is: ${set_temp}`);
@@ -156,7 +137,7 @@ class Tado extends utils.Adapter {
 						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
 						this.log.debug('Mode is: ' + set_tadomode);
 						this.log.debug('FanSpeed is: ' + set_fanSpeed);
-						this.log.debug('NextTimeBlockStart exists: ' + setNextTimeBlockStartExists);
+						this.log.debug('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
 
 						switch (statename) {
 							case ('overlayClearZone'):
@@ -164,9 +145,13 @@ class Tado extends utils.Adapter {
 								await this.clearZoneOverlay(home_id, zone_id);
 								break;
 
+							case ('fahrenheit'): //do the same as with celsius but just convert to celsius
 							case ('celsius'):
+								if (statename == 'fahrenheit') {
+									set_temp = Math.round((5 / 9) * (Number(state.val) - 32) * 10) / 10;
+								}
 								if (set_mode == 'NO_OVERLAY') {
-									if (setNextTimeBlockStartExists) set_mode = 'NEXT_TIME_BLOCK';
+									if (set_NextTimeBlockStartExists) set_mode = 'NEXT_TIME_BLOCK';
 									else set_mode = 'MANUAL';
 								}
 								set_power = 'ON';
@@ -332,6 +317,24 @@ class Tado extends utils.Adapter {
 		};
 
 		try {
+			if (type == 'HOT_WATER') {
+				if (temperature < 30) {
+					this.log.info(`Temperature set to 60° instead of ${temperature}° for HOT_WATER device`);
+					temperature = 60;
+				} else if (temperature > 80) {
+					this.log.info(`Temperature set to 60° instead of ${temperature}° for HOT_WATER device`);
+					temperature = 60;
+				}
+			}
+			if (type == 'HEATING') {
+				if (temperature > 25) {
+					this.log.info(`Temperature set to 25° instead of ${temperature}° for HEATING device`);
+					temperature = 25;
+				} else if (temperature < 5) {
+					this.log.info(`Temperature set to 5° instead of ${temperature}° for HEATING device`);
+					temperature = 5;
+				}
+			}
 			if (type == 'AIR_CONDITIONING') {
 				//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
 				if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
