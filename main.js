@@ -94,17 +94,23 @@ class Tado extends utils.Adapter {
 					this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
 
 					if (statename == 'offsetCelsius') {
-						const offset = await this.getStateAsync(id);
+						const offset = state;
 						// @ts-ignore
 						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
 						this.log.debug(`Offset changed for device '${device_id}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
 					} else if (statename == 'tt_id') {
-						const tt_id = await this.getStateAsync(id);
+						const tt_id = state;
 						// @ts-ignore
 						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null) ? 0 : parseInt(tt_id.val);
 						this.log.debug(`TimeTable changed for room '${zone_id}' in home '${home_id}' to value '${set_tt_id}'`);
 						this.setActiveTimeTable(home_id, zone_id, set_tt_id);
+					} else if (statename == 'presence') {
+						const presence = state;
+						// @ts-ignore
+						let set_presence = (presence == null || presence == undefined || presence.val == null) ? 'HOME' : String(presence.val);
+						this.log.debug(`Presence changed in home '${home_id}' to value '${set_presence}'`);
+						this.setPresenceLock(home_id, set_presence);
 					} else {
 						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
@@ -291,6 +297,29 @@ class Tado extends utils.Adapter {
 		}
 		catch (error) {
 			let eMsg = `Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`;
+			this.log.error(eMsg);
+			this.errorHandling(eMsg);
+		}
+	}
+
+	async setPresenceLock(home_id, homePresence) {
+		const homeState = {
+			homePresence: homePresence
+		};
+		let apiResponse;
+		this.log.debug('homePresence JSON ' + JSON.stringify(homeState));
+		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
+		try {
+			if (await this.checkInternetConnection() == false) {
+				throw new Error('No internet connection detected!');
+			}
+			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/presenceLock`, 'put', homeState);
+			this.DoHomeState(home_id);
+			this.log.debug(`API 'state' for home '${home_id}' with body ${JSON.stringify(homeState)} called.`);
+			this.log.debug(`Response from 'presenceLock' is ${JSON.stringify(apiResponse)}`);
+		}
+		catch (error) {
+			let eMsg = `Issue at setPresenceLock: '${error}'. Based on body ${JSON.stringify(homeState)}`;
 			this.log.error(eMsg);
 			this.errorHandling(eMsg);
 		}
@@ -683,8 +712,10 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async DoHomeState(HomeId) {
-		const homeState_data = await this.getHomeState(HomeId);
+	async DoHomeState(HomeId, homeState_data = null) {
+		if (homeState_data == null) {
+			homeState_data = await this.getHomeState(HomeId);
+		}
 		this.log.debug('HomeState_data Result: ' + JSON.stringify(homeState_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
 		JsonExplorer.TraverseJson(homeState_data, HomeId + '.Home.state', true, true, 0, 1);
