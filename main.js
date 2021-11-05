@@ -778,7 +778,7 @@ class Tado extends utils.Adapter {
 		if (method != 'get' && this.apiCallinExecution == true) {
 			for (let i = 0; i < 10; i++) {
 				this.log.info('Other API call in action, waiting... ' + url);
-				await this.sleep(waitingTime, waitingTime + 100);
+				await this.sleep(waitingTime + 300, waitingTime + 400);
 				this.log.debug('Waiting done! ' + url);
 				if (this.apiCallinExecution != true) {
 					this.log.debug('Time to execute ' + url); break;

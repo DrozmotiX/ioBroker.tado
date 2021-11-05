@@ -62,11 +62,11 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 ### __WORK IN PROGRESS__
 * (HGlab01) support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' and 'additionalConsents'
 * (HGlab01) Enhance error messages if API-call fails
-* (HGlab01) next time block fails if no time blocks are defined - fixed now
-* (HGlab01) Set HOME/AWAY is now suporrted by using state tado.x.yyyyyy.Home.state.presence
+* (HGlab01) next time block fails (one reason for 422 error) if time blocks are not defined - fixed now
+* (HGlab01) Set HOME/AWAY is now suported by using state tado.x.yyyyyy.Home.state.presence
 
 ### 0.3.10 (2021-10-29)
-* (HGlab01) API calls (except read) are queued and send at intervals of 3 seconds
+* (HGlab01) API calls (except read) are queued and send one after the other
 * (HGlab01) unhandled errors are now handled
 * (HGlab01) Internet connection is checked before requests are placed
 * (HGlab01) support attribute 'fanLevel' (Sentry: IOBROKER-TADO-35)
