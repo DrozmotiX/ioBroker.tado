@@ -806,7 +806,8 @@ class Tado extends utils.Adapter {
 						resolve(response.data);
 					}).catch(error => {
 						if (method != 'get') this.apiCallinExecution = false;
-						reject(error + ' with response ' + JSON.stringify(error.response.data));
+						if (error.response.data) reject(error + ' with response ' + JSON.stringify(error.response.data));
+						else reject(error);
 					});
 				});
 			} else {
