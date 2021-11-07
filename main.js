@@ -460,8 +460,6 @@ class Tado extends utils.Adapter {
 				}
 			}
 
-			this.getAllPowerSwitches();
-
 			// Get Basic data needed for all other querys and store to global variable
 			step = 'getMet_data';
 			if (this.getMe_data === null) {
@@ -721,27 +719,6 @@ class Tado extends utils.Adapter {
 		this.log.debug('HomeState_data Result: ' + JSON.stringify(homeState_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
 		JsonExplorer.TraverseJson(homeState_data, HomeId + '.Home.state', true, true, 0, 1);
-	}
-
-	//////////////////////////////////////////////////////////////////////
-	/* MASTERSWITCH														*/
-	//////////////////////////////////////////////////////////////////////
-
-	async getAllPowerSwitches(masterswitch = 'OFF') {
-		try {
-			const states = await this.getStatesAsync('*.Rooms.*.link.state');
-			for (const idS in states) {
-				let path = idS.split('.');
-				let homeId = path[2];
-				let zoneId = path[4];
-				let powerpath = homeId + '.Rooms.' + zoneId + '.setting.power';
-				this.log.info(powerpath);
-				this.setStateAsync(powerpath, masterswitch);
-			}
-		} catch (error) {
-			this.log.error(`Issue at getAllPowerSwitches(): ${error}`);
-			this.errorHandling(error);
-		}
 	}
 
 	//////////////////////////////////////////////////////////////////////
