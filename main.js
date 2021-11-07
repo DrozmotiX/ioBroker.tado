@@ -460,6 +460,8 @@ class Tado extends utils.Adapter {
 				}
 			}
 
+			this.getAllPowerSwitches();
+
 			// Get Basic data needed for all other querys and store to global variable
 			step = 'getMet_data';
 			if (this.getMe_data === null) {
@@ -722,6 +724,27 @@ class Tado extends utils.Adapter {
 	}
 
 	//////////////////////////////////////////////////////////////////////
+	/* MASTERSWITCH														*/
+	//////////////////////////////////////////////////////////////////////
+
+	async getAllPowerSwitches(masterswitch = 'OFF') {
+		try {
+			const states = await this.getStatesAsync('*.Rooms.*.link.state');
+			for (const idS in states) {
+				let path = idS.split('.');
+				let homeId = path[2];
+				let zoneId = path[4];
+				let powerpath = homeId + '.Rooms.' + zoneId + '.setting.power';
+				this.log.info(powerpath);
+				this.setStateAsync(powerpath, masterswitch);
+			}
+		} catch (error) {
+			this.log.error(`Issue at getAllPowerSwitches(): ${error}`);
+			this.errorHandling(error);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////
 	/* MISC																*/
 	//////////////////////////////////////////////////////////////////////
 	_refreshToken() {
@@ -806,7 +829,8 @@ class Tado extends utils.Adapter {
 						resolve(response.data);
 					}).catch(error => {
 						if (method != 'get') this.apiCallinExecution = false;
-						reject(error + ' with response ' + JSON.stringify(error.response.data));
+						if (error.response.data) reject(error + ' with response ' + JSON.stringify(error.response.data));
+						else reject(error);
 					});
 				});
 			} else {
