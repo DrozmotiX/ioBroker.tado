@@ -255,7 +255,7 @@ class Tado extends utils.Adapter {
 	 */
 	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
 		const offset = {
-			celsius: set_offset
+			celsius: Math.min(10, Math.max(-10, set_offset))
 		};
 		try {
 			if (await this.checkInternetConnection() == false) {
@@ -404,6 +404,7 @@ class Tado extends utils.Adapter {
 			await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 		}
 		catch (error) {
+			console.log(`Body: ${JSON.stringify(config)}`);
 			this.log.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
 			this.errorHandling(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
 		}
