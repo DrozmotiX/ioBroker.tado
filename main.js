@@ -102,7 +102,7 @@ class Tado extends utils.Adapter {
 					} else if (statename == 'tt_id') {
 						const tt_id = state;
 						// @ts-ignore
-						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null  || tt_id.val == '') ? 0 : parseInt(tt_id.val);
+						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == '') ? 0 : parseInt(tt_id.val);
 						this.log.debug(`TimeTable changed for room '${zone_id}' in home '${home_id}' to value '${set_tt_id}'`);
 						this.setActiveTimeTable(home_id, zone_id, set_tt_id);
 					} else if (statename == 'presence') {
@@ -111,6 +111,13 @@ class Tado extends utils.Adapter {
 						let set_presence = (presence == null || presence == undefined || presence.val == null || presence.val == '') ? 'HOME' : presence.val.toString().toUpperCase();
 						this.log.debug(`Presence changed in home '${home_id}' to value '${set_presence}'`);
 						this.setPresenceLock(home_id, set_presence);
+					} else if (statename == 'masterswitch') {
+						const masterswitch = state;
+						let set_masterswitch = (masterswitch == null || masterswitch == undefined || masterswitch.val == null || masterswitch.val == '') ? 'unknown' : masterswitch.val.toString().toUpperCase();
+						this.log.debug(`Masterswitch changed in home '${home_id}' to value '${set_masterswitch}'`);
+						await this.setMasterSwitch(set_masterswitch);
+						await this.sleep(1000, 1000);
+						this.setStateAsync(`${home_id}.Home.masterswitch`, '', true);
 					} else {
 						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
@@ -444,14 +451,13 @@ class Tado extends utils.Adapter {
 		let that = this;
 		return new Promise((resolve, reject) => {
 			pooltimer[pooltimerid] = setTimeout(async () => {
-				that.log.debug(`Timeout set for timer '${pooltimerid}' with 750ms`);
-				let apiResponse = await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config).then(apiResponse => {
+				that.log.debug(`Timeout was set for timer '${pooltimerid}' with 750ms`);
+				await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config).then(apiResponse => {
 					resolve(apiResponse);
 				}).catch(error => {
 					reject(error);
 				});
 				that.log.debug(`API called with ${JSON.stringify(config)}`);
-				resolve(apiResponse);
 			}, 750);
 		});
 	}
@@ -477,8 +483,6 @@ class Tado extends utils.Adapter {
 					this.log.info('Connected to Tado cloud, initialyzing... ');
 				}
 			}
-
-			this.getAllPowerSwitches();
 
 			// Get Basic data needed for all other querys and store to global variable
 			step = 'getMet_data';
@@ -599,6 +603,7 @@ class Tado extends utils.Adapter {
 			this.Home_data = await this.getHome(HomeId);
 		}
 		this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
+		this.Home_data.masterswitch = '';
 		this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
 		JsonExplorer.TraverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0, 0);
 	}
@@ -745,16 +750,26 @@ class Tado extends utils.Adapter {
 	/* MASTERSWITCH														*/
 	//////////////////////////////////////////////////////////////////////
 
-	async getAllPowerSwitches(masterswitch = 'OFF') {
+	async setMasterSwitch(masterswitch) {
+		masterswitch = masterswitch.toUpperCase();
+		if (!(masterswitch == 'ON' || masterswitch == 'OFF')) throw new Error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterswitch}'`);
 		try {
 			const states = await this.getStatesAsync('*.Rooms.*.link.state');
 			for (const idS in states) {
 				let path = idS.split('.');
 				let homeId = path[2];
 				let zoneId = path[4];
-				let powerpath = homeId + '.Rooms.' + zoneId + '.setting.power';
-				this.log.info(powerpath);
-				this.setStateAsync(powerpath, masterswitch);
+				let powerPath = homeId + '.Rooms.' + zoneId + '.setting.power';
+				let overlayClearZonePath = homeId + '.Rooms.' + zoneId + '.overlayClearZone';
+				let typeSkillBasedAppPath = homeId + '.Rooms.' + zoneId + '.overlay.termination.typeSkillBasedApp';
+				if (masterswitch == 'ON') {
+					await this.setStateAsync(overlayClearZonePath, true);
+				} else {
+					await this.setStateAsync(powerPath, 'OFF');
+					await this.sleep(100, 100);
+					await this.setStateAsync(typeSkillBasedAppPath, 'MANUAL');
+				}
+				await this.sleep(600, 600);
 			}
 		} catch (error) {
 			this.log.error(`Issue at getAllPowerSwitches(): ${error}`);
