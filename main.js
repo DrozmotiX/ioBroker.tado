@@ -95,19 +95,16 @@ class Tado extends utils.Adapter {
 
 					if (statename == 'offsetCelsius') {
 						const offset = state;
-						// @ts-ignore
-						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val);
+						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val.toString());
 						this.log.debug(`Offset changed for device '${device_id}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
 					} else if (statename == 'tt_id') {
 						const tt_id = state;
-						// @ts-ignore
-						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == '') ? 0 : parseInt(tt_id.val);
+						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == '') ? 0 : parseInt(tt_id.val.toString());
 						this.log.debug(`TimeTable changed for room '${zone_id}' in home '${home_id}' to value '${set_tt_id}'`);
 						this.setActiveTimeTable(home_id, zone_id, set_tt_id);
 					} else if (statename == 'presence') {
 						const presence = state;
-						// @ts-ignore
 						let set_presence = (presence == null || presence == undefined || presence.val == null || presence.val == '') ? 'HOME' : presence.val.toString().toUpperCase();
 						this.log.debug(`Presence changed in home '${home_id}' to value '${set_presence}'`);
 						this.setPresenceLock(home_id, set_presence);
@@ -128,10 +125,8 @@ class Tado extends utils.Adapter {
 						let tadomode, fanSpeed;
 
 						let set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
-						// @ts-ignore
-						let set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val);
-						// @ts-ignore
-						let set_temp = (temperature == null || temperature == undefined || temperature.val == null || temperature.val == '') ? 20 : parseFloat(temperature.val);
+						let set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val.toString());
+						let set_temp = (temperature == null || temperature == undefined || temperature.val == null || temperature.val == '') ? 20 : parseFloat(temperature.val.toString());
 						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
 						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 						let set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
