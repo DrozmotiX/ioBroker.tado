@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.11-alpha.2",
+    "version": "0.3.11-alpha.3",
     "news": {
+      "0.3.11-alpha.3": {
+        "en": "support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' and 'additionalConsents'\nEnhance error messages if API-call fails\nnext time block fails (one reason for 422 error) if time blocks are not defined - fixed now\nSet HOME/AWAY is now suported by using state tado.x.yyyyyy.Home.state.presence\nOffset range -10/+10 defined",
+        "de": "unterstützen die Attribute 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' und 'additionalConsents'\nFehlermeldungen verbessern, wenn API-Aufruf fehlschlägt\nnächster Zeitblock schlägt fehl (ein Grund für 422-Fehler), wenn Zeitblöcke nicht definiert sind - jetzt behoben\nSet HOME/AWAY wird jetzt unterstützt, indem der Status tado.x.yyyyyy.Home.state.presence verwendet wird\nOffsetbereich -10/+10 definiert",
+        "ru": "атрибуты поддержки 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' и 'additionalConsents'\nУлучшение сообщений об ошибках при сбое вызова API\nв следующий раз произойдет сбой блока (одна из причин ошибки 422), если временные блоки не определены - исправлено сейчас\nУстановка HOME / AWAY теперь поддерживается с помощью состояния tado.x.yyyyyy.Home.state.presence.\nДиапазон смещения -10 / + 10 определен",
+        "pt": "atributos de suporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' e 'additionalConsents'\nMelhore as mensagens de erro se a chamada API falhar\npróxima vez que o bloco falhar (uma razão para o erro 422) se os blocos de tempo não forem definidos - corrigido agora\nDefinir HOME / AWAY agora é suportado usando o estado tado.x.yyyyyy.Home.state.presence\nIntervalo de deslocamento -10 / + 10 definido",
+        "nl": "ondersteuningsattributen 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' en 'additionalConsents'\nVerbeter foutmeldingen als API-aanroep mislukt\nvolgende tijdsblok mislukt (een reden voor 422-fout) als tijdsblokken niet zijn gedefinieerd - nu opgelost\nSet HOME/AWAY wordt nu ondersteund door gebruik te maken van state tado.x.yyyyyy.Home.state.presence\nOffsetbereik -10/+10 gedefinieerd",
+        "fr": "prend en charge les attributs 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' et 'additionalConsents'\nAméliorer les messages d'erreur en cas d'échec de l'appel API\nle prochain bloc de temps échoue (une raison pour l'erreur 422) si les blocs de temps ne sont pas définis - corrigé maintenant\nSet HOME/AWAY est maintenant pris en charge en utilisant l'état tado.x.yyyyyy.Home.state.presence\nPlage de décalage -10/+10 définie",
+        "it": "attributi di supporto 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' e 'additionalConsents'\nMigliora i messaggi di errore se la chiamata API fallisce\nil prossimo blocco temporale fallisce (un motivo per l'errore 422) se i blocchi temporali non sono definiti - risolto ora\nL'impostazione HOME/AWAY è ora supportata utilizzando lo stato tado.x.yyyyyy.Home.state.presence\nCampo di offset -10/+10 definito",
+        "es": "atributos de soporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' y 'additionalConsents'\nMejora los mensajes de error si falla la llamada a la API\nla próxima vez que el bloque falle (una de las razones del error 422) si los bloques de tiempo no están definidos - arreglado ahora\nEstablecer EN CASA / AUSENTE ahora se admite mediante el uso del estado tado.x.yyyyyy.Home.state.presence\nRango de compensación -10 / + 10 definido",
+        "pl": "obsługują atrybuty „showSwitchToAutoGeofencingButton”, „showHomePresenceSwitchButton” i „additionalConsents”\nPopraw komunikaty o błędach, jeśli wywołanie API nie powiedzie się\nnastępny blok czasowy nie powiedzie się (jeden powód błędu 422), jeśli bloki czasowe nie są zdefiniowane - naprawiono teraz\nUstawienie HOME/AWAY jest teraz obsługiwane przy użyciu stanu tado.x.yyyyyy.Home.state.presence\nZakres przesunięcia -10/+10 zdefiniowany",
+        "zh-cn": "支持属性“showSwitchToAutoGeofencingButton”、“showHomePresenceSwitchButton”和“additionalConsents”\n如果 API 调用失败，则增强错误消息\n如果未定义时间块，则下一个时间块失败（422 错误的一个原因） - 现在修复\n现在使用状态 tado.x.yyyyyy.Home.state.presence 支持设置 HOME/AWAY\n偏移范围 -10/+10 定义"
+      },
       "0.3.11-alpha.2": {
         "en": "support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' and 'additionalConsents'\nEnhance error messages if API-call fails\nnext time block fails (one reason for 422 error) if time blocks are not defined - fixed now\nSet HOME/AWAY is now suported by using state tado.x.yyyyyy.Home.state.presence\nOffset range -10/+10 defined",
         "de": "unterstützen die Attribute 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' und 'additionalConsents'\nFehlermeldungen verbessern, wenn API-Aufruf fehlschlägt\nnächster Zeitblock schlägt fehl (ein Grund für 422-Fehler), wenn Zeitblöcke nicht definiert sind - jetzt behoben\nSet HOME/AWAY wird jetzt unterstützt, indem der Zustand tado.x.yyyyyy.Home.state.presence verwendet wird\nOffsetbereich -10/+10 definiert",
@@ -74,18 +86,6 @@
         "es": "la solicitud para establecer valores se envía a intervalos de 3 segundos\nlos errores no manejados ahora se manejan\nSe comprueba la conexión a Internet antes de realizar las solicitudes.",
         "pl": "żądanie ustawienia wartości wysyłane jest w odstępach co 3 sekundy\nnieobsłużone błędy są teraz obsługiwane\nPołączenie internetowe jest sprawdzane przed wysłaniem żądania",
         "zh-cn": "设置值的请求以 3 秒的间隔发送\n现在处理未处理的错误\n在发出请求之前检查 Internet 连接"
-      },
-      "0.3.9": {
-        "en": "force correct NodeJS dependency with error at install\nimplement queuing for API requests (avoids some status code 422 issues)",
-        "de": "Korrekte NodeJS-Abhängigkeit mit Fehler bei der Installation erzwingen\nImplementieren von Warteschlangen für API-Anfragen (vermeidet einige Probleme mit dem Statuscode 422)",
-        "ru": "принудительно исправить зависимость NodeJS с ошибкой при установке\nреализовать очередь для запросов API (позволяет избежать некоторых проблем с кодом состояния 422)",
-        "pt": "forçar dependência NodeJS correta com erro na instalação\nimplementar enfileiramento para solicitações de API (evita alguns problemas de código de status 422)",
-        "nl": "forceer correcte NodeJS-afhankelijkheid met fout bij installatie\nwachtrij voor API-verzoeken implementeren (vermijdt enkele problemen met statuscode 422)",
-        "fr": "forcer la dépendance correcte de NodeJS avec une erreur à l'installation\nimplémenter la file d'attente pour les demandes d'API (évite certains problèmes de code d'état 422)",
-        "it": "forza la dipendenza NodeJS corretta con errore durante l'installazione\nimplementare l'accodamento per le richieste API (evita alcuni problemi con il codice di stato 422)",
-        "es": "forzar la dependencia correcta de NodeJS con error en la instalación\nimplementar cola para solicitudes de API (evita algunos problemas del código de estado 422)",
-        "pl": "wymuś poprawną zależność NodeJS z błędem podczas instalacji\nzaimplementuj kolejkowanie żądań API (unika problemów z kodem statusu 422)",
-        "zh-cn": "强制正确的 NodeJS 依赖项在安装时出错\n实现 API 请求的排队（避免一些状态码 422 问题）"
       }
     },
     "title": "Tado",
