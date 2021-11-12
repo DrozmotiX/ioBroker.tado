@@ -286,6 +286,7 @@ class Tado extends utils.Adapter {
 	 */
 	async setActiveTimeTable(home_id, zone_id, timetable_id) {
 		if (!timetable_id) timetable_id = 0;
+		if (!(timetable_id == 0 || timetable_id == 1 || timetable_id == 2)) timetable_id = 0;
 		const timeTable = {
 			id: timetable_id
 		};
@@ -822,7 +823,7 @@ class Tado extends utils.Adapter {
 		try {
 			this.accessToken = await client.getToken(tokenParams);
 		} catch (error) {
-			throw new Error ('Login failed! Please verify Username and Password');
+			throw new Error('Login failed! Please verify Username and Password');
 		}
 	}
 
@@ -853,8 +854,10 @@ class Tado extends utils.Adapter {
 				}
 			}
 		}
-		if (method != 'get') this.apiCallinExecution = true;
-		console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
+		if (method != 'get') {
+			this.apiCallinExecution = true;
+			console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
+		}
 		return new Promise((resolve, reject) => {
 			if (this.accessToken) {
 				this.refreshToken().then(() => {
