@@ -38,7 +38,7 @@ class Tado extends utils.Adapter {
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-		this._accessToken = null;
+		this.accessToken = null;
 		this.getMe_data = null;
 		this.Home_data = null;
 		this.lastupdate = 0;
@@ -113,7 +113,7 @@ class Tado extends utils.Adapter {
 						let set_masterswitch = (masterswitch == null || masterswitch == undefined || masterswitch.val == null || masterswitch.val == '') ? 'unknown' : masterswitch.val.toString().toUpperCase();
 						this.log.debug(`Masterswitch changed in home '${home_id}' to value '${set_masterswitch}'`);
 						await this.setMasterSwitch(set_masterswitch);
-						await this.sleep(1000, 1000);
+						await this.sleep(1000);
 						this.setStateAsync(`${home_id}.Home.masterswitch`, '', true);
 					} else {
 						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
@@ -218,6 +218,7 @@ class Tado extends utils.Adapter {
 					this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 				} catch (error) {
 					this.log.error(`Issue at state change: ${error}`);
+					console.error(`Issue at state change: ${error}`);
 					this.errorHandling(error);
 				}
 
@@ -273,7 +274,8 @@ class Tado extends utils.Adapter {
 		catch (error) {
 			let emsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
 			this.log.error(emsg);
-			this.errorHandling(emsg);
+			console.error(emsg);
+			this.errorHandling(error);
 		}
 	}
 
@@ -303,7 +305,8 @@ class Tado extends utils.Adapter {
 		catch (error) {
 			let eMsg = `Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`;
 			this.log.error(eMsg);
-			this.errorHandling(eMsg);
+			console.error(eMsg);
+			this.errorHandling(error);
 		}
 	}
 
@@ -331,7 +334,8 @@ class Tado extends utils.Adapter {
 		catch (error) {
 			let eMsg = `Issue at setPresenceLock: '${error}'. Based on body ${JSON.stringify(homeState)}`;
 			this.log.error(eMsg);
-			this.errorHandling(eMsg);
+			console.error(eMsg);
+			this.errorHandling(error);
 		}
 	}
 
@@ -425,7 +429,8 @@ class Tado extends utils.Adapter {
 		catch (error) {
 			console.log(`Body: ${JSON.stringify(config)}`);
 			this.log.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
-			this.errorHandling(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
+			console.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
+			this.errorHandling(error);
 		}
 	}
 
@@ -435,20 +440,26 @@ class Tado extends utils.Adapter {
 	 * @param {object} config
 	 */
 	async poolApiCall(home_id, zone_id, config) {
+		this.log.debug(`poolApiCall() entered for '${home_id}/${zone_id}'`);
 		let pooltimerid = home_id + zone_id;
-		if (pooltimer[pooltimerid]) {
+		if (await this.checkInternetConnection() == false) {
+			if (pooltimer[pooltimerid]) {
+				clearTimeout(pooltimer[pooltimerid]);
+				pooltimer[pooltimerid] = null;
+			}
+			throw new Error('No internet connection detected!');
+		}
+		if (pooltimer[pooltimerid]) {  //Important, that there is no await function between clearTimeout() and setTimeout()) 
 			clearTimeout(pooltimer[pooltimerid]);
 			pooltimer[pooltimerid] = null;
-		}
-		if (await this.checkInternetConnection() == false) {
-			throw new Error('No internet connection detected!');
 		}
 		let that = this;
 		return new Promise((resolve, reject) => {
 			pooltimer[pooltimerid] = setTimeout(async () => {
-				that.log.debug(`Timeout was set for timer '${pooltimerid}' with 750ms`);
+				that.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be caled.`);
 				await that.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`, 'put', config).then(apiResponse => {
 					resolve(apiResponse);
+					that.log.debug(`API request finalized for '${home_id}/${zone_id}'`);
 				}).catch(error => {
 					reject(error);
 				});
@@ -548,6 +559,7 @@ class Tado extends utils.Adapter {
 		} catch (error) {
 			let emsg = `Error in data refresh at step ${step}: ${error}`;
 			this.log.error(emsg);
+			console.error(emsg);
 			this.errorHandling(error);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
@@ -758,16 +770,16 @@ class Tado extends utils.Adapter {
 				let overlayClearZonePath = homeId + '.Rooms.' + zoneId + '.overlayClearZone';
 				let typeSkillBasedAppPath = homeId + '.Rooms.' + zoneId + '.overlay.termination.typeSkillBasedApp';
 				if (masterswitch == 'ON') {
-					await this.setStateAsync(overlayClearZonePath, true);
+					this.setStateAsync(overlayClearZonePath, true);
 				} else {
-					await this.setStateAsync(powerPath, 'OFF');
-					await this.sleep(100, 100);
-					await this.setStateAsync(typeSkillBasedAppPath, 'MANUAL');
+					this.setStateAsync(powerPath, 'OFF');
+					this.setStateAsync(typeSkillBasedAppPath, 'MANUAL');
 				}
-				await this.sleep(600, 600);
+				await this.sleep(600);
 			}
 		} catch (error) {
 			this.log.error(`Issue at getAllPowerSwitches(): ${error}`);
+			console.error(`Issue at getAllPowerSwitches(): ${error}`);
 			this.errorHandling(error);
 		}
 	}
@@ -775,8 +787,8 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* MISC																*/
 	//////////////////////////////////////////////////////////////////////
-	_refreshToken() {
-		const { token } = this._accessToken;
+	refreshToken() {
+		const { token } = this.accessToken;
 		const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
 		const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
 
@@ -786,16 +798,16 @@ class Tado extends utils.Adapter {
 
 		return new Promise((resolve, reject) => {
 			if (shouldRefresh) {
-				this._accessToken.refresh()
+				this.accessToken.refresh()
 					.then(result => {
-						this._accessToken = result;
-						resolve(this._accessToken);
+						this.accessToken = result;
+						resolve(this.accessToken);
 					})
 					.catch(error => {
 						reject(error);
 					});
 			} else {
-				resolve(this._accessToken);
+				resolve(this.accessToken);
 			}
 		});
 	}
@@ -808,13 +820,16 @@ class Tado extends utils.Adapter {
 			scope: 'home.user',
 		};
 		try {
-			this._accessToken = await client.getToken(tokenParams);
+			this.accessToken = await client.getToken(tokenParams);
 		} catch (error) {
-			console.log('Access Token Error', error);
+			throw new Error ('Login failed! Please verify Username and Password');
 		}
 	}
 
-	sleep(msmin, msmax) {
+	/**
+	 * @param {number} msmin
+	 */
+	sleep(msmin, msmax = msmin) {
 		let ms = Math.random() * (msmax - msmin) + msmin;
 		this.log.debug('Waiting time is ' + ms + 'ms');
 		return new Promise(resolve => setTimeout(resolve, ms));
@@ -828,7 +843,7 @@ class Tado extends utils.Adapter {
 		// check if other call is in progress and if yes loop and wait
 		if (method != 'get' && this.apiCallinExecution == true) {
 			for (let i = 0; i < 10; i++) {
-				this.log.info('Other API call in action, waiting... ' + url);
+				this.log.debug('Other API call in action, waiting... ' + url);
 				await this.sleep(waitingTime + 300, waitingTime + 400);
 				this.log.debug('Waiting done! ' + url);
 				if (this.apiCallinExecution != true) {
@@ -841,15 +856,15 @@ class Tado extends utils.Adapter {
 		if (method != 'get') this.apiCallinExecution = true;
 		console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
 		return new Promise((resolve, reject) => {
-			if (this._accessToken) {
-				this._refreshToken().then(() => {
+			if (this.accessToken) {
+				this.refreshToken().then(() => {
 					// @ts-ignore
 					axios({
 						url: tado_url + url,
 						method: method,
 						data: data,
 						headers: {
-							Authorization: 'Bearer ' + this._accessToken.token.access_token
+							Authorization: 'Bearer ' + this.accessToken.token.access_token
 						}
 					}).then(response => {
 						if (method != 'get') {
@@ -882,9 +897,8 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async errorHandling(error, codePart = undefined) {
-		if (codePart) this.log.error(`[${codePart}] error: ${error.message}, stack: ${error.stack}`);
-		console.error(error.stack);
+	async errorHandling(error) {
+		if (error.message.includes('Login failed!')) return;
 		if (this.log.level != 'debug' && this.log.level != 'silly') {
 			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
 				const sentryInstance = this.getPluginInstance('sentry');
@@ -918,7 +932,7 @@ class Tado extends utils.Adapter {
 		let res = await ping.promise.probe(host);
 		if (res.alive != true) { //second try after 300ms
 			this.log.debug(`Retry 'Ping' before saying there is no internet connection...`);
-			await this.sleep(300, 300);
+			await this.sleep(300);
 			res = await ping.promise.probe(host);
 		}
 		this.log.debug(`Result checkInternetConnection() is ${res.alive}`);
