@@ -67,6 +67,7 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
 * (HGlab01) offset range -9.99/+10 validated
 * (HGlab01) add masterswitch for power on/off
 * (HGlab01) reduce logs in info-mode
+* (HGlab01) AC temperature range fixed
 
 ### 0.3.10 (2021-10-29)
 * (HGlab01) API calls (except read) are queued and send one after the other
