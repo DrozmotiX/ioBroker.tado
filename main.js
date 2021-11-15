@@ -272,9 +272,9 @@ class Tado extends utils.Adapter {
 			this.DoTemperatureOffset(home_id, zone_id, device_id, apiResponse);
 		}
 		catch (error) {
-			let emsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
-			this.log.error(emsg);
-			console.error(emsg);
+			let eMsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
+			this.log.error(eMsg);
+			console.error(eMsg);
 			this.errorHandling(error);
 		}
 	}
@@ -370,6 +370,7 @@ class Tado extends utils.Adapter {
 
 		try {
 			if (type == 'HOT_WATER') {
+				//temp range is unknown; 30-80 is best guess
 				if (temperature < 30) {
 					this.log.info(`Temperature set to 60° instead of ${temperature}° for HOT_WATER device`);
 					temperature = 60;
@@ -379,6 +380,7 @@ class Tado extends utils.Adapter {
 				}
 			}
 			if (type == 'HEATING') {
+				//Temp range is 5-25
 				if (temperature > 25) {
 					this.log.info(`Temperature set to 25° instead of ${temperature}° for HEATING device`);
 					temperature = 25;
@@ -388,6 +390,14 @@ class Tado extends utils.Adapter {
 				}
 			}
 			if (type == 'AIR_CONDITIONING') {
+				//Temp range is 16-30
+				if (temperature > 30) {
+					this.log.info(`Temperature set to 30° instead of ${temperature}° for AIR_CONDITIONING device`);
+					temperature = 30;
+				} else if (temperature < 16) {
+					this.log.info(`Temperature set to 16° instead of ${temperature}° for AIR_CONDITIONING device`);
+					temperature = 16;
+				}
 				//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
 				if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
 					config.setting.fanSpeed = fanSpeed;
@@ -558,9 +568,9 @@ class Tado extends utils.Adapter {
 				this.DoConnect();
 			}, this.intervall_time);
 		} catch (error) {
-			let emsg = `Error in data refresh at step ${step}: ${error}`;
-			this.log.error(emsg);
-			console.error(emsg);
+			let eMsg = `Error in data refresh at step ${step}: ${error}`;
+			this.log.error(eMsg);
+			console.error(eMsg);
 			this.errorHandling(error);
 			this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
 			this.setState('info.connection', false, true);
@@ -901,7 +911,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async errorHandling(error) {
-		if (error.message.includes('Login failed!')) return;
+		if (error.message.includes('Login failed!') || error.message.includes('connect ETIMEDOUT')) return;
 		if (this.log.level != 'debug' && this.log.level != 'silly') {
 			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
 				const sentryInstance = this.getPluginInstance('sentry');
