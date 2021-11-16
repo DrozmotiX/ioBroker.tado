@@ -886,8 +886,9 @@ class Tado extends utils.Adapter {
 						resolve(response.data);
 					}).catch(error => {
 						if (method != 'get') this.apiCallinExecution = false;
-						if (error.response && error.response.data) reject(error + ' with response ' + JSON.stringify(error.response.data));
-						else reject(error);
+						if (error.response && error.response.data) console.error(error + ' with response ' + JSON.stringify(error.response.data));
+						else console.error(error);
+						reject(error);
 					});
 				});
 			} else {
@@ -911,7 +912,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async errorHandling(error) {
-		if (error.message.includes('Login failed!') || error.message.includes('connect ETIMEDOUT')) return;
+		if (error.message && (error.message.includes('Login failed!') || error.message.includes('connect ETIMEDOUT'))) return;
 		if (this.log.level != 'debug' && this.log.level != 'silly') {
 			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
 				const sentryInstance = this.getPluginInstance('sentry');
