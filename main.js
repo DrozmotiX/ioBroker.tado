@@ -317,6 +317,7 @@ class Tado extends utils.Adapter {
 	 */
 	async setPresenceLock(home_id, homePresence) {
 		if (!homePresence) homePresence = 'HOME';
+		if (homePresence != 'HOME' && homePresence != 'AWAY') homePresence = 'HOME';
 		const homeState = {
 			homePresence: homePresence.toUpperCase()
 		};
@@ -780,13 +781,16 @@ class Tado extends utils.Adapter {
 				let powerPath = homeId + '.Rooms.' + zoneId + '.setting.power';
 				let overlayClearZonePath = homeId + '.Rooms.' + zoneId + '.overlayClearZone';
 				let typeSkillBasedAppPath = homeId + '.Rooms.' + zoneId + '.overlay.termination.typeSkillBasedApp';
-				if (masterswitch == 'ON') {
-					this.setStateAsync(overlayClearZonePath, true);
-				} else {
-					this.setStateAsync(powerPath, 'OFF');
-					this.setStateAsync(typeSkillBasedAppPath, 'MANUAL');
+				const settingType = await this.getStateAsync(homeId + '.Rooms.' + zoneId + '.setting.type');
+				if (settingType && settingType.val == 'HEATING') {
+					if (masterswitch == 'ON') {
+						this.setStateAsync(overlayClearZonePath, true);
+					} else {
+						this.setStateAsync(powerPath, 'OFF');
+						this.setStateAsync(typeSkillBasedAppPath, 'MANUAL');
+					}
+					await this.sleep(600);
 				}
-				await this.sleep(600);
 			}
 		} catch (error) {
 			this.log.error(`Issue at getAllPowerSwitches(): ${error}`);
@@ -912,7 +916,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async errorHandling(error) {
-		if (error.message && (error.message.includes('Login failed!') || error.message.includes('connect ETIMEDOUT'))) return;
+		if (error.message && (error.message.includes('Login failed!') || error.message.includes('ETIMEDOUT') || error.message.includes('No internet connection detected!'))) return;
 		if (this.log.level != 'debug' && this.log.level != 'silly') {
 			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
 				const sentryInstance = this.getPluginInstance('sentry');
