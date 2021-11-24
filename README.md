@@ -59,6 +59,9 @@ In general vaules are now NULL if API sends NULL or just nothing. In v0.2.x some
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) support attribute 'showScheduleSetup'
+
 ### 0.3.11 (2021-11-19)
 * (HGlab01) support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton', 'scheduleIsDefault' and 'additionalConsents'
 * (HGlab01) enhance error messages if API-call fails
