@@ -370,16 +370,6 @@ class Tado extends utils.Adapter {
 		};
 
 		try {
-			if (type == 'HOT_WATER') {
-				//temp range is unknown; 30-80 is best guess
-				if (temperature < 30) {
-					this.log.info(`Temperature set to 60° instead of ${temperature}° for HOT_WATER device`);
-					temperature = 60;
-				} else if (temperature > 80) {
-					this.log.info(`Temperature set to 60° instead of ${temperature}° for HOT_WATER device`);
-					temperature = 60;
-				}
-			}
 			if (type == 'HEATING') {
 				//Temp range is 5-25
 				if (temperature > 25) {
@@ -408,8 +398,8 @@ class Tado extends utils.Adapter {
 
 			if (power == 'ON') {
 				config.setting.power = 'ON';
-				//Temperature not for aircondition if mode is DRY, AUTO, FAN
-				if (!(type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN'))) {
+				//Temperature not for aircondition if mode is DRY, AUTO, FAN and not for HOT_WATER
+				if (!(type == 'HOT_WATER' || (type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN')))) {
 					config.setting.temperature = {};
 					config.setting.temperature.celsius = temperature;
 				}
