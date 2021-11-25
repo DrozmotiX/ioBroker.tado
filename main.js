@@ -916,7 +916,7 @@ class Tado extends utils.Adapter {
 	}
 
 	async errorHandling(error) {
-		if (error.message && (error.message.includes('Login failed!') || error.message.includes('ETIMEDOUT') || error.message.includes('No internet connection detected!'))) return;
+		if (error.message && (error.message.includes('Login failed!') || error.message.includes('ETIMEDOUT') || error.message.includes('EAI_AGAIN') || error.message.includes('No internet connection detected!'))) return;
 		if (this.log.level != 'debug' && this.log.level != 'silly') {
 			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
 				const sentryInstance = this.getPluginInstance('sentry');
