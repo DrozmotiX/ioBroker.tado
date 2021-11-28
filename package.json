@@ -23,7 +23,7 @@
     "@iobroker/adapter-core": "^2.4.0",
     "axios": "^0.21.4",
     "iobroker-jsonexplorer": "0.1.8",
-    "ping": "^0.4.1",
+    "is-online": "^9.0.1",
     "simple-oauth2": "4.2.0"
   },
   "devDependencies": {

@@ -19,7 +19,7 @@ const { ResourceOwnerPassword } = require('simple-oauth2');
 const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
-const ping = require('ping');
+const isOnline = require('is-online');
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
@@ -240,7 +240,7 @@ class Tado extends utils.Adapter {
 	 */
 	async clearZoneOverlay(home_id, zone_id) {
 		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
-		if (await this.checkInternetConnection() == false) {
+		if (await isOnline() == false) {
 			throw new Error('No internet connection detected!');
 		}
 		await this.apiCall(url, 'delete');
@@ -263,7 +263,7 @@ class Tado extends utils.Adapter {
 			celsius: Math.min(10, Math.max(-9.99, set_offset))
 		};
 		try {
-			if (await this.checkInternetConnection() == false) {
+			if (await isOnline() == false) {
 				throw new Error('No internet connection detected!');
 			}
 			let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
@@ -294,7 +294,7 @@ class Tado extends utils.Adapter {
 		this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
 		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
 		try {
-			if (await this.checkInternetConnection() == false) {
+			if (await isOnline() == false) {
 				throw new Error('No internet connection detected!');
 			}
 			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`, 'put', timeTable);
@@ -325,7 +325,7 @@ class Tado extends utils.Adapter {
 		this.log.debug('homePresence JSON ' + JSON.stringify(homeState));
 		//this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
 		try {
-			if (await this.checkInternetConnection() == false) {
+			if (await isOnline() == false) {
 				throw new Error('No internet connection detected!');
 			}
 			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/presenceLock`, 'put', homeState);
@@ -444,7 +444,7 @@ class Tado extends utils.Adapter {
 	async poolApiCall(home_id, zone_id, config) {
 		this.log.debug(`poolApiCall() entered for '${home_id}/${zone_id}'`);
 		let pooltimerid = home_id + zone_id;
-		if (await this.checkInternetConnection() == false) {
+		if (await isOnline() == false) {
 			if (pooltimer[pooltimerid]) {
 				clearTimeout(pooltimer[pooltimerid]);
 				pooltimer[pooltimerid] = null;
@@ -576,7 +576,7 @@ class Tado extends utils.Adapter {
 		const user = this.config.Username;
 		let pass = this.config.Password;
 
-		if (await this.checkInternetConnection() == false) {
+		if (await isOnline() == false) {
 			this.log.warn(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
 			// Clear running timer
 			if (polling) {
@@ -935,17 +935,7 @@ class Tado extends utils.Adapter {
 			this.log.debug(`Polling-Timer cleared.`);
 		}
 	}
-
-	async checkInternetConnection(host = 'dns.google') {
-		let res = await ping.promise.probe(host);
-		if (res.alive != true) { //second try after 300ms
-			this.log.debug(`Retry 'Ping' before saying there is no internet connection...`);
-			await this.sleep(300);
-			res = await ping.promise.probe(host);
-		}
-		this.log.debug(`Result checkInternetConnection() is ${res.alive}`);
-		return Boolean(res.alive);
-	}
+	
 
 	//////////////////////////////////////////////////////////////////////
 	/* GET METHODS														*/
