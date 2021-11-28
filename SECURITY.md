@@ -5,5 +5,5 @@ Please ensure the supported version is installed before submitting a new issue.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| >= 0.3.7   | :white_check_mark: |
-| <  0.3.7 | :x:                |
+| latest stable version | :white_check_mark: |
+| others | :x:                |
