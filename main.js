@@ -389,8 +389,8 @@ class Tado extends utils.Adapter {
 					this.log.info(`Temperature set to 16° instead of ${temperature}° for AIR_CONDITIONING device`);
 					temperature = 16;
 				}
-				//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
-				if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
+				//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN and COOL
+				if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN' && mode != 'COOL') {
 					config.setting.fanSpeed = fanSpeed;
 				}
 				config.setting.mode = mode;
@@ -935,7 +935,7 @@ class Tado extends utils.Adapter {
 			this.log.debug(`Polling-Timer cleared.`);
 		}
 	}
-	
+
 
 	//////////////////////////////////////////////////////////////////////
 	/* GET METHODS														*/
