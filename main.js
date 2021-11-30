@@ -402,6 +402,8 @@ class Tado extends utils.Adapter {
 					//config.setting.fanSpeed = fanSpeed;
 				}
 				config.setting.mode = mode;
+				config.setting.verticalSwing = 'OFF';
+				config.setting.horizontalSwing = 'OFF';
 			}
 
 			if (power == 'ON') {
