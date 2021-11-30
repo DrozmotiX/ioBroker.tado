@@ -399,7 +399,7 @@ class Tado extends utils.Adapter {
 				}
 				//Aircondiition: Fanspeed not allowed in modes DRY, AUTO, FAN
 				if (mode != 'DRY' && mode != 'AUTO' && mode != 'FAN') {
-					config.setting.fanSpeed = fanSpeed;
+					//config.setting.fanSpeed = fanSpeed;
 				}
 				config.setting.mode = mode;
 			}
