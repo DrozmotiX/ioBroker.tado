@@ -1,8 +1,32 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.13-alpha.0",
+    "version": "0.3.13-alpha.2",
     "news": {
+      "0.3.13-alpha.2": {
+        "en": "Optimize internet-check by using isOnline-library",
+        "de": "Internet-Check optimieren mit isOnline-Bibliothek",
+        "ru": "Оптимизируйте интернет-проверку с помощью isOnline-библиотеки",
+        "pt": "Otimize a verificação da Internet usando a biblioteca isOnline",
+        "nl": "Optimaliseer internetcontrole door gebruik te maken van isOnline-library",
+        "fr": "Optimisez la vérification Internet en utilisant isOnline-library",
+        "it": "Ottimizza il controllo su Internet utilizzando isOnline-library",
+        "es": "Optimice la comprobación de Internet utilizando isOnline-library",
+        "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline",
+        "zh-cn": "使用 isOnline-library 优化互联网检查"
+      },
+      "0.3.13-alpha.1": {
+        "en": "Optimize internet-check by using isOnline-library",
+        "de": "Internet-Check optimieren mit isOnline-Bibliothek",
+        "ru": "Оптимизируйте интернет-проверку с помощью isOnline-библиотеки",
+        "pt": "Otimize a verificação da Internet usando a biblioteca isOnline",
+        "nl": "Optimaliseer internetcontrole door gebruik te maken van isOnline-library",
+        "fr": "Optimisez la vérification Internet en utilisant isOnline-library",
+        "it": "Ottimizza il controllo su Internet utilizzando isOnline-library",
+        "es": "Optimice la comprobación de Internet utilizando isOnline-library",
+        "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline",
+        "zh-cn": "使用 isOnline-library 优化互联网检查"
+      },
       "0.3.13-alpha.0": {
         "en": "Optimize internet-check by using isOnline-library",
         "de": "Internet-Check optimieren mit isOnline-Bibliothek",
@@ -62,30 +86,6 @@
         "es": "atributos de soporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' y 'additionalConsents'\nmejorar los mensajes de error si falla la llamada a la API\nla próxima vez que el bloque falle (una de las razones del error 422) si los bloques de tiempo no están definidos - arreglado ahora\nset HOME / AWAY ahora se admite mediante el uso del estado tado.x.yyyyyy.Home.state.presence\nrango de compensación -9,99 / + 10 validado\nagregar interruptor maestro para encender / apagar\nreducir registros en modo de información\nRango de temperatura CA fijo",
         "pl": "obsługują atrybuty „showSwitchToAutoGeofencingButton”, „showHomePresenceSwitchButton” i „additionalConsents”\npoprawić komunikaty o błędach, jeśli wywołanie API nie powiedzie się\nnastępny blok czasowy nie powiedzie się (jeden powód błędu 422), jeśli bloki czasowe nie są zdefiniowane - naprawiono teraz\nset HOME/AWAY jest teraz obsługiwany przy użyciu stanu tado.x.yyyyyy.Home.state.presence\nzakres przesunięcia -9,99/+10 zwalidowany\ndodaj przełącznik główny do włączania/wyłączania zasilania\nzmniejsz logi w trybie informacyjnym\nStały zakres temperatury AC",
         "zh-cn": "支持属性“showSwitchToAutoGeofencingButton”、“showHomePresenceSwitchButton”和“additionalConsents”\n如果 API 调用失败，则增强错误消息\n如果未定义时间块，则下一个时间块失败（422 错误的一个原因） - 现在修复\n现在使用状态 tado.x.yyyyyy.Home.state.presence 支持设置 HOME/AWAY\n偏移范围 -9.99/+10 验证\n添加用于电源开/关的主开关\n减少信息模式下的日志\n交流温度范围固定"
-      },
-      "0.3.11-alpha.4": {
-        "en": "support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' and 'additionalConsents'\nenhance error messages if API-call fails\nnext time block fails (one reason for 422 error) if time blocks are not defined - fixed now\nset HOME/AWAY is now suported by using state tado.x.yyyyyy.Home.state.presence\noffset range -9.99/+10 validated\nadd masterswitch for power on/off",
-        "de": "unterstützen die Attribute 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' und 'additionalConsents'\nFehlermeldungen verbessern, wenn API-Aufruf fehlschlägt\nnächster Zeitblock schlägt fehl (ein Grund für 422-Fehler), wenn Zeitblöcke nicht definiert sind - jetzt behoben\nset HOME/AWAY wird jetzt durch die Verwendung des Zustands tado.x.yyyyyy.Home.state.presence unterstützt\nOffset-Bereich -9,99/+10 validiert\nMasterswitch für Power on/off hinzufügen",
-        "ru": "атрибуты поддержки 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' и 'additionalConsents'\nулучшать сообщения об ошибках, если вызов API не удался\nв следующий раз произойдет сбой блока (одна из причин ошибки 422), если временные блоки не определены - исправлено сейчас\nset HOME / AWAY теперь поддерживается с помощью состояния tado.x.yyyyyy.Home.state.presence\nдиапазон смещения -9,99 / + 10 подтвержден\nдобавить главный выключатель для включения / выключения питания",
-        "pt": "atributos de suporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' e 'additionalConsents'\nmelhorar as mensagens de erro se a chamada API falhar\npróxima vez que o bloco falhar (uma razão para o erro 422) se os blocos de tempo não forem definidos - corrigido agora\nset HOME / AWAY agora é suportado usando o estado tado.x.yyyyyy.Home.state.presence\nintervalo de deslocamento -9,99 / + 10 validado\nadicionar interruptor mestre para ligar / desligar",
-        "nl": "ondersteuningsattributen 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' en 'additionalConsents'\nverbeter foutmeldingen als API-aanroep mislukt\nvolgende tijdsblok mislukt (een reden voor 422-fout) als tijdsblokken niet zijn gedefinieerd - nu opgelost\nset HOME/AWAY wordt nu ondersteund door de status tado.x.yyyyyy.Home.state.presence te gebruiken\noffset bereik -9,99/+10 gevalideerd\nvoeg hoofdschakelaar toe voor aan/uit",
-        "fr": "prend en charge les attributs 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' et 'additionalConsents'\naméliorer les messages d'erreur si l'appel de l'API échoue\nle prochain bloc de temps échoue (une raison pour l'erreur 422) si les blocs de temps ne sont pas définis - corrigé maintenant\nset HOME/AWAY est maintenant pris en charge en utilisant state tado.x.yyyyyy.Home.state.presence\nplage de décalage -9.99/+10 validée\najouter un interrupteur principal pour la mise sous/hors tension",
-        "it": "attributi di supporto 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' e 'additionalConsents'\nmigliora i messaggi di errore se la chiamata API fallisce\nil prossimo blocco temporale fallisce (un motivo per l'errore 422) se i blocchi temporali non sono definiti - risolto ora\nset HOME/AWAY è ora supportato utilizzando lo stato tado.x.yyyyyy.Home.state.presence\nintervallo offset -9,99/+10 convalidato\naggiungi l'interruttore principale per l'accensione/spegnimento",
-        "es": "atributos de soporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' y 'additionalConsents'\nmejorar los mensajes de error si falla la llamada a la API\nla próxima vez que el bloque falle (una de las razones del error 422) si los bloques de tiempo no están definidos - arreglado ahora\nset HOME / AWAY ahora se admite mediante el uso del estado tado.x.yyyyyy.Home.state.presence\nrango de compensación -9,99 / + 10 validado\nagregar interruptor maestro para encender / apagar",
-        "pl": "obsługują atrybuty „showSwitchToAutoGeofencingButton”, „showHomePresenceSwitchButton” i „additionalConsents”\npoprawić komunikaty o błędach, jeśli wywołanie API nie powiedzie się\nnastępny blok czasowy nie powiedzie się (jeden powód błędu 422), jeśli bloki czasowe nie są zdefiniowane - naprawiono teraz\nset HOME/AWAY jest teraz obsługiwany przy użyciu stanu tado.x.yyyyyy.Home.state.presence\nzakres przesunięcia -9,99/+10 zwalidowany\ndodaj przełącznik główny do włączania/wyłączania zasilania",
-        "zh-cn": "支持属性“showSwitchToAutoGeofencingButton”、“showHomePresenceSwitchButton”和“additionalConsents”\n如果 API 调用失败，则增强错误消息\n如果未定义时间块，则下一个时间块失败（422 错误的一个原因） - 现在修复\n现在使用状态 tado.x.yyyyyy.Home.state.presence 支持设置 HOME/AWAY\n偏移范围 -9.99/+10 验证\n添加用于电源开/关的主开关"
-      },
-      "0.3.11-alpha.3": {
-        "en": "support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' and 'additionalConsents'\nEnhance error messages if API-call fails\nnext time block fails (one reason for 422 error) if time blocks are not defined - fixed now\nSet HOME/AWAY is now suported by using state tado.x.yyyyyy.Home.state.presence\nOffset range -10/+10 defined",
-        "de": "unterstützen die Attribute 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' und 'additionalConsents'\nFehlermeldungen verbessern, wenn API-Aufruf fehlschlägt\nnächster Zeitblock schlägt fehl (ein Grund für 422-Fehler), wenn Zeitblöcke nicht definiert sind - jetzt behoben\nSet HOME/AWAY wird jetzt unterstützt, indem der Status tado.x.yyyyyy.Home.state.presence verwendet wird\nOffsetbereich -10/+10 definiert",
-        "ru": "атрибуты поддержки 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' и 'additionalConsents'\nУлучшение сообщений об ошибках при сбое вызова API\nв следующий раз произойдет сбой блока (одна из причин ошибки 422), если временные блоки не определены - исправлено сейчас\nУстановка HOME / AWAY теперь поддерживается с помощью состояния tado.x.yyyyyy.Home.state.presence.\nДиапазон смещения -10 / + 10 определен",
-        "pt": "atributos de suporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' e 'additionalConsents'\nMelhore as mensagens de erro se a chamada API falhar\npróxima vez que o bloco falhar (uma razão para o erro 422) se os blocos de tempo não forem definidos - corrigido agora\nDefinir HOME / AWAY agora é suportado usando o estado tado.x.yyyyyy.Home.state.presence\nIntervalo de deslocamento -10 / + 10 definido",
-        "nl": "ondersteuningsattributen 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' en 'additionalConsents'\nVerbeter foutmeldingen als API-aanroep mislukt\nvolgende tijdsblok mislukt (een reden voor 422-fout) als tijdsblokken niet zijn gedefinieerd - nu opgelost\nSet HOME/AWAY wordt nu ondersteund door gebruik te maken van state tado.x.yyyyyy.Home.state.presence\nOffsetbereik -10/+10 gedefinieerd",
-        "fr": "prend en charge les attributs 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' et 'additionalConsents'\nAméliorer les messages d'erreur en cas d'échec de l'appel API\nle prochain bloc de temps échoue (une raison pour l'erreur 422) si les blocs de temps ne sont pas définis - corrigé maintenant\nSet HOME/AWAY est maintenant pris en charge en utilisant l'état tado.x.yyyyyy.Home.state.presence\nPlage de décalage -10/+10 définie",
-        "it": "attributi di supporto 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' e 'additionalConsents'\nMigliora i messaggi di errore se la chiamata API fallisce\nil prossimo blocco temporale fallisce (un motivo per l'errore 422) se i blocchi temporali non sono definiti - risolto ora\nL'impostazione HOME/AWAY è ora supportata utilizzando lo stato tado.x.yyyyyy.Home.state.presence\nCampo di offset -10/+10 definito",
-        "es": "atributos de soporte 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton' y 'additionalConsents'\nMejora los mensajes de error si falla la llamada a la API\nla próxima vez que el bloque falle (una de las razones del error 422) si los bloques de tiempo no están definidos - arreglado ahora\nEstablecer EN CASA / AUSENTE ahora se admite mediante el uso del estado tado.x.yyyyyy.Home.state.presence\nRango de compensación -10 / + 10 definido",
-        "pl": "obsługują atrybuty „showSwitchToAutoGeofencingButton”, „showHomePresenceSwitchButton” i „additionalConsents”\nPopraw komunikaty o błędach, jeśli wywołanie API nie powiedzie się\nnastępny blok czasowy nie powiedzie się (jeden powód błędu 422), jeśli bloki czasowe nie są zdefiniowane - naprawiono teraz\nUstawienie HOME/AWAY jest teraz obsługiwane przy użyciu stanu tado.x.yyyyyy.Home.state.presence\nZakres przesunięcia -10/+10 zdefiniowany",
-        "zh-cn": "支持属性“showSwitchToAutoGeofencingButton”、“showHomePresenceSwitchButton”和“additionalConsents”\n如果 API 调用失败，则增强错误消息\n如果未定义时间块，则下一个时间块失败（422 错误的一个原因） - 现在修复\n现在使用状态 tado.x.yyyyyy.Home.state.presence 支持设置 HOME/AWAY\n偏移范围 -10/+10 定义"
       }
     },
     "title": "Tado",
