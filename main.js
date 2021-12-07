@@ -164,12 +164,12 @@ class Tado extends utils.Adapter {
 						this.log.debug(`Temperature is: ${set_temp}`);
 						this.log.debug('Execution mode (typeSkillBasedApp) is: ' + set_mode);
 						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
-						this.log.info('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
-						this.log.info('Mode is: ' + set_tadomode);
-						this.log.info('FanSpeed is: ' + set_fanSpeed);
-						this.log.info('FanLevel is: ' + set_fanLevel);
-						this.log.info('HorizontalSwing is: ' + set_horizontalSwing);
-						this.log.info('VerticalSwing is: ' + set_verticalSwing);
+						this.log.debug('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
+						this.log.debug('Mode is: ' + set_tadomode);
+						this.log.debug('FanSpeed is: ' + set_fanSpeed);
+						this.log.debug('FanLevel is: ' + set_fanLevel);
+						this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
+						this.log.debug('VerticalSwing is: ' + set_verticalSwing);
 
 
 						switch (statename) {
@@ -411,8 +411,7 @@ class Tado extends utils.Adapter {
 			setting: {
 				type: type,
 			},
-			termination: {
-			}
+			termination: {}
 		};
 
 		try {
