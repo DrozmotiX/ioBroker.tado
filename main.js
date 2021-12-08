@@ -442,8 +442,8 @@ class Tado extends utils.Adapter {
 			}
 			if (power == 'ON') {
 				config.setting.power = 'ON';
-				//Temperature not for aircondition if mode is DRY, AUTO, FAN and not for HOT_WATER
-				if (!(type == 'HOT_WATER' || (type == 'AIR_CONDITIONING' && (mode == 'DRY' || mode == 'AUTO' || mode == 'FAN')))) {
+				//Temperature not for aircondition if mode is AUTO, FAN and not for HOT_WATER
+				if (!(type == 'HOT_WATER' || (type == 'AIR_CONDITIONING' && (mode == 'AUTO' || mode == 'FAN')))) {
 					config.setting.temperature = {};
 					config.setting.temperature.celsius = temperature;
 				}
