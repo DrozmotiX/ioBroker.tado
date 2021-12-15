@@ -434,11 +434,12 @@ class Tado extends utils.Adapter {
 					this.log.info(`Temperature set to 16° instead of ${temperature}° for AIR_CONDITIONING device`);
 					temperature = 16;
 				}
+				//fan level not allowed in mode DRY
 				if (mode != 'NOT_AVAILABLE') config.setting.mode = mode;
 				if (verticalSwing != 'NOT_AVAILABLE') config.setting.verticalSwing = verticalSwing;
 				if (horizontalSwing != 'NOT_AVAILABLE') config.setting.horizontalSwing = horizontalSwing;
-				if (fanLevel != 'NOT_AVAILABLE') config.setting.fanLevel = fanLevel;
-				if (fanSpeed != 'NOT_AVAILABLE') config.setting.fanSpeed = fanSpeed;
+				if (fanLevel != 'NOT_AVAILABLE' && mode != 'DRY') config.setting.fanLevel = fanLevel;
+				if (fanSpeed != 'NOT_AVAILABLE' && mode != 'DRY') config.setting.fanSpeed = fanSpeed;
 			}
 			if (power == 'ON') {
 				config.setting.power = 'ON';
@@ -450,13 +451,14 @@ class Tado extends utils.Adapter {
 			} else {
 				config.setting.power = 'OFF';
 			}
-
-			config.termination.typeSkillBasedApp = typeSkillBasedApp;
-			if (typeSkillBasedApp != 'TIMER') {
-				config.termination.durationInSeconds = null;
-			}
-			else {
-				config.termination.durationInSeconds = durationInSeconds;
+			if (typeSkillBasedApp != 'NO_OVERLAY') {
+				config.termination.typeSkillBasedApp = typeSkillBasedApp;
+				if (typeSkillBasedApp != 'TIMER') {
+					config.termination.durationInSeconds = null;
+				}
+				else {
+					config.termination.durationInSeconds = durationInSeconds;
+				}
 			}
 			let result = await this.poolApiCall(home_id, zone_id, config);
 			this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
