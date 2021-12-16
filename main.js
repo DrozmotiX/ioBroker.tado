@@ -122,7 +122,7 @@ class Tado extends utils.Adapter {
 						const power = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.power');
 						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
 						const nextTimeBlockStart = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.nextTimeBlock.start');
-						let tadomode, fanLevel, horizontalSwing, verticalSwing, fanSpeed;
+						let acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed;
 
 						let set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
 						let set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val.toString());
@@ -132,16 +132,16 @@ class Tado extends utils.Adapter {
 						let set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
 
 						if (set_type == 'AIR_CONDITIONING') {
-							tadomode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
+							acMode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
 							fanSpeed = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanSpeed');
 							fanLevel = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.fanLevel');
 							horizontalSwing = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.horizontalSwing');
 							verticalSwing = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.verticalSwing');
 						}
-						let set_horizontalSwing = '', set_verticalSwing = '', set_fanLevel = '', set_fanSpeed = '', set_tadomode = '';
-						if (tadomode == undefined) set_tadomode = 'NOT_AVAILABLE';
+						let set_horizontalSwing = '', set_verticalSwing = '', set_fanLevel = '', set_fanSpeed = '', set_acMode = '';
+						if (acMode == undefined) set_acMode = 'NOT_AVAILABLE';
 						else {
-							set_tadomode = (tadomode == null || tadomode.val == null || tadomode.val == '') ? 'COOL' : tadomode.val.toString().toUpperCase();
+							set_acMode = (acMode == null || acMode.val == null || acMode.val == '') ? 'COOL' : acMode.val.toString().toUpperCase();
 						}
 						if (fanSpeed == undefined) set_fanSpeed = 'NOT_AVAILABLE';
 						else {
@@ -165,7 +165,7 @@ class Tado extends utils.Adapter {
 						this.log.debug('Execution mode (typeSkillBasedApp) is: ' + set_mode);
 						this.log.debug('DurationInSeconds is: ' + set_durationInSeconds);
 						this.log.debug('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
-						this.log.debug('Mode is: ' + set_tadomode);
+						this.log.debug('Mode is: ' + set_acMode);
 						this.log.debug('FanSpeed is: ' + set_fanSpeed);
 						this.log.debug('FanLevel is: ' + set_fanLevel);
 						this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
@@ -189,45 +189,45 @@ class Tado extends utils.Adapter {
 								}
 								set_power = 'ON';
 								this.log.debug(`Temperature changed for room '${zone_id}' in home '${home_id}' to '${set_temp}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('durationInSeconds'):
 								set_mode = 'TIMER';
 								this.log.debug(`DurationInSecond changed for room '${zone_id}' in home '${home_id}' to '${set_durationInSeconds}'`);
 								this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.typeSkillBasedApp`, set_mode, true);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('fanSpeed'):
 								this.log.debug(`FanSpeed changed for room '${zone_id}' in home '${home_id}' to '${set_fanSpeed}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('mode'):
-								this.log.debug(`Mode changed for room '${zone_id}' in home '${home_id}' to '${set_tadomode}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								this.log.debug(`Mode changed for room '${zone_id}' in home '${home_id}' to '${set_acMode}'`);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('fanLevel'):
 								this.log.debug(`fanLevel changed for room '${zone_id}' in home '${home_id}' to '${set_fanLevel}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('horizontalSwing'):
 								this.log.debug(`horizontalSwing changed for room '${zone_id}' in home '${home_id}' to '${set_horizontalSwing}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('verticalSwing'):
 								this.log.debug(`verticalSwing changed for room '${zone_id}' in home '${home_id}' to '${set_verticalSwing}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								break;
 
 							case ('typeSkillBasedApp'):
 								if (set_mode == 'NO_OVERLAY') { break; }
 								this.log.debug(`TypeSkillBasedApp changed for room '${zone_id}' in home '${home_id}' to '${set_mode}'`);
-								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+								await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								if (set_mode == 'MANUAL') {
 									this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.expiry`, null, true);
 									this.setStateAsync(`${home_id}.Rooms.${zone_id}.overlay.termination.durationInSeconds`, null, true);
@@ -244,11 +244,11 @@ class Tado extends utils.Adapter {
 									else {
 										set_mode = 'MANUAL';
 										this.log.debug(`Power changed for room '${zone_id}' in home '${home_id}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`);
-										await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+										await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 									}
 								} else {
 									this.log.debug(`Power changed for room '${zone_id}' in home '${home_id}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`);
-									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_tadomode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
+									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								}
 								break;
 							default:
@@ -389,20 +389,20 @@ class Tado extends utils.Adapter {
 	 * @param {string} typeSkillBasedApp
 	 * @param {number} durationInSeconds
 	 * @param {string} type
-	 * @param {string} mode
+	 * @param {string} acMode
 	 * @param {string} fanLevel
 	 * @param {string} horizontalSwing
 	 * @param {string} verticalSwing
 	 * @param {string} fanSpeed
 	 */
-	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, mode, fanLevel, horizontalSwing, verticalSwing, fanSpeed) {
+	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed) {
 		power = power.toUpperCase();
 		if (!temperature) temperature = 20;
 		typeSkillBasedApp = typeSkillBasedApp.toUpperCase();
 		durationInSeconds = Math.max(10, durationInSeconds);
 		type = type.toUpperCase();
 		fanSpeed = fanSpeed.toUpperCase();
-		mode = mode.toUpperCase();
+		acMode = acMode.toUpperCase();
 		fanLevel = fanLevel.toUpperCase();
 		horizontalSwing = horizontalSwing.toUpperCase();
 		verticalSwing = verticalSwing.toUpperCase();
@@ -434,17 +434,20 @@ class Tado extends utils.Adapter {
 					this.log.info(`Temperature set to 16° instead of ${temperature}° for AIR_CONDITIONING device`);
 					temperature = 16;
 				}
-				//fan level not allowed in mode DRY
-				if (mode != 'NOT_AVAILABLE') config.setting.mode = mode;
+				//acMode is always needed if AIR_CONDITION
+				if (acMode != 'NOT_AVAILABLE') config.setting.mode = acMode;
+				else config.setting.mode = 'COOL';
 				if (verticalSwing != 'NOT_AVAILABLE') config.setting.verticalSwing = verticalSwing;
 				if (horizontalSwing != 'NOT_AVAILABLE') config.setting.horizontalSwing = horizontalSwing;
-				if (fanLevel != 'NOT_AVAILABLE' && mode != 'DRY') config.setting.fanLevel = fanLevel;
-				if (fanSpeed != 'NOT_AVAILABLE' && mode != 'DRY') config.setting.fanSpeed = fanSpeed;
+				//fan level not allowed in mode DRY
+				if (fanLevel != 'NOT_AVAILABLE' && acMode != 'DRY') config.setting.fanLevel = fanLevel;
+				if (fanSpeed != 'NOT_AVAILABLE' && acMode != 'DRY') config.setting.fanSpeed = fanSpeed;
 			}
 			if (power == 'ON') {
 				config.setting.power = 'ON';
-				//Temperature not for aircondition if mode is AUTO, FAN and not for HOT_WATER
-				if (!(type == 'HOT_WATER' || (type == 'AIR_CONDITIONING' && (mode == 'AUTO' || mode == 'FAN')))) {
+				//temperature required for mode AUTO
+				//Temperature not for aircondition if mode is FAN, DRY and not for HOT_WATER
+				if (!(type == 'HOT_WATER' || (type == 'AIR_CONDITIONING' && (acMode == 'DRY' || acMode == 'FAN')))) {
 					config.setting.temperature = {};
 					config.setting.temperature.celsius = temperature;
 				}
