@@ -410,8 +410,7 @@ class Tado extends utils.Adapter {
 		const config = {
 			setting: {
 				type: type,
-			},
-			termination: {}
+			}
 		};
 
 		try {
@@ -455,6 +454,7 @@ class Tado extends utils.Adapter {
 				config.setting.power = 'OFF';
 			}
 			if (typeSkillBasedApp != 'NO_OVERLAY') {
+				config.termination = {};
 				config.termination.typeSkillBasedApp = typeSkillBasedApp;
 				if (typeSkillBasedApp != 'TIMER') {
 					config.termination.durationInSeconds = null;
@@ -462,7 +462,7 @@ class Tado extends utils.Adapter {
 				else {
 					config.termination.durationInSeconds = durationInSeconds;
 				}
-			} else config.termination.typeSkillBasedApp = null;
+			}
 			let result = await this.poolApiCall(home_id, zone_id, config);
 			this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
