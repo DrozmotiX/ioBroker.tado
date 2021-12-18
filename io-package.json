@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.13-alpha.5",
+    "version": "0.3.13-alpha.6",
     "news": {
+      "0.3.13-alpha.6": {
+        "en": "Optimize internet-check by using isOnline-library\nSupport Smart AC Control V3+ (issue #403)\nFix issue 'fan level not allowed in mode DRY'\nFix issue 'mode not in supported modes [COOL, HEAT, DRY, FAN, AUTO]'\nFix issue 'temperature required for mode AUTO'",
+        "de": "Internet-Check optimieren mit isOnline-Bibliothek\nUnterstützt Smart AC Control V3+ (Ausgabe Nr. 403)\nBehebung des Problems 'Lüfterstufe im Modus DRY nicht zulässig'\nBehebung des Problems 'Modus nicht in unterstützten Modi [COOL, HEAT, DRY, FAN, AUTO]'\nBehebung des Problems 'Temperatur für Modus AUTO erforderlich'",
+        "ru": "Оптимизируйте интернет-проверку с помощью isOnline-библиотеки\nПоддержка Smart AC Control V3 + (issue # 403)\nИсправить проблему «уровень вентилятора не разрешен в режиме СУХОЙ».\nУстранение проблемы \"режим не входит в поддерживаемые режимы [ОХЛАЖДЕНИЕ, НАГРЕВ, СУШКА, ВЕНТИЛЯЦИЯ, АВТО]\"\nИсправить проблему \"температура, необходимая для режима АВТО\"",
+        "pt": "Otimize a verificação da Internet usando a biblioteca isOnline\nCompatível com Smart AC Control V3 + (problema # 403)\nCorrigir o problema de 'nível de ventilador não permitido no modo DRY'\nCorrigir o problema de 'modo não compatível com os modos [COOL, HEAT, DRY, FAN, AUTO]'\nCorrigir o problema de 'temperatura necessária para o modo AUTO'",
+        "nl": "Optimaliseer internetcontrole door gebruik te maken van isOnline-library\nOndersteuning Slimme Aircobediening V3+ (issue #403)\nProbleem oplossen 'ventilatorniveau niet toegestaan in modus DROGEN'\nProbleem oplossen 'modus niet in ondersteunde modi [COOL, HEAT, DRY, FAN, AUTO]'\nProbleem 'temperatuur vereist voor modus AUTO' oplossen",
+        "fr": "Optimisez la vérification Internet en utilisant isOnline-library\nPrise en charge de Smart AC Control V3+ (numéro 403)\nCorrection du problème « niveau de ventilateur non autorisé en mode DRY »\nCorrection du problème « le mode n'est pas dans les modes pris en charge [COOL, HEAT, DRY, FAN, AUTO] »\nCorrection du problème « température requise pour le mode AUTO »",
+        "it": "Ottimizza il controllo su Internet utilizzando isOnline-library\nSupporta Smart AC Control V3+ (numero 403)\nRisolto il problema \"Livello ventola non consentito in modalità DRY\"\nRisolto il problema \"modalità non supportata nelle modalità [COOL, HEAT, DRY, FAN, AUTO]\"\nRisolto il problema \"temperatura richiesta per la modalità AUTO\"",
+        "es": "Optimice la comprobación de Internet utilizando isOnline-library\nAdmite Smart AC Control V3 + (número 403)\nSoluciona el problema 'nivel de ventilador no permitido en modo SECO'\nSoluciona el problema 'el modo no está en los modos admitidos [FRÍO, CALOR, SECO, VENTILADOR, AUTO]'\nSoluciona el problema 'temperatura requerida para el modo AUTO'",
+        "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline\nObsługa Smart AC Control V3+ (wydanie #403)\nNapraw problem „Niedozwolony poziom wentylatora w trybie DRY”\nNapraw problem „tryb nie w obsługiwanych trybach [CHŁODZENIE, OGRZEWANIE, OSUSZANIE, WENTYLATOR, AUTO]”\nNapraw problem „temperatura wymagana dla trybu AUTO”",
+        "zh-cn": "使用 isOnline-library 优化互联网检查\n支持智能交流控制 V3+（issue #403）\n修复“干燥模式下不允许风扇级别”的问题\n修复问题“模式不受支持的模式 [COOL、HEAT、DRY、FAN、AUTO]”\n修复问题“自动模式所需的温度”"
+      },
       "0.3.13-alpha.5": {
         "en": "Optimize internet-check by using isOnline-library\nSupport Smart AC Control V3+ (issue #403)\nFix issue 'fan level not allowed in mode DRY'\nFix issue 'mode not in supported modes [COOL, HEAT, DRY, FAN, AUTO]'\nFix issue 'temperature required for mode AUTO'",
         "de": "Internet-Check optimieren mit isOnline-Bibliothek\nUnterstützt Smart AC Control V3+ (Ausgabe Nr. 403)\nBehebung des Problems 'Lüfterstufe im Modus DRY nicht zulässig'\nBehebung des Problems 'Modus nicht in unterstützten Modi [COOL, HEAT, DRY, FAN, AUTO]'\nBehebung des Problems 'Temperatur für Modus AUTO erforderlich'",
@@ -74,18 +86,6 @@
         "es": "Optimice la comprobación de Internet utilizando isOnline-library",
         "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline",
         "zh-cn": "使用 isOnline-library 优化互联网检查"
-      },
-      "0.3.12": {
-        "en": "support attribute 'showScheduleSetup'\nfix HOT_WATER device issue with temperature\nBump iobroker-jsonexplorer to 0.1.8 (avoids re-sending same missing-attribeute info to Sentry after restart)",
-        "de": "Support-Attribut 'showScheduleSetup'\nBehebung des Problems des HOT_WATER-Geräts mit der Temperatur\niobroker-jsonexplorer auf 0.1.8 hochsetzen (vermeidet das erneute Senden der gleichen fehlenden Attributinformationen an Sentry nach dem Neustart)",
-        "ru": "атрибут поддержки 'showScheduleSetup'\nисправить проблему устройства HOT_WATER с температурой\nУвеличьте iobroker-jsonexplorer до 0.1.8 (избегает повторной отправки той же информации об отсутствии атрибута в Sentry после перезапуска)",
-        "pt": "atributo de suporte 'showScheduleSetup'\ncorrigir o problema do dispositivo HOT_WATER com a temperatura\nBump iobroker-jsonexplorer para 0.1.8 (evita reenviar as mesmas informações de atributo perdido para o Sentry após reiniciar)",
-        "nl": "ondersteuningskenmerk 'showScheduleSetup'\nfix HOT_WATER apparaatprobleem met temperatuur\nBump iobroker-jsonexplorer naar 0.1.8 (vermijdt het opnieuw verzenden van dezelfde ontbrekende attribuutinfo naar Sentry na opnieuw opstarten)",
-        "fr": "attribut de support 'showScheduleSetup'\nrésoudre le problème de l'appareil HOT_WATER avec la température\nBump iobroker-jsonexplorer à 0.1.8 (évite de renvoyer les mêmes informations d'attribut manquant à Sentry après le redémarrage)",
-        "it": "attributo di supporto 'showScheduleSetup'\nrisolvere il problema del dispositivo HOT_WATER con la temperatura\nBump iobroker-jsonexplorer a 0.1.8 (evita di inviare nuovamente le stesse informazioni sugli attributi mancanti a Sentry dopo il riavvio)",
-        "es": "atributo de soporte 'showScheduleSetup'\ncorregir el problema del dispositivo HOT_WATER con la temperatura\nAumente iobroker-jsonexplorer a 0.1.8 (evita volver a enviar la misma información de atributo faltante a Sentry después de reiniciar)",
-        "pl": "atrybut wsparcia „showScheduleSetup”\nnapraw problem z urządzeniem HOT_WATER z temperaturą\nPodbij iobroker-jsonexplorer do 0.1.8 (unika ponownego wysyłania tych samych informacji o brakującym atrybucie do Sentry po restarcie)",
-        "zh-cn": "支持属性“showScheduleSetup”\n修复 HOT_WATER 设备温度问题\n将 iobroker-jsonexplorer 提升到 0.1.8（避免在重启后重新发送相同的缺失属性信息给 Sentry）"
       }
     },
     "title": "Tado",
