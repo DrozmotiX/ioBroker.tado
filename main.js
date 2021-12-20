@@ -407,6 +407,39 @@ class Tado extends utils.Adapter {
 		horizontalSwing = horizontalSwing.toUpperCase();
 		verticalSwing = verticalSwing.toUpperCase();
 
+		if (power != 'ON' && power != 'OFF') {
+			this.log.error(`Invalid value '${power}' for state 'power'. Allowed values are ON and OFF`);
+			return;
+		}
+		if (typeSkillBasedApp != 'TIMER' && typeSkillBasedApp != 'MANUAL' && typeSkillBasedApp != 'NEXT_TIME_BLOCK' && typeSkillBasedApp != 'NO_OVERLAY') {
+			this.log.error(`Invalid value '${typeSkillBasedApp}' for state 'typeSkillBasedApp'. Allowed values are TIMER, MANUAL and NEXT_TIME_BLOCK`);
+			return;
+		}
+		if (horizontalSwing != 'ON' && horizontalSwing != 'OFF' && horizontalSwing != 'NOT_AVAILABLE') {
+			this.log.error(`Invalid value '${horizontalSwing}' for state 'horizontalSwing'. Allowed values are ON and OFF`);
+			return;
+		}
+		if (verticalSwing != 'ON' && verticalSwing != 'OFF' && verticalSwing != 'NOT_AVAILABLE') {
+			this.log.error(`Invalid value '${verticalSwing}' for state 'verticalSwing'. Allowed values are ON and OFF`);
+			return;
+		}
+		if (type != 'HEATING' && type != 'AIR_CONDITIONING' && type != 'HOT_WATER') {
+			this.log.error(`Invalid value '${type}' for state 'type'. Allowed values are HOT_WATER, AIR_CONDITIONING and HEATING`);
+			return;
+		}
+		if (fanSpeed != 'AUTO' && fanSpeed != 'HIGH' && fanSpeed != 'MIDDLE' && fanSpeed != 'LOW' && fanSpeed != 'NOT_AVAILABLE') {
+			this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are HIGH, MIDDLE, LOW and AUTO`);
+			return;
+		}
+		if (fanLevel != 'AUTO' && fanLevel != 'SILENT' && fanLevel != 'LEVEL1' && fanLevel != 'LEVEL2' && fanLevel != 'LEVEL3' && fanLevel != 'LEVEL4' && fanLevel != 'LEVEL5' && fanLevel != 'NOT_AVAILABLE') {
+			this.log.error(`Invalid value '${fanLevel}' for state 'fanLevel'. Allowed values are AUTO, SILENT, LEVEL1, LEVEL2, LEVEL3, LEVEL4 and LEVEL5`);
+			return;
+		}
+		if (acMode != 'AUTO' && acMode != 'COOL' && acMode != 'DRY' && acMode != 'FAN' && acMode != 'HEAT' && acMode != 'NOT_AVAILABLE') {
+			this.log.error(`Invalid value '${acMode}' for state 'acMode'. Allowed values are AUTO, COOL, DRY, FAN and HEAT`);
+			return;
+		}
+
 		const config = {
 			setting: {
 				type: type,
