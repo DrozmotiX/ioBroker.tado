@@ -24,7 +24,7 @@
     "axios": "^0.24.0",
     "iobroker-jsonexplorer": "0.1.8",
     "is-online": "^9.0.1",
-    "simple-oauth2": "4.2.0"
+    "simple-oauth2": "4.3.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.4.0",
