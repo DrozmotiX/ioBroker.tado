@@ -446,11 +446,11 @@ class Tado extends utils.Adapter {
 
 			if (type == 'HEATING' && power == 'ON') {
 				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;
-				let camMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;
+				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;
 
-				if (capMinTemp && camMaxTemp) {
-					if (temperature > camMaxTemp || temperature < capMinTemp) {
-						this.log.error(`Temperature of ${temperature}° outside supported range of ${capMinTemp}° to ${camMaxTemp}°`);
+				if (capMinTemp && capMaxTemp) {
+					if (temperature > capMaxTemp || temperature < capMinTemp) {
+						this.log.error(`Temperature of ${temperature}° outside supported range of ${capMinTemp}° to ${capMaxTemp}°`);
 						return;
 					}
 					config.setting.temperature = {};
@@ -508,7 +508,7 @@ class Tado extends utils.Adapter {
 					config.setting.fanLevel = fanLevel;
 				}
 			}
-			
+
 			let result = await this.poolApiCall(home_id, zone_id, config);
 			this.log.info(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
