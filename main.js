@@ -397,9 +397,7 @@ class Tado extends utils.Adapter {
 	 * @param {string} fanSpeed
 	 */
 	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed) {
-
 		power = power.toUpperCase();
-		if (!temperature) temperature = 20;
 		typeSkillBasedApp = typeSkillBasedApp.toUpperCase();
 		durationInSeconds = Math.max(10, durationInSeconds);
 		type = type.toUpperCase();
@@ -408,6 +406,7 @@ class Tado extends utils.Adapter {
 		fanLevel = fanLevel.toUpperCase();
 		horizontalSwing = horizontalSwing.toUpperCase();
 		verticalSwing = verticalSwing.toUpperCase();
+		if (!temperature) temperature = 21;
 		let config = {
 			setting: {
 				type: type,
@@ -440,7 +439,7 @@ class Tado extends utils.Adapter {
 			}
 			let capType = this.roomCapabilities[zone_id].type;
 			if (capType && capType != type) {
-				this.log.error(`Type ${type} not supported. Type ${capType} expected.`);
+				this.log.error(`Type ${type} not valid. Type ${capType} expected.`);
 				return;
 			}
 
@@ -450,7 +449,7 @@ class Tado extends utils.Adapter {
 
 				if (capMinTemp && capMaxTemp) {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
-						this.log.error(`Temperature of ${temperature}° outside supported range of ${capMinTemp}° to ${capMaxTemp}°`);
+						this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
 						return;
 					}
 					config.setting.temperature = {};
@@ -473,35 +472,35 @@ class Tado extends utils.Adapter {
 
 				if (capMinTemp && capMaxTemp) {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
-						this.log.error(`Temperature of ${temperature}° outside supported range of ${capMinTemp}° to ${capMaxTemp}°`);
+						this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
 						return;
 					}
 					config.setting.temperature = {};
 					config.setting.temperature.celsius = temperature;
 				}
 				if (capHorizontalSwing) {
-					if (horizontalSwing != 'NOT_AVAILABLE' && !capHorizontalSwing.includes(horizontalSwing)) {
+					if (!capHorizontalSwing.includes(horizontalSwing)) {
 						this.log.error(`Invalid value '${horizontalSwing}' for state 'horizontalSwing'. Allowed values are ${JSON.stringify(capHorizontalSwing)}`);
 						return;
 					}
 					config.setting.horizontalSwing = horizontalSwing;
 				}
 				if (capVerticalSwing) {
-					if (verticalSwing != 'NOT_AVAILABLE' && !capVerticalSwing.includes(verticalSwing)) {
+					if (!capVerticalSwing.includes(verticalSwing)) {
 						this.log.error(`Invalid value '${verticalSwing}' for state 'verticalSwing'. Allowed values are ${JSON.stringify(capVerticalSwing)}`);
 						return;
 					}
 					config.setting.verticalSwing = verticalSwing;
 				}
 				if (capFanSpeed) {
-					if (fanSpeed != 'NOT_AVAILABLE' && !capFanSpeed.includes(fanSpeed)) {
+					if (!capFanSpeed.includes(fanSpeed)) {
 						this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are ${JSON.stringify(capFanSpeed)}`);
 						return;
 					}
 					config.setting.fanSpeed = fanSpeed;
 				}
 				if (capFanLevel) {
-					if (fanLevel != 'NOT_AVAILABLE' && !capFanLevel.includes(fanLevel)) {
+					if (!capFanLevel.includes(fanLevel)) {
 						this.log.error(`Invalid value '${fanLevel}' for state 'fanLevel'. Allowed values are ${JSON.stringify(capFanLevel)}`);
 						return;
 					}
