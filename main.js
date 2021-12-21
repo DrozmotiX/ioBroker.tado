@@ -782,10 +782,11 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
 
 		for (const i in this.Zones_data) {
-			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
-			await this.DoCapabilities(HomeId, this.Zones_data[i].id);
-			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
-			await this.DoTimeTables(HomeId, this.Zones_data[i].id);
+			let zoneID = this.Zones_data[i].id;
+			await this.DoZoneStates(HomeId, zoneID);
+			if (!this.roomCapabilities[zoneID]) await this.DoCapabilities(HomeId, zoneID);
+			await this.DoAwayConfiguration(HomeId, zoneID);
+			await this.DoTimeTables(HomeId, zoneID);
 		}
 	}
 
