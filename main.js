@@ -509,7 +509,7 @@ class Tado extends utils.Adapter {
 			}
 
 			let result = await this.poolApiCall(home_id, zone_id, config);
-			this.log.info(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
+			this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
 			if (result.setting.temperature == null) {
 				result.setting.temperature = {};
@@ -781,11 +781,11 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
 
 		for (const i in this.Zones_data) {
-			let zoneID = this.Zones_data[i].id;
-			await this.DoZoneStates(HomeId, zoneID);
-			if (!this.roomCapabilities[zoneID]) await this.DoCapabilities(HomeId, zoneID);
-			await this.DoAwayConfiguration(HomeId, zoneID);
-			await this.DoTimeTables(HomeId, zoneID);
+			let zoneId = this.Zones_data[i].id;
+			await this.DoZoneStates(HomeId, zoneId);
+			if (!this.roomCapabilities[zoneId]) await this.DoCapabilities(HomeId, zoneId);
+			await this.DoAwayConfiguration(HomeId, zoneId);
+			await this.DoTimeTables(HomeId, zoneId);
 		}
 	}
 
@@ -806,7 +806,7 @@ class Tado extends utils.Adapter {
 		this.roomCapabilities[ZoneId] = capabilities_data;
 		this.log.debug(`Capabilities_data result for room '${ZoneId}' is ${JSON.stringify(capabilities_data)}`);
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_Capabilities_data_' + ZoneId, capabilities_data);
-		JsonExplorer.TraverseJson(capabilities_data, HomeId + '.Rooms.' + ZoneId + '.Capabilities', true, true, 0, 2);
+		JsonExplorer.TraverseJson(capabilities_data, HomeId + '.Rooms.' + ZoneId + '.capabilities', true, true, 0, 2);
 	}
 
 	/**
@@ -830,7 +830,7 @@ class Tado extends utils.Adapter {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 2);
+		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 0, 2);
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
@@ -861,7 +861,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* MASTERSWITCH														*/
 	//////////////////////////////////////////////////////////////////////
-
 	async setMasterSwitch(masterswitch) {
 		masterswitch = masterswitch.toUpperCase();
 		if (!(masterswitch == 'ON' || masterswitch == 'OFF')) throw new Error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterswitch}'`);
@@ -1118,17 +1117,8 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/devices`);
 	}*/
 
-	/*getTimeTable(home_id, zone_id, timetable_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
-	}*/
-
 	/*getZoneOverlay(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
-	}*/
-
-	/*
-	getZoneCapabilities(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
 	}*/
 
 	/*getInstallations(home_id) {
