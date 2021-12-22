@@ -45,6 +45,7 @@ class Tado extends utils.Adapter {
 		this.apiCallinExecution = false;
 		JsonExplorer.init(this, state_attr);
 		this.intervall_time = 60 * 1000;
+		this.roomCapabilities = {};
 	}
 
 	/**
@@ -397,7 +398,6 @@ class Tado extends utils.Adapter {
 	 */
 	async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed) {
 		power = power.toUpperCase();
-		if (!temperature) temperature = 20;
 		typeSkillBasedApp = typeSkillBasedApp.toUpperCase();
 		durationInSeconds = Math.max(10, durationInSeconds);
 		type = type.toUpperCase();
@@ -406,87 +406,15 @@ class Tado extends utils.Adapter {
 		fanLevel = fanLevel.toUpperCase();
 		horizontalSwing = horizontalSwing.toUpperCase();
 		verticalSwing = verticalSwing.toUpperCase();
-
-		if (power != 'ON' && power != 'OFF') {
-			this.log.error(`Invalid value '${power}' for state 'power'. Allowed values are ON and OFF`);
-			return;
-		}
-		if (typeSkillBasedApp != 'TIMER' && typeSkillBasedApp != 'MANUAL' && typeSkillBasedApp != 'NEXT_TIME_BLOCK' && typeSkillBasedApp != 'NO_OVERLAY') {
-			this.log.error(`Invalid value '${typeSkillBasedApp}' for state 'typeSkillBasedApp'. Allowed values are TIMER, MANUAL and NEXT_TIME_BLOCK`);
-			return;
-		}
-		if (horizontalSwing != 'ON' && horizontalSwing != 'OFF' && horizontalSwing != 'NOT_AVAILABLE') {
-			this.log.error(`Invalid value '${horizontalSwing}' for state 'horizontalSwing'. Allowed values are ON and OFF`);
-			return;
-		}
-		if (verticalSwing != 'ON' && verticalSwing != 'OFF' && verticalSwing != 'NOT_AVAILABLE') {
-			this.log.error(`Invalid value '${verticalSwing}' for state 'verticalSwing'. Allowed values are ON and OFF`);
-			return;
-		}
-		if (type != 'HEATING' && type != 'AIR_CONDITIONING' && type != 'HOT_WATER') {
-			this.log.error(`Invalid value '${type}' for state 'type'. Allowed values are HOT_WATER, AIR_CONDITIONING and HEATING`);
-			return;
-		}
-		if (fanSpeed != 'AUTO' && fanSpeed != 'HIGH' && fanSpeed != 'MIDDLE' && fanSpeed != 'LOW' && fanSpeed != 'NOT_AVAILABLE') {
-			this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are HIGH, MIDDLE, LOW and AUTO`);
-			return;
-		}
-		if (fanLevel != 'AUTO' && fanLevel != 'SILENT' && fanLevel != 'LEVEL1' && fanLevel != 'LEVEL2' && fanLevel != 'LEVEL3' && fanLevel != 'LEVEL4' && fanLevel != 'LEVEL5' && fanLevel != 'NOT_AVAILABLE') {
-			this.log.error(`Invalid value '${fanLevel}' for state 'fanLevel'. Allowed values are AUTO, SILENT, LEVEL1, LEVEL2, LEVEL3, LEVEL4 and LEVEL5`);
-			return;
-		}
-		if (acMode != 'AUTO' && acMode != 'COOL' && acMode != 'DRY' && acMode != 'FAN' && acMode != 'HEAT' && acMode != 'NOT_AVAILABLE') {
-			this.log.error(`Invalid value '${acMode}' for state 'acMode'. Allowed values are AUTO, COOL, DRY, FAN and HEAT`);
-			return;
-		}
-
-		const config = {
+		if (!temperature) temperature = 21;
+		let config = {
 			setting: {
 				type: type,
 			}
 		};
 
 		try {
-			if (type == 'HEATING') {
-				//Temp range is 5-25
-				if (temperature > 25) {
-					this.log.info(`Temperature set to 25° instead of ${temperature}° for HEATING device`);
-					temperature = 25;
-				} else if (temperature < 5) {
-					this.log.info(`Temperature set to 5° instead of ${temperature}° for HEATING device`);
-					temperature = 5;
-				}
-			}
-			if (type == 'AIR_CONDITIONING') {
-				//Temp range is 16-30
-				if (temperature > 30) {
-					this.log.info(`Temperature set to 30° instead of ${temperature}° for AIR_CONDITIONING device`);
-					temperature = 30;
-				} else if (temperature < 16) {
-					this.log.info(`Temperature set to 16° instead of ${temperature}° for AIR_CONDITIONING device`);
-					temperature = 16;
-				}
-				//acMode is always needed if AIR_CONDITION
-				if (acMode != 'NOT_AVAILABLE') config.setting.mode = acMode;
-				else config.setting.mode = 'COOL';
-				if (verticalSwing != 'NOT_AVAILABLE') config.setting.verticalSwing = verticalSwing;
-				if (horizontalSwing != 'NOT_AVAILABLE') config.setting.horizontalSwing = horizontalSwing;
-				//fan level not allowed in mode DRY
-				if (fanLevel != 'NOT_AVAILABLE' && acMode != 'DRY') config.setting.fanLevel = fanLevel;
-				if (fanSpeed != 'NOT_AVAILABLE' && acMode != 'DRY') config.setting.fanSpeed = fanSpeed;
-			}
-			if (power == 'ON') {
-				config.setting.power = 'ON';
-				//temperature required for mode AUTO
-				//temperature required for mode DRY
-				//Temperature not for aircondition if mode is FAN, DRY(deactivated!) and not for HOT_WATER
-				if (!(type == 'HOT_WATER' || (type == 'AIR_CONDITIONING' && (acMode == 'DRY_DEACTIVATED!!' || acMode == 'FAN')))) {
-					config.setting.temperature = {};
-					config.setting.temperature.celsius = temperature;
-				}
-			} else {
-				config.setting.power = 'OFF';
-			}
+			config.setting.power = power;
 			if (typeSkillBasedApp != 'NO_OVERLAY') {
 				config.termination = {};
 				config.termination.typeSkillBasedApp = typeSkillBasedApp;
@@ -497,6 +425,89 @@ class Tado extends utils.Adapter {
 					config.termination.durationInSeconds = durationInSeconds;
 				}
 			}
+			if (type != 'HEATING' && type != 'AIR_CONDITIONING' && type != 'HOT_WATER') {
+				this.log.error(`Invalid value '${type}' for state 'type'. Supported values are HOT_WATER, AIR_CONDITIONING and HEATING`);
+				return;
+			}
+			if (power != 'ON' && power != 'OFF') {
+				this.log.error(`Invalid value '${power}' for state 'power'. Supported values are ON and OFF`);
+				return;
+			}
+			if (typeSkillBasedApp != 'TIMER' && typeSkillBasedApp != 'MANUAL' && typeSkillBasedApp != 'NEXT_TIME_BLOCK' && typeSkillBasedApp != 'NO_OVERLAY') {
+				this.log.error(`Invalid value '${typeSkillBasedApp}' for state 'typeSkillBasedApp'. Allowed values are TIMER, MANUAL and NEXT_TIME_BLOCK`);
+				return;
+			}
+			let capType = this.roomCapabilities[zone_id].type;
+			if (capType && capType != type) {
+				this.log.error(`Type ${type} not valid. Type ${capType} expected.`);
+				return;
+			}
+
+			if (type == 'HEATING' && power == 'ON') {
+				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;
+				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;
+
+				if (capMinTemp && capMaxTemp) {
+					if (temperature > capMaxTemp || temperature < capMinTemp) {
+						this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
+						return;
+					}
+					config.setting.temperature = {};
+					config.setting.temperature.celsius = temperature;
+				}
+			}
+
+			if (type == 'AIR_CONDITIONING' && power == 'ON') {
+				if (!this.roomCapabilities[zone_id][acMode]) {
+					this.log.error(`AC-Mode ${acMode} not supported!`);
+					return;
+				}
+				config.setting.mode = acMode;
+				let capMinTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.min;
+				let capMaxTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.max;
+				let capHorizontalSwing = this.roomCapabilities[zone_id][acMode].horizontalSwing;
+				let capVerticalSwing = this.roomCapabilities[zone_id][acMode].verticalSwing;
+				let capFanSpeed = this.roomCapabilities[zone_id][acMode].fanSpeed;
+				let capFanLevel = this.roomCapabilities[zone_id][acMode].fanLevel;
+
+				if (capMinTemp && capMaxTemp) {
+					if (temperature > capMaxTemp || temperature < capMinTemp) {
+						this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
+						return;
+					}
+					config.setting.temperature = {};
+					config.setting.temperature.celsius = temperature;
+				}
+				if (capHorizontalSwing) {
+					if (!capHorizontalSwing.includes(horizontalSwing)) {
+						this.log.error(`Invalid value '${horizontalSwing}' for state 'horizontalSwing'. Allowed values are ${JSON.stringify(capHorizontalSwing)}`);
+						return;
+					}
+					config.setting.horizontalSwing = horizontalSwing;
+				}
+				if (capVerticalSwing) {
+					if (!capVerticalSwing.includes(verticalSwing)) {
+						this.log.error(`Invalid value '${verticalSwing}' for state 'verticalSwing'. Allowed values are ${JSON.stringify(capVerticalSwing)}`);
+						return;
+					}
+					config.setting.verticalSwing = verticalSwing;
+				}
+				if (capFanSpeed) {
+					if (!capFanSpeed.includes(fanSpeed)) {
+						this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are ${JSON.stringify(capFanSpeed)}`);
+						return;
+					}
+					config.setting.fanSpeed = fanSpeed;
+				}
+				if (capFanLevel) {
+					if (!capFanLevel.includes(fanLevel)) {
+						this.log.error(`Invalid value '${fanLevel}' for state 'fanLevel'. Allowed values are ${JSON.stringify(capFanLevel)}`);
+						return;
+					}
+					config.setting.fanLevel = fanLevel;
+				}
+			}
+
 			let result = await this.poolApiCall(home_id, zone_id, config);
 			this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
@@ -770,9 +781,11 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
 
 		for (const i in this.Zones_data) {
-			await this.DoZoneStates(HomeId, this.Zones_data[i].id);
-			await this.DoAwayConfiguration(HomeId, this.Zones_data[i].id);
-			await this.DoTimeTables(HomeId, this.Zones_data[i].id);
+			let zoneId = this.Zones_data[i].id;
+			await this.DoZoneStates(HomeId, zoneId);
+			if (!this.roomCapabilities[zoneId]) await this.DoCapabilities(HomeId, zoneId);
+			await this.DoAwayConfiguration(HomeId, zoneId);
+			await this.DoTimeTables(HomeId, zoneId);
 		}
 	}
 
@@ -786,6 +799,14 @@ class Tado extends utils.Adapter {
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
+	}
+
+	async DoCapabilities(HomeId, ZoneId) {
+		const capabilities_data = await this.getCapabilities(HomeId, ZoneId);
+		this.roomCapabilities[ZoneId] = capabilities_data;
+		this.log.debug(`Capabilities_data result for room '${ZoneId}' is ${JSON.stringify(capabilities_data)}`);
+		this.DoWriteJsonRespons(HomeId, 'Stage_09_Capabilities_data_' + ZoneId, capabilities_data);
+		JsonExplorer.TraverseJson(capabilities_data, HomeId + '.Rooms.' + ZoneId + '.capabilities', true, true, 0, 2);
 	}
 
 	/**
@@ -809,7 +830,7 @@ class Tado extends utils.Adapter {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.AwayConfig', true, true, 0, 2);
+		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 0, 2);
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
@@ -840,7 +861,6 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	/* MASTERSWITCH														*/
 	//////////////////////////////////////////////////////////////////////
-
 	async setMasterSwitch(masterswitch) {
 		masterswitch = masterswitch.toUpperCase();
 		if (!(masterswitch == 'ON' || masterswitch == 'OFF')) throw new Error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterswitch}'`);
@@ -1072,6 +1092,10 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
 	}
 
+	getCapabilities(home_id, zone_id) {
+		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
+	}
+
 	getAwayConfiguration(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
 	}
@@ -1093,17 +1117,8 @@ class Tado extends utils.Adapter {
 		return this.apiCall(`/api/v2/homes/${home_id}/devices`);
 	}*/
 
-	/*getTimeTable(home_id, zone_id, timetable_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/timetables/${timetable_id}/blocks`);
-	}*/
-
 	/*getZoneOverlay(home_id, zone_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
-	}*/
-
-	/*
-	getZoneCapabilities(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
 	}*/
 
 	/*getInstallations(home_id) {
