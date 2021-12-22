@@ -33,10 +33,10 @@ If you like my work, please feel free to provide a personal donation
 | tado.[x].[yyyyyy].Home.state.presence | Set HOME or AWAY mode |
 | tado.[x].[yyyyyy].Home.masterswitch | Turn all devices on/off |
 | tado.[x].[yyyyyy].Rooms.[z].setting.mode | AC mode (only AC devices) |
-| tado.[x].[yyyyyy].Rooms.[z].setting.fanspeed | Fanspeed (only AC devices with **V3 and older** version) |
-| tado.[x].[yyyyyy].Rooms.[z].setting.fanLebel | Fanlebel (only AC devices with **V3+** version) |
-| tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing | Vertical swing (only AC devices with **V3+** version) |
-| tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with **V3 and older** version) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.fanspeed | Fanspeed (only AC devices with V3 and older versions) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.fanLebel | Fanlebel (only AC devices with V3+ version) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing | Vertical swing (only AC devices with V3+ version) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 
 ## Changelog
 <!--
