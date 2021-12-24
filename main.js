@@ -299,7 +299,7 @@ class Tado extends utils.Adapter {
 	 */
 	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
 		if (!set_offset) set_offset = 0;
-		if (set_offset <= -10 || set_offset > 10) this.log.info('Offset out of range +/-10°');
+		if (set_offset <= -10 || set_offset > 10) this.log.warn('Offset out of range +/-10°');
 		const offset = {
 			celsius: Math.min(10, Math.max(-9.99, set_offset))
 		};
@@ -327,7 +327,10 @@ class Tado extends utils.Adapter {
 	 */
 	async setActiveTimeTable(home_id, zone_id, timetable_id) {
 		if (!timetable_id) timetable_id = 0;
-		if (!(timetable_id == 0 || timetable_id == 1 || timetable_id == 2)) timetable_id = 0;
+		if (!(timetable_id == 0 || timetable_id == 1 || timetable_id == 2)) {
+			this.log.error(`Invalid value '${timetable_id}' for state 'timetable_id'. Allowed values are '0', '1' and '2'.`);
+			return;
+		}
 		const timeTable = {
 			id: timetable_id
 		};
@@ -358,7 +361,10 @@ class Tado extends utils.Adapter {
 	 */
 	async setPresenceLock(home_id, homePresence) {
 		if (!homePresence) homePresence = 'HOME';
-		if (homePresence != 'HOME' && homePresence != 'AWAY') homePresence = 'HOME';
+		if (homePresence != 'HOME' && homePresence != 'AWAY') {
+			this.log.error(`Invalid value '${homePresence}' for state 'homePresence'. Allowed values are HOME and AWAY.`);
+			return;
+		}
 		const homeState = {
 			homePresence: homePresence.toUpperCase()
 		};
@@ -467,8 +473,18 @@ class Tado extends utils.Adapter {
 				let capMaxTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.max;
 				let capHorizontalSwing = this.roomCapabilities[zone_id][acMode].horizontalSwing;
 				let capVerticalSwing = this.roomCapabilities[zone_id][acMode].verticalSwing;
-				let capFanSpeed = this.roomCapabilities[zone_id][acMode].fanSpeed;
+				let capFanSpeeds = this.roomCapabilities[zone_id][acMode].fanSpeeds;
 				let capFanLevel = this.roomCapabilities[zone_id][acMode].fanLevel;
+				let capSwings = this.roomCapabilities[zone_id][acMode].swings;
+				let capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;
+				let capLight = this.roomCapabilities[zone_id][acMode].light;
+
+				if (capFanSpeeds || capSwings || capCanSetTemperature || capLight) {
+					this.log.error(`WE NEED YOUR HELP! Your AC-Tado-Setup is not yet supported!`);
+					this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=fanSpeeds:${capFanSpeeds}%20swings:${capSwings}%20canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
+					this.log.error(`Pleas add this info to the ticket (if not automatically done): 'fanSpeeds:${capFanSpeeds} swings:${capSwings} canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
+					this.log.error(`THANKS FOR YOUR SUPPORT!`);
+				}
 
 				if (capMinTemp && capMaxTemp) {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
@@ -492,9 +508,9 @@ class Tado extends utils.Adapter {
 					}
 					config.setting.verticalSwing = verticalSwing;
 				}
-				if (capFanSpeed) {
-					if (!capFanSpeed.includes(fanSpeed)) {
-						this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are ${JSON.stringify(capFanSpeed)}`);
+				if (capFanSpeeds) {
+					if (!capFanSpeeds.includes(fanSpeed)) {
+						this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are ${JSON.stringify(capFanSpeeds)}`);
 						return;
 					}
 					config.setting.fanSpeed = fanSpeed;
@@ -507,7 +523,7 @@ class Tado extends utils.Adapter {
 					config.setting.fanLevel = fanLevel;
 				}
 			}
-
+			
 			let result = await this.poolApiCall(home_id, zone_id, config);
 			this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
@@ -783,7 +799,7 @@ class Tado extends utils.Adapter {
 		for (const i in this.Zones_data) {
 			let zoneId = this.Zones_data[i].id;
 			await this.DoZoneStates(HomeId, zoneId);
-			if (!this.roomCapabilities[zoneId]) await this.DoCapabilities(HomeId, zoneId);
+			await this.DoCapabilities(HomeId, zoneId);
 			await this.DoAwayConfiguration(HomeId, zoneId);
 			await this.DoTimeTables(HomeId, zoneId);
 		}
@@ -801,12 +817,14 @@ class Tado extends utils.Adapter {
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
 	}
 
-	async DoCapabilities(HomeId, ZoneId) {
-		const capabilities_data = await this.getCapabilities(HomeId, ZoneId);
-		this.roomCapabilities[ZoneId] = capabilities_data;
-		this.log.debug(`Capabilities_data result for room '${ZoneId}' is ${JSON.stringify(capabilities_data)}`);
-		this.DoWriteJsonRespons(HomeId, 'Stage_09_Capabilities_data_' + ZoneId, capabilities_data);
-		JsonExplorer.TraverseJson(capabilities_data, HomeId + '.Rooms.' + ZoneId + '.capabilities', true, true, 0, 2);
+	async DoCapabilities(homeId, zoneId) {
+		let capabilities_data;
+		if (this.roomCapabilities[zoneId]) capabilities_data = this.roomCapabilities[zoneId];
+		else capabilities_data = await this.getCapabilities(homeId, zoneId);
+		this.roomCapabilities[zoneId] = capabilities_data;
+		this.log.debug(`Capabilities_data result for room '${zoneId}' is ${JSON.stringify(capabilities_data)}`);
+		this.DoWriteJsonRespons(homeId, 'Stage_09_Capabilities_data_' + zoneId, capabilities_data);
+		JsonExplorer.TraverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true, 0, 2);
 	}
 
 	/**
@@ -863,7 +881,10 @@ class Tado extends utils.Adapter {
 	//////////////////////////////////////////////////////////////////////
 	async setMasterSwitch(masterswitch) {
 		masterswitch = masterswitch.toUpperCase();
-		if (!(masterswitch == 'ON' || masterswitch == 'OFF')) throw new Error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterswitch}'`);
+		if (masterswitch != 'ON' && masterswitch != 'OFF') {
+			this.log.error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterswitch}'`);
+			return;
+		}
 		try {
 			const states = await this.getStatesAsync('*.Rooms.*.link.state');
 			for (const idS in states) {
