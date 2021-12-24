@@ -43,7 +43,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.3.13-alpha.8 (2021-12-22)
+### 0.3.13-alpha.9 (2021-12-24)
 * (HGlab01) Optimize internet-check by using isOnline-library
 * (HGlab01) Support Smart AC Control V3+ (issue #403)
 * (HGlab01) Fix issue 'fan level not allowed in mode DRY'
