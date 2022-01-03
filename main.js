@@ -300,9 +300,12 @@ class Tado extends utils.Adapter {
 	async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
 		if (!set_offset) set_offset = 0;
 		if (set_offset <= -10 || set_offset > 10) this.log.warn('Offset out of range +/-10°');
+		set_offset = Math.round(set_offset * 100) / 100;
+		
 		const offset = {
 			celsius: Math.min(10, Math.max(-9.99, set_offset))
 		};
+		
 		try {
 			if (await isOnline() == false) {
 				throw new Error('No internet connection detected!');
@@ -413,6 +416,8 @@ class Tado extends utils.Adapter {
 		horizontalSwing = horizontalSwing.toUpperCase();
 		verticalSwing = verticalSwing.toUpperCase();
 		if (!temperature) temperature = 21;
+		temperature = Math.round(temperature * 100) / 100;
+
 		let config = {
 			setting: {
 				type: type,
@@ -523,7 +528,7 @@ class Tado extends utils.Adapter {
 					config.setting.fanLevel = fanLevel;
 				}
 			}
-			
+
 			let result = await this.poolApiCall(home_id, zone_id, config);
 			this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
