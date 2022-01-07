@@ -301,11 +301,11 @@ class Tado extends utils.Adapter {
 		if (!set_offset) set_offset = 0;
 		if (set_offset <= -10 || set_offset > 10) this.log.warn('Offset out of range +/-10°');
 		set_offset = Math.round(set_offset * 100) / 100;
-		
+
 		const offset = {
 			celsius: Math.min(10, Math.max(-9.99, set_offset))
 		};
-		
+
 		try {
 			if (await isOnline() == false) {
 				throw new Error('No internet connection detected!');
@@ -462,6 +462,31 @@ class Tado extends utils.Adapter {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
 						this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
 						return;
+					}
+					config.setting.temperature = {};
+					config.setting.temperature.celsius = temperature;
+				}
+			}
+
+			if (type == 'HOT_WATER' && power == 'ON') {
+				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;
+				let capLight = this.roomCapabilities[zone_id].light;
+				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;
+				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;
+
+				//if (capCanSetTemperature || capLight) {
+				this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
+				this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
+				this.log.error(`Pleas add this info to the ticket (if not automatically done): 'canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
+				this.log.error(`THANKS FOR YOUR SUPPORT!`);
+				//}
+
+				if (capCanSetTemperature == true) {
+					if (capMinTemp && capMaxTemp) {
+						if (temperature > capMaxTemp || temperature < capMinTemp) {
+							this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
+							return;
+						}
 					}
 					config.setting.temperature = {};
 					config.setting.temperature.celsius = temperature;
