@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.13",
+    "version": "0.3.14-alpha.0",
     "news": {
+      "0.3.14-alpha.0": {
+        "en": "Hotwater-devices: asking device-owners for help",
+        "de": "Heißwassergeräte: Gerätebesitzer um Hilfe bitten",
+        "ru": "Водогрейные устройства: обращаемся за помощью к владельцам устройств",
+        "pt": "Dispositivos Hotwater: pedindo ajuda aos proprietários de dispositivos",
+        "nl": "Warmwaterapparaten: apparaateigenaren om hulp vragen",
+        "fr": "Appareils à eau chaude : demander de l'aide aux propriétaires d'appareils",
+        "it": "Dispositivi per l'acqua calda: chiedere aiuto ai proprietari dei dispositivi",
+        "es": "Dispositivos de agua caliente: pedir ayuda a los propietarios de dispositivos",
+        "pl": "Urządzenia do ciepłej wody: proszenie właścicieli urządzeń o pomoc",
+        "zh-cn": "热水设备：向设备所有者寻求帮助"
+      },
       "0.3.13": {
         "en": "Optimize internet-check by using isOnline-library\nSupport Smart AC Control V3+ (issue #403)\nOffset temperature rounding to max. 2 digits",
         "de": "Internet-Check optimieren mit isOnline-Bibliothek\nUnterstützt Smart AC Control V3+ (Ausgabe Nr. 403)\nOffset Temperaturrundung auf max. 2 Ziffern",
@@ -74,18 +86,6 @@
         "es": "Optimice la comprobación de Internet utilizando isOnline-library\nAdmite Smart AC Control V3 + (número 403)\nSoluciona el problema 'nivel de ventilador no permitido en modo SECO'\nSoluciona el problema 'el modo no está en los modos admitidos [FRÍO, CALOR, SECO, VENTILADOR, AUTO]'\nSoluciona el problema 'temperatura requerida para el modo AUTO'",
         "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline\nObsługa Smart AC Control V3+ (wydanie #403)\nNapraw problem „Niedozwolony poziom wentylatora w trybie DRY”\nNapraw problem „tryb nie w obsługiwanych trybach [CHŁODZENIE, OGRZEWANIE, OSUSZANIE, WENTYLATOR, AUTO]”\nNapraw problem „temperatura wymagana dla trybu AUTO”",
         "zh-cn": "使用 isOnline-library 优化互联网检查\n支持智能交流控制 V3+（issue #403）\n修复“干燥模式下不允许风扇级别”的问题\n修复问题“模式不受支持的模式 [COOL、HEAT、DRY、FAN、AUTO]”\n修复问题“自动模式所需的温度”"
-      },
-      "0.3.13-alpha.4": {
-        "en": "Optimize internet-check by using isOnline-library\nSupport Smart AC Control V3+ (issue #403)\nFix issue 'fan level not allowed in mode DRY'",
-        "de": "Internet-Check optimieren mit isOnline-Bibliothek\nUnterstützt Smart AC Control V3+ (Ausgabe Nr. 403)\nBehebung des Problems 'Lüfterstufe im Modus DRY nicht zulässig'",
-        "ru": "Оптимизируйте интернет-проверку с помощью isOnline-библиотеки\nПоддержка Smart AC Control V3 + (issue # 403)\nУстранить проблему «уровень вентилятора не разрешен в режиме СУХОЙ».",
-        "pt": "Otimize a verificação da Internet usando a biblioteca isOnline\nCompatível com Smart AC Control V3 + (problema # 403)\nCorrigir o problema de 'nível de ventilador não permitido no modo DRY'",
-        "nl": "Optimaliseer internetcontrole door gebruik te maken van isOnline-library\nOndersteuning Slimme Aircobediening V3+ (issue #403)\nProbleem oplossen 'ventilatorniveau niet toegestaan in modus DROGEN'",
-        "fr": "Optimisez la vérification Internet en utilisant isOnline-library\nPrise en charge de Smart AC Control V3+ (numéro 403)\nCorrection du problème « niveau de ventilateur non autorisé en mode DRY »",
-        "it": "Ottimizza il controllo su Internet utilizzando isOnline-library\nSupporta Smart AC Control V3+ (numero 403)\nRisolto il problema \"Livello ventola non consentito in modalità DRY\"",
-        "es": "Optimice la comprobación de Internet utilizando isOnline-library\nAdmite Smart AC Control V3 + (número 403)\nSoluciona el problema 'nivel de ventilador no permitido en modo SECO'",
-        "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline\nObsługa Smart AC Control V3+ (wydanie #403)\nNapraw problem „Niedozwolony poziom wentylatora w trybie DRY”",
-        "zh-cn": "使用 isOnline-library 优化互联网检查\n支持智能交流控制 V3+（issue #403）\n修复“干燥模式下不允许风扇级别”的问题"
       }
     },
     "title": "Tado",
