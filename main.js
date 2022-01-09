@@ -471,8 +471,7 @@ class Tado extends utils.Adapter {
 			else {
 				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;
 				let capLight = this.roomCapabilities[zone_id].light;
-				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;
-				if (capCanSetTemperature || capLight || capMinTemp) {
+				if (capCanSetTemperature || capLight) {
 					this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
 					this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
 					this.log.error(`Pleas add this info to the ticket (if not automatically done): 'canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
