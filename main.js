@@ -454,9 +454,37 @@ class Tado extends utils.Adapter {
 				return;
 			}
 
-			if (type == 'HEATING' && power == 'ON') {
+			if (type == 'AIR_CONDITIONING') {
+				let capSwings = this.roomCapabilities[zone_id][acMode].swings;
+				let capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;
+				let capLight = this.roomCapabilities[zone_id][acMode].light;
+
+				if (capSwings || capCanSetTemperature || capLight) {
+					this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
+					this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=capSwings:${capSwings}%20canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
+					this.log.error(`Pleas add this info to the ticket (if not automatically done): 'capSwings:${capSwings} canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
+					this.log.error(`THANKS FOR YOUR SUPPORT!`);
+					console.log(JSON.stringify(this.roomCapabilities));
+					this.sendSentryWarn('Aircondition with additional capailities');
+				}
+			}
+			else {
+				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;
+				let capLight = this.roomCapabilities[zone_id].light;
 				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;
-				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;
+				if (capCanSetTemperature || capLight || capMinTemp) {
+					this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
+					this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
+					this.log.error(`Pleas add this info to the ticket (if not automatically done): 'canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
+					this.log.error(`THANKS FOR YOUR SUPPORT!`);
+					console.log(JSON.stringify(this.roomCapabilities));
+					this.sendSentryWarn('Non-Aircondition with additional capailities');
+				}
+			}
+
+			if (type == 'HEATING' && power == 'ON') {
+				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;	//valide
+				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;	//valide
 
 				if (capMinTemp && capMaxTemp) {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
@@ -469,17 +497,17 @@ class Tado extends utils.Adapter {
 			}
 
 			if (type == 'HOT_WATER' && power == 'ON') {
-				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;
-				let capLight = this.roomCapabilities[zone_id].light;
-				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;
-				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;
+				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;	//unclear
+				let capLight = this.roomCapabilities[zone_id].light;							//unclear
+				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;		//unclear
+				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;		//unclear
+				console.log(JSON.stringify(this.roomCapabilities));
+				this.sendSentryWarn('HOTWATER with capailities');
 
-				//if (capCanSetTemperature || capLight) {
 				this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
 				this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
 				this.log.error(`Pleas add this info to the ticket (if not automatically done): 'canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
 				this.log.error(`THANKS FOR YOUR SUPPORT!`);
-				//}
 
 				if (capCanSetTemperature == true) {
 					if (capMinTemp && capMaxTemp) {
@@ -499,22 +527,15 @@ class Tado extends utils.Adapter {
 					return;
 				}
 				config.setting.mode = acMode;
-				let capMinTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.min;
-				let capMaxTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.max;
-				let capHorizontalSwing = this.roomCapabilities[zone_id][acMode].horizontalSwing;
-				let capVerticalSwing = this.roomCapabilities[zone_id][acMode].verticalSwing;
-				let capFanSpeeds = this.roomCapabilities[zone_id][acMode].fanSpeeds;
-				let capFanLevel = this.roomCapabilities[zone_id][acMode].fanLevel;
-				let capSwings = this.roomCapabilities[zone_id][acMode].swings;
-				let capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;
-				let capLight = this.roomCapabilities[zone_id][acMode].light;
-
-				if (capFanSpeeds || capSwings || capCanSetTemperature || capLight) {
-					this.log.error(`WE NEED YOUR HELP! Your AC-Tado-Setup is not yet supported!`);
-					this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=fanSpeeds:${capFanSpeeds}%20swings:${capSwings}%20canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
-					this.log.error(`Pleas add this info to the ticket (if not automatically done): 'fanSpeeds:${capFanSpeeds} swings:${capSwings} canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
-					this.log.error(`THANKS FOR YOUR SUPPORT!`);
-				}
+				let capMinTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.min;	//valide v3 & v3+
+				let capMaxTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.max;	//valide v3 & v3+
+				let capHorizontalSwing = this.roomCapabilities[zone_id][acMode].horizontalSwing;	//valide v3+
+				let capVerticalSwing = this.roomCapabilities[zone_id][acMode].verticalSwing;		//valide v3+
+				let capFanLevel = this.roomCapabilities[zone_id][acMode].fanLevel;					//valide v3+
+				let capFanSpeeds = this.roomCapabilities[zone_id][acMode].fanSpeeds;				//valide v3
+				//let capSwings = this.roomCapabilities[zone_id][acMode].swings;						//unclear
+				//let capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;//unclear
+				//let capLight = this.roomCapabilities[zone_id][acMode].light;						//unclear
 
 				if (capMinTemp && capMaxTemp) {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
@@ -1073,6 +1094,23 @@ class Tado extends utils.Adapter {
 					sentryInstance.getSentryObject().captureException(error);
 				}
 			}
+		}
+	}
+
+	async sendSentryWarn(message) {
+		try {
+			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+				const sentryInstance = this.getPluginInstance('sentry');
+				if (sentryInstance) {
+					const Sentry = sentryInstance.getSentryObject();
+					Sentry && Sentry.withScope(scope => {
+						scope.setLevel(Sentry.Severity.Warning);
+						Sentry.captureMessage(message);
+					});
+				}
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
