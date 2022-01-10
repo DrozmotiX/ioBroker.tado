@@ -42,7 +42,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.3.14-alpha.1 (2022-01-09)
+### 0.3.14-alpha.2 (2022-01-10)
 * (HGlab01) Hotwater and AC v3 devices: asking device-owners for help
 
 ### 0.3.13 (2022-01-03)

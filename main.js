@@ -496,13 +496,15 @@ class Tado extends utils.Adapter {
 			}
 
 			if (type == 'HOT_WATER' && power == 'ON') {
-				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;	//unclear
-				let capLight = this.roomCapabilities[zone_id].light;							//unclear
-				let capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;		//unclear
-				let capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;		//unclear
 				console.log(JSON.stringify(this.roomCapabilities));
 				this.sendSentryWarn('HOTWATER with capailities');
-
+				let capMinTemp, capMaxTemp;
+				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;	//unclear
+				let capLight = this.roomCapabilities[zone_id].light;							//unclear
+				if (this.roomCapabilities[zone_id] && this.roomCapabilities[zone_id].temperatures) {
+					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;		//unclear
+					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;		//unclear
+				}
 				this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
 				this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=canSetTemperature:${capCanSetTemperature}%20light:${capLight}'`);
 				this.log.error(`Pleas add this info to the ticket (if not automatically done): 'canSetTemperature:${capCanSetTemperature} light:${capLight}'`);
@@ -1084,15 +1086,19 @@ class Tado extends utils.Adapter {
 		}
 	}
 
-	async errorHandling(error) {
-		if (error.message && (error.message.includes('Login failed!') || error.message.includes('ETIMEDOUT') || error.message.includes('EAI_AGAIN') || error.message.includes('No internet connection detected!'))) return;
-		if (this.log.level != 'debug' && this.log.level != 'silly') {
-			if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
-				const sentryInstance = this.getPluginInstance('sentry');
-				if (sentryInstance) {
-					sentryInstance.getSentryObject().captureException(error);
+	async errorHandling(errorObject) {
+		try {
+			if (errorObject.message && (errorObject.message.includes('Login failed!') || errorObject.message.includes('ETIMEDOUT') || errorObject.message.includes('EAI_AGAIN') || errorObject.message.includes('No internet connection detected!'))) return;
+			if (this.log.level != 'debug' && this.log.level != 'silly') {
+				if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+					const sentryInstance = this.getPluginInstance('sentry');
+					if (sentryInstance) {
+						sentryInstance.getSentryObject().captureException(errorObject);
+					}
 				}
 			}
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
