@@ -42,7 +42,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.3.14-alpha.4 (2022-01-11)
 * (HGlab01) Hotwater and AC v3 devices: asking device-owners for help
 * (HGlab01) support swing ON/OFF for AC v3 devices
 
