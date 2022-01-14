@@ -3,7 +3,7 @@ name: Enhancement Request
 about: Request new functionality
 title: ''
 labels: 'enhancement'
-assignees: 'DutchmanNL'
+assignees: 'HGlab01'
 ---
 
 **!!! Before you start !!!!**  

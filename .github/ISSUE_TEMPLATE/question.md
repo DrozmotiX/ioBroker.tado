@@ -3,6 +3,7 @@ name: Question/support
 about: I have a question or I need support
 title: ''
 labels: support
+assignees: 'HGlab01'
 
 ---
 
