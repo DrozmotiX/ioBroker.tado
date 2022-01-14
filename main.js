@@ -460,36 +460,45 @@ class Tado extends utils.Adapter {
 				this.log.error(`Invalid value '${typeSkillBasedApp}' for state 'typeSkillBasedApp'. Allowed values are TIMER, MANUAL and NEXT_TIME_BLOCK`);
 				return;
 			}
+
+			//Capability Management
+			if (!this.roomCapabilities || !this.roomCapabilities[zone_id]) {
+				this.log.error(`No room capabilities found for room '${zone_id}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
+				console.log(`No room capabilities found for room '${zone_id}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
+				this.sendSentryWarn('Capabilities for zone not found');
+				return;
+			}
+
 			let capType = this.roomCapabilities[zone_id].type;
 			if (capType && capType != type) {
 				this.log.error(`Type ${type} not valid. Type ${capType} expected.`);
 				return;
 			}
 
-			//can be deleted again START
+			//can be deleted again BEGIN
 			let capCanSetTemperature, capLight;
-			if (this.roomCapabilities[zone_id] && this.roomCapabilities[zone_id][acMode]) {
+			if (this.roomCapabilities[zone_id][acMode]) {
 				//capSwings = this.roomCapabilities[zone_id][acMode].swings;
 				capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;
 				capLight = this.roomCapabilities[zone_id][acMode].light;
 
-			} else if (this.roomCapabilities[zone_id]) {
+			} else {
 				capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;
 				capLight = this.roomCapabilities[zone_id].light;
 			}
 
 			if (capCanSetTemperature || capLight) {
 				console.log(JSON.stringify(this.roomCapabilities));
-				this.sendSentryWarn('Additional capailities capSwings || capCanSetTemperature || capLight');
+				this.sendSentryWarn('Additional capailities capCanSetTemperature || capLight');
 			}
-			//can be deleted again STOP
+			//can be deleted again END
 
 
 			if (type == 'HEATING' && power == 'ON') {
 				let capMinTemp, capMaxTemp;
-				if (this.roomCapabilities[zone_id] && this.roomCapabilities[zone_id].temperatures) {
-					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;	//valide
-					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;	//valide
+				if (this.roomCapabilities[zone_id].temperatures && this.roomCapabilities[zone_id].temperatures.celsius) {
+					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;	//valid
+					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;	//valid
 				}
 
 				if (capMinTemp && capMaxTemp) {
@@ -505,12 +514,10 @@ class Tado extends utils.Adapter {
 			if (type == 'HOT_WATER' && power == 'ON') {
 				console.log(JSON.stringify(this.roomCapabilities));
 				this.sendSentryWarn('HOTWATER with capabilities');
-				let capMinTemp, capMaxTemp, capCanSetTemperature, capLight;
-				if (this.roomCapabilities[zone_id]) {
-					capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;	//unclear
-					capLight = this.roomCapabilities[zone_id].light;							//unclear
-				}
-				if (this.roomCapabilities[zone_id] && this.roomCapabilities[zone_id].temperatures) {
+				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;	//valid for hotwater
+				//let capLight = this.roomCapabilities[zone_id].light;							//unclear
+				let capMinTemp, capMaxTemp;
+				if (this.roomCapabilities[zone_id].temperatures && this.roomCapabilities[zone_id].temperatures.celsius) {
 					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;		//unclear
 					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;		//unclear
 				}
@@ -529,12 +536,17 @@ class Tado extends utils.Adapter {
 
 			if (type == 'AIR_CONDITIONING' && power == 'ON') {
 				if (!this.roomCapabilities[zone_id][acMode]) {
-					this.log.error(`AC-Mode ${acMode} not supported!`);
+					this.log.error(`AC-Mode ${acMode} not supported! Capailities looks like ${JSON.stringify(this.roomCapabilities)}`);
+					console.log(`AC-Mode ${acMode} in Room ${zone_id} not supported! Capailities looks like ${JSON.stringify(this.roomCapabilities)}`);
+					this.sendSentryWarn('Capabilities for acMode not found');
 					return;
 				}
 				config.setting.mode = acMode;
-				let capMinTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.min;	//valide v3 & v3+
-				let capMaxTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.max;	//valide v3 & v3+
+				let capMinTemp, capMaxTemp;
+				if (this.roomCapabilities[zone_id][acMode].temperatures && this.roomCapabilities[zone_id][acMode].temperatures.celsius) {
+					capMinTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.min;	//valide v3 & v3+
+					capMaxTemp = this.roomCapabilities[zone_id][acMode].temperatures.celsius.max;	//valide v3 & v3+
+				}
 				let capHorizontalSwing = this.roomCapabilities[zone_id][acMode].horizontalSwing;	//valide v3+
 				let capVerticalSwing = this.roomCapabilities[zone_id][acMode].verticalSwing;		//valide v3+
 				let capFanLevel = this.roomCapabilities[zone_id][acMode].fanLevel;					//valide v3+
