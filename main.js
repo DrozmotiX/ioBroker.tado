@@ -252,6 +252,19 @@ class Tado extends utils.Adapter {
 									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed);
 								}
 								break;
+							
+							case ('activateOpenWindow'):
+								const activateOpenWindow = state;
+								let set_activateOpenWindow = (activateOpenWindow == null || activateOpenWindow == undefined || activateOpenWindow.val == null || activateOpenWindow.val == '') ? 'unknown' : activateOpenWindow.val.toString().toUpperCase();
+								if (set_activateOpenWindow !== true) {
+									this.log.debug(`Expecting 'true' as value for 'Activate Open Window'`);
+									break;
+								}
+								this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
+								await this.activateOpenWindow(home_id, zone_id);
+								await this.sleep(1000);
+								this.setStateAsync(`${home_id}.Rooms.${zone_id}.activateOpenWindow`, null, true);
+								break;
 							default:
 						}
 					}
@@ -582,6 +595,22 @@ class Tado extends utils.Adapter {
 				that.log.debug(`API called with ${JSON.stringify(config)}`);
 			}, 750);
 		});
+	}
+	
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 */
+	async activateOpenWindow(home_id, zone_id) {
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/state/openWindow/activate`;
+		if (await isOnline() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'post');
+		this.log.debug(`Called 'POST ${url}'`);
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindow.*');
 	}
 
 	//////////////////////////////////////////////////////////////////////
