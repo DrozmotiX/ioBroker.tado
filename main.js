@@ -846,6 +846,7 @@ class Tado extends utils.Adapter {
 			ZonesState_data.setting.temperature = {};
 			ZonesState_data.setting.temperature.celsius = null;
 		}
+		ZonesState_data.activateOpenWindow = null;
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
