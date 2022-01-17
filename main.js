@@ -264,10 +264,8 @@ class Tado extends utils.Adapter {
 								break;
 							
 							case ('activateOpenWindow'):
-								this.log.debug(state);
 								const activateOpenWindow = state;
 								let set_activateOpenWindow = (activateOpenWindow == null || activateOpenWindow == undefined || activateOpenWindow.val == null || activateOpenWindow.val == '') ? 'unknown' : activateOpenWindow.val;
-								this.log.debug(set_activateOpenWindow, set_activateOpenWindow == true);
 								if (set_activateOpenWindow == true) {
 									this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
 									await this.activateOpenWindow(home_id, zone_id);
