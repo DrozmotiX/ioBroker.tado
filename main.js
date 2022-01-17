@@ -266,14 +266,14 @@ class Tado extends utils.Adapter {
 							case ('activateOpenWindow'):
 								const activateOpenWindow = state;
 								let set_activateOpenWindow = (activateOpenWindow == null || activateOpenWindow == undefined || activateOpenWindow.val == null || activateOpenWindow.val == '') ? 'unknown' : activateOpenWindow.val;
-								if (set_activateOpenWindow !== true) {
+								if (set_activateOpenWindow == true) {
+									this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
+									await this.activateOpenWindow(home_id, zone_id);
+									await this.sleep(1000);
+									this.setStateAsync(`${home_id}.Rooms.${zone_id}.activateOpenWindow`, null, true);
+								} else {
 									this.log.debug(`Expecting 'true' as value for 'Activate Open Window'. Got '${JSON.stringify(set_activateOpenWindow)}'`);
-									break;
 								}
-								this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
-								await this.activateOpenWindow(home_id, zone_id);
-								await this.sleep(1000);
-								this.setStateAsync(`${home_id}.Rooms.${zone_id}.activateOpenWindow`, null, true);
 								break;
 							default:
 						}
