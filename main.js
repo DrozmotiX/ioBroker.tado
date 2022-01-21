@@ -462,6 +462,13 @@ class Tado extends utils.Adapter {
 			}
 
 			//Capability Management
+			/*
+			{"1":{"type":"HEATING","temperatures":{"celsius":{"min":5,"max":25,"step":0.1},"fahrenheit":{"min":41,"max":77,"step":0.1}}}}
+			{"0":{"type":"HOT_WATER","canSetTemperature":true,"temperatures":{"celsius":{"min":30,"max":65,"step":1},"fahrenheit":{"min":86,"max":149,"step":1}}}}
+			{"0":{"type":"HOT_WATER","canSetTemperature":false}}
+			{"1":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}},"3":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}}}
+			*/
+			console.log(JSON.stringify(this.roomCapabilities));
 			if (!this.roomCapabilities || !this.roomCapabilities[zone_id]) {
 				this.log.error(`No room capabilities found for room '${zone_id}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
 				console.log(`No room capabilities found for room '${zone_id}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
@@ -475,21 +482,16 @@ class Tado extends utils.Adapter {
 				return;
 			}
 
-			//can be deleted again BEGIN
-			let capCanSetTemperature, capLight;
+			//can be deleted again BEGIN - purpuse is to understand what 'light' is used for
+			let capLight;
 			if (this.roomCapabilities[zone_id][acMode]) {
-				//capSwings = this.roomCapabilities[zone_id][acMode].swings;
-				capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;
 				capLight = this.roomCapabilities[zone_id][acMode].light;
-
 			} else {
-				capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;
 				capLight = this.roomCapabilities[zone_id].light;
 			}
-
-			if (capCanSetTemperature || capLight) {
+			if (capLight) {
 				console.log(JSON.stringify(this.roomCapabilities));
-				this.sendSentryWarn('Additional capailities capCanSetTemperature || capLight');
+				this.sendSentryWarn(`Additional capailities 'light' found!`);
 			}
 			//can be deleted again END
 
@@ -497,8 +499,8 @@ class Tado extends utils.Adapter {
 			if (type == 'HEATING' && power == 'ON') {
 				let capMinTemp, capMaxTemp;
 				if (this.roomCapabilities[zone_id].temperatures && this.roomCapabilities[zone_id].temperatures.celsius) {
-					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;	//valid
-					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;	//valid
+					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;	//valid for all heating devices
+					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;	//valid for all heating devices
 				}
 
 				if (capMinTemp && capMaxTemp) {
@@ -512,14 +514,11 @@ class Tado extends utils.Adapter {
 			}
 
 			if (type == 'HOT_WATER' && power == 'ON') {
-				console.log(JSON.stringify(this.roomCapabilities));
-				this.sendSentryWarn('HOTWATER with capabilities');
 				let capCanSetTemperature = this.roomCapabilities[zone_id].canSetTemperature;	//valid for hotwater
-				//let capLight = this.roomCapabilities[zone_id].light;							//unclear
 				let capMinTemp, capMaxTemp;
 				if (this.roomCapabilities[zone_id].temperatures && this.roomCapabilities[zone_id].temperatures.celsius) {
-					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;		//unclear
-					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;		//unclear
+					capMinTemp = this.roomCapabilities[zone_id].temperatures.celsius.min;		//valid for hotwater if canSetTemperature == true
+					capMaxTemp = this.roomCapabilities[zone_id].temperatures.celsius.max;		//valid for hotwater if canSetTemperature == true
 				}
 
 				if (capCanSetTemperature == true) {
@@ -552,15 +551,6 @@ class Tado extends utils.Adapter {
 				let capFanLevel = this.roomCapabilities[zone_id][acMode].fanLevel;					//valide v3+
 				let capFanSpeeds = this.roomCapabilities[zone_id][acMode].fanSpeeds;				//valide v3
 				let capSwings = this.roomCapabilities[zone_id][acMode].swings;						//valide v3
-				//let capCanSetTemperature = this.roomCapabilities[zone_id][acMode].canSetTemperature;//unclear
-				//let capLight = this.roomCapabilities[zone_id][acMode].light;						//unclear
-
-				/*if (capSwings) {
-					this.log.error(`WE NEED YOUR HELP! Your Setup is not yet supported!`);
-					this.log.error(`Please raise a ticket by using this URL 'https://github.com/DrozmotiX/ioBroker.tado/issues/new?labels=support&title=capabilities&body=capSwings:${capSwings}%20capFanSpeeds:${capFanSpeeds}'`);
-					this.log.error(`Pleas add this info to the ticket (if not automatically done): 'capSwings:${capSwings} light:${capFanSpeeds}'`);
-					this.log.error(`THANKS FOR YOUR SUPPORT!`);
-				}*/
 
 				if (capMinTemp && capMaxTemp) {
 					if (temperature > capMaxTemp || temperature < capMinTemp) {
