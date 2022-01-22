@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.14-alpha.5",
+    "version": "0.3.14",
     "news": {
+      "0.3.14": {
+        "en": "Improve hotwater handling\nImprove AC Control v3 devices \nSupport swing ON/OFF for AC v3 devices",
+        "de": "Verbessern Sie den Umgang mit heißem Wasser\nVerbessern Sie AC Control v3-Geräte\nUnterstützung von Swing ON/OFF für AC v3-Geräte",
+        "ru": "Улучшить работу с горячей водой\nУлучшение устройств AC Control v3\nПоддержка включения/выключения качания для устройств AC v3",
+        "pt": "Melhore o manuseio de água quente\nMelhore os dispositivos AC Control v3\nSuporte swing ON/OFF para dispositivos AC v3",
+        "nl": "Verbetering van de verwerking van warm water\nVerbeter AC Control v3-apparaten\nOndersteuning swing AAN/UIT voor AC v3-apparaten",
+        "fr": "Améliorer la gestion de l'eau chaude\nAméliorer les appareils AC Control v3\nPrise en charge de l'oscillation ON/OFF pour les appareils AC v3",
+        "it": "Migliora la gestione dell'acqua calda\nMigliora i dispositivi AC Control v3\nSupporto oscillazione ON/OFF per dispositivi AC v3",
+        "es": "Mejore el manejo del agua caliente\nMejorar los dispositivos AC Control v3\nAdmite oscilación ON/OFF para dispositivos AC v3",
+        "pl": "Popraw obsługę ciepłej wody\nPopraw urządzenia AC Control v3\nObsługa włączania/wyłączania huśtawki dla urządzeń AC v3",
+        "zh-cn": "改善热水处理\n改进 AC Control v3 设备\n支持 AC v3 设备的摇摆开/关"
+      },
       "0.3.14-alpha.5": {
         "en": "Hotwater and AC v3 devices: asking device-owners for help\nsupport swing ON/OFF for AC v3 devices",
         "de": "Heißwasser- und AC-v3-Geräte: Gerätebesitzer um Hilfe bitten\nunterstützt Swing ON/OFF für AC v3-Geräte",
@@ -74,18 +86,6 @@
         "es": "Dispositivos de agua caliente: pedir ayuda a los propietarios de dispositivos",
         "pl": "Urządzenia do ciepłej wody: proszenie właścicieli urządzeń o pomoc",
         "zh-cn": "热水设备：向设备所有者寻求帮助"
-      },
-      "0.3.13": {
-        "en": "Optimize internet-check by using isOnline-library\nSupport Smart AC Control V3+ (issue #403)\nOffset temperature rounding to max. 2 digits",
-        "de": "Internet-Check optimieren mit isOnline-Bibliothek\nUnterstützt Smart AC Control V3+ (Ausgabe Nr. 403)\nOffset Temperaturrundung auf max. 2 Ziffern",
-        "ru": "Оптимизируйте интернет-проверку с помощью isOnline-библиотеки\nПоддержка Smart AC Control V3 + (issue # 403)\nОкругление температуры смещения до макс. 2 цифры",
-        "pt": "Otimize a verificação da Internet usando a biblioteca isOnline\nCompatível com Smart AC Control V3 + (problema # 403)\nArredondamento da temperatura compensada para o máx. 2 dígitos",
-        "nl": "Optimaliseer internetcontrole door gebruik te maken van isOnline-library\nOndersteuning Slimme Aircobediening V3+ (issue #403)\nOffset temperatuur afronding naar max. 2 cijfers",
-        "fr": "Optimisez la vérification Internet en utilisant isOnline-library\nPrise en charge de Smart AC Control V3+ (numéro 403)\nArrondi de la température de décalage à max. 2 chiffres",
-        "it": "Ottimizza il controllo su Internet utilizzando isOnline-library\nSupporta Smart AC Control V3+ (numero 403)\nArrotondamento temperatura offset a max. 2 cifre",
-        "es": "Optimice la comprobación de Internet utilizando isOnline-library\nAdmite Smart AC Control V3 + (número 403)\nRedondeo de temperatura de compensación a máx. 2 dígitos",
-        "pl": "Zoptymalizuj sprawdzanie internetu za pomocą biblioteki isOnline\nObsługa Smart AC Control V3+ (wydanie #403)\nPrzesunięcie zaokrąglenia temperatury do max. 2 cyfry",
-        "zh-cn": "使用 isOnline-library 优化互联网检查\n支持智能交流控制 V3+（issue #403）\n偏移温度四舍五入到最大值。 2位数"
       }
     },
     "title": "Tado",
