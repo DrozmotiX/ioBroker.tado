@@ -99,6 +99,11 @@ class Tado extends utils.Adapter {
 						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val.toString());
 						this.log.debug(`Offset changed for device '${device_id}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
+					} else if (statename == 'childLockEnabled') {
+						const childLockEnabled = state;
+						let set_childLockEnabled = (childLockEnabled == null || childLockEnabled == undefined || childLockEnabled.val == null || childLockEnabled.val == '') ? false : childLockEnabled.val;
+						this.log.debug(`ChildLockEnabled changed for device '${device_id}' in home '${home_id}' to value '${set_childLockEnabled}'`);
+						this.setChildLock(home_id, zone_id, device_id, set_childLockEnabled);
 					} else if (statename == 'tt_id') {
 						const tt_id = state;
 						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == '') ? 0 : parseInt(tt_id.val.toString());
@@ -133,8 +138,8 @@ class Tado extends utils.Adapter {
 						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
 						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 						let set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
-						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : true;
-						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : set_openWindowDetectionTimeoutInSeconds.val;
+						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : openWindowDetectionEnabled.val;
+						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : openWindowDetectionTimeoutInSeconds.val;
 
 						if (set_type == 'AIR_CONDITIONING') {
 							acMode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
@@ -690,6 +695,39 @@ class Tado extends utils.Adapter {
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindow.*');
+	}
+
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {any} config Payload needs to be an object like this {"enabled":true,"timeoutInSeconds":960}
+	 */
+	async setOpenWindowDetectionSettings(home_id, zone_id, config) {
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/openWindowDetection`;
+		if (await isOnline() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'put', config);
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindowDetection.*');
+	}
+
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {string} device_id
+	 * @param {boolean} enabled
+	 */
+	async setChildLock(home_id, zone_id, device_id, enabled) {
+		let url = `/api/v2/homes/${home_id}/devices/${device_id}/childLock`;
+		if (await isOnline() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'put', {childLockEnabled: enabled});
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(`${home_id}.Rooms.${zone_id}.devices.${device_id}.childLockEnabled`);
 	}
 
 	//////////////////////////////////////////////////////////////////////
