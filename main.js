@@ -1135,7 +1135,7 @@ class Tado extends utils.Adapter {
 		}
 		if (method != 'get') {
 			this.apiCallinExecution = true;
-			console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
+			this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
 		}
 		return new Promise((resolve, reject) => {
 			if (this.accessToken) {
