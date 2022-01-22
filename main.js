@@ -681,7 +681,7 @@ class Tado extends utils.Adapter {
 	}
 	
 	/**
-	 * Calls the "Active Open Window" endpoint. If the tado thermostate did not detect an open window, the call does nothing.
+	 * Calls the "Active Open Window" endpoint. If the tado thermostat did not detect an open window, the call does nothing.
 	 * @param {string} home_id
 	 * @param {string} zone_id
 	 */
