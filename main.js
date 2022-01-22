@@ -123,6 +123,8 @@ class Tado extends utils.Adapter {
 						const power = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.power');
 						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
 						const nextTimeBlockStart = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.nextTimeBlock.start');
+						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.enabled');
+						const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.timeoutInSeconds');
 						let acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed, swing;
 
 						let set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
@@ -131,6 +133,8 @@ class Tado extends utils.Adapter {
 						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
 						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 						let set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
+						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : true;
+						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : set_openWindowDetectionTimeoutInSeconds.val;
 
 						if (set_type == 'AIR_CONDITIONING') {
 							acMode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
@@ -177,6 +181,8 @@ class Tado extends utils.Adapter {
 						this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
 						this.log.debug('VerticalSwing is: ' + set_verticalSwing);
 						this.log.debug('Swing is: ' + set_swing);
+						this.log.debug('Open Window Detection enabled: ' + set_openWindowDetectionEnabled);
+						this.log.debug('Open Window Detection Timeout is: ' + set_openWindowDetectionTimeoutInSeconds);
 
 						switch (statename) {
 							case ('overlayClearZone'):
@@ -264,15 +270,21 @@ class Tado extends utils.Adapter {
 								break;
 							
 							case ('activateOpenWindow'):
-								const activateOpenWindow = state;
-								let set_activateOpenWindow = (activateOpenWindow == null || activateOpenWindow == undefined || activateOpenWindow.val == null || activateOpenWindow.val == '') ? 'unknown' : activateOpenWindow.val;
-								if (set_activateOpenWindow == true) {
-									this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
-									await this.activateOpenWindow(home_id, zone_id);
-									await this.sleep(1000);
-									this.setStateAsync(`${home_id}.Rooms.${zone_id}.activateOpenWindow`, false, true);
+								this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
+								await this.activateOpenWindow(home_id, zone_id);
+								break;
+
+							case ('enabled'):
+							case ('timeoutInSeconds'):
+								if (idSplitted[idSplitted.length - 2] === 'openWindowDetection') {
+									this.log.debug(`Changing open window detection for '${zone_id}' in home '${home_id}'`);
+									await this.setOpenWindowDetectionSettings(home_id, zone_id, {
+										enabled: set_openWindowDetectionEnabled,
+										timeoutInSeconds: set_openWindowDetectionTimeoutInSeconds
+									});
 								}
 								break;
+
 							default:
 						}
 					}
@@ -664,6 +676,7 @@ class Tado extends utils.Adapter {
 	}
 	
 	/**
+	 * Calls the "Active Open Window" endpoint. If the tado thermostate did not detect an open window, the call does nothing.
 	 * @param {string} home_id
 	 * @param {string} zone_id
 	 */
