@@ -720,7 +720,7 @@ class Tado extends utils.Adapter {
 	 * @param {boolean} enabled
 	 */
 	async setChildLock(home_id, zone_id, device_id, enabled) {
-		let url = `/api/v2/homes/${home_id}/devices/${device_id}/childLock`;
+		let url = `/api/v2/devices/${device_id}/childLock`;
 		if (await isOnline() == false) {
 			throw new Error('No internet connection detected!');
 		}
