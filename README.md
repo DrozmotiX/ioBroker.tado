@@ -20,57 +20,27 @@ If you like my work, please feel free to provide a personal donation
 [![Donate](https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/button.png)](http://paypal.me/DutchmanNL)
 
 ## Things you can steer
-| State                                                                   | Description                                                                                                  |
-|-------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| tado.[x].[yyyyyy].Rooms.[z].setting.power                               | Turn device on/off                                                                                           |
-| tado.[x].[yyyyyy].Rooms.[z].setting.temperature.celsius                 | Define temperature                                                                                           |
-| tado.[x].[yyyyyy].Rooms.[z].overlayClearZone                            | Switch to automatic mode                                                                                     |
-| tado.[x].[yyyyyy].Rooms.[z].overlay.termination.typeSkillBasedApp       | Set time table mode                                                                                          |
-| tado.[x].[yyyyyy].Rooms.[z].overlay.termination.durationInSeconds       | Set how long the time table mode shall apply                                                                 |
-| tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].offset.offsetCelsius | Temperature offset                                                                                           |
-| tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].childLockEnabled     | Child Lock on/off                                                                                            |
-| tado.[x].[yyyyyy].Rooms.[z].timeTables.tt_id                            | Select active time table                                                                                     |
-| tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.enabled                 | Enable/Disable open window detection on thermostat                                                           |
-| tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.timeoutInSeconds        | Timeout how long thermostats are turned off when an open window is detected                                  |
-| tado.[x].[yyyyyy].Rooms.[z].activateOpenWindow                          | Switch thermostats off when an open window is detected (only works if the thermostatdetects an open window) |
-| tado.[x].[yyyyyy].Home.state.presence                                   | Set HOME or AWAY mode                                                                                        |
-| tado.[x].[yyyyyy].Home.masterswitch                                     | Turn all devices on/off                                                                                      |
-| tado.[x].[yyyyyy].Rooms.[z].setting.mode                                | AC mode (only AC devices)                                                                                    |
-| tado.[x].[yyyyyy].Rooms.[z].setting.fanspeed                            | Fanspeed (only AC devices with V3 and older versions)                                                        |
-| tado.[x].[yyyyyy].Rooms.[z].setting.fanLebel                            | Fanlebel (only AC devices with V3+ version)                                                                  |
-| tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing                       | Vertical swing (only AC devices with V3+ version)                                                            |
-| tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing                     | Horizontal swing (only AC devices with V3 and olderversions)                                                 |
+| State | Description |
+| ----- | ----------- |
+| tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
+| tado.[x].[yyyyyy].Rooms.[z].setting.temperature.celsius | Define temperature |
+| tado.[x].[yyyyyy].Rooms.[z].overlayClearZone | Switch to automatic mode |
+| tado.[x].[yyyyyy].Rooms.[z].overlay.termination.typeSkillBasedApp | Set time table mode |
+| tado.[x].[yyyyyy].Rooms.[z].overlay.termination.durationInSeconds | Set how long the time table mode shall apply |
+| tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].offset.offsetCelsius | Temperature offset |
+| tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].childLockEnabled | Child Lock on/off |
+| tado.[x].[yyyyyy].Rooms.[z].timeTables.tt_id | Select active time table |
+| tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.enabled | Enable/Disable open window detection on thermostat |
+| tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.timeoutInSeconds | Timeout how long thermostats are turned off when an open window is detected |
+| tado.[x].[yyyyyy].Rooms.[z].activateOpenWindow | Switch thermostats off when an open window is detected (only works if the thermostat detects an open window) | 
+| tado.[x].[yyyyyy].Home.state.presence | Set HOME or AWAY mode |
+| tado.[x].[yyyyyy].Home.masterswitch | Turn all devices on/off |
+| tado.[x].[yyyyyy].Rooms.[z].setting.mode | AC mode (only AC devices) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.fanspeed | Fanspeed (only AC devices with V3 and older versions) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.fanLebel | Fanlebel (only AC devices with V3+ version) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing | Vertical swing (only AC devices with V3+ version) |
+| tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 
-## Changelog
-<!--
-    Placeholder for the next version (at the beginning of the line):
-    ### __WORK IN PROGRESS__
--->
-### 0.3.14 (2022-01-21)
-* (HGlab01) Improve hotwater handling
-* (HGlab01) Improve AC Control v3 devices 
-* (HGlab01) Support swing ON/OFF for AC v3 devices
-
-### 0.3.13 (2022-01-03)
-* (HGlab01) Optimize internet-check by using isOnline-library
-* (HGlab01) Support Smart AC Control V3+ (issue #403)
-* (HGlab01) Offset temperature rounding to max. 2 digits
-
-### 0.3.12 (2021-11-25)
-* (HGlab01) support attribute 'showScheduleSetup'
-* (HGlab01) fix HOT_WATER device issue with temperature
-* (HGlab01) Bump iobroker-jsonexplorer to 0.1.8 (avoids re-sending same missing-attribeute info to Sentry after restart)
-
-### 0.3.11 (2021-11-19)
-* (HGlab01) support attributes 'showSwitchToAutoGeofencingButton', 'showHomePresenceSwitchButton', 'scheduleIsDefault' and 'additionalConsents'
-* (HGlab01) enhance error messages if API-call fails
-* (HGlab01) next time block fails (one reason for 422 error) if time blocks are not defined - fixed now
-* (HGlab01) set HOME/AWAY is now suported by using state tado.x.yyyyyy.Home.state.presence
-* (HGlab01) offset range -9.99/+10 validated
-* (HGlab01) add masterswitch for power on/off (tado.[x].[yyyyyy].Home.masterswitch)
-* (HGlab01) reduce logs in info-mode
-* (HGlab01) AC temperature range fixed
-* (HGlab01) Bump iobroker-jsonexplorer to 0.1.7
 
 ### 0.3.10 (2021-10-29)
 * (HGlab01) API calls (except read) are queued and send one after the other

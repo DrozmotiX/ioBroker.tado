@@ -121,6 +121,23 @@ class Tado extends utils.Adapter {
 						await this.setMasterSwitch(set_masterswitch);
 						await this.sleep(1000);
 						this.setStateAsync(`${home_id}.Home.masterswitch`, '', true);
+					} else if (statename == 'activateOpenWindow') {
+						this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
+						await this.activateOpenWindow(home_id, zone_id);
+					} else if (idSplitted[idSplitted.length - 2] === 'openWindowDetection' && (statename == 'enabled' || statename == 'timeoutInSeconds')) {
+						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.enabled');
+						const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.timeoutInSeconds');
+						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : openWindowDetectionEnabled.val;
+						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : openWindowDetectionTimeoutInSeconds.val;
+
+						this.log.debug('Open Window Detection enabled: ' + set_openWindowDetectionEnabled);
+						this.log.debug('Open Window Detection Timeout is: ' + set_openWindowDetectionTimeoutInSeconds);
+
+						this.log.debug(`Changing open window detection for '${zone_id}' in home '${home_id}'`);
+						await this.setOpenWindowDetectionSettings(home_id, zone_id, {
+							enabled: set_openWindowDetectionEnabled,
+							timeoutInSeconds: set_openWindowDetectionTimeoutInSeconds
+						});
 					} else {
 						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
@@ -128,8 +145,6 @@ class Tado extends utils.Adapter {
 						const power = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.power');
 						const durationInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.overlay.termination.durationInSeconds');
 						const nextTimeBlockStart = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.nextTimeBlock.start');
-						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.enabled');
-						const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.timeoutInSeconds');
 						let acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed, swing;
 
 						let set_type = (type == null || type == undefined || type.val == null || type.val == '') ? 'HEATING' : type.val.toString().toUpperCase();
@@ -138,8 +153,6 @@ class Tado extends utils.Adapter {
 						let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
 						let set_mode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 						let set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
-						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : openWindowDetectionEnabled.val;
-						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : openWindowDetectionTimeoutInSeconds.val;
 
 						if (set_type == 'AIR_CONDITIONING') {
 							acMode = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.mode');
@@ -186,8 +199,7 @@ class Tado extends utils.Adapter {
 						this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
 						this.log.debug('VerticalSwing is: ' + set_verticalSwing);
 						this.log.debug('Swing is: ' + set_swing);
-						this.log.debug('Open Window Detection enabled: ' + set_openWindowDetectionEnabled);
-						this.log.debug('Open Window Detection Timeout is: ' + set_openWindowDetectionTimeoutInSeconds);
+
 
 						switch (statename) {
 							case ('overlayClearZone'):
@@ -271,22 +283,6 @@ class Tado extends utils.Adapter {
 								} else {
 									this.log.debug(`Power changed for room '${zone_id}' in home '${home_id}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`);
 									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed, set_swing);
-								}
-								break;
-							
-							case ('activateOpenWindow'):
-								this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
-								await this.activateOpenWindow(home_id, zone_id);
-								break;
-
-							case ('enabled'):
-							case ('timeoutInSeconds'):
-								if (idSplitted[idSplitted.length - 2] === 'openWindowDetection') {
-									this.log.debug(`Changing open window detection for '${zone_id}' in home '${home_id}'`);
-									await this.setOpenWindowDetectionSettings(home_id, zone_id, {
-										enabled: set_openWindowDetectionEnabled,
-										timeoutInSeconds: set_openWindowDetectionTimeoutInSeconds
-									});
 								}
 								break;
 
@@ -1135,6 +1131,7 @@ class Tado extends utils.Adapter {
 		}
 		if (method != 'get') {
 			this.apiCallinExecution = true;
+			console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
 			this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
 		}
 		return new Promise((resolve, reject) => {
