@@ -22,7 +22,7 @@
   "dependencies": {
     "@iobroker/adapter-core": "^2.4.0",
     "axios": "^0.25.0",
-    "iobroker-jsonexplorer": "0.1.8",
+    "iobroker-jsonexplorer": "0.1.9-alpha.0",
     "is-online": "^9.0.1",
     "simple-oauth2": "4.3.0"
   },
