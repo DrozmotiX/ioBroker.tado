@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.14",
+    "version": "0.3.15-alpha.0",
     "news": {
+      "0.3.15-alpha.0": {
+        "en": "obj.common.states handling improved for js-controller 4.0",
+        "de": "Die Handhabung von obj.common.states wurde für js-controller 4.0 verbessert",
+        "ru": "Улучшена обработка obj.common.states для js-controller 4.0",
+        "pt": "Manipulação obj.common.states aprimorada para js-controller 4.0",
+        "nl": "obj.common.states afhandeling verbeterd voor js-controller 4.0",
+        "fr": "gestion obj.common.states améliorée pour js-controller 4.0",
+        "it": "obj.common.states gestione migliorata per js-controller 4.0",
+        "es": "Manejo de obj.common.states mejorado para js-controller 4.0",
+        "pl": "poprawiono obsługę obj.common.states dla js-controller 4.0",
+        "zh-cn": "js-controller 4.0 改进了 obj.common.states 处理"
+      },
       "0.3.14": {
         "en": "Improve hotwater handling\nImprove AC Control v3 devices \nSupport swing ON/OFF for AC v3 devices",
         "de": "Verbessern Sie den Umgang mit heißem Wasser\nVerbessern Sie AC Control v3-Geräte\nUnterstützung von Swing ON/OFF für AC v3-Geräte",
@@ -74,18 +86,6 @@
         "es": "Dispositivos Hotwater y AC v3: pedir ayuda a los propietarios de dispositivos",
         "pl": "Urządzenia ciepłej wody i AC v3: proszenie właścicieli urządzeń o pomoc",
         "zh-cn": "热水和 AC v3 设备：向设备所有者寻求帮助"
-      },
-      "0.3.14-alpha.0": {
-        "en": "Hotwater-devices: asking device-owners for help",
-        "de": "Heißwassergeräte: Gerätebesitzer um Hilfe bitten",
-        "ru": "Водогрейные устройства: обращаемся за помощью к владельцам устройств",
-        "pt": "Dispositivos Hotwater: pedindo ajuda aos proprietários de dispositivos",
-        "nl": "Warmwaterapparaten: apparaateigenaren om hulp vragen",
-        "fr": "Appareils à eau chaude : demander de l'aide aux propriétaires d'appareils",
-        "it": "Dispositivi per l'acqua calda: chiedere aiuto ai proprietari dei dispositivi",
-        "es": "Dispositivos de agua caliente: pedir ayuda a los propietarios de dispositivos",
-        "pl": "Urządzenia do ciepłej wody: proszenie właścicieli urządzeń o pomoc",
-        "zh-cn": "热水设备：向设备所有者寻求帮助"
       }
     },
     "title": "Tado",
