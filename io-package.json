@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.15-alpha.0",
+    "version": "0.3.15-alpha.1",
     "news": {
+      "0.3.15-alpha.1": {
+        "en": "Bump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
+        "de": "Erweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
+        "ru": "Поднимите iobroker-jsonexplorer до версии 0.1.9\nготовность js-контроллера 4.0",
+        "pt": "Suba iobroker-jsonexplorer para v0.1.9\nprontidão do controlador js 4.0",
+        "nl": "Bump iobroker-jsonexplorer naar v0.1.9\njs-controller 4.0 gereedheid",
+        "fr": "Passer iobroker-jsonexplorer à la v0.1.9\npréparation js-controller 4.0",
+        "it": "Porta iobroker-jsonexplorer alla v0.1.9\njs-controller 4.0 prontezza",
+        "es": "Bump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
+        "pl": "Podnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
+        "zh-cn": "将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
+      },
       "0.3.15-alpha.0": {
         "en": "obj.common.states handling improved for js-controller 4.0",
         "de": "Die Handhabung von obj.common.states wurde für js-controller 4.0 verbessert",
@@ -73,18 +85,6 @@
         "it": "Dispositivi per acqua calda e AC v3: chiedere aiuto ai proprietari dei dispositivi",
         "es": "Dispositivos Hotwater y AC v3: pedir ayuda a los propietarios de dispositivos",
         "pl": "Urządzenia do ciepłej wody i AC v3: proszenie właścicieli urządzeń o pomoc",
-        "zh-cn": "热水和 AC v3 设备：向设备所有者寻求帮助"
-      },
-      "0.3.14-alpha.1": {
-        "en": "Hotwater and AC v3 devices: asking device-owners for help",
-        "de": "Heißwasser- und AC-v3-Geräte: Gerätebesitzer um Hilfe bitten",
-        "ru": "Устройства Hotwater и AC v3: обращаемся за помощью к владельцам устройств",
-        "pt": "Dispositivos Hotwater e AC v3: pedindo ajuda aos proprietários de dispositivos",
-        "nl": "Warmwater- en AC v3-apparaten: apparaateigenaren om hulp vragen",
-        "fr": "Appareils à eau chaude et AC v3 : demander de l'aide aux propriétaires d'appareils",
-        "it": "Dispositivi per acqua calda e AC v3: chiedere aiuto ai proprietari dei dispositivi",
-        "es": "Dispositivos Hotwater y AC v3: pedir ayuda a los propietarios de dispositivos",
-        "pl": "Urządzenia ciepłej wody i AC v3: proszenie właścicieli urządzeń o pomoc",
         "zh-cn": "热水和 AC v3 设备：向设备所有者寻求帮助"
       }
     },
