@@ -939,6 +939,9 @@ class Tado extends utils.Adapter {
 					}
 				}
 			}
+			// Change `enabled` to `openWindowDetectionEnabled`
+			this.Zones_data[j].openWindowDetection.openWindowDetectionEnabled = this.Zones_data[j].openWindowDetection.enabled;
+			delete this.Zones_data[j].openWindowDetection.enabled;
 		}
 
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
@@ -959,8 +962,6 @@ class Tado extends utils.Adapter {
 			ZonesState_data.setting.temperature = {};
 			ZonesState_data.setting.temperature.celsius = null;
 		}
-		ZonesState_data.openWindowDetection.openWindowDetectionEnabled = ZonesState_data.openWindowDetection.enabled;
-		delete ZonesState_data.openWindowDetection.enabled;
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		ZonesState_data.activateOpenWindow = false;
