@@ -124,8 +124,8 @@ class Tado extends utils.Adapter {
 					} else if (statename == 'activateOpenWindow') {
 						this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
 						await this.activateOpenWindow(home_id, zone_id);
-					} else if (idSplitted[idSplitted.length - 2] === 'openWindowDetection' && (statename == 'enabled' || statename == 'timeoutInSeconds')) {
-						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.enabled');
+					} else if (idSplitted[idSplitted.length - 2] === 'openWindowDetection' && (statename == 'openWindowDetectionEnabled' || statename == 'timeoutInSeconds')) {
+						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.openWindowDetectionEnabled');
 						const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.timeoutInSeconds');
 						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : openWindowDetectionEnabled.val;
 						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : openWindowDetectionTimeoutInSeconds.val;
@@ -959,6 +959,8 @@ class Tado extends utils.Adapter {
 			ZonesState_data.setting.temperature = {};
 			ZonesState_data.setting.temperature.celsius = null;
 		}
+		ZonesState_data.openWindowDetection.openWindowDetectionEnabled = ZonesState_data.openWindowDetection.enabled;
+		delete ZonesState_data.openWindowDetection.enabled;
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		ZonesState_data.activateOpenWindow = false;
