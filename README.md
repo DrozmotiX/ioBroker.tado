@@ -30,7 +30,7 @@ If you like my work, please feel free to provide a personal donation
 | tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].offset.offsetCelsius | Temperature offset |
 | tado.[x].[yyyyyy].Rooms.[z].devices.[RUaaaaaaaaaa].childLockEnabled | Child Lock on/off |
 | tado.[x].[yyyyyy].Rooms.[z].timeTables.tt_id | Select active time table |
-| tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.enabled | Enable/Disable open window detection on thermostat |
+| tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.openWindowDetectionEnabled | Enable/Disable open window detection on thermostat |
 | tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.timeoutInSeconds | Timeout how long thermostats are turned off when an open window is detected |
 | tado.[x].[yyyyyy].Rooms.[z].activateOpenWindow | Switch thermostats off when an open window is detected (only works if the thermostat detects an open window) | 
 | tado.[x].[yyyyyy].Home.state.presence | Set HOME or AWAY mode |
