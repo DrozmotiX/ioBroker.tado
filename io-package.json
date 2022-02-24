@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.15-alpha.1",
+    "version": "0.3.15-alpha.2",
     "news": {
+      "0.3.15-alpha.2": {
+        "en": "Support steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled \nBump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
+        "de": "Unterstützt die Steuerung von ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nErweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
+        "ru": "Поддержка управления ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nПоднимите iobroker-jsonexplorer до версии 0.1.9\nготовность js-контроллера 4.0",
+        "pt": "Suporte a direção de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nSuba iobroker-jsonexplorer para v0.1.9\nprontidão do controlador js 4.0",
+        "nl": "Ondersteuningsbesturing van ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer naar v0.1.9\njs-controller 4.0 gereedheid",
+        "fr": "Prise en charge de la direction de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPasser iobroker-jsonexplorer à la v0.1.9\npréparation js-controller 4.0",
+        "it": "Supporta la guida di ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPorta iobroker-jsonexplorer alla v0.1.9\njs-controller 4.0 prontezza",
+        "es": "Admite la dirección de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
+        "pl": "Obsługa sterowania ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPodnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
+        "zh-cn": "支持ActivateOpenWindow、OpenWindowDetection、childLockEnabled的转向\n将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
+      },
       "0.3.15-alpha.1": {
         "en": "Bump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
         "de": "Erweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
@@ -64,18 +76,6 @@
         "zh-cn": "热水和 AC v3 设备：向设备所有者寻求帮助\n支持 AC v3 设备的摇摆开/关"
       },
       "0.3.14-alpha.3": {
-        "en": "Hotwater and AC v3 devices: asking device-owners for help",
-        "de": "Heißwasser- und AC-v3-Geräte: Gerätebesitzer um Hilfe bitten",
-        "ru": "Устройства Hotwater и AC v3: обращаемся за помощью к владельцам устройств",
-        "pt": "Dispositivos Hotwater e AC v3: pedindo ajuda aos proprietários de dispositivos",
-        "nl": "Warmwater- en AC v3-apparaten: apparaateigenaren om hulp vragen",
-        "fr": "Appareils à eau chaude et AC v3 : demander de l'aide aux propriétaires d'appareils",
-        "it": "Dispositivi per acqua calda e AC v3: chiedere aiuto ai proprietari dei dispositivi",
-        "es": "Dispositivos Hotwater y AC v3: pedir ayuda a los propietarios de dispositivos",
-        "pl": "Urządzenia do ciepłej wody i AC v3: proszenie właścicieli urządzeń o pomoc",
-        "zh-cn": "热水和 AC v3 设备：向设备所有者寻求帮助"
-      },
-      "0.3.14-alpha.2": {
         "en": "Hotwater and AC v3 devices: asking device-owners for help",
         "de": "Heißwasser- und AC-v3-Geräte: Gerätebesitzer um Hilfe bitten",
         "ru": "Устройства Hotwater и AC v3: обращаемся за помощью к владельцам устройств",
