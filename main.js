@@ -99,6 +99,11 @@ class Tado extends utils.Adapter {
 						let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val.toString());
 						this.log.debug(`Offset changed for device '${device_id}' in home '${home_id}' to value '${set_offset}'`);
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
+					} else if (statename == 'childLockEnabled') {
+						const childLockEnabled = state;
+						let set_childLockEnabled = (childLockEnabled == null || childLockEnabled == undefined || childLockEnabled.val == null || childLockEnabled.val == '') ? false : childLockEnabled.val;
+						this.log.debug(`ChildLockEnabled changed for device '${device_id}' in home '${home_id}' to value '${set_childLockEnabled}'`);
+						this.setChildLock(home_id, zone_id, device_id, set_childLockEnabled);
 					} else if (statename == 'tt_id') {
 						const tt_id = state;
 						let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == '') ? 0 : parseInt(tt_id.val.toString());
@@ -116,6 +121,23 @@ class Tado extends utils.Adapter {
 						await this.setMasterSwitch(set_masterswitch);
 						await this.sleep(1000);
 						this.setStateAsync(`${home_id}.Home.masterswitch`, '', true);
+					} else if (statename == 'activateOpenWindow') {
+						this.log.debug(`Activate Open Window for room '${zone_id}' in home '${home_id}'`);
+						await this.activateOpenWindow(home_id, zone_id);
+					} else if (idSplitted[idSplitted.length - 2] === 'openWindowDetection' && (statename == 'openWindowDetectionEnabled' || statename == 'timeoutInSeconds')) {
+						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.openWindowDetectionEnabled');
+						const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.timeoutInSeconds');
+						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : openWindowDetectionEnabled.val;
+						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : openWindowDetectionTimeoutInSeconds.val;
+
+						this.log.debug('Open Window Detection enabled: ' + set_openWindowDetectionEnabled);
+						this.log.debug('Open Window Detection Timeout is: ' + set_openWindowDetectionTimeoutInSeconds);
+
+						this.log.debug(`Changing open window detection for '${zone_id}' in home '${home_id}'`);
+						await this.setOpenWindowDetectionSettings(home_id, zone_id, {
+							enabled: set_openWindowDetectionEnabled,
+							timeoutInSeconds: set_openWindowDetectionTimeoutInSeconds
+						});
 					} else {
 						const type = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.type');
 						const temperature = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.setting.temperature.celsius');
@@ -177,6 +199,7 @@ class Tado extends utils.Adapter {
 						this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
 						this.log.debug('VerticalSwing is: ' + set_verticalSwing);
 						this.log.debug('Swing is: ' + set_swing);
+
 
 						switch (statename) {
 							case ('overlayClearZone'):
@@ -262,6 +285,7 @@ class Tado extends utils.Adapter {
 									await this.setZoneOverlay(home_id, zone_id, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed, set_swing);
 								}
 								break;
+
 							default:
 						}
 					}
@@ -651,6 +675,56 @@ class Tado extends utils.Adapter {
 			}, 750);
 		});
 	}
+	
+	/**
+	 * Calls the "Active Open Window" endpoint. If the tado thermostat did not detect an open window, the call does nothing.
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 */
+	async activateOpenWindow(home_id, zone_id) {
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/state/openWindow/activate`;
+		if (await isOnline() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'post');
+		this.log.debug(`Called 'POST ${url}'`);
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindow.*');
+	}
+
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {any} config Payload needs to be an object like this {"enabled":true,"timeoutInSeconds":960}
+	 */
+	async setOpenWindowDetectionSettings(home_id, zone_id, config) {
+		let url = `/api/v2/homes/${home_id}/zones/${zone_id}/openWindowDetection`;
+		if (await isOnline() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'put', config);
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindowDetection.*');
+	}
+
+	/**
+	 * @param {string} home_id
+	 * @param {string} zone_id
+	 * @param {string} device_id
+	 * @param {boolean} enabled
+	 */
+	async setChildLock(home_id, zone_id, device_id, enabled) {
+		let url = `/api/v2/devices/${device_id}/childLock`;
+		if (await isOnline() == false) {
+			throw new Error('No internet connection detected!');
+		}
+		await this.apiCall(url, 'put', {childLockEnabled: enabled});
+		await JsonExplorer.setLastStartTime();
+		await this.DoZoneStates(home_id, zone_id);
+		await JsonExplorer.checkExpire(`${home_id}.Rooms.${zone_id}.devices.${device_id}.childLockEnabled`);
+	}
 
 	//////////////////////////////////////////////////////////////////////
 	/* DO Methods														*/
@@ -865,6 +939,9 @@ class Tado extends utils.Adapter {
 					}
 				}
 			}
+			// Change `enabled` to `openWindowDetectionEnabled`
+			this.Zones_data[j].openWindowDetection.openWindowDetectionEnabled = this.Zones_data[j].openWindowDetection.enabled;
+			delete this.Zones_data[j].openWindowDetection.enabled;
 		}
 
 		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
@@ -887,6 +964,7 @@ class Tado extends utils.Adapter {
 		}
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
+		ZonesState_data.activateOpenWindow = false;
 		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
 	}
 
@@ -1057,6 +1135,7 @@ class Tado extends utils.Adapter {
 		if (method != 'get') {
 			this.apiCallinExecution = true;
 			console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
+			this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
 		}
 		return new Promise((resolve, reject) => {
 			if (this.accessToken) {
