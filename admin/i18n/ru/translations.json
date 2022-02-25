@@ -1,5 +1,7 @@
 {
+    "Interval in seconds": "Интервал в секундах",
     "Password": "Пароль",
+    "Please provide your credentials": "Пожалуйста, предоставьте свои учетные данные",
     "Tado adapter settings": "Настройки адаптера Tado",
     "Username": "Имя пользователя",
     "intervall": "Обновить интервал в секунду",

@@ -1,5 +1,7 @@
 {
+    "Interval in seconds": "Intervalle en secondes",
     "Password": "Mot de passe",
+    "Please provide your credentials": "Veuillez fournir vos identifiants",
     "Tado adapter settings": "Paramètres de l'adaptateur Tado",
     "Username": "Nom d'utilisateur",
     "intervall": "Rafraîchir l'intervalle en seconde",
