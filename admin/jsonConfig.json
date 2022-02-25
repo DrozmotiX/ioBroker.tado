@@ -26,8 +26,8 @@
       "sm": 3,
       "type": "number",
       "label": "Interval in seconds",
-      "min" : 10,
-      "max" : 300,
+      "min" : 30,
+      "max" : 3600,
       "step": 5
     }
   }
