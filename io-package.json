@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.15-alpha.3",
+    "version": "0.3.15",
     "news": {
+      "0.3.15": {
+        "en": "move to jsonConfig.json (Admin 5)\nSupport steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled \nBump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
+        "de": "Verschieben Sie zu jsonConfig.json (Admin 5)\nUnterstützt die Steuerung von ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nErweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
+        "ru": "перейти к jsonConfig.json (Администратор 5)\nПоддержка управления ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nПоднимите iobroker-jsonexplorer до версии 0.1.9\nготовность js-контроллера 4.0",
+        "pt": "mover para jsonConfig.json (Admin 5)\nSuporte a direção de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nSuba iobroker-jsonexplorer para v0.1.9\nprontidão do controlador js 4.0",
+        "nl": "ga naar jsonConfig.json (Admin 5)\nOndersteuningsbesturing van ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer naar v0.1.9\njs-controller 4.0 gereedheid",
+        "fr": "déplacer vers jsonConfig.json (Admin 5)\nPrise en charge de la direction de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPasser iobroker-jsonexplorer à la v0.1.9\npréparation js-controller 4.0",
+        "it": "passa a jsonConfig.json (amministratore 5)\nSupporta la guida di ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPorta iobroker-jsonexplorer alla v0.1.9\njs-controller 4.0 prontezza",
+        "es": "mover a jsonConfig.json (Administrador 5)\nAdmite la dirección de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
+        "pl": "przejdź do jsonConfig.json (Administrator 5)\nObsługa sterowania ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPodnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
+        "zh-cn": "移至 jsonConfig.json（管理员 5）\n支持ActivateOpenWindow、OpenWindowDetection、childLockEnabled的转向\n将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
+      },
       "0.3.15-alpha.3": {
         "en": "move to jsonConfig.json (Admin 5)\nSupport steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled \nBump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
         "de": "Verschieben Sie zu jsonConfig.json (Admin 5)\nUnterstützt die Steuerung von ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nErweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
@@ -64,18 +76,6 @@
         "zh-cn": "改善热水处理\n改进 AC Control v3 设备\n支持 AC v3 设备的摇摆开/关"
       },
       "0.3.14-alpha.5": {
-        "en": "Hotwater and AC v3 devices: asking device-owners for help\nsupport swing ON/OFF for AC v3 devices",
-        "de": "Heißwasser- und AC-v3-Geräte: Gerätebesitzer um Hilfe bitten\nunterstützt Swing ON/OFF für AC v3-Geräte",
-        "ru": "Устройства Hotwater и AC v3: обращаемся за помощью к владельцам устройств\nподдержка качания ВКЛ/ВЫКЛ для устройств AC v3",
-        "pt": "Dispositivos Hotwater e AC v3: pedindo ajuda aos proprietários de dispositivos\nsuporte swing ON/OFF para dispositivos AC v3",
-        "nl": "Warmwater- en AC v3-apparaten: apparaateigenaren om hulp vragen\nondersteuning swing AAN/UIT voor AC v3-apparaten",
-        "fr": "Appareils à eau chaude et AC v3 : demander de l'aide aux propriétaires d'appareils\nprise en charge de l'oscillation ON/OFF pour les appareils AC v3",
-        "it": "Dispositivi Hotwater e AC v3: chiedere aiuto ai proprietari di dispositivi\nsupporto oscillazione ON/OFF per dispositivi AC v3",
-        "es": "Dispositivos de agua caliente y AC v3: pedir ayuda a los propietarios de dispositivos\nsoporte oscilación ON/OFF para dispositivos AC v3",
-        "pl": "Urządzenia do ciepłej wody i AC v3: proszenie właścicieli urządzeń o pomoc\nwsparcie swing ON/OFF dla urządzeń AC v3;",
-        "zh-cn": "热水和 AC v3 设备：向设备所有者寻求帮助\n支持 AC v3 设备的摇摆开/关"
-      },
-      "0.3.14-alpha.4": {
         "en": "Hotwater and AC v3 devices: asking device-owners for help\nsupport swing ON/OFF for AC v3 devices",
         "de": "Heißwasser- und AC-v3-Geräte: Gerätebesitzer um Hilfe bitten\nunterstützt Swing ON/OFF für AC v3-Geräte",
         "ru": "Устройства Hotwater и AC v3: обращаемся за помощью к владельцам устройств\nподдержка качания ВКЛ/ВЫКЛ для устройств AC v3",
