@@ -101,7 +101,7 @@ class Tado extends utils.Adapter {
 						this.setTemperatureOffset(home_id, zone_id, device_id, set_offset);
 					} else if (statename == 'childLockEnabled') {
 						const childLockEnabled = state;
-						let set_childLockEnabled = (childLockEnabled == null || childLockEnabled == undefined || childLockEnabled.val == null || childLockEnabled.val == '') ? false : childLockEnabled.val;
+						let set_childLockEnabled = (childLockEnabled == null || childLockEnabled == undefined || childLockEnabled.val == null || childLockEnabled.val == '') ? false : toBoolean(childLockEnabled.val);
 						this.log.debug(`ChildLockEnabled changed for device '${device_id}' in home '${home_id}' to value '${set_childLockEnabled}'`);
 						this.setChildLock(home_id, zone_id, device_id, set_childLockEnabled);
 					} else if (statename == 'tt_id') {
@@ -127,8 +127,8 @@ class Tado extends utils.Adapter {
 					} else if (idSplitted[idSplitted.length - 2] === 'openWindowDetection' && (statename == 'openWindowDetectionEnabled' || statename == 'timeoutInSeconds')) {
 						const openWindowDetectionEnabled = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.openWindowDetectionEnabled');
 						const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(home_id + '.Rooms.' + zone_id + '.openWindowDetection.timeoutInSeconds');
-						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : openWindowDetectionEnabled.val;
-						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : openWindowDetectionTimeoutInSeconds.val;
+						let set_openWindowDetectionEnabled = (openWindowDetectionEnabled == null || openWindowDetectionEnabled == undefined || openWindowDetectionEnabled.val == null || openWindowDetectionEnabled.val == '') ? false : toBoolean(openWindowDetectionEnabled.val);
+						let set_openWindowDetectionTimeoutInSeconds = (openWindowDetectionTimeoutInSeconds == null || openWindowDetectionTimeoutInSeconds == undefined || openWindowDetectionTimeoutInSeconds.val == null || openWindowDetectionTimeoutInSeconds.val == '') ? 900 : Number(openWindowDetectionTimeoutInSeconds.val);
 
 						this.log.debug('Open Window Detection enabled: ' + set_openWindowDetectionEnabled);
 						this.log.debug('Open Window Detection Timeout is: ' + set_openWindowDetectionTimeoutInSeconds);
@@ -492,6 +492,9 @@ class Tado extends utils.Adapter {
 			{"0":{"type":"HOT_WATER","canSetTemperature":false}}
 			{"1":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}},"3":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}}}
 			*/
+			/*
+			{"1":{"type":"AIR_CONDITIONING","HEAT":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"COOL":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"DRY":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"FAN":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"AUTO":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"HEAT":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"DRY":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"FAN":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"AUTO":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"}},"light":"ON"}}}
+			*/
 			console.log(JSON.stringify(this.roomCapabilities));
 			if (!this.roomCapabilities || !this.roomCapabilities[zone_id]) {
 				this.log.error(`No room capabilities found for room '${zone_id}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
@@ -675,7 +678,7 @@ class Tado extends utils.Adapter {
 			}, 750);
 		});
 	}
-	
+
 	/**
 	 * Calls the "Active Open Window" endpoint. If the tado thermostat did not detect an open window, the call does nothing.
 	 * @param {string} home_id
@@ -720,7 +723,7 @@ class Tado extends utils.Adapter {
 		if (await isOnline() == false) {
 			throw new Error('No internet connection detected!');
 		}
-		await this.apiCall(url, 'put', {childLockEnabled: enabled});
+		await this.apiCall(url, 'put', { childLockEnabled: enabled });
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		await JsonExplorer.checkExpire(`${home_id}.Rooms.${zone_id}.devices.${device_id}.childLockEnabled`);
@@ -1318,6 +1321,10 @@ class Tado extends utils.Adapter {
 	/*getInstallations(home_id) {
 		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
 	}*/
+}
+
+function toBoolean(valueToBoolean) {
+	return (valueToBoolean === true || valueToBoolean === 'true');
 }
 
 // @ts-ignore parent is a valid property on module
