@@ -4,6 +4,6 @@
     "Please provide your credentials": "请提供您的凭据",
     "Tado adapter settings": "Tado适配器设置",
     "Username": "用户名",
-    "intervall": "刷新间隔秒",
-    "tado adapter settings": "tado的适配器设置"
+    "intervall": "刷新间隔（秒）",
+    "tado adapter settings": "Tado适配器设置"
 }
