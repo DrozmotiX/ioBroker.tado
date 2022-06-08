@@ -485,14 +485,11 @@ class Tado extends utils.Adapter {
 				return;
 			}
 
-			//Capability Management
-			/*
+			/* Capability Management
 			{"1":{"type":"HEATING","temperatures":{"celsius":{"min":5,"max":25,"step":0.1},"fahrenheit":{"min":41,"max":77,"step":0.1}}}}
 			{"0":{"type":"HOT_WATER","canSetTemperature":true,"temperatures":{"celsius":{"min":30,"max":65,"step":1},"fahrenheit":{"min":86,"max":149,"step":1}}}}
 			{"0":{"type":"HOT_WATER","canSetTemperature":false}}
 			{"1":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}},"3":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}}}
-			*/
-			/*
 			{"1":{"type":"AIR_CONDITIONING","HEAT":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"COOL":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"DRY":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"FAN":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"AUTO":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"HEAT":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"DRY":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"FAN":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"AUTO":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"}},"light":"ON"}}}
 			*/
 			console.log(JSON.stringify(this.roomCapabilities));
@@ -508,20 +505,6 @@ class Tado extends utils.Adapter {
 				this.log.error(`Type ${type} not valid. Type ${capType} expected.`);
 				return;
 			}
-
-			//can be deleted again BEGIN - purpuse is to understand what 'light' is used for
-			let capLight;
-			if (this.roomCapabilities[zone_id][acMode]) {
-				capLight = this.roomCapabilities[zone_id][acMode].light;
-			} else {
-				capLight = this.roomCapabilities[zone_id].light;
-			}
-			if (capLight) {
-				console.log(JSON.stringify(this.roomCapabilities));
-				this.sendSentryWarn(`Additional capailities 'light' found!`);
-			}
-			//can be deleted again END
-
 
 			if (type == 'HEATING' && power == 'ON') {
 				let capMinTemp, capMaxTemp;
