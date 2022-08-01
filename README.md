@@ -47,9 +47,9 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.3.16-alpha.0 (2022-07-28)
-* (HGlab01) Support light
-* (HGlab01) Support vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible
+### 0.3.16 (2022-08-01)
+* (HGlab01) Support light (issue #519)
+* (HGlab01) Add attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible
 
 ### 0.3.15 (2022-02-27)
 * (DutchmanNL) move to jsonConfig.json (Admin 5)
