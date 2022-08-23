@@ -3,7 +3,7 @@ import { ResourceOwnerPassword } from "simple-oauth2";
 import * as JsonExplorer from "iobroker-jsonexplorer";
 import axios from "axios";
 import isOnline from "is-online";
-import {state_attr} from "./lib/state_attr.mjs";
+import { state_attr } from "./lib/state_attr.mjs";
 
 /* eslint-disable prefer-const */
 //'use strict';
@@ -1045,12 +1045,12 @@ class Tado extends utils.Adapter {
             if (shouldRefresh) {
                 this.accessToken.refresh()
                     .then(result => {
-                    this.accessToken = result;
-                    resolve(this.accessToken);
-                })
+                        this.accessToken = result;
+                        resolve(this.accessToken);
+                    })
                     .catch(error => {
-                    reject(error);
-                });
+                        reject(error);
+                    });
             }
             else {
                 resolve(this.accessToken);
