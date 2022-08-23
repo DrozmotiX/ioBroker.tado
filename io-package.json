@@ -141,7 +141,7 @@
     "materialize": true,
     "dependencies": [
       {
-        "js-controller": ">=3.0.0"
+        "js-controller": ">=4.0.0"
       }
     ],
     "plugins": {
