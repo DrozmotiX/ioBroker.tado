@@ -47,8 +47,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-
-### __WORK IN PROGRESS__
+### 0.4.0-alpha.0 (2022-08-23)
 * (HGlab01) !Breaking change! NodeJS 14.16 or higher required
 * (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
 * (HGlab01) Switch from CJS to ESM
@@ -73,11 +72,6 @@ If you like my work, please feel free to provide a personal donation
 * (HGlab01) Optimize internet-check by using isOnline-library
 * (HGlab01) Support Smart AC Control V3+ (issue #403)
 * (HGlab01) Offset temperature rounding to max. 2 digits
-
-### 0.3.12 (2021-11-25)
-* (HGlab01) support attribute 'showScheduleSetup'
-* (HGlab01) fix HOT_WATER device issue with temperature
-* (HGlab01) Bump iobroker-jsonexplorer to 0.1.8 (avoids re-sending same missing-attribeute info to Sentry after restart)
 
 ## License
 MIT License

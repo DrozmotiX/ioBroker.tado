@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.16",
+    "version": "0.4.0-alpha.0",
     "news": {
+      "0.4.0-alpha.0": {
+        "en": "!Breaking change! NodeJS 14.16 or higher required\n!Breaking change! ioBroker js-controller 4.0 or higher required\nSwitch from CJS to ESM\nBump is-online from 9.0.1 to 10.0.0",
+        "de": "! Veränderung brechen! NodeJS 14.16 oder höher erforderlich\n! Veränderung brechen! ioBroker js-controller 4.0 oder höher erforderlich\nWechsel von CJS zu ESM\nBump is-online von 9.0.1 bis 10.0.0",
+        "ru": "! Перерыв перемен! NodeJS 14.16 или выше требуется\n! Перерыв перемен! ioBroker js-controller 4.0 или выше требуется\nПереход с CJS на ESM\nBump онлайн с 9.0.1 до 10.0.0",
+        "pt": "! Mudança de ruptura! NodeJS 14.16 ou superior exigido\n! Mudança de ruptura! ioBroker js-controller 4.0 ou superior exigido\nMudar de CJS para ESM\nBump is-online de 9.0.1 a 10.0.0",
+        "nl": "! Verandering. NodeJS 14.16 of hoger vereiste\n! Verandering. Quality over Quantity (QoQ) Releases Vertaling:\nVertaling:\nBump is-online van 9.01 tot 10.0",
+        "fr": "! Changer ! NodeJS 14.16 ou plus requis\n! Changer ! ioBroker js-controller 4.0 ou supérieur requis\nPassage de CJS à ESM\nBump is-online from 9.0.1 to 10.0.0",
+        "it": "! Cambiamento di rottura! NodeJS 14.16 o superiore richiesto\n! Cambiamento di rottura! ioBroker js-controller 4.0 o superiore richiesto\nPassare da CJS a ESM\nBump è online da 9.0.1 a 10.0.0",
+        "es": "! ¡Cambio de ruptura! NodeJS 14.16 o superior requerido\n! ¡Cambio de ruptura! ioBroker js-controller 4.0 o superior requerido\nCambiar de CJS a ESM\nBump is-online from 9.0.1 to 10.0.0",
+        "pl": "! Zmiana. NodeJS 14.16 (ang.)\n! Zmiana. ioBroker js-kontroler 4.0 lub wyższych wymagań\nSwitch from CJS to ESM (ang.)\nBump jest na linii 9.0.1 do 10.0.0",
+        "zh-cn": "! 打破沉默! 第14.16号申诉\n! 打破沉默! io Broker js-控制ler 4.0或更高需要\nCJS到EM\nBump是从9.0到10.0.0的。"
+      },
       "0.3.16": {
         "en": "Support light (issue #519)\nAdd attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
         "de": "Unterstützungslicht (Gewebe #519)\nAttribute hinzufügen vattenfallBannerDiscountCode, SchwellwertModeActive, mountStateWithError, isAirComfortEligible",
@@ -74,18 +86,6 @@
         "es": "Bump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
         "pl": "Podnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
         "zh-cn": "将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
-      },
-      "0.3.15-alpha.0": {
-        "en": "obj.common.states handling improved for js-controller 4.0",
-        "de": "Die Handhabung von obj.common.states wurde für js-controller 4.0 verbessert",
-        "ru": "Улучшена обработка obj.common.states для js-controller 4.0",
-        "pt": "Manipulação obj.common.states aprimorada para js-controller 4.0",
-        "nl": "obj.common.states afhandeling verbeterd voor js-controller 4.0",
-        "fr": "gestion obj.common.states améliorée pour js-controller 4.0",
-        "it": "obj.common.states gestione migliorata per js-controller 4.0",
-        "es": "Manejo de obj.common.states mejorado para js-controller 4.0",
-        "pl": "poprawiono obsługę obj.common.states dla js-controller 4.0",
-        "zh-cn": "js-controller 4.0 改进了 obj.common.states 处理"
       }
     },
     "title": "Tado",
