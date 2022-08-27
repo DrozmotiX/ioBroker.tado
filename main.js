@@ -19,7 +19,7 @@ const { ResourceOwnerPassword } = require('simple-oauth2');
 const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
-const isOnline = require('is-online');
+const isOnline = require('@esm2cjs/is-online').default;
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer

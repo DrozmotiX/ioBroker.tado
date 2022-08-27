@@ -47,6 +47,12 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) !Breaking change! NodeJS 14.16 or higher required
+* (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
+* (HGlab01) Bump is-online from 9.0.1 to 10.0.0
+
 ### 0.3.16 (2022-08-01)
 * (HGlab01) Support light (issue #519)
 * (HGlab01) Add attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible

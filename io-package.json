@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.3.16",
+    "version": "0.4.0-alpha.0",
     "news": {
       "0.3.16": {
         "en": "Support light (issue #519)\nAdd attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
@@ -141,7 +141,7 @@
     "materialize": true,
     "dependencies": [
       {
-        "js-controller": ">=3.0.0"
+        "js-controller": ">=4.0.0"
       }
     ],
     "plugins": {
