@@ -50,7 +50,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.4.0 (2022-09-05)
 * (HGlab01) !Breaking change! NodeJS 14.16 or higher required
 * (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
 * (HGlab01) Bump is-online from 9.0.1 to 10.0.0
