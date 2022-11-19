@@ -50,7 +50,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.4.1-alpha.0 (2022-11-19)
 * (HGlab01) Add attribute isBalanceAcEligible
 * (HGlab01) Bump axios from 0.27.2 to 1.1.3
 * (HGlab01) Bump simple-oauth2 from 4.3.0 to 5.0.0
@@ -74,11 +74,6 @@ If you like my work, please feel free to provide a personal donation
 * (HGlab01) Improve hotwater handling
 * (HGlab01) Improve AC Control v3 devices 
 * (HGlab01) Support swing ON/OFF for AC v3 devices
-
-### 0.3.13 (2022-01-03)
-* (HGlab01) Optimize internet-check by using isOnline-library
-* (HGlab01) Support Smart AC Control V3+ (issue #403)
-* (HGlab01) Offset temperature rounding to max. 2 digits
 
 ## License
 MIT License

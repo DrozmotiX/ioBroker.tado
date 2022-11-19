@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.0",
+    "version": "0.4.1-alpha.0",
     "news": {
+      "0.4.1-alpha.0": {
+        "en": "Add attribute isBalanceAcEligible\nBump axios from 0.27.2 to 1.1.3\nBump simple-oauth2 from 4.3.0 to 5.0.0",
+        "de": "Attribut hinzufügen\nBump axios von 0,27,2 bis 1,1.3\nBump simple-oauth2 von 4.3.0 bis 5.0.0",
+        "ru": "Добавить атрибут isBalanceAcEligible\nAxios Bump от 0.27.2 до 1.1.3\nBump simple-oauth2 от 4.3.0 до 5.0.0",
+        "pt": "Adicionar atributo isBalanceAcEligible\nEixo de descarga de 0,27.2 a 1.1.3\nBump simple-oauth2 de 4.3.0 para 5.0.0",
+        "nl": "Advocaat is Balance\nBump Axios van 0.27,2 tot 1,3\nBump eenvoudig-oauth2 van 4.3.0 tot 5.0",
+        "fr": "Ajouter attribute isBalanceAcEligible\nAxios de chanvre de 0,27.2 à 1.1.3\nBump simple-oauth2 de 4.3.0 à 5.0.0",
+        "it": "Aggiungi attributo èBalanceAcEligible\nAssio di bump da 0.27.2 a 1.1.3\nBump simple-oauth2 da 4.3.0 a 5.0.0",
+        "es": "Agregar atributo esBalanceAcEligible\nAxios de bomba de 0.27.2 a 1.1.3\nBomba simple-auth2 de 4.3.0 a 5.0.0",
+        "pl": "Addaptacja jest zrozumiała dla Addda\nBump axios od 0,27 do 1.1.3\nPojedyncza wersja 4.3.0 do 5.0.0",
+        "uk": "Додавання атрибутаBalanceAcEligible\nBump axios від 0.27.2 до 1.1.3\nEnglish, Українська, Français..",
+        "zh-cn": "增属性\nBumpxis from 0.27.2 to 1.1.3\nBump简单auth2 从4.3.0下降到5.0.0"
+      },
       "0.4.0": {
         "en": "!Breaking change! NodeJS 14.16 or higher required\n!Breaking change! ioBroker js-controller 4.0 or higher required\nBump is-online from 9.0.1 to 10.0.0",
         "de": "! Veränderung brechen! NodeJS 14.16 oder höher erforderlich\n! Veränderung brechen! ioBroker js-controller 4.0 oder höher erforderlich\nBump is-online von 9.0.1 bis 10.0.0",
@@ -74,18 +87,6 @@
         "es": "mover a jsonConfig.json (Administrador 5)\nAdmite la dirección de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
         "pl": "przejdź do jsonConfig.json (Administrator 5)\nObsługa sterowania ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPodnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
         "zh-cn": "移至 jsonConfig.json（管理员 5）\n支持ActivateOpenWindow、OpenWindowDetection、childLockEnabled的转向\n将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
-      },
-      "0.3.15-alpha.2": {
-        "en": "Support steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled \nBump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
-        "de": "Unterstützt die Steuerung von ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nErweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
-        "ru": "Поддержка управления ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nПоднимите iobroker-jsonexplorer до версии 0.1.9\nготовность js-контроллера 4.0",
-        "pt": "Suporte a direção de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nSuba iobroker-jsonexplorer para v0.1.9\nprontidão do controlador js 4.0",
-        "nl": "Ondersteuningsbesturing van ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer naar v0.1.9\njs-controller 4.0 gereedheid",
-        "fr": "Prise en charge de la direction de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPasser iobroker-jsonexplorer à la v0.1.9\npréparation js-controller 4.0",
-        "it": "Supporta la guida di ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPorta iobroker-jsonexplorer alla v0.1.9\njs-controller 4.0 prontezza",
-        "es": "Admite la dirección de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
-        "pl": "Obsługa sterowania ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPodnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
-        "zh-cn": "支持ActivateOpenWindow、OpenWindowDetection、childLockEnabled的转向\n将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
       }
     },
     "title": "Tado",

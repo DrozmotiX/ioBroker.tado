@@ -1,4 +1,9 @@
 # Older changes
+## 0.3.13 (2022-01-03)
+* (HGlab01) Optimize internet-check by using isOnline-library
+* (HGlab01) Support Smart AC Control V3+ (issue #403)
+* (HGlab01) Offset temperature rounding to max. 2 digits
+
 ## 0.3.12 (2021-11-25)
 * (HGlab01) support attribute 'showScheduleSetup'
 * (HGlab01) fix HOT_WATER device issue with temperature
