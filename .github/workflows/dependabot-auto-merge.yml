@@ -11,7 +11,7 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2.6.0
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           target: minor
           github-token: ${{ secrets.AUTOMERGER }}
