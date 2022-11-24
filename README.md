@@ -50,9 +50,9 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.4.1-alpha.0 (2022-11-19)
+### 0.4.1 (2022-11-24)
 * (HGlab01) Add attribute isBalanceAcEligible
-* (HGlab01) Bump axios from 0.27.2 to 1.1.3
+* (HGlab01) Bump axios from 0.27.2 to 1.2.0
 * (HGlab01) Bump simple-oauth2 from 4.3.0 to 5.0.0
 
 ### 0.4.0 (2022-09-05)
