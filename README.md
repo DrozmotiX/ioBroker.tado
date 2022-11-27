@@ -50,6 +50,9 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.4.2 (2022-11-27)
+* (HGlab01) Downgrade axios to 1.1.3 (#561)
+
 ### 0.4.1 (2022-11-24)
 * (HGlab01) Add attribute isBalanceAcEligible
 * (HGlab01) Bump axios from 0.27.2 to 1.2.0
@@ -69,11 +72,6 @@ If you like my work, please feel free to provide a personal donation
 * (ilueckel) Support steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled 
 * (HGlab01) Bump iobroker-jsonexplorer to v0.1.9
 * (HGlab01) js-controller 4.0 readiness
-
-### 0.3.14 (2022-01-21)
-* (HGlab01) Improve hotwater handling
-* (HGlab01) Improve AC Control v3 devices 
-* (HGlab01) Support swing ON/OFF for AC v3 devices
 
 ## License
 MIT License

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "news": {
+      "0.4.2": {
+        "en": "Downgrade axios to 1.1.3 (#561)",
+        "de": "Axios nach unten auf 1.1.3 #(561)",
+        "ru": "Аксиос понижения до 1.1.3 #(561)",
+        "pt": "Eixo de downgrade para 1.1.3 #(561)",
+        "nl": "Downgrade axios to 1.1.3",
+        "fr": "Axios de bas niveau à 1.1.3 #(561)",
+        "it": "Axios downgrade a 1.1.3 #(561)",
+        "es": "Axios degradados a 1.1.3 #(561)",
+        "pl": "Downgrade axios to 1.1.3 #(561) (ang.)",
+        "uk": "Downgrade axios до 1.1.3 #(561)",
+        "zh-cn": "Down等级 axios to 1.1.3 #(561)"
+      },
       "0.4.1": {
         "en": "Add attribute isBalanceAcEligible\nBump axios from 0.27.2 to 1.2.0\nBump simple-oauth2 from 4.3.0 to 5.0.0",
         "de": "Attribut hinzufügen\nBump axios von 0,27,2 bis 1,2.0\nBump simple-oauth2 von 4.3.0 bis 5.0.0",
@@ -76,18 +89,6 @@
         "es": "Soporte ligero\nSoporte vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
         "pl": "Światło pomocowe\nWsparcie vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortE zrozumiałe",
         "zh-cn": "支助\n支持被遗弃的Banner Dis de Code,阈化,不断增长的WithError,是AirComfortEligableable"
-      },
-      "0.3.15": {
-        "en": "move to jsonConfig.json (Admin 5)\nSupport steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled \nBump iobroker-jsonexplorer to v0.1.9\njs-controller 4.0 readiness",
-        "de": "Verschieben Sie zu jsonConfig.json (Admin 5)\nUnterstützt die Steuerung von ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nErweitern Sie iobroker-jsonexplorer auf v0.1.9\njs-controller 4.0-Bereitschaft",
-        "ru": "перейти к jsonConfig.json (Администратор 5)\nПоддержка управления ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nПоднимите iobroker-jsonexplorer до версии 0.1.9\nготовность js-контроллера 4.0",
-        "pt": "mover para jsonConfig.json (Admin 5)\nSuporte a direção de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nSuba iobroker-jsonexplorer para v0.1.9\nprontidão do controlador js 4.0",
-        "nl": "ga naar jsonConfig.json (Admin 5)\nOndersteuningsbesturing van ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer naar v0.1.9\njs-controller 4.0 gereedheid",
-        "fr": "déplacer vers jsonConfig.json (Admin 5)\nPrise en charge de la direction de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPasser iobroker-jsonexplorer à la v0.1.9\npréparation js-controller 4.0",
-        "it": "passa a jsonConfig.json (amministratore 5)\nSupporta la guida di ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPorta iobroker-jsonexplorer alla v0.1.9\njs-controller 4.0 prontezza",
-        "es": "mover a jsonConfig.json (Administrador 5)\nAdmite la dirección de ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nBump iobroker-jsonexplorer a v0.1.9\njs-controller 4.0 preparación",
-        "pl": "przejdź do jsonConfig.json (Administrator 5)\nObsługa sterowania ActivateOpenWindow, OpenWindowDetection, childLockEnabled\nPodnieś iobroker-jsonexplorer do wersji 0.1.9\nGotowość js-controller 4.0",
-        "zh-cn": "移至 jsonConfig.json（管理员 5）\n支持ActivateOpenWindow、OpenWindowDetection、childLockEnabled的转向\n将 iobroker-jsonexplorer 升级到 v0.1.9\njs-controller 4.0 准备就绪"
       }
     },
     "title": "Tado",

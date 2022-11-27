@@ -1,4 +1,9 @@
 # Older changes
+## 0.3.14 (2022-01-21)
+* (HGlab01) Improve hotwater handling
+* (HGlab01) Improve AC Control v3 devices 
+* (HGlab01) Support swing ON/OFF for AC v3 devices
+
 ## 0.3.13 (2022-01-03)
 * (HGlab01) Optimize internet-check by using isOnline-library
 * (HGlab01) Support Smart AC Control V3+ (issue #403)
