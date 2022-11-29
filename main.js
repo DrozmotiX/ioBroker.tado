@@ -641,7 +641,6 @@ class Tado extends utils.Adapter {
 			await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
 			this.log.debug('CheckExpire() at setZoneOverlay() started');
 			await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
-			
 		}
 		catch (error) {
 			console.log(`Body: ${JSON.stringify(config)}`);
