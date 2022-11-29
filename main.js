@@ -797,7 +797,6 @@ class Tado extends utils.Adapter {
 				if (outdated) {
 					this.log.debug('CheckExpire() at DoDataRefresh() if outdated started');
 					await JsonExplorer.checkExpire(homeID + '.*');
-					this.log.debug('CheckExpire() done');
 				} else {
 					this.log.debug('CheckExpire() at DoDataRefresh() if not outdated started');
 					await JsonExplorer.checkExpire(homeID + '.Rooms.*');
