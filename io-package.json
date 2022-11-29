@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.2",
+    "version": "0.4.3-alpha.0",
     "news": {
+      "0.4.3-alpha.0": {
+        "en": "Bump ioBroker-jsonExplorer to 0.1.10-alpha.0\nImprove logs",
+        "de": "Bump ioBroker-jsonExplorer bis 0,1.10-alpha.0\nProtokolle verbessern",
+        "ru": "Bump ioBroker-jsonExplorer до 0.1.10-alpha.0\nУлучшить логы",
+        "pt": "Bump ioBroker-jsonExplorer para 0.1.10-alpha.0\nMelhorar os logs",
+        "nl": "Bump ioBroker-JsonExplorer tot 0.1.10-alfa\nImprove logboeken",
+        "fr": "Bump ioBroker-jsonExplorer to 0.1.10-alpha.0\nAméliorez les registres",
+        "it": "Bump ioBroker-jsonExplorer a 0.1.10-alpha.0\nMigliorare i registri",
+        "es": "Bump ioBroker-jsonExplorer to 0.1.10-alpha.0\nMejorar los registros",
+        "pl": "Bump ioBroker-jsonExplorer to 0,1.10-alpha (ang.)\nPoprawa logna",
+        "uk": "Bump ioBroker-jsonExplorer до 0.1.10-alpha.0\nПокращення журналів",
+        "zh-cn": "Bumpio Broker-jsonExplorer to 0.10-alpha.0\n改进逻辑"
+      },
       "0.4.2": {
         "en": "Downgrade axios to 1.1.3 (#561)",
         "de": "Axios nach unten auf 1.1.3 #(561)",
@@ -77,18 +90,6 @@
         "es": "Soporte de luz (sue #519)\nAñadir atributos vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
         "pl": "Wsparcie światła (odcinek #519)\nAdd attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError is AirComfortE zrozumiałe",
         "zh-cn": "(第519号)\n添加的属性是《濒危的BannerDis de Code》,阈化行为,不断增长的WithError,是AirComfortEligableable"
-      },
-      "0.3.16-alpha.0": {
-        "en": "Support light\nSupport vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
-        "de": "Unterstützungslicht\nUnterstützung vattenfallBannerDiscountCode, SchwellwertModeActive, MontageStateWithError, isAirComfortEligible",
-        "ru": "Поддержка света\nПоддержка vattenfallBannerDiscountCode, порогModeActive, MountStateWithError, isAirComfortEligible",
-        "pt": "Luz de suporte\nSuporte vattenfallBannerDiscountCode, limiarModeActive, mountingStateWithError, isAirComfortEligible",
-        "nl": "Steun licht\nVertaling:",
-        "fr": "Support lumière\nSupport vattenfallBannerDiscountCode, thresholdModeActive, montageStateAvecError, isAirComfortEligible",
-        "it": "Luce di sostegno\nSupporto vattenfallBannerDiscountCode, sogliaModeActive, montaggioStateWithError, èAirComfortEleggibile",
-        "es": "Soporte ligero\nSoporte vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
-        "pl": "Światło pomocowe\nWsparcie vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortE zrozumiałe",
-        "zh-cn": "支助\n支持被遗弃的Banner Dis de Code,阈化,不断增长的WithError,是AirComfortEligableable"
       }
     },
     "title": "Tado",

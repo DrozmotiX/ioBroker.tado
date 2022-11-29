@@ -1,4 +1,10 @@
 # Older changes
+## 0.3.15 (2022-02-27)
+* (DutchmanNL) move to jsonConfig.json (Admin 5)
+* (ilueckel) Support steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled 
+* (HGlab01) Bump iobroker-jsonexplorer to v0.1.9
+* (HGlab01) js-controller 4.0 readiness
+
 ## 0.3.14 (2022-01-21)
 * (HGlab01) Improve hotwater handling
 * (HGlab01) Improve AC Control v3 devices 

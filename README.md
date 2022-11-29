@@ -50,6 +50,10 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.4.3-alpha.0 (2022-11-29)
+* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10-alpha.0
+* (HGlab01) Improve logs
+
 ### 0.4.2 (2022-11-27)
 * (HGlab01) Downgrade axios to 1.1.3 (#561)
 
@@ -66,12 +70,6 @@ If you like my work, please feel free to provide a personal donation
 ### 0.3.16 (2022-08-01)
 * (HGlab01) Support light (issue #519)
 * (HGlab01) Add attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible
-
-### 0.3.15 (2022-02-27)
-* (DutchmanNL) move to jsonConfig.json (Admin 5)
-* (ilueckel) Support steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled 
-* (HGlab01) Bump iobroker-jsonexplorer to v0.1.9
-* (HGlab01) js-controller 4.0 readiness
 
 ## License
 MIT License

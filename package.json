@@ -1,6 +1,6 @@
 {
   "name": "iobroker.tado",
-  "version": "0.4.2",
+  "version": "0.4.3-alpha.0",
   "description": "Tado cloud connector to control Tado devices",
   "author": {
     "name": "DutchmanNL",
@@ -23,7 +23,7 @@
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^2.4.0",
     "axios": "1.1.3",
-    "iobroker-jsonexplorer": "0.1.9",
+    "iobroker-jsonexplorer": "0.1.10-alpha.0",
     "simple-oauth2": "^5.0.0"
   },
   "devDependencies": {
