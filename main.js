@@ -332,9 +332,8 @@ class Tado extends utils.Adapter {
 		this.log.debug(`Called 'DELETE ${url}'`);
 		await JsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
-		this.log.info('CheckExpire() at clearZoneOverlay()');
+		this.log.debug('CheckExpire() at clearZoneOverlay() started');
 		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
-		this.log.info('CheckExpire()  done');
 	}
 
 	/**
@@ -640,10 +639,8 @@ class Tado extends utils.Adapter {
 			await JsonExplorer.setLastStartTime();
 			await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
 			await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
-			this.log.info('CheckExpire() at setZoneOverlay()');
+			this.log.debug('CheckExpire() at setZoneOverlay() started');
 			await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
-			this.log.info('CheckExpire()  done');
-			
 		}
 		catch (error) {
 			console.log(`Body: ${JSON.stringify(config)}`);
@@ -798,15 +795,13 @@ class Tado extends utils.Adapter {
 				//set all outdated states to NULL
 				step = `Set outdated states to null`;
 				if (outdated) {
-					this.log.info('CheckExpire() at DoDataRefresh() if outdated');
+					this.log.debug('CheckExpire() at DoDataRefresh() if outdated started');
 					await JsonExplorer.checkExpire(homeID + '.*');
-					this.log.info('CheckExpire()  done');
 				} else {
-					this.log.info('CheckExpire() at DoDataRefresh() if not outdated');
+					this.log.debug('CheckExpire() at DoDataRefresh() if not outdated started');
 					await JsonExplorer.checkExpire(homeID + '.Rooms.*');
 					await JsonExplorer.checkExpire(homeID + '.Weather.*');
 					await JsonExplorer.checkExpire(homeID + '.Mobile_Devices.*');
-					this.log.info('CheckExpire()  done');
 				}
 			}
 
