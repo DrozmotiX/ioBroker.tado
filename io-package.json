@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.3-alpha.0",
+    "version": "0.4.3-alpha.1",
     "news": {
+      "0.4.3-alpha.1": {
+        "en": "Bump ioBroker-jsonExplorer to 0.1.10\nImprove logs",
+        "de": "Bump ioBroker-jsonExplorer bis 0,1.10\nProtokolle verbessern",
+        "ru": "Bump ioBroker-jsonExplorer до 0.1.10\nУлучшить логы",
+        "pt": "Bump ioBroker-jsonExplorer para 0.1.10\nMelhorar os logs",
+        "nl": "Bump ioBroker-JsonExplorer tot 0.1.10\nImprove logboeken",
+        "fr": "Bump ioBroker-jsonExplorer to 0.1.10\nAméliorez les registres",
+        "it": "Bump ioBroker-jsonExplorer a 0.1.10\nMigliorare i registri",
+        "es": "Bump ioBroker-jsonExplorer to 0.1.10\nMejorar los registros",
+        "pl": "Bump ioBroker-jsonExplorer (ang.)\nPoprawa logna",
+        "uk": "Bump ioBroker-jsonExplorer до 0.1.10\nПокращення журналів",
+        "zh-cn": "Bumpio Broker-json Explorer to 0.10\n改进逻辑"
+      },
       "0.4.3-alpha.0": {
         "en": "Bump ioBroker-jsonExplorer to 0.1.10-alpha.0\nImprove logs",
         "de": "Bump ioBroker-jsonExplorer bis 0,1.10-alpha.0\nProtokolle verbessern",
@@ -78,18 +91,6 @@
         "es": "! ¡Cambio de ruptura! NodeJS 14.16 o superior requerido\n! ¡Cambio de ruptura! ioBroker js-controller 4.0 o superior requerido\nBump is-online from 9.0.1 to 10.0.0",
         "pl": "! Zmiana. NodeJS 14.16 (ang.)\n! Zmiana. ioBroker js-kontroler 4.0 lub wyższych wymagań\nBump jest na linii 9.0.1 do 10.0.0",
         "zh-cn": "! 打破沉默! 第14.16号申诉\n! 打破沉默! io Broker js-控制ler 4.0或更高需要\nBump是从9.0到10.0.0的。"
-      },
-      "0.3.16": {
-        "en": "Support light (issue #519)\nAdd attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
-        "de": "Unterstützungslicht (Gewebe #519)\nAttribute hinzufügen vattenfallBannerDiscountCode, SchwellwertModeActive, mountStateWithError, isAirComfortEligible",
-        "ru": "Световая поддержка (выдача #519)\nДобавить атрибуты vattenfallBannerDiscountCode, порогModeActive, MountStateWithError, isAirComfortEligible",
-        "pt": "Luz de apoio (edição #519)\nAdicionar atributos vattenfallBannerDiscountCode, limiarModeActive, mountingStateWithError, isAirComfortEligible",
-        "nl": "Vertaling:\nAdresteert vattenfallBannerDiscountCode, drempelModeActive, mountingStateWithrror, isAirComfortEligible",
-        "fr": "Lumière de soutien (issue #519)\nAjouter les attributs vattenfallBannerDiscountCode, thresholdModeActive, montageStateAvecError, isAirComfortEligible",
-        "it": "Luce di supporto (problema #519)\nAggiungi attributi vattenfallBannerDiscountCode, sogliaModeActive, montaggioStateWithError, èAirComfortEleggibile",
-        "es": "Soporte de luz (sue #519)\nAñadir atributos vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible",
-        "pl": "Wsparcie światła (odcinek #519)\nAdd attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError is AirComfortE zrozumiałe",
-        "zh-cn": "(第519号)\n添加的属性是《濒危的BannerDis de Code》,阈化行为,不断增长的WithError,是AirComfortEligableable"
       }
     },
     "title": "Tado",

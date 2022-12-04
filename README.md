@@ -50,8 +50,8 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.4.3-alpha.0 (2022-11-29)
-* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10-alpha.0
+### 0.4.3-alpha.1 (2022-12-04)
+* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10
 * (HGlab01) Improve logs
 
 ### 0.4.2 (2022-11-27)
