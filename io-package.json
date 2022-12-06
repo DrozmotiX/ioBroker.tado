@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.3-alpha.1",
+    "version": "0.4.3",
     "news": {
+      "0.4.3": {
+        "en": "Bump ioBroker-jsonExplorer to 0.1.10 (#551)\nBump axios to 1.2.1 (final fix for #561)\nImprove logs",
+        "de": "Bump ioBroker-jsonExplorer zu 0,1.10 #(551)\nBump axios bis 1.2.1 (Endfix für #561)\nProtokolle verbessern",
+        "ru": "Bump ioBroker-jsonExplorer до 0.1.10 #(551)\nBump axios до 1.2.1 (конечная фиксация для #561)\nУлучшить логы",
+        "pt": "Bump ioBroker-jsonExplorer para 0.1.10 #(551)\nBump axios para 1.2.1 (fixação final para #561)\nMelhorar os logs",
+        "nl": "Bump ioBroker-JsonExplorer tot 0.1.10\nBump Axios naar 1.2.1 (finale fix for 561)\nImprove logboeken",
+        "fr": "Bump ioBroker-jsonExplorer to 0.1.10 #(551)\nBump axios to 1.2.1 (réparation finale pour #561)\nAméliorez les registres",
+        "it": "Bump ioBroker-jsonExplorer a 0.1.10 #(551)\nBump axios a 1.2.1 (finale per #561)\nMigliorare i registri",
+        "es": "Bump ioBroker-jsonExplorer to 0.1.10 #(551)\nBump axios a 1.2.1 (final fijado para #561)\nMejorar los registros",
+        "pl": "Bump ioBroker-jsonExplorer do 0,1.10 #(551) (ang.)\nBump axios to 1.2.1 (final fix for #561) (ang.)\nPoprawa logna",
+        "uk": "Bump ioBroker-jsonExplorer до 0.1.10 #(551)\nBump axios до 1.2.1 (фінансова фіксація для #561)\nПокращення журналів",
+        "zh-cn": "Bumpio Broker-json Explorer to 0.10 #(551)\nBump axios to 1.2.1(第561号最后规定)\n改进逻辑"
+      },
       "0.4.3-alpha.1": {
         "en": "Bump ioBroker-jsonExplorer to 0.1.10\nImprove logs",
         "de": "Bump ioBroker-jsonExplorer bis 0,1.10\nProtokolle verbessern",
@@ -69,18 +82,6 @@
         "zh-cn": "增属性\nBumpxis from 0.27.2 to 1.1.3\nBump简单auth2 从4.3.0下降到5.0.0"
       },
       "0.4.0": {
-        "en": "!Breaking change! NodeJS 14.16 or higher required\n!Breaking change! ioBroker js-controller 4.0 or higher required\nBump is-online from 9.0.1 to 10.0.0",
-        "de": "! Veränderung brechen! NodeJS 14.16 oder höher erforderlich\n! Veränderung brechen! ioBroker js-controller 4.0 oder höher erforderlich\nBump is-online von 9.0.1 bis 10.0.0",
-        "ru": "! Перерыв перемен! NodeJS 14.16 или выше требуется\n! Перерыв перемен! ioBroker js-controller 4.0 или выше требуется\nBump онлайн с 9.0.1 до 10.0.0",
-        "pt": "! Mudança de ruptura! NodeJS 14.16 ou superior exigido\n! Mudança de ruptura! ioBroker js-controller 4.0 ou superior exigido\nBump is-online de 9.0.1 a 10.0.0",
-        "nl": "! Verandering. NodeJS 14.16 of hoger vereiste\n! Verandering. Quality over Quantity (QoQ) Releases Vertaling:\nBump is-online van 9.01 tot 10.0",
-        "fr": "! Changer ! NodeJS 14.16 ou plus requis\n! Changer ! ioBroker js-controller 4.0 ou supérieur requis\nBump is-online from 9.0.1 to 10.0.0",
-        "it": "! Cambiamento di rottura! NodeJS 14.16 o superiore richiesto\n! Cambiamento di rottura! ioBroker js-controller 4.0 o superiore richiesto\nBump è online da 9.0.1 a 10.0.0",
-        "es": "! ¡Cambio de ruptura! NodeJS 14.16 o superior requerido\n! ¡Cambio de ruptura! ioBroker js-controller 4.0 o superior requerido\nBump is-online from 9.0.1 to 10.0.0",
-        "pl": "! Zmiana. NodeJS 14.16 (ang.)\n! Zmiana. ioBroker js-kontroler 4.0 lub wyższych wymagań\nBump jest na linii 9.0.1 do 10.0.0",
-        "zh-cn": "! 打破沉默! 第14.16号申诉\n! 打破沉默! io Broker js-控制ler 4.0或更高需要\nBump是从9.0到10.0.0的。"
-      },
-      "0.4.0-alpha.1": {
         "en": "!Breaking change! NodeJS 14.16 or higher required\n!Breaking change! ioBroker js-controller 4.0 or higher required\nBump is-online from 9.0.1 to 10.0.0",
         "de": "! Veränderung brechen! NodeJS 14.16 oder höher erforderlich\n! Veränderung brechen! ioBroker js-controller 4.0 oder höher erforderlich\nBump is-online von 9.0.1 bis 10.0.0",
         "ru": "! Перерыв перемен! NodeJS 14.16 или выше требуется\n! Перерыв перемен! ioBroker js-controller 4.0 или выше требуется\nBump онлайн с 9.0.1 до 10.0.0",
