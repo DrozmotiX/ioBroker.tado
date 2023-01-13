@@ -493,7 +493,7 @@ class Tado extends utils.Adapter {
 				this.log.error(`Invalid value '${power}' for state 'power'. Supported values are ON and OFF`);
 				return;
 			}
-			if (typeSkillBasedApp != 'TIMER' && typeSkillBasedApp != 'MANUAL' && typeSkillBasedApp != 'NEXT_TIME_BLOCK' && typeSkillBasedApp != 'NO_OVERLAY') {
+			if (typeSkillBasedApp != 'TIMER' && typeSkillBasedApp != 'MANUAL' && typeSkillBasedApp != 'NEXT_TIME_BLOCK' && typeSkillBasedApp != 'NO_OVERLAY' && typeSkillBasedApp != 'TADO_MODE') {
 				this.log.error(`Invalid value '${typeSkillBasedApp}' for state 'typeSkillBasedApp'. Allowed values are TIMER, MANUAL and NEXT_TIME_BLOCK`);
 				return;
 			}
