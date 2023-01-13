@@ -1198,7 +1198,14 @@ class Tado extends utils.Adapter {
 
 	async errorHandling(errorObject) {
 		try {
-			if (errorObject.message && (errorObject.message.includes('Login failed!') || errorObject.message.includes('ETIMEDOUT') || errorObject.message.includes('EAI_AGAIN') || errorObject.message.includes('No internet connection detected!'))) return;
+			if (errorObject.message && (errorObject.message.includes('Login failed!') ||
+				errorObject.message.includes('conflict occurred while trying to update entity null') ||
+				errorObject.message.includes('ECONNRESET') ||
+				errorObject.message.includes('socket hang up') ||
+				errorObject.message.includes('with status code 504') ||
+				errorObject.message.includes('ETIMEDOUT') ||
+				errorObject.message.includes('EAI_AGAIN') ||
+				errorObject.message.includes('No internet connection detected!'))) return;
 			if (this.log.level != 'debug' && this.log.level != 'silly') {
 				if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
 					const sentryInstance = this.getPluginInstance('sentry');

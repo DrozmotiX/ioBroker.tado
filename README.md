@@ -50,6 +50,9 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Add attribute energyIqReminder
+
 ### 0.4.3 (2022-12-06)
 * (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10 (#551)
 * (HGlab01) Bump axios to 1.2.1 (final fix for #561)
