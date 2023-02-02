@@ -51,7 +51,7 @@
     "node": ">=14.16.0",
     "npm": ">=6.0.0"
   },
-  "main": "main.js",
+  "main": "main.mjs",
   "scripts": {
     "release": "release-script",
     "test:js": "mocha --config test/mocharc.custom.json \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
