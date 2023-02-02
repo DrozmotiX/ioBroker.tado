@@ -132,7 +132,7 @@
     ],
     "license": "MIT",
     "platform": "Javascript/Node.js",
-    "main": "main.mjs",
+    "main": "main.js",
     "icon": "tado.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/tado.png",
