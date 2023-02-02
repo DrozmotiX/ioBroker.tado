@@ -24,8 +24,7 @@
 	},
 	"include": [
 		"**/*.js",
-		"**/*.mjs",
-		"**/*.d.ts",
+		"**/*.d.ts"
 	],
 	"exclude": [
 		"node_modules/**",
