@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "news": {
+      "0.4.4": {
+        "en": "Add attribute 'energyIqReminder' and 'specialOffersEnabled'\nBump axios to 1.3.1\nFix 'Invalid value TADO_MODE' (#585)",
+        "de": "Attribut energyIqReminder und Sonderangeboten hinzufügen Ermöglicht\nBump axios bis 1.3.1\nFix 'Invaliditätswert TADO_MODE' (#585)",
+        "ru": "Добавить атрибут energyIqReminder и specialOffers Включить\nBump осье до 1.3.1\nFix 'Недействительное значение TADO_MODE' (#585)",
+        "pt": "Adicionar atributo energyIqReminder e SpecialOffers Activado\nBump axios para 1.3.1\nFix 'Valor inválido TADO_MODE' (#585)",
+        "nl": "Voeg advertentie aan energie IqReminder en specialist In staat\nBump Axios naar 1.3.1\nLos 'Invalid waarde TADO MODE' (585)",
+        "fr": "Ajouter attribute energyIqReminder et specialOffers Enabled\nAxios de la boue au 1.3.1\nFix 'Valeur invalide TADO_MODE' (#585)",
+        "it": "Aggiungi attributo energyIqRimettitore e offerte speciali Abilitato\nAssio di bump a 1.3.1\nRisolvere 'Valore non valido TADO_MODE' (#585)",
+        "es": "Agregar el atributo energíaIqReminder y especialesOffers Enabled\nBump axios a 1.3.1\nFijar el valor inválido TADO_MODE (#585)",
+        "pl": "Addd przypisuje energię IqReminder i specjalną Oferę. Enabled\nBump axios (ang.)\nTADO_MODE (#585) (ang.)",
+        "uk": "Додати атрибут енергіїIqReminder та спеціальні Увімкнути\nБампер аксіос до 1.3.1\nВиправлення 'Незакінченна вартість TADO_MODE' (#585)",
+        "zh-cn": "增加能源IqReminder 和特别Offer 附录\nBumpxios to 1.3.1\nFix TADO_MODE(第585号)"
+      },
       "0.4.3": {
         "en": "Bump ioBroker-jsonExplorer to 0.1.10 (#551)\nBump axios to 1.2.1 (final fix for #561)\nImprove logs",
         "de": "Bump ioBroker-jsonExplorer zu 0,1.10 #(551)\nBump axios bis 1.2.1 (Endfix für #561)\nProtokolle verbessern",
@@ -80,18 +93,6 @@
         "pl": "Addaptacja jest zrozumiała dla Addda\nBump axios od 0,27 do 1.1.3\nPojedyncza wersja 4.3.0 do 5.0.0",
         "uk": "Додавання атрибутаBalanceAcEligible\nBump axios від 0.27.2 до 1.1.3\nEnglish, Українська, Français..",
         "zh-cn": "增属性\nBumpxis from 0.27.2 to 1.1.3\nBump简单auth2 从4.3.0下降到5.0.0"
-      },
-      "0.4.0": {
-        "en": "!Breaking change! NodeJS 14.16 or higher required\n!Breaking change! ioBroker js-controller 4.0 or higher required\nBump is-online from 9.0.1 to 10.0.0",
-        "de": "! Veränderung brechen! NodeJS 14.16 oder höher erforderlich\n! Veränderung brechen! ioBroker js-controller 4.0 oder höher erforderlich\nBump is-online von 9.0.1 bis 10.0.0",
-        "ru": "! Перерыв перемен! NodeJS 14.16 или выше требуется\n! Перерыв перемен! ioBroker js-controller 4.0 или выше требуется\nBump онлайн с 9.0.1 до 10.0.0",
-        "pt": "! Mudança de ruptura! NodeJS 14.16 ou superior exigido\n! Mudança de ruptura! ioBroker js-controller 4.0 ou superior exigido\nBump is-online de 9.0.1 a 10.0.0",
-        "nl": "! Verandering. NodeJS 14.16 of hoger vereiste\n! Verandering. Quality over Quantity (QoQ) Releases Vertaling:\nBump is-online van 9.01 tot 10.0",
-        "fr": "! Changer ! NodeJS 14.16 ou plus requis\n! Changer ! ioBroker js-controller 4.0 ou supérieur requis\nBump is-online from 9.0.1 to 10.0.0",
-        "it": "! Cambiamento di rottura! NodeJS 14.16 o superiore richiesto\n! Cambiamento di rottura! ioBroker js-controller 4.0 o superiore richiesto\nBump è online da 9.0.1 a 10.0.0",
-        "es": "! ¡Cambio de ruptura! NodeJS 14.16 o superior requerido\n! ¡Cambio de ruptura! ioBroker js-controller 4.0 o superior requerido\nBump is-online from 9.0.1 to 10.0.0",
-        "pl": "! Zmiana. NodeJS 14.16 (ang.)\n! Zmiana. ioBroker js-kontroler 4.0 lub wyższych wymagań\nBump jest na linii 9.0.1 do 10.0.0",
-        "zh-cn": "! 打破沉默! 第14.16号申诉\n! 打破沉默! io Broker js-控制ler 4.0或更高需要\nBump是从9.0到10.0.0的。"
       }
     },
     "title": "Tado",

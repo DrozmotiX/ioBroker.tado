@@ -50,7 +50,7 @@ If you like my work, please feel free to provide a personal donation
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.4.4 (2023-02-03)
 * (HGlab01) Add attribute 'energyIqReminder' and 'specialOffersEnabled'
 * (HGlab01) Bump axios to 1.3.1
 * (HGlab01) Fix 'Invalid value TADO_MODE' (#585)
@@ -72,10 +72,6 @@ If you like my work, please feel free to provide a personal donation
 * (HGlab01) !Breaking change! NodeJS 14.16 or higher required
 * (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
 * (HGlab01) Bump is-online from 9.0.1 to 10.0.0
-
-### 0.3.16 (2022-08-01)
-* (HGlab01) Support light (issue #519)
-* (HGlab01) Add attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible
 
 ## License
 MIT License

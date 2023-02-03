@@ -1,4 +1,8 @@
 # Older changes
+## 0.3.16 (2022-08-01)
+* (HGlab01) Support light (issue #519)
+* (HGlab01) Add attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible
+
 ## 0.3.15 (2022-02-27)
 * (DutchmanNL) move to jsonConfig.json (Admin 5)
 * (ilueckel) Support steering of ActivateOpenWindow, OpenWindowDetection, childLockEnabled 
