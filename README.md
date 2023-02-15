@@ -13,15 +13,6 @@
 ## tado adapter for ioBroker
 tado° ensures a comfortable and healthy climate while saving up to 31% on your heating bill.
 
-## Breaking changes in 0.4.0
-* Requires NodeJS 14.16 or higher
-* Requires ioBroker host (js-controller) 4.0 or higher
-
-## Support me
-If you like my work, please feel free to provide a personal donation  
-(this is an personal Donate link for DutchmanNL, no relation to the ioBroker Project !  
-[![Donate](https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/button.png)](http://paypal.me/DutchmanNL)
-
 ## Things you can steer
 | State | Description |
 | ----- | ----------- |
@@ -44,6 +35,9 @@ If you like my work, please feel free to provide a personal donation
 | tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing | Vertical swing (only AC devices with V3+ version) |
 | tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 
+## Requires
+* NodeJS 14.16 or higher
+* ioBroker host (js-controller) 4.0 or higher
 
 ## Changelog
 <!--
