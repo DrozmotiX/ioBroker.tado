@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.0 (2022-09-05)
+* (HGlab01) !Breaking change! NodeJS 14.16 or higher required
+* (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
+* (HGlab01) Bump is-online from 9.0.1 to 10.0.0
+
 ## 0.3.16 (2022-08-01)
 * (HGlab01) Support light (issue #519)
 * (HGlab01) Add attributes vattenfallBannerDiscountCode, thresholdModeActive, mountingStateWithError, isAirComfortEligible
