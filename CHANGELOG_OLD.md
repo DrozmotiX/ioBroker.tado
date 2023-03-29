@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.1 (2022-11-24)
+* (HGlab01) Add attribute isBalanceAcEligible
+* (HGlab01) Bump axios from 0.27.2 to 1.2.0
+* (HGlab01) Bump simple-oauth2 from 4.3.0 to 5.0.0
+
 ## 0.4.0 (2022-09-05)
 * (HGlab01) !Breaking change! NodeJS 14.16 or higher required
 * (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
