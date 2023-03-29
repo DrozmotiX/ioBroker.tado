@@ -20,6 +20,7 @@ const JsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
 const isOnline = require('@esm2cjs/is-online').default;
+const https = require('https');
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
@@ -1155,6 +1156,8 @@ class Tado extends utils.Adapter {
 						url: tado_url + url,
 						method: method,
 						data: data,
+						timeout: 10000,
+						httpsAgent: new https.Agent({ keepAlive: true }),
 						headers: {
 							Authorization: 'Bearer ' + this.accessToken.token.access_token
 						}
