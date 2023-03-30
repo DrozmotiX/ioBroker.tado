@@ -16,7 +16,7 @@ const tado_config = {
 	}
 };
 const { ResourceOwnerPassword } = require('simple-oauth2');
-const JsonExplorer = require('iobroker-jsonexplorer');
+const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
 const isOnline = require('@esm2cjs/is-online').default;
@@ -44,7 +44,7 @@ class Tado extends utils.Adapter {
 		this.Home_data = null;
 		this.lastupdate = 0;
 		this.apiCallinExecution = false;
-		JsonExplorer.init(this, state_attr);
+		jsonExplorer.init(this, state_attr);
 		this.intervall_time = 60 * 1000;
 		this.roomCapabilities = {};
 	}
@@ -53,7 +53,7 @@ class Tado extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
-		this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
+		this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 		this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 		// Reset the connection indicator during startup
 		this.setState('info.connection', false, true);
@@ -331,10 +331,10 @@ class Tado extends utils.Adapter {
 		}
 		await this.apiCall(url, 'delete');
 		this.log.debug(`Called 'DELETE ${url}'`);
-		await JsonExplorer.setLastStartTime();
+		await jsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
 		this.log.debug('CheckExpire() at clearZoneOverlay() started');
-		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
+		await jsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 	}
 
 	/**
@@ -637,11 +637,11 @@ class Tado extends utils.Adapter {
 				result.setting.temperature.celsius = null;
 				result.setting.temperature.fahrenheit = null;
 			}
-			await JsonExplorer.setLastStartTime();
-			await JsonExplorer.TraverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
-			await JsonExplorer.TraverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
+			await jsonExplorer.setLastStartTime();
+			await jsonExplorer.traverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 2);
+			await jsonExplorer.traverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 2);
 			this.log.debug('CheckExpire() at setZoneOverlay() started');
-			await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
+			await jsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 		}
 		catch (error) {
 			console.log(`Body: ${JSON.stringify(config)}`);
@@ -697,9 +697,9 @@ class Tado extends utils.Adapter {
 		}
 		await this.apiCall(url, 'post');
 		this.log.debug(`Called 'POST ${url}'`);
-		await JsonExplorer.setLastStartTime();
+		await jsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
-		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindow.*');
+		await jsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindow.*');
 	}
 
 	/**
@@ -713,9 +713,9 @@ class Tado extends utils.Adapter {
 			throw new Error('No internet connection detected!');
 		}
 		await this.apiCall(url, 'put', config);
-		await JsonExplorer.setLastStartTime();
+		await jsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
-		await JsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindowDetection.*');
+		await jsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.openWindowDetection.*');
 	}
 
 	/**
@@ -730,9 +730,9 @@ class Tado extends utils.Adapter {
 			throw new Error('No internet connection detected!');
 		}
 		await this.apiCall(url, 'put', { childLockEnabled: enabled });
-		await JsonExplorer.setLastStartTime();
+		await jsonExplorer.setLastStartTime();
 		await this.DoZoneStates(home_id, zone_id);
-		await JsonExplorer.checkExpire(`${home_id}.Rooms.${zone_id}.devices.${device_id}.childLockEnabled`);
+		await jsonExplorer.checkExpire(`${home_id}.Rooms.${zone_id}.devices.${device_id}.childLockEnabled`);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -764,7 +764,7 @@ class Tado extends utils.Adapter {
 			}
 			this.log.debug('GetMe result: ' + JSON.stringify(this.getMe_data));
 			//set timestamp for 'Online'-state
-			await JsonExplorer.setLastStartTime();
+			await jsonExplorer.setLastStartTime();
 
 			for (const i in this.getMe_data.homes) {
 				let homeID = String(this.getMe_data.homes[i].id);
@@ -797,12 +797,12 @@ class Tado extends utils.Adapter {
 				step = `Set outdated states to null`;
 				if (outdated) {
 					this.log.debug('CheckExpire() at DoDataRefresh() if outdated started');
-					await JsonExplorer.checkExpire(homeID + '.*');
+					await jsonExplorer.checkExpire(homeID + '.*');
 				} else {
 					this.log.debug('CheckExpire() at DoDataRefresh() if not outdated started');
-					await JsonExplorer.checkExpire(homeID + '.Rooms.*');
-					await JsonExplorer.checkExpire(homeID + '.Weather.*');
-					await JsonExplorer.checkExpire(homeID + '.Mobile_Devices.*');
+					await jsonExplorer.checkExpire(homeID + '.Rooms.*');
+					await jsonExplorer.checkExpire(homeID + '.Weather.*');
+					await jsonExplorer.checkExpire(homeID + '.Mobile_Devices.*');
 				}
 			}
 
@@ -881,14 +881,14 @@ class Tado extends utils.Adapter {
 		this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
 		this.Home_data.masterswitch = '';
 		this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
-		JsonExplorer.TraverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0, 0);
+		jsonExplorer.traverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0);
 	}
 
 	async DoWeather(HomeId) {
 		const weather_data = await this.getWeather(HomeId);
 		this.log.debug('Weather_data Result: ' + JSON.stringify(weather_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
-		JsonExplorer.TraverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
+		jsonExplorer.traverseJson(weather_data, `${HomeId}.Weather`, true, true,  0);
 	}
 
 	/**
@@ -907,7 +907,7 @@ class Tado extends utils.Adapter {
 		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
 		delete offset.celsius;
 		delete offset.fahrenheit;
-		JsonExplorer.TraverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
+		jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true,  2);
 	}
 
 	async DoDevices(HomeId) {
@@ -920,14 +920,14 @@ class Tado extends utils.Adapter {
 		this.MobileDevices_data = await this.getMobileDevices(HomeId);
 		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
-		JsonExplorer.TraverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0, 0);
+		jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
 	}
 
 	async DoMobileDeviceSettings(HomeId, DeviceId) {
 		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
 		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		JsonExplorer.TraverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true, 0, 2);
+		jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true,  2);
 	}
 
 	async DoZones(HomeId) {
@@ -955,7 +955,7 @@ class Tado extends utils.Adapter {
 			delete this.Zones_data[j].openWindowDetection.enabled;
 		}
 
-		JsonExplorer.TraverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
+		jsonExplorer.traverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0);
 
 		for (const i in this.Zones_data) {
 			let zoneId = this.Zones_data[i].id;
@@ -976,7 +976,7 @@ class Tado extends utils.Adapter {
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		ZonesState_data.activateOpenWindow = false;
-		JsonExplorer.TraverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
+		jsonExplorer.traverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 2);
 	}
 
 	async DoCapabilities(homeId, zoneId) {
@@ -986,7 +986,7 @@ class Tado extends utils.Adapter {
 		this.roomCapabilities[zoneId] = capabilities_data;
 		this.log.debug(`Capabilities_data result for room '${zoneId}' is ${JSON.stringify(capabilities_data)}`);
 		this.DoWriteJsonRespons(homeId, 'Stage_09_Capabilities_data_' + zoneId, capabilities_data);
-		JsonExplorer.TraverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true, 0, 2);
+		jsonExplorer.traverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true,  2);
 	}
 
 	/**
@@ -1003,14 +1003,14 @@ class Tado extends utils.Adapter {
 		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
 		this.log.debug('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
-		JsonExplorer.TraverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true, 0, 2);
+		jsonExplorer.traverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true,  2);
 	}
 
 	async DoAwayConfiguration(HomeId, ZoneId) {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		JsonExplorer.TraverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 0, 2);
+		jsonExplorer.traverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 2);
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
@@ -1035,7 +1035,7 @@ class Tado extends utils.Adapter {
 		}
 		this.log.debug('HomeState_data Result: ' + JSON.stringify(homeState_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
-		JsonExplorer.TraverseJson(homeState_data, HomeId + '.Home.state', true, true, 0, 1);
+		jsonExplorer.traverseJson(homeState_data, HomeId + '.Home.state', true, true, 1);
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -1156,7 +1156,7 @@ class Tado extends utils.Adapter {
 						url: tado_url + url,
 						method: method,
 						data: data,
-						timeout: 10000,
+						timeout: 20000,
 						httpsAgent: new https.Agent({ keepAlive: true }),
 						headers: {
 							Authorization: 'Bearer ' + this.accessToken.token.access_token
@@ -1195,7 +1195,7 @@ class Tado extends utils.Adapter {
 		this.log.debug(`Create_state called for state '${state}' and name '${name}' with value '${value}'`);
 		const intervall_time = (this.config.intervall * 4);
 		if (value) {
-			JsonExplorer.stateSetCreate(state, name, value, intervall_time);
+			jsonExplorer.stateSetCreate(state, name, value, intervall_time);
 		}
 	}
 
