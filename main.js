@@ -638,8 +638,8 @@ class Tado extends utils.Adapter {
 				result.setting.temperature.fahrenheit = null;
 			}
 			await jsonExplorer.setLastStartTime();
-			await jsonExplorer.traverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 0, 2);
-			await jsonExplorer.traverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 0, 2);
+			await jsonExplorer.traverseJson(result, home_id + '.Rooms.' + zone_id + '.overlay', true, true, 2);
+			await jsonExplorer.traverseJson(result.setting, home_id + '.Rooms.' + zone_id + '.setting', true, true, 2);
 			this.log.debug('CheckExpire() at setZoneOverlay() started');
 			await jsonExplorer.checkExpire(home_id + '.Rooms.' + zone_id + '.overlay.*');
 		}
@@ -881,14 +881,14 @@ class Tado extends utils.Adapter {
 		this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
 		this.Home_data.masterswitch = '';
 		this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
-		jsonExplorer.traverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0, 0);
+		jsonExplorer.traverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0);
 	}
 
 	async DoWeather(HomeId) {
 		const weather_data = await this.getWeather(HomeId);
 		this.log.debug('Weather_data Result: ' + JSON.stringify(weather_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
-		jsonExplorer.traverseJson(weather_data, `${HomeId}.Weather`, true, true, 0, 0);
+		jsonExplorer.traverseJson(weather_data, `${HomeId}.Weather`, true, true,  0);
 	}
 
 	/**
@@ -907,7 +907,7 @@ class Tado extends utils.Adapter {
 		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
 		delete offset.celsius;
 		delete offset.fahrenheit;
-		jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 0, 2);
+		jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true,  2);
 	}
 
 	async DoDevices(HomeId) {
@@ -920,14 +920,14 @@ class Tado extends utils.Adapter {
 		this.MobileDevices_data = await this.getMobileDevices(HomeId);
 		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
-		jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0, 0);
+		jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
 	}
 
 	async DoMobileDeviceSettings(HomeId, DeviceId) {
 		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
 		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true, 0, 2);
+		jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true,  2);
 	}
 
 	async DoZones(HomeId) {
@@ -955,7 +955,7 @@ class Tado extends utils.Adapter {
 			delete this.Zones_data[j].openWindowDetection.enabled;
 		}
 
-		jsonExplorer.traverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0, 0);
+		jsonExplorer.traverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0);
 
 		for (const i in this.Zones_data) {
 			let zoneId = this.Zones_data[i].id;
@@ -976,7 +976,7 @@ class Tado extends utils.Adapter {
 		this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
 		ZonesState_data.overlayClearZone = false;
 		ZonesState_data.activateOpenWindow = false;
-		jsonExplorer.traverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 0, 2);
+		jsonExplorer.traverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 2);
 	}
 
 	async DoCapabilities(homeId, zoneId) {
@@ -986,7 +986,7 @@ class Tado extends utils.Adapter {
 		this.roomCapabilities[zoneId] = capabilities_data;
 		this.log.debug(`Capabilities_data result for room '${zoneId}' is ${JSON.stringify(capabilities_data)}`);
 		this.DoWriteJsonRespons(homeId, 'Stage_09_Capabilities_data_' + zoneId, capabilities_data);
-		jsonExplorer.traverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true, 0, 2);
+		jsonExplorer.traverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true,  2);
 	}
 
 	/**
@@ -1003,14 +1003,14 @@ class Tado extends utils.Adapter {
 		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
 		this.log.debug('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
-		jsonExplorer.traverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true, 0, 2);
+		jsonExplorer.traverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true,  2);
 	}
 
 	async DoAwayConfiguration(HomeId, ZoneId) {
 		const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
 		this.log.debug('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-		jsonExplorer.traverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 0, 2);
+		jsonExplorer.traverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 2);
 	}
 
 	async DoWriteJsonRespons(HomeId, state_name, value) {
@@ -1035,7 +1035,7 @@ class Tado extends utils.Adapter {
 		}
 		this.log.debug('HomeState_data Result: ' + JSON.stringify(homeState_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
-		jsonExplorer.traverseJson(homeState_data, HomeId + '.Home.state', true, true, 0, 1);
+		jsonExplorer.traverseJson(homeState_data, HomeId + '.Home.state', true, true, 1);
 	}
 
 	//////////////////////////////////////////////////////////////////////
