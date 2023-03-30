@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.6-alpha.0",
+    "version": "0.4.6-alpha.1",
     "news": {
+      "0.4.6-alpha.1": {
+        "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11",
+        "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11",
+        "ru": "Добавить атрибут EnergyIqEligible (#613)\nулучшить проблему ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11",
+        "pt": "Adicionar atributo isEnergyIqEligible (#613)\nmelhorar a questão ETIMEDOUT\nBump ioBroker-jsonExplorer para 0.1.11",
+        "nl": "Advocaat is Energy IqEligible (613)\neTIMEDOUT kwestie\nBump ioBroker-JsonExplorer tot 0.1.11",
+        "fr": "Ajouter l'attribut estEnergyIqEligible (#613)\naméliorer ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11",
+        "it": "Aggiungi attributo èEnergyIqEligible (#613)\nmigliorare ETIMEDOUT problema\nBump ioBroker-jsonExplorer a 0.1.11",
+        "es": "Agregar atributo esEnergyIqEligible (#613)\nmejorar la cuestión ETIMEDOUT\nBump ioBroker-jsonExplorer to 0.1.11",
+        "pl": "Adddaptacja (pol.)\npoprawa\nBump ioBroker-jsonExplorer (ang.)",
+        "uk": "Додати атрибут EnergyIqEligible (#613)\nполіпшити випуск ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11",
+        "zh-cn": "增 属性:能源机构资格(第613)\na. 改进中小企业协会问题\nBumpio Broker-json Explorer to 0.11"
+      },
       "0.4.6-alpha.0": {
         "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11.aplha",
         "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11.aplha",
@@ -80,19 +93,6 @@
         "pl": "Bump ioBroker-jsonExplorer to 0,1.10-alpha (ang.)\nPoprawa logna",
         "uk": "Bump ioBroker-jsonExplorer до 0.1.10-alpha.0\nПокращення журналів",
         "zh-cn": "Bumpio Broker-jsonExplorer to 0.10-alpha.0\n改进逻辑"
-      },
-      "0.4.2": {
-        "en": "Downgrade axios to 1.1.3 (#561)",
-        "de": "Axios nach unten auf 1.1.3 #(561)",
-        "ru": "Аксиос понижения до 1.1.3 #(561)",
-        "pt": "Eixo de downgrade para 1.1.3 #(561)",
-        "nl": "Downgrade axios to 1.1.3",
-        "fr": "Axios de bas niveau à 1.1.3 #(561)",
-        "it": "Axios downgrade a 1.1.3 #(561)",
-        "es": "Axios degradados a 1.1.3 #(561)",
-        "pl": "Downgrade axios to 1.1.3 #(561) (ang.)",
-        "uk": "Downgrade axios до 1.1.3 #(561)",
-        "zh-cn": "Down等级 axios to 1.1.3 #(561)"
       }
     },
     "title": "Tado",
