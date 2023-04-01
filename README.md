@@ -44,10 +44,11 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.4.6-alpha.1 (2023-03-30)
+### __WORK IN PROGRESS__
 * (HGlab01) Add attribute 'isEnergyIqEligible' (#613)
 * (HGlab01) improve ETIMEDOUT issue
 * (HGlab01) Bump ioBroker-jsonExplorer to 0.1.11
+* (HGlab01) js-controller v5 readiness (#618)
 
 ### 0.4.5 (2023-03-08)
 * (HGlab01) Add attribute 'sensorType' (#604)
