@@ -781,8 +781,6 @@ class Tado extends utils.Adapter {
 					this.lastupdate = now;
 					step = 'DoHome';
 					await this.DoHome(homeID);
-					step = 'DoDevices';
-					await this.DoDevices(homeID);
 				}
 				step = 'DoMobileDevices';
 				await this.DoMobileDevices(homeID);
@@ -888,7 +886,7 @@ class Tado extends utils.Adapter {
 		const weather_data = await this.getWeather(HomeId);
 		this.log.debug('Weather_data Result: ' + JSON.stringify(weather_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
-		jsonExplorer.traverseJson(weather_data, `${HomeId}.Weather`, true, true,  0);
+		jsonExplorer.traverseJson(weather_data, `${HomeId}.Weather`, true, true, 0);
 	}
 
 	/**
@@ -907,13 +905,7 @@ class Tado extends utils.Adapter {
 		if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
 		delete offset.celsius;
 		delete offset.fahrenheit;
-		jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true,  2);
-	}
-
-	async DoDevices(HomeId) {
-		const Devices_data = await this.getDevices(HomeId);
-		this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
+		jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 2);
 	}
 
 	async DoMobileDevices(HomeId) {
@@ -921,13 +913,6 @@ class Tado extends utils.Adapter {
 		this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
 		jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
-	}
-
-	async DoMobileDeviceSettings(HomeId, DeviceId) {
-		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
-		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true,  2);
 	}
 
 	async DoZones(HomeId) {
@@ -986,7 +971,7 @@ class Tado extends utils.Adapter {
 		this.roomCapabilities[zoneId] = capabilities_data;
 		this.log.debug(`Capabilities_data result for room '${zoneId}' is ${JSON.stringify(capabilities_data)}`);
 		this.DoWriteJsonRespons(homeId, 'Stage_09_Capabilities_data_' + zoneId, capabilities_data);
-		jsonExplorer.traverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true,  2);
+		jsonExplorer.traverseJson(capabilities_data, homeId + '.Rooms.' + zoneId + '.capabilities', true, true, 2);
 	}
 
 	/**
@@ -1003,7 +988,7 @@ class Tado extends utils.Adapter {
 		this.log.debug('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
 		this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
 		this.log.debug('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
-		jsonExplorer.traverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true,  2);
+		jsonExplorer.traverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true, 2);
 	}
 
 	async DoAwayConfiguration(HomeId, ZoneId) {
@@ -1037,6 +1022,24 @@ class Tado extends utils.Adapter {
 		this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
 		jsonExplorer.traverseJson(homeState_data, HomeId + '.Home.state', true, true, 1);
 	}
+
+	//not in use
+	/*
+	async DoDevices(HomeId) {
+		const Devices_data = await this.getDevices(HomeId);
+		this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
+	}*/
+
+	//not in use
+	/*
+	async DoMobileDeviceSettings(HomeId, DeviceId) {
+		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
+		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
+		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
+		jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true,  2);
+	}*/
+
 
 	//////////////////////////////////////////////////////////////////////
 	/* MASTERSWITCH														*/
