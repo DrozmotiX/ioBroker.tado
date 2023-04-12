@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.6-alpha.2",
+    "version": "0.4.6",
     "news": {
+      "0.4.6": {
+        "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 readiness (#618)",
+        "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11\njs-controller v5 bereitschaft (#618)",
+        "ru": "Добавить атрибут EnergyIqEligible (#613)\nулучшить проблему ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11\njs-controller v5 готовности (#618)",
+        "pt": "Adicionar atributo isEnergyIqEligible (#613)\nmelhorar a questão ETIMEDOUT\nBump ioBroker-jsonExplorer para 0.1.11\njs-controller v5 prontidão (#618)",
+        "nl": "Advocaat is Energy IqEligible (613)\neTIMEDOUT kwestie\nBump ioBroker-JsonExplorer tot 0.1.11\njs-controller v5 lezing (618)",
+        "fr": "Ajouter l'attribut estEnergyIqEligible (#613)\naméliorer ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 ready (#618)",
+        "it": "Aggiungi attributo èEnergyIqEligible (#613)\nmigliorare ETIMEDOUT problema\nBump ioBroker-jsonExplorer a 0.1.11\njs-controller v5 prontezza (#618)",
+        "es": "Agregar atributo esEnergyIqEligible (#613)\nmejorar la cuestión ETIMEDOUT\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 preparedness (#618)",
+        "pl": "Adddaptacja (pol.)\npoprawa\nBump ioBroker-jsonExplorer (ang.)\njs-controller v5 (#618) (ang.)",
+        "uk": "Додати атрибут EnergyIqEligible (#613)\nполіпшити випуск ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11\njs-controller v5 готовність (#618)",
+        "zh-cn": "增 属性:能源机构资格(第613)\na. 改进中小企业协会问题\nBumpio Broker-json Explorer to 0.11\nj. 控制容忍 v5随时准备(第618号)"
+      },
       "0.4.6-alpha.2": {
         "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 readiness (#618)",
         "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11\njs-controller v5 bereitschaft (#618)",
@@ -80,19 +93,6 @@
         "pl": "Bump ioBroker-jsonExplorer do 0,1.10 #(551) (ang.)\nBump axios to 1.2.1 (final fix for #561) (ang.)\nPoprawa logna",
         "uk": "Bump ioBroker-jsonExplorer до 0.1.10 #(551)\nBump axios до 1.2.1 (фінансова фіксація для #561)\nПокращення журналів",
         "zh-cn": "Bumpio Broker-json Explorer to 0.10 #(551)\nBump axios to 1.2.1(第561号最后规定)\n改进逻辑"
-      },
-      "0.4.3-alpha.1": {
-        "en": "Bump ioBroker-jsonExplorer to 0.1.10\nImprove logs",
-        "de": "Bump ioBroker-jsonExplorer bis 0,1.10\nProtokolle verbessern",
-        "ru": "Bump ioBroker-jsonExplorer до 0.1.10\nУлучшить логы",
-        "pt": "Bump ioBroker-jsonExplorer para 0.1.10\nMelhorar os logs",
-        "nl": "Bump ioBroker-JsonExplorer tot 0.1.10\nImprove logboeken",
-        "fr": "Bump ioBroker-jsonExplorer to 0.1.10\nAméliorez les registres",
-        "it": "Bump ioBroker-jsonExplorer a 0.1.10\nMigliorare i registri",
-        "es": "Bump ioBroker-jsonExplorer to 0.1.10\nMejorar los registros",
-        "pl": "Bump ioBroker-jsonExplorer (ang.)\nPoprawa logna",
-        "uk": "Bump ioBroker-jsonExplorer до 0.1.10\nПокращення журналів",
-        "zh-cn": "Bumpio Broker-json Explorer to 0.10\n改进逻辑"
       }
     },
     "title": "Tado",
