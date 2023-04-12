@@ -18,13 +18,11 @@ const tado_config = {
 const { ResourceOwnerPassword } = require('simple-oauth2');
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
-const axios = require('axios');
-
-// @ts-ignore
-const axiosInstance = axios.create({});
-
 const isOnline = require('@esm2cjs/is-online').default;
 const https = require('https');
+const axios = require('axios');
+// @ts-ignore
+let axiosInstance = axios.create({});
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
