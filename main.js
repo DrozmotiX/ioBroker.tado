@@ -19,6 +19,10 @@ const { ResourceOwnerPassword } = require('simple-oauth2');
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const axios = require('axios');
+
+// @ts-ignore
+const axiosInstance = axios.create({});
+
 const isOnline = require('@esm2cjs/is-online').default;
 const https = require('https');
 
@@ -1154,13 +1158,13 @@ class Tado extends utils.Adapter {
 		return new Promise((resolve, reject) => {
 			if (this.accessToken) {
 				this.refreshToken().then(() => {
-					// @ts-ignore
-					axios({
+
+					axiosInstance({
+						timeout: 20000,
+						httpsAgent: new https.Agent({ keepAlive: true }),
 						url: tado_url + url,
 						method: method,
 						data: data,
-						timeout: 20000,
-						httpsAgent: new https.Agent({ keepAlive: true }),
 						headers: {
 							Authorization: 'Bearer ' + this.accessToken.token.access_token
 						}
@@ -1181,6 +1185,8 @@ class Tado extends utils.Adapter {
 						}
 						reject(error);
 					});
+				}).catch(error => {
+					reject(error);
 				});
 			} else {
 				if (method != 'get') this.apiCallinExecution = false;
