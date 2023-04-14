@@ -1126,7 +1126,7 @@ class Tado extends utils.Adapter {
 	 */
 	async sleep(msmin, msmax = msmin) {
 		let ms = Math.random() * (msmax - msmin) + msmin;
-		this.log.info('Waiting time is ' + ms + 'ms');
+		this.log.debug('Waiting time is ' + ms + 'ms');
 		await jsonExplorer.sleep(ms);
 		return;
 		//return new Promise(resolve => setTimeout(resolve, ms));
