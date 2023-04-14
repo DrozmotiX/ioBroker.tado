@@ -68,7 +68,7 @@ class Tado extends utils.Adapter {
 	 */
 	onUnload(callback) {
 		try {
-			this.resetTimer();
+			//this.resetTimer();
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
@@ -1124,10 +1124,12 @@ class Tado extends utils.Adapter {
 	/**
 	 * @param {number} msmin
 	 */
-	sleep(msmin, msmax = msmin) {
+	async sleep(msmin, msmax = msmin) {
 		let ms = Math.random() * (msmax - msmin) + msmin;
-		this.log.debug('Waiting time is ' + ms + 'ms');
-		return new Promise(resolve => setTimeout(resolve, ms));
+		this.log.info('Waiting time is ' + ms + 'ms');
+		await jsonExplorer.sleep(ms);
+		return;
+		//return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
 	/**
