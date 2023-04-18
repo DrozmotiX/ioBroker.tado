@@ -1136,63 +1136,69 @@ class Tado extends utils.Adapter {
 	 * @param {string} url
 	 */
 	async apiCall(url, method = 'get', data = {}) {
-		const waitingTime = 300;  //time in ms to wait between calls
-		// check if other call is in progress and if yes loop and wait
-		if (method != 'get' && this.apiCallinExecution == true) {
-			for (let i = 0; i < 10; i++) {
-				this.log.debug('Other API call in action, waiting... ' + url);
-				await this.sleep(waitingTime + 300, waitingTime + 400);
-				this.log.debug('Waiting done! ' + url);
-				if (this.apiCallinExecution != true) {
-					this.log.debug('Time to execute ' + url); break;
-				} else {
-					this.log.debug('Oh, no! One more loop! ' + url);
+		try {
+			const waitingTime = 300;  //time in ms to wait between calls
+			// check if other call is in progress and if yes loop and wait
+			if (method != 'get' && this.apiCallinExecution == true) {
+				for (let i = 0; i < 10; i++) {
+					this.log.debug('Other API call in action, waiting... ' + url);
+					await this.sleep(waitingTime + 300, waitingTime + 400);
+					this.log.debug('Waiting done! ' + url);
+					if (this.apiCallinExecution != true) {
+						this.log.debug('Time to execute ' + url); break;
+					} else {
+						this.log.debug('Oh, no! One more loop! ' + url);
+					}
 				}
 			}
-		}
-		if (method != 'get') {
-			this.apiCallinExecution = true;
-			console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
-			this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
-		}
-		return new Promise((resolve, reject) => {
-			if (this.accessToken) {
-				this.refreshToken().then(() => {
+			if (method != 'get') {
+				this.apiCallinExecution = true;
+				console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
+				this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
+			}
+			return new Promise((resolve, reject) => {
+				if (this.accessToken) {
+					this.refreshToken().then(() => {
 
-					axiosInstance({
-						timeout: 20000,
-						httpsAgent: new https.Agent({ keepAlive: true }),
-						url: tado_url + url,
-						method: method,
-						data: data,
-						headers: {
-							Authorization: 'Bearer ' + this.accessToken.token.access_token
-						}
-					}).then(response => {
-						if (method != 'get') {
-							setTimeout(() => { this.apiCallinExecution = false; }, waitingTime);
-						}
-						resolve(response.data);
+						axiosInstance({
+							timeout: 20000,
+							httpsAgent: new https.Agent({ keepAlive: true }),
+							url: tado_url + url,
+							method: method,
+							data: data,
+							headers: {
+								Authorization: 'Bearer ' + this.accessToken.token.access_token
+							}
+						}).then(response => {
+							if (method != 'get') {
+								setTimeout(() => { this.apiCallinExecution = false; }, waitingTime);
+							}
+							resolve(response.data);
+						}).catch(error => {
+							if (method != 'get') this.apiCallinExecution = false;
+							if (error.response && error.response.data) {
+								console.error(error + ' with response ' + JSON.stringify(error.response.data));
+								this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+							}
+							else {
+								console.error(error);
+								this.log.error(error);
+							}
+							reject(error);
+						});
 					}).catch(error => {
-						if (method != 'get') this.apiCallinExecution = false;
-						if (error.response && error.response.data) {
-							console.error(error + ' with response ' + JSON.stringify(error.response.data));
-							this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
-						}
-						else {
-							console.error(error);
-							this.log.error(error);
-						}
 						reject(error);
 					});
-				}).catch(error => {
-					reject(error);
-				});
-			} else {
-				if (method != 'get') this.apiCallinExecution = false;
-				reject(new Error('Not yet logged in'));
-			}
-		});
+				} else {
+					if (method != 'get') this.apiCallinExecution = false;
+					reject(new Error('Not yet logged in'));
+				}
+			});
+		} catch (error) {
+			this.log.error(`Issue at apiCall: ${error}`);
+			console.error(`Issue at apiCall: ${error}`);
+			this.errorHandling(error);
+		}
 	}
 
 	/**
