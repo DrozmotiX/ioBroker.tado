@@ -1,4 +1,7 @@
 # Older changes
+## 0.4.2 (2022-11-27)
+* (HGlab01) Downgrade axios to 1.1.3 (#561)
+
 ## 0.4.1 (2022-11-24)
 * (HGlab01) Add attribute isBalanceAcEligible
 * (HGlab01) Bump axios from 0.27.2 to 1.2.0

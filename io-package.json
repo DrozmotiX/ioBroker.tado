@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.6",
+    "version": "0.4.7-alpha.0",
     "news": {
+      "0.4.7-alpha.0": {
+        "en": "Add attribute 'generation'\nimprove axios error handling",
+        "de": "Attributgenerierung hinzufügen\naxios fehlerbehandlung verbessern",
+        "ru": "Добавить поколение атрибутов\nулучшить обработку ошибок axios",
+        "pt": "Adicionar geração de atributos\nmelhorar o manuseio de erro do axios",
+        "nl": "Add Attributie generatie\nverbeter axios fouten",
+        "fr": "Ajouter la génération d ' attributs\naméliorer la manipulation des erreurs axios",
+        "it": "Aggiungere generazione attributo\nmigliorare la gestione degli errori",
+        "es": "Agregar atributo generación\nmejorar el manejo de errores de axios",
+        "pl": "Generacja atrybutów\npoprawa błędów",
+        "uk": "Додавання покоління атрибутів\nполіпшення обробки помилок axios",
+        "zh-cn": "增加属性\na. 改善焦虑处理"
+      },
       "0.4.6": {
         "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 readiness (#618)",
         "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11\njs-controller v5 bereitschaft (#618)",
@@ -80,19 +93,6 @@
         "pl": "Addd przypisuje energię IqReminder i specjalną Oferę. Enabled\nBump axios (ang.)\nTADO_MODE (#585) (ang.)",
         "uk": "Додати атрибут енергіїIqReminder та спеціальні Увімкнути\nБампер аксіос до 1.3.1\nВиправлення 'Незакінченна вартість TADO_MODE' (#585)",
         "zh-cn": "增加能源IqReminder 和特别Offer 附录\nBumpxios to 1.3.1\nFix TADO_MODE(第585号)"
-      },
-      "0.4.3": {
-        "en": "Bump ioBroker-jsonExplorer to 0.1.10 (#551)\nBump axios to 1.2.1 (final fix for #561)\nImprove logs",
-        "de": "Bump ioBroker-jsonExplorer zu 0,1.10 #(551)\nBump axios bis 1.2.1 (Endfix für #561)\nProtokolle verbessern",
-        "ru": "Bump ioBroker-jsonExplorer до 0.1.10 #(551)\nBump axios до 1.2.1 (конечная фиксация для #561)\nУлучшить логы",
-        "pt": "Bump ioBroker-jsonExplorer para 0.1.10 #(551)\nBump axios para 1.2.1 (fixação final para #561)\nMelhorar os logs",
-        "nl": "Bump ioBroker-JsonExplorer tot 0.1.10\nBump Axios naar 1.2.1 (finale fix for 561)\nImprove logboeken",
-        "fr": "Bump ioBroker-jsonExplorer to 0.1.10 #(551)\nBump axios to 1.2.1 (réparation finale pour #561)\nAméliorez les registres",
-        "it": "Bump ioBroker-jsonExplorer a 0.1.10 #(551)\nBump axios a 1.2.1 (finale per #561)\nMigliorare i registri",
-        "es": "Bump ioBroker-jsonExplorer to 0.1.10 #(551)\nBump axios a 1.2.1 (final fijado para #561)\nMejorar los registros",
-        "pl": "Bump ioBroker-jsonExplorer do 0,1.10 #(551) (ang.)\nBump axios to 1.2.1 (final fix for #561) (ang.)\nPoprawa logna",
-        "uk": "Bump ioBroker-jsonExplorer до 0.1.10 #(551)\nBump axios до 1.2.1 (фінансова фіксація для #561)\nПокращення журналів",
-        "zh-cn": "Bumpio Broker-json Explorer to 0.10 #(551)\nBump axios to 1.2.1(第561号最后规定)\n改进逻辑"
       }
     },
     "title": "Tado",
