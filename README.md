@@ -47,6 +47,7 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 ### 0.4.7-alpha.0 (2023-04-18)
 * (HGlab01) Add attribute 'generation'
 * (HGlab01) improve axios error handling
+* (HGlab01) Bump axios to 1.3.6
 
 ### 0.4.6 (2023-04-12)
 * (HGlab01) Add attribute 'isEnergyIqEligible' (#613)
