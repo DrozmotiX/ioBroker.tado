@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.7-alpha.0",
+    "version": "0.4.7",
     "news": {
+      "0.4.7": {
+        "en": "Add attribute 'generation'\nimprove axios error handling\nBump axios to 1.3.6",
+        "de": "Attributgenerierung hinzufügen\naxios fehlerbehandlung verbessern\nBump axios zu 1.3.6",
+        "ru": "Добавить поколение атрибутов\nулучшить обработку ошибок axios\nBump осье до 1.3.6",
+        "pt": "Adicionar geração de atributos\nmelhorar o manuseio de erro do axios\nBump axios para 1.3.6",
+        "nl": "Add Attributie generatie\nverbeter axios fouten\nBump Axios naar 1.3.6",
+        "fr": "Ajouter la génération d ' attributs\naméliorer la manipulation des erreurs axios\nAxios à chanvre à 1.3.6",
+        "it": "Aggiungere generazione attributo\nmigliorare la gestione degli errori\nAssio di bump a 1.3.6",
+        "es": "Agregar atributo generación\nmejorar el manejo de errores de axios\nBump axios a 1.3.6",
+        "pl": "Generacja atrybutów\npoprawa błędów\nBump axios (ang.)",
+        "uk": "Додавання покоління атрибутів\nполіпшення обробки помилок axios\nБампер аксіос до 1.3.6",
+        "zh-cn": "增加属性\na. 改善焦虑处理\nBumpxios to 1.3.6"
+      },
       "0.4.7-alpha.0": {
         "en": "Add attribute 'generation'\nimprove axios error handling",
         "de": "Attributgenerierung hinzufügen\naxios fehlerbehandlung verbessern",
@@ -80,19 +93,6 @@
         "pl": "Addaptacja sensorType (#604)\nBump axios (ang.)",
         "uk": "Додавання датчика атрибутаType (#604)\nБампер аксіос до 1.3.4",
         "zh-cn": "添加特色传感器(第604号)\nBumpxios to 1.3.4"
-      },
-      "0.4.4": {
-        "en": "Add attribute 'energyIqReminder' and 'specialOffersEnabled'\nBump axios to 1.3.1\nFix 'Invalid value TADO_MODE' (#585)",
-        "de": "Attribut energyIqReminder und Sonderangeboten hinzufügen Ermöglicht\nBump axios bis 1.3.1\nFix 'Invaliditätswert TADO_MODE' (#585)",
-        "ru": "Добавить атрибут energyIqReminder и specialOffers Включить\nBump осье до 1.3.1\nFix 'Недействительное значение TADO_MODE' (#585)",
-        "pt": "Adicionar atributo energyIqReminder e SpecialOffers Activado\nBump axios para 1.3.1\nFix 'Valor inválido TADO_MODE' (#585)",
-        "nl": "Voeg advertentie aan energie IqReminder en specialist In staat\nBump Axios naar 1.3.1\nLos 'Invalid waarde TADO MODE' (585)",
-        "fr": "Ajouter attribute energyIqReminder et specialOffers Enabled\nAxios de la boue au 1.3.1\nFix 'Valeur invalide TADO_MODE' (#585)",
-        "it": "Aggiungi attributo energyIqRimettitore e offerte speciali Abilitato\nAssio di bump a 1.3.1\nRisolvere 'Valore non valido TADO_MODE' (#585)",
-        "es": "Agregar el atributo energíaIqReminder y especialesOffers Enabled\nBump axios a 1.3.1\nFijar el valor inválido TADO_MODE (#585)",
-        "pl": "Addd przypisuje energię IqReminder i specjalną Oferę. Enabled\nBump axios (ang.)\nTADO_MODE (#585) (ang.)",
-        "uk": "Додати атрибут енергіїIqReminder та спеціальні Увімкнути\nБампер аксіос до 1.3.1\nВиправлення 'Незакінченна вартість TADO_MODE' (#585)",
-        "zh-cn": "增加能源IqReminder 和特别Offer 附录\nBumpxios to 1.3.1\nFix TADO_MODE(第585号)"
       }
     },
     "title": "Tado",
