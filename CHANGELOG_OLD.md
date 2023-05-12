@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.3 (2022-12-06)
+* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10 (#551)
+* (HGlab01) Bump axios to 1.2.1 (final fix for #561)
+* (HGlab01) Improve logs
+
 ## 0.4.2 (2022-11-27)
 * (HGlab01) Downgrade axios to 1.1.3 (#561)
 
