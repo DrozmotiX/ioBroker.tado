@@ -1,8 +1,22 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: monthly
-    time: "04:00"
-  open-pull-requests-limit: 10
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    assignees:
+      - HGlab01
+    versioning-strategy: increase
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    assignees:
+      - HGlab01
