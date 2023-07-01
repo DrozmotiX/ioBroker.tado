@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.4 (2023-02-03)
+* (HGlab01) Add attribute 'energyIqReminder' and 'specialOffersEnabled'
+* (HGlab01) Bump axios to 1.3.1
+* (HGlab01) Fix 'Invalid value TADO_MODE' (#585)
+
 ## 0.4.3 (2022-12-06)
 * (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10 (#551)
 * (HGlab01) Bump axios to 1.2.1 (final fix for #561)
