@@ -1223,6 +1223,7 @@ class Tado extends utils.Adapter {
 				errorObject.message.includes('with status code 504') ||
 				errorObject.message.includes('ETIMEDOUT') ||
 				errorObject.message.includes('EAI_AGAIN') ||
+				errorObject.message.includes('timeout of 20000ms exceeded') ||
 				errorObject.message.includes('No internet connection detected!'))) return;
 			if (this.log.level != 'debug' && this.log.level != 'silly') {
 				if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
