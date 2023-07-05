@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.9-alpha.0",
+    "version": "0.4.9",
     "news": {
+      "0.4.9": {
+        "en": "Add attribute 'zonesCount'\nBump ioBroker-jsonExplorer to 0.1.12",
+        "de": "Attributzonen hinzufügen Anzahl\nBump ioBroker-jsonExplorer bis 0,1.12",
+        "ru": "Добавить атрибутные зоны Граф\nBump ioBroker-jsonExplorer до 0.1.12",
+        "pt": "Adicionar zonas de atributos Contagem\nBump ioBroker-jsonExplorer para 0.1.12",
+        "nl": "Add Attribute Zones Graaf\nBump ioBroker-JsonExplorer tot 0.1.12",
+        "fr": "Ajouter les zones d ' attributs Comte\nBump ioBroker-jsonExplorer to 0.1.12",
+        "it": "Aggiungere zone di attributo Conte\nBump ioBroker-jsonExplorer a 0.1.12",
+        "es": "Agregar atributos Conde\nBump ioBroker-jsonExplorer to 0.1.12",
+        "pl": "Strefa atrybutów hrabia\nBump ioBroker-jsonExplorer (ang.)",
+        "uk": "Додавання зон атрибуту Кількість\nBump ioBroker-jsonExplorer до 0.1.12",
+        "zh-cn": "增加属区 国家\nBumpio Broker-json Explorer to 0.12"
+      },
       "0.4.9-alpha.0": {
         "en": "Add attribute 'zonesCount'\nBump ioBroker-jsonExplorer to 0.1.12-alpha",
         "de": "Attributzonen hinzufügen Anzahl\nBump ioBroker-jsonExplorer bis 0,1.12-alpha",
@@ -80,19 +93,6 @@
         "pl": "Adddaptacja (pol.)\npoprawa\nBump ioBroker-jsonExplorer (ang.)\njs-controller v5 (#618) (ang.)",
         "uk": "Додати атрибут EnergyIqEligible (#613)\nполіпшити випуск ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11\njs-controller v5 готовність (#618)",
         "zh-cn": "增 属性:能源机构资格(第613)\na. 改进中小企业协会问题\nBumpio Broker-json Explorer to 0.11\nj. 控制容忍 v5随时准备(第618号)"
-      },
-      "0.4.6-alpha.1": {
-        "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11",
-        "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11",
-        "ru": "Добавить атрибут EnergyIqEligible (#613)\nулучшить проблему ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11",
-        "pt": "Adicionar atributo isEnergyIqEligible (#613)\nmelhorar a questão ETIMEDOUT\nBump ioBroker-jsonExplorer para 0.1.11",
-        "nl": "Advocaat is Energy IqEligible (613)\neTIMEDOUT kwestie\nBump ioBroker-JsonExplorer tot 0.1.11",
-        "fr": "Ajouter l'attribut estEnergyIqEligible (#613)\naméliorer ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11",
-        "it": "Aggiungi attributo èEnergyIqEligible (#613)\nmigliorare ETIMEDOUT problema\nBump ioBroker-jsonExplorer a 0.1.11",
-        "es": "Agregar atributo esEnergyIqEligible (#613)\nmejorar la cuestión ETIMEDOUT\nBump ioBroker-jsonExplorer to 0.1.11",
-        "pl": "Adddaptacja (pol.)\npoprawa\nBump ioBroker-jsonExplorer (ang.)",
-        "uk": "Додати атрибут EnergyIqEligible (#613)\nполіпшити випуск ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11",
-        "zh-cn": "增 属性:能源机构资格(第613)\na. 改进中小企业协会问题\nBumpio Broker-json Explorer to 0.11"
       }
     },
     "title": "Tado",
