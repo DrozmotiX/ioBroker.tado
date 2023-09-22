@@ -36,7 +36,7 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 | tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 
 ## Requires
-* NodeJS 14.16 or higher
+* NodeJS 16 or higher
 * ioBroker host (js-controller) 4.0 or higher
 
 ## Changelog
