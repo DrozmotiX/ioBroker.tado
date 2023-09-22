@@ -1,4 +1,8 @@
 # Older changes
+## 0.4.5 (2023-03-08)
+* (HGlab01) Add attribute 'sensorType' (#604)
+* (HGlab01) Bump axios to 1.3.4
+
 ## 0.4.4 (2023-02-03)
 * (HGlab01) Add attribute 'energyIqReminder' and 'specialOffersEnabled'
 * (HGlab01) Bump axios to 1.3.1

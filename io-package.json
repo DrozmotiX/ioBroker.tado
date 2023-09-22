@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.9",
+    "version": "0.4.10-alpha.0",
     "news": {
+      "0.4.10-alpha.0": {
+        "en": "Add attribute 'isBalanceHpEligible'\nimprove axios keep_a_live",
+        "de": "Attribut hinzufügen\naxios keep_a_live",
+        "ru": "Добавить атрибут isBalanceHpEligible\nулучшить axios keep_a_live",
+        "pt": "Adicionar atributo isBalanceHpEligible\nmelhorar axios keep_a_live",
+        "nl": "Advocaat is BalanceHpEligible\nverbeter axios",
+        "fr": "Ajouter l'attribut estBalanceHpEligible\naméliorer axios keep_a_live",
+        "it": "Aggiungi attributo èBalanceHpEligible\nmigliorare l'assio keep_a_live",
+        "es": "Agregar atributo esBalanceHpEligible\nmejorar axios keep_a_live",
+        "pl": "Addd atrybutem jest BajlanceHpE zrozumiały\nulepszenie aksji",
+        "uk": "Додавання атрибутаBalanceHpEligible\nпокращувати axios тримати_a_live",
+        "zh-cn": "增 属性\na. 改善轴线"
+      },
       "0.4.9": {
         "en": "Add attribute 'zonesCount'\nBump ioBroker-jsonExplorer to 0.1.12",
         "de": "Attributzonen hinzufügen Anzahl\nBump ioBroker-jsonExplorer bis 0,1.12",
@@ -69,19 +82,6 @@
         "zh-cn": "增加属性\na. 改善焦虑处理"
       },
       "0.4.6": {
-        "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 readiness (#618)",
-        "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11\njs-controller v5 bereitschaft (#618)",
-        "ru": "Добавить атрибут EnergyIqEligible (#613)\nулучшить проблему ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11\njs-controller v5 готовности (#618)",
-        "pt": "Adicionar atributo isEnergyIqEligible (#613)\nmelhorar a questão ETIMEDOUT\nBump ioBroker-jsonExplorer para 0.1.11\njs-controller v5 prontidão (#618)",
-        "nl": "Advocaat is Energy IqEligible (613)\neTIMEDOUT kwestie\nBump ioBroker-JsonExplorer tot 0.1.11\njs-controller v5 lezing (618)",
-        "fr": "Ajouter l'attribut estEnergyIqEligible (#613)\naméliorer ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 ready (#618)",
-        "it": "Aggiungi attributo èEnergyIqEligible (#613)\nmigliorare ETIMEDOUT problema\nBump ioBroker-jsonExplorer a 0.1.11\njs-controller v5 prontezza (#618)",
-        "es": "Agregar atributo esEnergyIqEligible (#613)\nmejorar la cuestión ETIMEDOUT\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 preparedness (#618)",
-        "pl": "Adddaptacja (pol.)\npoprawa\nBump ioBroker-jsonExplorer (ang.)\njs-controller v5 (#618) (ang.)",
-        "uk": "Додати атрибут EnergyIqEligible (#613)\nполіпшити випуск ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11\njs-controller v5 готовність (#618)",
-        "zh-cn": "增 属性:能源机构资格(第613)\na. 改进中小企业协会问题\nBumpio Broker-json Explorer to 0.11\nj. 控制容忍 v5随时准备(第618号)"
-      },
-      "0.4.6-alpha.2": {
         "en": "Add attribute 'isEnergyIqEligible' (#613)\nimprove ETIMEDOUT issue\nBump ioBroker-jsonExplorer to 0.1.11\njs-controller v5 readiness (#618)",
         "de": "Attribut hinzufügen istEnergyIqEligible (#613)\nverbesserung der ETIMEDOUT-Ausgabe\nBump ioBroker-jsonExplorer bis 0,1.11\njs-controller v5 bereitschaft (#618)",
         "ru": "Добавить атрибут EnergyIqEligible (#613)\nулучшить проблему ETIMEDOUT\nBump ioBroker-jsonExplorer до 0.1.11\njs-controller v5 готовности (#618)",

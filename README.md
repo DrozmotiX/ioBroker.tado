@@ -45,8 +45,9 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
     ### __WORK IN PROGRESS__
 
 -->
-### __WORK IN PROGRESS__
+### 0.4.10-alpha.0 (2023-09-22)
 * (HGlab01) Add attribute 'isBalanceHpEligible'
+* (HGlab01) improve axios keep_a_live
 
 ### 0.4.9 (2023-07-05)
 * (HGlab01) Add attribute 'zonesCount'
@@ -66,10 +67,6 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 * (HGlab01) improve ETIMEDOUT issue
 * (HGlab01) Bump ioBroker-jsonExplorer to 0.1.11
 * (HGlab01) js-controller v5 readiness (#618)
-
-### 0.4.5 (2023-03-08)
-* (HGlab01) Add attribute 'sensorType' (#604)
-* (HGlab01) Bump axios to 1.3.4
 
 ## License
 MIT License
