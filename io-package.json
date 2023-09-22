@@ -105,7 +105,8 @@
       "it": "Tado",
       "es": "Tado",
       "pl": "Tado",
-      "zh-cn": "Tado"
+      "zh-cn": "Tado",
+      "uk": "Tado"
     },
     "desc": {
       "en": "Tado cloud connector to control Tado devices",
@@ -117,7 +118,8 @@
       "it": "Tado cloud connector to control Tado devices",
       "es": "Tado cloud connector to control Tado devices",
       "pl": "Tado cloud connector to control Tado devices",
-      "zh-cn": "Tado cloud connector to control Tado devices"
+      "zh-cn": "Tado cloud connector to control Tado devices",
+      "uk": "Tado cloud connector to control Tado devices"
     },
     "authors": [
       "DutchmanNL <rdrozda@hotmail.com>",
