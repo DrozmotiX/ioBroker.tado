@@ -22,7 +22,11 @@ const isOnline = require('@esm2cjs/is-online').default;
 const https = require('https');
 const axios = require('axios');
 // @ts-ignore
-let axiosInstance = axios.create({});
+let axiosInstance = axios.create({
+	timeout: 20000,
+	baseURL: `${tado_url}/`,
+	httpsAgent: new https.Agent({ keepAlive: true }),
+});
 
 const oneHour = 60 * 60 * 1000;
 let polling; // Polling timer
@@ -1161,9 +1165,7 @@ class Tado extends utils.Adapter {
 					this.refreshToken().then(() => {
 
 						axiosInstance({
-							timeout: 20000,
-							httpsAgent: new https.Agent({ keepAlive: true }),
-							url: tado_url + url,
+							url: url,
 							method: method,
 							data: data,
 							headers: {
