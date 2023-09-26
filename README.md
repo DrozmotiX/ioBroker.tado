@@ -45,7 +45,7 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
     ### __WORK IN PROGRESS__
 
 -->
-### 0.4.10-alpha.0 (2023-09-22)
+### 0.4.10 (2023-09-26)
 * (HGlab01) Add attribute 'isBalanceHpEligible'
 * (HGlab01) improve axios keep_a_live
 
