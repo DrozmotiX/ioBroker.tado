@@ -416,7 +416,7 @@ class Tado extends utils.Adapter {
 	 */
 	async setPresenceLock(home_id, homePresence) {
 		if (!homePresence) homePresence = 'HOME';
-		if (homePresence !== 'HOME' && homePresence !== 'AWAY' !== 'AUTO') {
+		if (homePresence !== 'HOME' && homePresence !== 'AWAY' && homePresence !== 'AUTO') {
 			this.log.error(`Invalid value '${homePresence}' for state 'homePresence'. Allowed values are HOME, AWAY and AUTO.`);
 			return;
 		}
