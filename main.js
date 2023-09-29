@@ -416,8 +416,8 @@ class Tado extends utils.Adapter {
 	 */
 	async setPresenceLock(home_id, homePresence) {
 		if (!homePresence) homePresence = 'HOME';
-		if (homePresence != 'HOME' && homePresence != 'AWAY') {
-			this.log.error(`Invalid value '${homePresence}' for state 'homePresence'. Allowed values are HOME and AWAY.`);
+		if (homePresence !== 'HOME' && homePresence !== 'AWAY' !== 'AUTO') {
+			this.log.error(`Invalid value '${homePresence}' for state 'homePresence'. Allowed values are HOME, AWAY and AUTO.`);
 			return;
 		}
 		const homeState = {
@@ -430,7 +430,11 @@ class Tado extends utils.Adapter {
 			if (await isOnline() == false) {
 				throw new Error('No internet connection detected!');
 			}
-			apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/presenceLock`, 'put', homeState);
+			if (homePresence === 'AUTO') {
+				apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/presenceLock`, 'delete');
+			} else {
+				apiResponse = await this.apiCall(`/api/v2/homes/${home_id}/presenceLock`, 'put', homeState);
+			}
 			this.DoHomeState(home_id);
 			this.log.debug(`API 'state' for home '${home_id}' with body ${JSON.stringify(homeState)} called.`);
 			this.log.debug(`Response from 'presenceLock' is ${JSON.stringify(apiResponse)}`);
