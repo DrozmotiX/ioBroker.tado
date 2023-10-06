@@ -21,6 +21,8 @@ const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute 
 const isOnline = require('@esm2cjs/is-online').default;
 const https = require('https');
 const axios = require('axios');
+const { version } = require('./package.json');
+
 // @ts-ignore
 let axiosInstance = axios.create({
 	timeout: 20000,
@@ -59,6 +61,7 @@ class Tado extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	async onReady() {
+		jsonExplorer.sendVersionInfo(version);
 		this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 		this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 		// Reset the connection indicator during startup
