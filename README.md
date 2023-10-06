@@ -45,7 +45,7 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
     ### __WORK IN PROGRESS__
 
 -->
-### __WORK IN PROGRESS__
+### 0.4.11-alpha.0 (2023-10-06)
 * (HGlab01) Bump json-explorer to 0.1.14
 * (Garfonso) add AUTO for *.Home.state.presence (in addtion to HOME and AWAY)
 
@@ -65,12 +65,6 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 * (HGlab01) Add attribute 'generation'
 * (HGlab01) improve axios error handling
 * (HGlab01) Bump axios to 1.3.6
-
-### 0.4.6 (2023-04-12)
-* (HGlab01) Add attribute 'isEnergyIqEligible' (#613)
-* (HGlab01) improve ETIMEDOUT issue
-* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.11
-* (HGlab01) js-controller v5 readiness (#618)
 
 ## License
 MIT License
