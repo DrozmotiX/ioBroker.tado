@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.11-alpha.0",
+    "version": "0.4.11",
     "news": {
+      "0.4.11": {
+        "en": "Bump json-explorer to 0.1.14\nadd AUTO for *.Home.state.presence (in addtion to HOME and AWAY)",
+        "de": "Stoßdämpfer bis 0,1.14\naUTO für *Home.state.presence (in Ergänzung zu HOME und AWAY)",
+        "ru": "Bump json-explorer до 0.1.14\nдобавить AUTO для *Home.state.presence (в дополнение к HOME и AWAY)",
+        "pt": "Bump json-explorer para 0.1.14\nadicionar AUTO para *Home.state.presence (em adição a HOME e AWAY)",
+        "nl": "Bump Json-explorer tot 0.1.14\nvertaling:",
+        "fr": "Bump json-explorer à 0,1.14\najouter AUTO pour *Home.state.presence (en addtion à HOME et AWAY)",
+        "it": "Bump json-explorer a 0.1.14\naggiungere AUTO per *Home.state.presence (in aggiunta a HOME e AWAY)",
+        "es": "Bump json-explorer to 0.1.14\nañadir AUTO para *Home.state.presence (en adición a HOME y AWAY)",
+        "pl": "Bump json-explorer do 0,1.14\ndodaje AUTO dla *Home.state.presence (wydanie do HOME i AWAY)",
+        "uk": "Bump json-explorer до 0.1.14\nadd AUTO для *будинки.state.presence (в додатку до HOME і AWAY)",
+        "zh-cn": "Bump json-explorer to 014\n增加非洲联盟热带木材组织,以*ome. State.presence(增加氢氟碳化合物和亚西青年)"
+      },
       "0.4.11-alpha.0": {
         "en": "Bump json-explorer to 0.1.14\nadd AUTO for *.Home.state.presence (in addtion to HOME and AWAY)",
         "de": "Stoßdämpfer bis 0,1.14\naUTO für *Home.state.presence (in Ergänzung zu HOME und AWAY)",
@@ -80,19 +93,6 @@
         "pl": "Addaptacja HeatSourceInstalled\nBump axios to 1.4.0",
         "uk": "Додавання атрибутаHeatSourceInstalled\nБампер аксіос до 1.4.0",
         "zh-cn": "增属性是保健活动。\nBumpxios to 1.4.0"
-      },
-      "0.4.7": {
-        "en": "Add attribute 'generation'\nimprove axios error handling\nBump axios to 1.3.6",
-        "de": "Attributgenerierung hinzufügen\naxios fehlerbehandlung verbessern\nBump axios zu 1.3.6",
-        "ru": "Добавить поколение атрибутов\nулучшить обработку ошибок axios\nBump осье до 1.3.6",
-        "pt": "Adicionar geração de atributos\nmelhorar o manuseio de erro do axios\nBump axios para 1.3.6",
-        "nl": "Add Attributie generatie\nverbeter axios fouten\nBump Axios naar 1.3.6",
-        "fr": "Ajouter la génération d ' attributs\naméliorer la manipulation des erreurs axios\nAxios à chanvre à 1.3.6",
-        "it": "Aggiungere generazione attributo\nmigliorare la gestione degli errori\nAssio di bump a 1.3.6",
-        "es": "Agregar atributo generación\nmejorar el manejo de errores de axios\nBump axios a 1.3.6",
-        "pl": "Generacja atrybutów\npoprawa błędów\nBump axios (ang.)",
-        "uk": "Додавання покоління атрибутів\nполіпшення обробки помилок axios\nБампер аксіос до 1.3.6",
-        "zh-cn": "增加属性\na. 改善焦虑处理\nBumpxios to 1.3.6"
       }
     },
     "titleLang": {
