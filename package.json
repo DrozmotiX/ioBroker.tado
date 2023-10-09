@@ -24,7 +24,7 @@
     "@iobroker/adapter-core": "^3.0.3",
     "axios": "1.5.1",
     "https": "^1.0.0",
-    "iobroker-jsonexplorer": "0.1.14-alpha.0",
+    "iobroker-jsonexplorer": "0.1.14",
     "simple-oauth2": "^5.0.0"
   },
   "devDependencies": {
