@@ -1,4 +1,10 @@
 # Older changes
+## 0.4.6 (2023-04-12)
+* (HGlab01) Add attribute 'isEnergyIqEligible' (#613)
+* (HGlab01) improve ETIMEDOUT issue
+* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.11
+* (HGlab01) js-controller v5 readiness (#618)
+
 ## 0.4.5 (2023-03-08)
 * (HGlab01) Add attribute 'sensorType' (#604)
 * (HGlab01) Bump axios to 1.3.4
