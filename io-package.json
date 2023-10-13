@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.11",
+    "version": "0.4.12-alpha.0",
     "news": {
+      "0.4.12-alpha.0": {
+        "en": "switch finaly to Admin5 UI",
+        "de": "endgültiger Schalter für Admin5 UI",
+        "ru": "переключить финал на Admin5 UI",
+        "pt": "switch finaly para Admin5 UI",
+        "nl": "vertaling:",
+        "fr": "switch finaly to Admin5 UI",
+        "it": "passare alla finale di Admin5 UI",
+        "es": "conmutación final a Admin5 UI",
+        "pl": "finał do Admin5",
+        "uk": "кінцевий вимикач до Admin5 UI",
+        "zh-cn": "迈向Admin5 UI"
+      },
       "0.4.11": {
         "en": "Bump json-explorer to 0.1.14\nadd AUTO for *.Home.state.presence (in addtion to HOME and AWAY)",
         "de": "Stoßdämpfer bis 0,1.14\naUTO für *Home.state.presence (in Ergänzung zu HOME und AWAY)",
@@ -80,19 +93,6 @@
         "pl": "Strefa atrybutów hrabia\nBump ioBroker-jsonExplorer (ang.)",
         "uk": "Додавання зон атрибуту Кількість\nBump ioBroker-jsonExplorer до 0.1.12-alpha",
         "zh-cn": "增加属区 国家\nBumpio Broker-jsonExplorer to 0.12-alpha"
-      },
-      "0.4.8": {
-        "en": "Add attribute 'isHeatSourceInstalled'\nBump axios to 1.4.0",
-        "de": "Attribut hinzufügen isHeatSourceInstalliert\nBump axios zu 1.4.0",
-        "ru": "Добавить атрибут isHeatSourceInstalled\nBump осье до 1.4.0",
-        "pt": "Adicionar atributo isHeatSourceInstalled\nBump axios para 1.4.0",
-        "nl": "Advocaat is HeatSourceInstal\nBump Axios naar 1.4.0",
-        "fr": "Ajouter attribute isHeatSourceInstalled\nBump axios to 1.4.0",
-        "it": "Aggiungi attributo èHeatSourceInstalled\nAssio di bump a 1.4.0",
-        "es": "Agregar atributo esHeatSourceInstalled\nAxios de bomba a 1.4.0",
-        "pl": "Addaptacja HeatSourceInstalled\nBump axios to 1.4.0",
-        "uk": "Додавання атрибутаHeatSourceInstalled\nБампер аксіос до 1.4.0",
-        "zh-cn": "增属性是保健活动。\nBumpxios to 1.4.0"
       }
     },
     "titleLang": {

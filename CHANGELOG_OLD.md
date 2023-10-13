@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.7 (2023-04-26)
+* (HGlab01) Add attribute 'generation'
+* (HGlab01) improve axios error handling
+* (HGlab01) Bump axios to 1.3.6
+
 ## 0.4.6 (2023-04-12)
 * (HGlab01) Add attribute 'isEnergyIqEligible' (#613)
 * (HGlab01) improve ETIMEDOUT issue

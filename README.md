@@ -44,13 +44,12 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-
-### __WORK IN PROGRESS__
-* (HGlab01) Finaly admin5 UI
+### 0.4.12-alpha.0 (2023-10-13)
+* (HGlab01) switch finaly to Admin5 UI
 
 ### 0.4.11 (2023-10-09)
 * (HGlab01) Bump json-explorer to 0.1.14
-* (Garfonso) add AUTO for *.Home.state.presence (in addtion to HOME and AWAY)
+* (Garfonso) add value AUTO for *.Home.state.presence (in addtion to HOME and AWAY)
 
 ### 0.4.10 (2023-09-26)
 * (HGlab01) Add attribute 'isBalanceHpEligible'
@@ -63,11 +62,6 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 ### 0.4.8 (2023-05-12)
 * (HGlab01) Add attribute 'isHeatSourceInstalled'
 * (HGlab01) Bump axios to 1.4.0
-
-### 0.4.7 (2023-04-26)
-* (HGlab01) Add attribute 'generation'
-* (HGlab01) improve axios error handling
-* (HGlab01) Bump axios to 1.3.6
 
 ## License
 MIT License
