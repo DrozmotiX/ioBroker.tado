@@ -43,8 +43,11 @@ tado° ensures a comfortable and healthy climate while saving up to 31% on your 
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
-
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) Finaly admin5 UI
+
 ### 0.4.11 (2023-10-09)
 * (HGlab01) Bump json-explorer to 0.1.14
 * (Garfonso) add AUTO for *.Home.state.presence (in addtion to HOME and AWAY)
