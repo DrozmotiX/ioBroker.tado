@@ -5,9 +5,7 @@
     "_basicSettings": {
       "newLine": true,
       "type": "header",
-      "text": "Please provide your credentials",
-      "sm": 12,
-      "size": 8
+      "text": "Please provide your credentials"
     },
     "Username": {
       "newLine": true,
