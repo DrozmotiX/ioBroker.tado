@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.12-alpha.0",
+    "version": "0.4.12",
     "news": {
+      "0.4.12": {
+        "en": "switch finaly to Admin5 UI\nImprove REST-call handling\nBump axios to 1.6.1",
+        "de": "endgültiger Schalter für Admin5 UI\nREST-Call-Handling verbessern\nBump axios zu 1.6.1",
+        "ru": "переключить финал на Admin5 UI\nУлучшение REST-call обработки\nBump осье до 1.6.1",
+        "pt": "switch finaly para Admin5 UI\nMelhorar o manuseio de chamadas REST\nBump axios para 1.6.1",
+        "nl": "vertaling:\nVertaling:\nBump Axios naar 1.6.1",
+        "fr": "switch finaly to Admin5 UI\nAméliorez la manipulation des appels REST\nBump axios to 1.6.1",
+        "it": "passare alla finale di Admin5 UI\nMigliorare la gestione dei cavi REST\nAssio di bump a 1.6.1",
+        "es": "conmutación final a Admin5 UI\nMejorar el manejo de la llamada REST\nAxios de bomba a 1.6.1",
+        "pl": "finał do Admin5\nImproving REST-call maintenance\nBump axios to 1,6.1",
+        "uk": "кінцевий вимикач до Admin5 UI\nПокращення REST-Call обробки\nБампер аксіос до 1.6.1",
+        "zh-cn": "迈向Admin5 UI\nB. 改进无害环境技术的处理\nBumpxios to 1.6.1"
+      },
       "0.4.12-alpha.0": {
         "en": "switch finaly to Admin5 UI",
         "de": "endgültiger Schalter für Admin5 UI",
@@ -80,19 +93,6 @@
         "pl": "Strefa atrybutów hrabia\nBump ioBroker-jsonExplorer (ang.)",
         "uk": "Додавання зон атрибуту Кількість\nBump ioBroker-jsonExplorer до 0.1.12",
         "zh-cn": "增加属区 国家\nBumpio Broker-json Explorer to 0.12"
-      },
-      "0.4.9-alpha.0": {
-        "en": "Add attribute 'zonesCount'\nBump ioBroker-jsonExplorer to 0.1.12-alpha",
-        "de": "Attributzonen hinzufügen Anzahl\nBump ioBroker-jsonExplorer bis 0,1.12-alpha",
-        "ru": "Добавить атрибутные зоны Граф\nBump ioBroker-jsonExplorer до 0.1.12-alpha",
-        "pt": "Adicionar zonas de atributos Contagem\nBump ioBroker-jsonExplorer para 0.1.12-alpha",
-        "nl": "Add Attribute Zones Graaf\nBump ioBroker-JsonExplorer tot 0.1.12-alpha",
-        "fr": "Ajouter les zones d ' attributs Comte\nBump ioBroker-jsonExplorer to 0.1.12-alpha",
-        "it": "Aggiungere zone di attributo Conte\nBump ioBroker-jsonExplorer a 0.1.12-alpha",
-        "es": "Agregar atributos Conde\nBump ioBroker-jsonExplorer a 0.1.12-alpha",
-        "pl": "Strefa atrybutów hrabia\nBump ioBroker-jsonExplorer (ang.)",
-        "uk": "Додавання зон атрибуту Кількість\nBump ioBroker-jsonExplorer до 0.1.12-alpha",
-        "zh-cn": "增加属区 国家\nBumpio Broker-jsonExplorer to 0.12-alpha"
       }
     },
     "titleLang": {
