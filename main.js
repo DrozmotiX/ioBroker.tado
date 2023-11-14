@@ -55,6 +55,7 @@ class Tado extends utils.Adapter {
 		jsonExplorer.init(this, state_attr);
 		this.intervall_time = 60 * 1000;
 		this.roomCapabilities = {};
+		this.oldStatesVal = [];
 	}
 
 	/**
@@ -95,6 +96,10 @@ class Tado extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			if (state.ack === false) {
+				if (this.oldStatesVal[id] === state.val) {
+					this.log.debug(`State ${id} did not change, value is ${state.val}. No further actions!`);
+					return;
+				}
 				try {
 					this.log.debug('GETS INTERESSTING!!!');
 					const idSplitted = id.split('.');
@@ -318,6 +323,8 @@ class Tado extends utils.Adapter {
 				}
 
 			} else {
+				this.oldStatesVal[id] = state.val;
+				this.log.debug(`Changed value ${state.val} for ID ${id} stored`);
 				this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			}
 		} else {
@@ -1176,7 +1183,8 @@ class Tado extends utils.Adapter {
 							method: method,
 							data: data,
 							headers: {
-								Authorization: 'Bearer ' + this.accessToken.token.access_token
+								'Authorization': 'Bearer ' + this.accessToken.token.access_token,
+								'Source': 'iobroker.tado@' + version
 							}
 						}).then(response => {
 							if (method != 'get') {
