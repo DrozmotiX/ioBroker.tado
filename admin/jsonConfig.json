@@ -6,8 +6,7 @@
       "newLine": true,
       "type": "header",
       "text": "Please provide your credentials",
-      "sm": 12,
-      "size": 8
+      "size": 3
     },
     "Username": {
       "newLine": true,
