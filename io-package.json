@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.4.12",
+    "version": "0.5.0-alpha.0",
     "news": {
+      "0.5.0-alpha.0": {
+        "en": "Breaking changes\nNode 18.0 or higher\nioBroker host (js-controller) 5.0 or higher\nfix jsonConf validation issue\nBump axios to 1.6.2",
+        "de": "Veränderungsraten\nNode 18.0 oder höher\nioBroker host (js-controller) 5.0 oder höher\nfix jsonConf Validierung Problem\nBump axios zu 1.6.2",
+        "ru": "Перерыв изменений\nNode 18.0 или выше\nioBroker host (js-controller) 5.0 или выше\nисправить jsonConf вопрос проверки\nBump осье до 1.6.2",
+        "pt": "Alterações de ruptura\nNode 18.0 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\ncorrigir problema de validação jsonConf\nBump axios para 1.6.2",
+        "nl": "Breaking changes\nNode 18.0 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nvertaling:\nBump Axios naar 1.6.2",
+        "fr": "Changements de rupture\nNode 18.0 ou supérieur\nioBroker host (js-controller) 5.0 ou supérieur\ncorrection du problème de validation jsonConf\nAxyose de bouillon à 1.6.2",
+        "it": "Cambiamenti di rottura\nNodo 18.0 o superiore\nioBroker host (js-controller) 5.0 o superiore\nrisolvere problema di convalida jsonConf\nAssio di bump a 1.6.2",
+        "es": "Cambios de ruptura\nNodo 18.0 o superior\nioBroker host (js-controller) 5.0 o superior\nsolución jsonConf validation issue\nAxios de bomba a 1.6.2",
+        "pl": "Zmiany\n18.0 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\ntwierdzenie jsonConf\nBump axios to 1.6.2 (ang.)",
+        "uk": "Зміни\nNode 18.0 або вище\nioBroker host (js-controller) 5.0 або вище\nвиправити jsonНалаштування джсон\nБампер аксіос до 1.6.2",
+        "zh-cn": "断 变\n第18.0或更高\nio Broker收容(控制员)5.0或更高。\nfixson ConConConConConConConcorative issue\nBumpxios to 1.6.2"
+      },
       "0.4.12": {
         "en": "switch finaly to Admin5 UI\nImprove REST-call handling\nBump axios to 1.6.1",
         "de": "endgültiger Schalter für Admin5 UI\nREST-Call-Handling verbessern\nBump axios zu 1.6.1",
@@ -80,19 +93,6 @@
         "pl": "Addd atrybutem jest BajlanceHpE zrozumiały\nulepszenie aksji",
         "uk": "Додавання атрибутаBalanceHpEligible\nпокращувати axios тримати_a_live",
         "zh-cn": "增 属性\na. 改善轴线"
-      },
-      "0.4.9": {
-        "en": "Add attribute 'zonesCount'\nBump ioBroker-jsonExplorer to 0.1.12",
-        "de": "Attributzonen hinzufügen Anzahl\nBump ioBroker-jsonExplorer bis 0,1.12",
-        "ru": "Добавить атрибутные зоны Граф\nBump ioBroker-jsonExplorer до 0.1.12",
-        "pt": "Adicionar zonas de atributos Contagem\nBump ioBroker-jsonExplorer para 0.1.12",
-        "nl": "Add Attribute Zones Graaf\nBump ioBroker-JsonExplorer tot 0.1.12",
-        "fr": "Ajouter les zones d ' attributs Comte\nBump ioBroker-jsonExplorer to 0.1.12",
-        "it": "Aggiungere zone di attributo Conte\nBump ioBroker-jsonExplorer a 0.1.12",
-        "es": "Agregar atributos Conde\nBump ioBroker-jsonExplorer to 0.1.12",
-        "pl": "Strefa atrybutów hrabia\nBump ioBroker-jsonExplorer (ang.)",
-        "uk": "Додавання зон атрибуту Кількість\nBump ioBroker-jsonExplorer до 0.1.12",
-        "zh-cn": "增加属区 国家\nBumpio Broker-json Explorer to 0.12"
       }
     },
     "titleLang": {
@@ -154,7 +154,7 @@
     "supportCustoms": false,
     "dependencies": [
       {
-        "js-controller": ">=4.0.0"
+        "js-controller": ">=5.0.0"
       }
     ],
     "plugins": {
