@@ -52,6 +52,7 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
     - ioBroker host (js-controller) 5.0 or higher
 * (HGlab01) fix jsonConf validation issue
 * (HGlab01) Bump axios to 1.6.2
+* (HGlab01) update contact data
 
 ### 0.4.12 (2023-11-14)
 * (HGlab01) switch finaly to Admin5 UI
