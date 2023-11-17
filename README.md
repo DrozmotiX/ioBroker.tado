@@ -38,14 +38,21 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 | tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 
 ## Requires
-* NodeJS 16 or higher
-* ioBroker host (js-controller) 4.0 or higher
+* Node 18 or higher
+* ioBroker host (js-controller) 5.0 or higher
 
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.5.0-alpha.0 (2023-11-17)
+* (HGlab01) Breaking changes
+    - Node 18.0 or higher
+    - ioBroker host (js-controller) 5.0 or higher
+* (HGlab01) fix jsonConf validation issue
+* (HGlab01) Bump axios to 1.6.2
+
 ### 0.4.12 (2023-11-14)
 * (HGlab01) switch finaly to Admin5 UI
 * (HGlab01) Improve REST-call handling
@@ -63,10 +70,6 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 ### 0.4.9 (2023-07-05)
 * (HGlab01) Add attribute 'zonesCount'
 * (HGlab01) Bump ioBroker-jsonExplorer to 0.1.12
-
-### 0.4.8 (2023-05-12)
-* (HGlab01) Add attribute 'isHeatSourceInstalled'
-* (HGlab01) Bump axios to 1.4.0
 
 ## License
 MIT License

@@ -1,4 +1,8 @@
 # Older changes
+## 0.4.8 (2023-05-12)
+* (HGlab01) Add attribute 'isHeatSourceInstalled'
+* (HGlab01) Bump axios to 1.4.0
+
 ## 0.4.7 (2023-04-26)
 * (HGlab01) Add attribute 'generation'
 * (HGlab01) improve axios error handling
