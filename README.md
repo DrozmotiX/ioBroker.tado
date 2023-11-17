@@ -74,7 +74,7 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 ## License
 MIT License
 
-Copyright (c) 2023 HGlab01 & DutchmanNL <rdrozda@hotmail.com>
+Copyright (c) 2023 HGlab01 <myiobrokeradapters@gmail.com> & DutchmanNL <oss@drozmotix.eu>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
