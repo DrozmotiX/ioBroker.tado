@@ -46,7 +46,7 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.5.0-alpha.0 (2023-11-17)
+### 0.5.0 (2023-11-25)
 * (HGlab01) Breaking changes
     - Node 18.0 or higher
     - ioBroker host (js-controller) 5.0 or higher
