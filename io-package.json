@@ -122,8 +122,14 @@
       "uk": "Tado cloud connector to control Tado devices"
     },
     "authors": [
-      "DutchmanNL <rdrozda@hotmail.com>",
-      "HGlab01"
+      {
+        "name": "HGlab01",
+        "email": "<myiobrokeradapters@gmail.com>"
+      },
+      {
+        "name": "DutchmanNL",
+        "email": "<oss@drozmotix.eu>"
+      }
     ],
     "keywords": [
       "energy",
