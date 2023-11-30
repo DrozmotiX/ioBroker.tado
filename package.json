@@ -2,16 +2,7 @@
   "name": "iobroker.tado",
   "version": "0.5.0",
   "description": "Tado cloud connector to control Tado devices",
-  "authors": [
-    {
-      "name": "HGlab01",
-      "email": "<myiobrokeradapters@gmail.com>"
-    },
-    {
-      "name": "DutchmanNL",
-      "email": "<oss@drozmotix.eu>"
-    }
-  ],
+  "author": "HGlab01 <myiobrokeradapters@gmail.com> & DutchmanNL <oss@drozmotix.eu>",
   "homepage": "https://github.com/DrozmotiX/ioBroker.tado",
   "license": "MIT",
   "keywords": [
