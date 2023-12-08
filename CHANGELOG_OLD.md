@@ -1,4 +1,8 @@
 # Older changes
+## 0.4.9 (2023-07-05)
+* (HGlab01) Add attribute 'zonesCount'
+* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.12
+
 ## 0.4.8 (2023-05-12)
 * (HGlab01) Add attribute 'isHeatSourceInstalled'
 * (HGlab01) Bump axios to 1.4.0

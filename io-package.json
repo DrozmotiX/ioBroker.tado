@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.0",
+    "version": "0.5.1-alpha.0",
     "news": {
+      "0.5.1-alpha.0": {
+        "en": "Bump json-explorer to 0.1.15-alpha.0\nPrepare (c) for 2024",
+        "de": "Stoßdämpfer auf 0,1.15-alpha.0\nZubereitung (c) für 2024",
+        "ru": "Bump json-explorer до 0.1.15-alpha.0\nПодготовить (c) на 2024",
+        "pt": "Bump json-explorer para 0.1.15-alpha.0\nPreparar (c) para 2024",
+        "nl": "Bump Json-explorer tot 0.1.15-alfa\nBereid je voor op 2024",
+        "fr": "Bump json-explorer à 0,1.15-alpha.0\nPréparer (c) pour 2024",
+        "it": "Bump json-explorer a 0.1.15-alpha.0\nPreparare (c) per il 2024",
+        "es": "Bump json-explorer to 0.1.15-alpha.0\nPreparar (c) para 2024",
+        "pl": "Bump json-explorer to 0.1.15-alfa.0\nPrepare 2024 (ang.)",
+        "uk": "Bump json-explorer до 0.1.15-alpha.0\nПідготовка (c) до 2024",
+        "zh-cn": "Bump json-explorer to 015-alpha0\n2024年准备(c)"
+      },
       "0.5.0": {
         "en": "Breaking changes\nNode 18.0 or higher\nioBroker host (js-controller) 5.0 or higher\nfix jsonConf validation issue\nBump axios to 1.6.2\nupdate contact data",
         "de": "Veränderungsraten\nNode 18.0 oder höher\nioBroker host (js-controller) 5.0 oder höher\nfix jsonConf Validierung Problem\nBump axios zu 1.6.2\nkontaktdaten aktualisieren",
@@ -80,19 +93,6 @@
         "pl": "Bump json-explorer do 0,1.14\ndodaje AUTO dla *Home.state.presence (wydanie do HOME i AWAY)",
         "uk": "Bump json-explorer до 0.1.14\nadd AUTO для *будинки.state.presence (в додатку до HOME і AWAY)",
         "zh-cn": "Bump json-explorer to 014\n增加非洲联盟热带木材组织,以*ome. State.presence(增加氢氟碳化合物和亚西青年)"
-      },
-      "0.4.10": {
-        "en": "Add attribute 'isBalanceHpEligible'\nimprove axios keep_a_live",
-        "de": "Attribut hinzufügen\naxios keep_a_live",
-        "ru": "Добавить атрибут isBalanceHpEligible\nулучшить axios keep_a_live",
-        "pt": "Adicionar atributo isBalanceHpEligible\nmelhorar axios keep_a_live",
-        "nl": "Advocaat is BalanceHpEligible\nverbeter axios",
-        "fr": "Ajouter l'attribut estBalanceHpEligible\naméliorer axios keep_a_live",
-        "it": "Aggiungi attributo èBalanceHpEligible\nmigliorare l'assio keep_a_live",
-        "es": "Agregar atributo esBalanceHpEligible\nmejorar axios keep_a_live",
-        "pl": "Addd atrybutem jest BajlanceHpE zrozumiały\nulepszenie aksji",
-        "uk": "Додавання атрибутаBalanceHpEligible\nпокращувати axios тримати_a_live",
-        "zh-cn": "增 属性\na. 改善轴线"
       }
     },
     "titleLang": {
