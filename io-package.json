@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.1-alpha.1",
+    "version": "0.5.1",
     "news": {
+      "0.5.1": {
+        "en": "Bump json-explorer to 0.1.15\nPrepare (c) for 2024",
+        "de": "Stoßdämpfer bis 0,1.15\nZubereitung (c) für 2024",
+        "ru": "Bump json-explorer до 0.1.15\nПодготовить (c) на 2024",
+        "pt": "Bump json-explorer para 0.1.15\nPreparar (c) para 2024",
+        "nl": "Bump Json-explorer tot 0.1.15\nBereid je voor op 2024",
+        "fr": "Bump json-explorer à 0,1.15\nPréparer (c) pour 2024",
+        "it": "Bump json-explorer a 0.1.15\nPreparare (c) per il 2024",
+        "es": "Bump json-explorer to 0.1.15\nPreparar (c) para 2024",
+        "pl": "Bump json-explorer to 0.1.15\nPrepare 2024 (ang.)",
+        "uk": "Bump json-explorer до 0.1.15\nПідготовка (c) до 2024",
+        "zh-cn": "Bump json-explorer\n2024年准备(c)"
+      },
       "0.5.1-alpha.1": {
         "en": "Bump json-explorer to 0.1.15-alpha.0\nPrepare (c) for 2024",
         "de": "Stoßdämpfer auf 0,1.15-alpha.0\nZubereitung (c) für 2024",
@@ -80,19 +93,6 @@
         "pl": "finał do Admin5",
         "uk": "кінцевий вимикач до Admin5 UI",
         "zh-cn": "迈向Admin5 UI"
-      },
-      "0.4.11": {
-        "en": "Bump json-explorer to 0.1.14\nadd AUTO for *.Home.state.presence (in addtion to HOME and AWAY)",
-        "de": "Stoßdämpfer bis 0,1.14\naUTO für *Home.state.presence (in Ergänzung zu HOME und AWAY)",
-        "ru": "Bump json-explorer до 0.1.14\nдобавить AUTO для *Home.state.presence (в дополнение к HOME и AWAY)",
-        "pt": "Bump json-explorer para 0.1.14\nadicionar AUTO para *Home.state.presence (em adição a HOME e AWAY)",
-        "nl": "Bump Json-explorer tot 0.1.14\nvertaling:",
-        "fr": "Bump json-explorer à 0,1.14\najouter AUTO pour *Home.state.presence (en addtion à HOME et AWAY)",
-        "it": "Bump json-explorer a 0.1.14\naggiungere AUTO per *Home.state.presence (in aggiunta a HOME e AWAY)",
-        "es": "Bump json-explorer to 0.1.14\nañadir AUTO para *Home.state.presence (en adición a HOME y AWAY)",
-        "pl": "Bump json-explorer do 0,1.14\ndodaje AUTO dla *Home.state.presence (wydanie do HOME i AWAY)",
-        "uk": "Bump json-explorer до 0.1.14\nadd AUTO для *будинки.state.presence (в додатку до HOME і AWAY)",
-        "zh-cn": "Bump json-explorer to 014\n增加非洲联盟热带木材组织,以*ome. State.presence(增加氢氟碳化合物和亚西青年)"
       }
     },
     "titleLang": {

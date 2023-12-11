@@ -46,8 +46,8 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.5.1-alpha.1 (2023-12-08)
-* (HGlab01) Bump json-explorer to 0.1.15-alpha.0
+### 0.5.1 (2023-12-11)
+* (HGlab01) Bump json-explorer to 0.1.15
 * (HGlab01) Prepare (c) for 2024
 
 ### 0.5.0 (2023-11-25)
