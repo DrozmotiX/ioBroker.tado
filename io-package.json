@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "news": {
+      "0.5.2": {
+        "en": "Improve axios handling\nBump axios to 1.6.2",
+        "de": "Verbessern Sie die Handhabung von Axios\nBump axios zu 1.6.2",
+        "ru": "Улучшить обработку аксиоса\nBump axios to 1.6.2",
+        "pt": "Melhorar o manuseio de axios\nBump axios para 1.6.2",
+        "nl": "Verbetering van de behandeling van axio's\nBump axios to 1.6.2",
+        "fr": "Améliorer la manipulation des axios\nAxios à bouffées à 1.6.2",
+        "it": "Migliorare la gestione degli assi\nAssio di bump a 1.6.2",
+        "es": "Mejorar el manejo de axios\nAxios de bomba a 1.6.2",
+        "pl": "Poprawa obsługi aksjow\nAxios bump do 1.6.2",
+        "uk": "Поліпшення обробки осей\nБампер аксіос до 1.6.2",
+        "zh-cn": "改进轴式处理\n横轴至1.6.2"
+      },
       "0.5.1": {
         "en": "Bump json-explorer to 0.1.15\nPrepare (c) for 2024",
         "de": "Stoßdämpfer bis 0,1.15\nZubereitung (c) für 2024",
@@ -80,19 +93,6 @@
         "pl": "finał do Admin5\nImproving REST-call maintenance\nBump axios to 1,6.1",
         "uk": "кінцевий вимикач до Admin5 UI\nПокращення REST-Call обробки\nБампер аксіос до 1.6.1",
         "zh-cn": "迈向Admin5 UI\nB. 改进无害环境技术的处理\nBumpxios to 1.6.1"
-      },
-      "0.4.12-alpha.0": {
-        "en": "switch finaly to Admin5 UI",
-        "de": "endgültiger Schalter für Admin5 UI",
-        "ru": "переключить финал на Admin5 UI",
-        "pt": "switch finaly para Admin5 UI",
-        "nl": "vertaling:",
-        "fr": "switch finaly to Admin5 UI",
-        "it": "passare alla finale di Admin5 UI",
-        "es": "conmutación final a Admin5 UI",
-        "pl": "finał do Admin5",
-        "uk": "кінцевий вимикач до Admin5 UI",
-        "zh-cn": "迈向Admin5 UI"
       }
     },
     "titleLang": {

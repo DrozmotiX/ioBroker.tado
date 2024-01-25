@@ -1,4 +1,8 @@
 # Older changes
+## 0.4.10 (2023-09-26)
+* (HGlab01) Add attribute 'isBalanceHpEligible'
+* (HGlab01) improve axios keep_a_live
+
 ## 0.4.9 (2023-07-05)
 * (HGlab01) Add attribute 'zonesCount'
 * (HGlab01) Bump ioBroker-jsonExplorer to 0.1.12
