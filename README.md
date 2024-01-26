@@ -48,7 +48,7 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 -->
 ### 0.5.2 (2024-01-25)
 * (HGlab01) Improve axios handling
-* (HGlab01) Bump axios to 1.6.2
+* (HGlab01) Bump axios to 1.6.6
 
 ### 0.5.1 (2023-12-11)
 * (HGlab01) Bump json-explorer to 0.1.15
