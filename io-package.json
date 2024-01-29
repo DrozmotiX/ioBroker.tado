@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "news": {
+      "0.5.3": {
+        "en": "Improve axios handling\nBump axios to 1.6.7",
+        "de": "Verbessern Sie die Handhabung von Axios\nBump axios zu 1.6.7",
+        "ru": "Улучшить обработку аксиоса\nBump axios to 1.6.7",
+        "pt": "Melhorar o manuseio de axios\nBump axios para 1.6.7",
+        "nl": "Verbetering van de behandeling van axio's\nBump axios naar 1.6.7",
+        "fr": "Améliorer la manipulation des axios\nAxios à bouffées à 1,6.7",
+        "it": "Migliorare la gestione degli assi\nAssio di bump a 1.6.7",
+        "es": "Mejorar el manejo de axios\nAxios de bomba a 1.6.7",
+        "pl": "Poprawa obsługi aksjow\nAxios Bump do 1.6.7",
+        "uk": "Поліпшення обробки осей\nБампер аксіос до 1.6.7",
+        "zh-cn": "改进轴式处理\n横轴改为1.6.7"
+      },
       "0.5.2": {
         "en": "Improve axios handling\nBump axios to 1.6.2",
         "de": "Verbessern Sie die Handhabung von Axios\nBump axios zu 1.6.2",
@@ -80,19 +93,6 @@
         "pl": "Zmiany\n18.0 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\ntwierdzenie jsonConf\nBump axios to 1.6.2 (ang.)",
         "uk": "Зміни\nNode 18.0 або вище\nioBroker host (js-controller) 5.0 або вище\nвиправити jsonНалаштування джсон\nБампер аксіос до 1.6.2",
         "zh-cn": "断 变\n第18.0或更高\nio Broker收容(控制员)5.0或更高。\nfixson ConConConConConConConcorative issue\nBumpxios to 1.6.2"
-      },
-      "0.4.12": {
-        "en": "switch finaly to Admin5 UI\nImprove REST-call handling\nBump axios to 1.6.1",
-        "de": "endgültiger Schalter für Admin5 UI\nREST-Call-Handling verbessern\nBump axios zu 1.6.1",
-        "ru": "переключить финал на Admin5 UI\nУлучшение REST-call обработки\nBump осье до 1.6.1",
-        "pt": "switch finaly para Admin5 UI\nMelhorar o manuseio de chamadas REST\nBump axios para 1.6.1",
-        "nl": "vertaling:\nVertaling:\nBump Axios naar 1.6.1",
-        "fr": "switch finaly to Admin5 UI\nAméliorez la manipulation des appels REST\nBump axios to 1.6.1",
-        "it": "passare alla finale di Admin5 UI\nMigliorare la gestione dei cavi REST\nAssio di bump a 1.6.1",
-        "es": "conmutación final a Admin5 UI\nMejorar el manejo de la llamada REST\nAxios de bomba a 1.6.1",
-        "pl": "finał do Admin5\nImproving REST-call maintenance\nBump axios to 1,6.1",
-        "uk": "кінцевий вимикач до Admin5 UI\nПокращення REST-Call обробки\nБампер аксіос до 1.6.1",
-        "zh-cn": "迈向Admin5 UI\nB. 改进无害环境技术的处理\nBumpxios to 1.6.1"
       }
     },
     "titleLang": {
