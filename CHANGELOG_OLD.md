@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.11 (2023-10-09)
+* (HGlab01) Bump json-explorer to 0.1.14
+* (Garfonso) add value AUTO for *.Home.state.presence (in addtion to HOME and AWAY)
+* (HGlab01) Bump axios to 1.5.1
+
 ## 0.4.10 (2023-09-26)
 * (HGlab01) Add attribute 'isBalanceHpEligible'
 * (HGlab01) improve axios keep_a_live
