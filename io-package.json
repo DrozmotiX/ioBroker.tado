@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.4-alpha.0",
+    "version": "0.5.4",
     "news": {
+      "0.5.4": {
+        "en": "Add attribute 'runningOfflineSchedule'\nBump axios to 1.6.8",
+        "de": "Attribut hinzufügen 'runningOfflineSchedule '\nBump axios zu 1.6.8",
+        "ru": "Добавить атрибут 'runningOfflineSchedule \"\nBump axios to 1.6.8",
+        "pt": "Adicionar atributo 'runningOfflineSchedule '\nBump axios para 1.6.8",
+        "nl": "Voeg attribuut 'runningOfflineSchedule' toe '\nBump axios naar 1.6.8",
+        "fr": "Ajouter l'attribut 'runningOfflineSchedule '\nAxios de pompe à 1.6.8",
+        "it": "Aggiungi attributo 'runningOfflineSchedule '\nAssio di bump a 1.6.8",
+        "es": "Agregar atributo 'runningOfflineSchedule '\nAxios de bomba a 1.6.8",
+        "pl": "Dodaj atrybut 'runningOfflineSchedule'\nBump aksjos do 1.6.8",
+        "uk": "Додати атрибут 'runningOfflineSchedule Р\nБампер аксіос до 1.6.8",
+        "zh-cn": "添加属性“ 运行 Offline 附表  '\n横轴改为1.6.8"
+      },
       "0.5.4-alpha.0": {
         "en": "Add attribute 'runningOfflineSchedule'\nBump axios to 1.6.8",
         "de": "Attribut hinzufügen 'runningOfflineSchedule '\nBump axios zu 1.6.8",
@@ -80,19 +93,6 @@
         "pl": "Bump json-explorer to 0.1.15-alfa.0\nPrepare 2024 (ang.)",
         "uk": "Bump json-explorer до 0.1.15-alpha.0\nПідготовка (c) до 2024",
         "zh-cn": "Bump json-explorer to 015-alpha0\n2024年准备(c)"
-      },
-      "0.5.0": {
-        "en": "Breaking changes\nNode 18.0 or higher\nioBroker host (js-controller) 5.0 or higher\nfix jsonConf validation issue\nBump axios to 1.6.2\nupdate contact data",
-        "de": "Veränderungsraten\nNode 18.0 oder höher\nioBroker host (js-controller) 5.0 oder höher\nfix jsonConf Validierung Problem\nBump axios zu 1.6.2\nkontaktdaten aktualisieren",
-        "ru": "Перерыв изменений\nNode 18.0 или выше\nioBroker host (js-controller) 5.0 или выше\nисправить jsonConf вопрос проверки\nBump осье до 1.6.2\nобновить контактные данные",
-        "pt": "Alterações de ruptura\nNode 18.0 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\ncorrigir problema de validação jsonConf\nBump axios para 1.6.2\natualizar dados de contato",
-        "nl": "Breaking changes\nNode 18.0 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nvertaling:\nBump Axios naar 1.6.2\nvertaling:",
-        "fr": "Changements de rupture\nNode 18.0 ou supérieur\nioBroker host (js-controller) 5.0 ou supérieur\ncorrection du problème de validation jsonConf\nAxyose de bouillon à 1.6.2\nmettre à jour les données de contact",
-        "it": "Cambiamenti di rottura\nNodo 18.0 o superiore\nioBroker host (js-controller) 5.0 o superiore\nrisolvere problema di convalida jsonConf\nAssio di bump a 1.6.2\naggiornamento dei dati di contatto",
-        "es": "Cambios de ruptura\nNodo 18.0 o superior\nioBroker host (js-controller) 5.0 o superior\nsolución jsonConf validation issue\nAxios de bomba a 1.6.2\nactualizar datos de contacto",
-        "pl": "Zmiany\n18.0 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\ntwierdzenie jsonConf\nBump axios to 1.6.2 (ang.)\ndata dostępu",
-        "uk": "Зміни\nNode 18.0 або вище\nioBroker host (js-controller) 5.0 або вище\nвиправити jsonНалаштування джсон\nБампер аксіос до 1.6.2\nоновлення контактних даних",
-        "zh-cn": "断 变\n第18.0或更高\nio Broker收容(控制员)5.0或更高。\nfixson ConConConConConConConcorative issue\nBumpxios to 1.6.2\n更新联络数据"
       }
     },
     "titleLang": {
