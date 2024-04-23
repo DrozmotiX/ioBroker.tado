@@ -138,7 +138,10 @@
       "climate",
       "temperature"
     ],
-    "licenseInformation": "MIT",
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
     "platform": "Javascript/Node.js",
     "main": "main.js",
     "icon": "tado.png",
