@@ -138,7 +138,7 @@
       "climate",
       "temperature"
     ],
-    "license": "MIT",
+    "licenseInformation": "MIT",
     "platform": "Javascript/Node.js",
     "main": "main.js",
     "icon": "tado.png",
@@ -146,6 +146,7 @@
     "extIcon": "https://raw.githubusercontent.com/DrozmotiX/ioBroker.tado/main/admin/tado.png",
     "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/README.md",
     "loglevel": "info",
+    "tier": 3,
     "mode": "daemon",
     "type": "climate-control",
     "jsonConfig": true,
