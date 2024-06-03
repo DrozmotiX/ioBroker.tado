@@ -156,7 +156,6 @@
     "compact": true,
     "connectionType": "cloud",
     "dataSource": "poll",
-    "materialize": true,
     "adminUI": {
       "config": "json",
       "tab": "materialize"
