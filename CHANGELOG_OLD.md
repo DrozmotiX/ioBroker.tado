@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.12 (2023-11-14)
+* (HGlab01) switch finaly to Admin5 UI
+* (HGlab01) Improve REST-call handling
+* (HGlab01) Bump axios to 1.6.1
+
 ## 0.4.11 (2023-10-09)
 * (HGlab01) Bump json-explorer to 0.1.14
 * (Garfonso) add value AUTO for *.Home.state.presence (in addtion to HOME and AWAY)
