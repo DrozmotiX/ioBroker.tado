@@ -22,7 +22,7 @@
     "axios": "1.7.2",
     "https": "^1.0.0",
     "iobroker-jsonexplorer": "0.1.15",
-    "simple-oauth2": "^5.0.1"
+    "simple-oauth2": "^5.1.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",
