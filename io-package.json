@@ -175,8 +175,8 @@
     "Password"
   ],
   "protectedNative": [
-    "Username":"",
-    "Password":""
+    "Username",
+    "Password"
 ],
   "native": {
     "intervall": 30
