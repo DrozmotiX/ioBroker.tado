@@ -15,6 +15,9 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
+## TADO° X
+Tado X **is not supported** by this adapter. The adapter supports Tado V3, V3+ and V2.
+
 ## Things you can steer
 | State | Description |
 | ----- | ----------- |
