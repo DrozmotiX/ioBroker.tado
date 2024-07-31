@@ -1134,19 +1134,19 @@ class Tado extends utils.Adapter {
 		};
 		try {
 			//this.accessToken = await client.getToken(tokenParams); //HERE
-			
 			const timeoutFunc = client.getToken(tokenParams);
 			const runIt = async () => {
 				try {
-					const { data } = await asyncCallWithTimeout(timeoutFunc, 10000);
-					this.log.info(data);
+					this.accessToken = await asyncCallWithTimeout(timeoutFunc, 10000);
+					this.log.info('accessToken result is ' + JSON.stringify(this.accessToken));
 				}
 				catch (err) {
 					this.log.error('Error: ' + err);
 					console.error(err);
+					throw(err);
 				}
 			};
-			runIt();
+			await runIt();
 
 
 		} catch (error) {
