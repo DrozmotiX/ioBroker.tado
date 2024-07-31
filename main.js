@@ -1126,6 +1126,15 @@ class Tado extends utils.Adapter {
 	}
 
 	async login(username, password) {
+		let expires_at = new Date();
+		if (this.accessToken && this.accessToken.token && this.accessToken.token.expires_at) {
+			expires_at = new Date(this.accessToken.token.expires_at);
+			if (expires_at.getTime() - new Date().getTime() > 30000) {
+				this.log.info('No login needed; will expire at ' + this.accessToken.token.expires_at);
+				return;
+			}
+		}
+
 		const client = new ResourceOwnerPassword(tado_config);
 		const tokenParams = {
 			username: username,
@@ -1138,12 +1147,12 @@ class Tado extends utils.Adapter {
 			const runIt = async () => {
 				try {
 					this.accessToken = await asyncCallWithTimeout(timeoutFunc, 10000);
-					this.log.info('accessToken result is ' + JSON.stringify(this.accessToken));
+					this.log.info('Login executed successful');
 				}
 				catch (err) {
 					this.log.error('Error: ' + err);
 					console.error(err);
-					throw(err);
+					throw (err);
 				}
 			};
 			await runIt();
