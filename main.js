@@ -1133,7 +1133,22 @@ class Tado extends utils.Adapter {
 			scope: 'home.user',
 		};
 		try {
-			this.accessToken = await client.getToken(tokenParams);
+			//this.accessToken = await client.getToken(tokenParams); //HERE
+			
+			const timeoutFunc = client.getToken(tokenParams);
+			const runIt = async () => {
+				try {
+					const { data } = await asyncCallWithTimeout(timeoutFunc, 10000);
+					this.log.info(data);
+				}
+				catch (err) {
+					this.log.error('Error: ' + err);
+					console.error(err);
+				}
+			};
+			runIt();
+
+
 		} catch (error) {
 			throw new Error('Login failed! Please verify Username and Password');
 		}
@@ -1388,3 +1403,19 @@ if (module.parent) {
 	// otherwise start the instance directly
 	new Tado();
 }
+
+const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
+	let timeoutHandle;
+
+	const timeoutPromise = new Promise((_resolve, reject) => {
+		timeoutHandle = setTimeout(
+			() => reject(new Error('Async call timeout limit reached')),
+			timeLimit
+		);
+	});
+
+	return Promise.race([asyncPromise, timeoutPromise]).then(result => {
+		clearTimeout(timeoutHandle);
+		return result;
+	});
+};
