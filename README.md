@@ -49,6 +49,9 @@ Tado X **is not supported** by this adapter. The adapter supports Tado V3, V3+ a
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.5.6-alpha.0 (2024-08-01)
+* (HGlab01) Improve AccessToken Management
+
 ### 0.5.5 (2024-06-25)
 * (HGlab01) Bump axios to 1.7.2
 
@@ -63,14 +66,6 @@ Tado X **is not supported** by this adapter. The adapter supports Tado V3, V3+ a
 ### 0.5.1 (2023-12-11)
 * (HGlab01) Bump json-explorer to 0.1.15
 * (HGlab01) Prepare (c) for 2024
-
-### 0.5.0 (2023-11-25)
-* (HGlab01) Breaking changes
-    - Node.js 18.0 or higher
-    - ioBroker host (js-controller) 5.0 or higher
-* (HGlab01) fix jsonConf validation issue
-* (HGlab01) Bump axios to 1.6.2
-* (HGlab01) update contact data
 
 ## License
 MIT License

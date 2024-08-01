@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.5",
+    "version": "0.5.6-alpha.0",
     "news": {
+      "0.5.6-alpha.0": {
+        "en": "Improve AccessToken Management",
+        "de": "Verbessern Sie das AccessToken Management",
+        "ru": "Улучшение управления доступом",
+        "pt": "Melhorar o gerenciamento do AccessToken",
+        "nl": "AccessToken Management verbeteren",
+        "fr": "Améliorer la gestion AccessToken",
+        "it": "Migliorare la gestione di AccessToken",
+        "es": "Mejorar el accesoToken Management",
+        "pl": "Poprawa zarządzania akcesoriami Token",
+        "uk": "Покращення управління доступом",
+        "zh-cn": "改进访问端口管理"
+      },
       "0.5.5": {
         "en": "Bump axios to 1.7.2",
         "de": "Bump axios bis 1.7.2",
@@ -80,19 +93,6 @@
         "pl": "Bump json-explorer to 0.1.15\nPrepare 2024 (ang.)",
         "uk": "Bump json-explorer до 0.1.15\nПідготовка (c) до 2024",
         "zh-cn": "Bump json-explorer\n2024年准备(c)"
-      },
-      "0.5.1-alpha.1": {
-        "en": "Bump json-explorer to 0.1.15-alpha.0\nPrepare (c) for 2024",
-        "de": "Stoßdämpfer auf 0,1.15-alpha.0\nZubereitung (c) für 2024",
-        "ru": "Bump json-explorer до 0.1.15-alpha.0\nПодготовить (c) на 2024",
-        "pt": "Bump json-explorer para 0.1.15-alpha.0\nPreparar (c) para 2024",
-        "nl": "Bump Json-explorer tot 0.1.15-alfa\nBereid je voor op 2024",
-        "fr": "Bump json-explorer à 0,1.15-alpha.0\nPréparer (c) pour 2024",
-        "it": "Bump json-explorer a 0.1.15-alpha.0\nPreparare (c) per il 2024",
-        "es": "Bump json-explorer to 0.1.15-alpha.0\nPreparar (c) para 2024",
-        "pl": "Bump json-explorer to 0.1.15-alfa.0\nPrepare 2024 (ang.)",
-        "uk": "Bump json-explorer до 0.1.15-alpha.0\nПідготовка (c) до 2024",
-        "zh-cn": "Bump json-explorer to 015-alpha0\n2024年准备(c)"
       }
     },
     "titleLang": {
@@ -177,7 +177,7 @@
   "protectedNative": [
     "Username",
     "Password"
-],
+  ],
   "native": {
     "intervall": 30
   },
