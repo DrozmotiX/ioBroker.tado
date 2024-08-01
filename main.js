@@ -2,7 +2,8 @@
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
-const EXPIRATION_WINDOW_IN_SECONDS = 30;
+const EXPIRATION_WINDOW_IN_SECONDS = 125; //bit more than 2 minutes
+const EXPIRATION_LOGIN_WINDOW_IN_SECONDS = 10;
 
 const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
@@ -767,7 +768,7 @@ class Tado extends utils.Adapter {
 
 		// Get login token
 		try {
-			if (!this.accessToken || !this.accessToken.token || new Date(this.accessToken.token.expires_at).getTime() - new Date().getTime() < 10 * 1000) {
+			if (!this.accessToken || !this.accessToken.token || new Date(this.accessToken.token.expires_at).getTime() - new Date().getTime() < EXPIRATION_LOGIN_WINDOW_IN_SECONDS * 1000) {
 				step = 'login';
 				await this.login(user, pass);
 				if (conn_state === undefined || conn_state === null) {
@@ -777,7 +778,7 @@ class Tado extends utils.Adapter {
 						this.log.info('Connected to Tado cloud, initialyzing... ');
 					}
 				}
-			} else this.log.info('Token still valid. No Re-Login needed ' + this.accessToken.token.expires_at);
+			} else this.log.debug('Token still valid. No Re-Login needed ' + this.accessToken.token.expires_at);
 
 			// Get Basic data needed for all other querys and store to global variable
 			step = 'getMet_data';
@@ -1133,15 +1134,6 @@ class Tado extends utils.Adapter {
 	}
 
 	async login(username, password) {
-		/*let expires_at = new Date();
-		if (this.accessToken && this.accessToken.token && this.accessToken.token.expires_at) {
-			expires_at = new Date(this.accessToken.token.expires_at);
-			if (expires_at.getTime() - new Date().getTime() > EXPIRATION_WINDOW_LOGIN_IN_SECONDS * 1000) {
-				this.log.info('No login needed; will expire at ' + this.accessToken.token.expires_at);
-				return;
-			}
-		}*/
-
 		const client = new ResourceOwnerPassword(tado_config);
 		const tokenParams = {
 			username: username,
@@ -1154,7 +1146,7 @@ class Tado extends utils.Adapter {
 			const runIt = async () => {
 				try {
 					this.accessToken = await asyncCallWithTimeout(timeoutFunc, 10000);
-					this.log.info('Login executed successful');
+					this.log.debug('Login successful');
 				}
 				catch (err) {
 					this.log.error('Error: ' + err);
