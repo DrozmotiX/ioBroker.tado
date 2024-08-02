@@ -2,7 +2,8 @@
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
-const EXPIRATION_WINDOW_IN_SECONDS = 300;
+const EXPIRATION_WINDOW_IN_SECONDS = 125; //bit more than 2 minutes
+const EXPIRATION_LOGIN_WINDOW_IN_SECONDS = 10;
 
 const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
@@ -30,7 +31,7 @@ let axiosInstance = axios.create({
 	httpsAgent: new https.Agent({ keepAlive: true }),
 });
 
-const oneHour = 60 * 60 * 1000;
+const ONEHOUR = 60 * 60 * 1000;
 let polling; // Polling timer
 let pooltimer = [];
 
@@ -66,7 +67,7 @@ class Tado extends utils.Adapter {
 		this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 		this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 		// Reset the connection indicator during startup
-		this.setState('info.connection', false, true);
+		await jsonExplorer.stateSetCreate('info.connection', 'connection', false);
 		await this.DoConnect();
 	}
 
@@ -759,23 +760,25 @@ class Tado extends utils.Adapter {
 	/* DO Methods														*/
 	//////////////////////////////////////////////////////////////////////
 	async DoData_Refresh(user, pass) {
-		let outdated = false;
 		let now = new Date().getTime();
 		let step = 'start';
-		if (now - this.lastupdate > oneHour) outdated = true;
+		let outdated = now - this.lastupdate > ONEHOUR;
+		let conn_state = await this.getStateAsync('info.connection');
+		this.log.debug('ConnState ' + JSON.stringify(conn_state));
 
 		// Get login token
 		try {
-			step = 'login';
-			await this.login(user, pass);
-			const conn_state = await this.getStateAsync('info.connection');
-			if (conn_state === undefined || conn_state === null) {
-				return;
-			} else {
-				if (conn_state.val === false) {
-					this.log.info('Connected to Tado cloud, initialyzing... ');
+			if (!this.accessToken || !this.accessToken.token || new Date(this.accessToken.token.expires_at).getTime() - new Date().getTime() < EXPIRATION_LOGIN_WINDOW_IN_SECONDS * 1000) {
+				step = 'login';
+				await this.login(user, pass);
+				if (conn_state === undefined || conn_state === null) {
+					return;
+				} else {
+					if (conn_state.val === false) {
+						this.log.info('Connected to Tado cloud, initialyzing... ');
+					}
 				}
-			}
+			} else this.log.debug('Token still valid. No Re-Login needed ' + this.accessToken.token.expires_at);
 
 			// Get Basic data needed for all other querys and store to global variable
 			step = 'getMet_data';
@@ -858,7 +861,9 @@ class Tado extends utils.Adapter {
 	}
 
 	async DoConnect() {
+		// @ts-ignore
 		const user = this.config.Username;
+		// @ts-ignore
 		let pass = this.config.Password;
 
 		if (await isOnline() == false) {
@@ -1101,13 +1106,16 @@ class Tado extends utils.Adapter {
 	/* MISC																*/
 	//////////////////////////////////////////////////////////////////////
 	refreshToken() {
-		const { token } = this.accessToken;
-		const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
-		const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
+		//const { token } = this.accessToken;
+		//const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
+		//const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
 
-		// If the start of the window has passed, refresh the token
-		const nowInSeconds = (new Date()).getTime() / 1000;
-		const shouldRefresh = nowInSeconds >= expirationWindowStart;
+		//If the start of the window has passed, refresh the token
+		//const nowInSeconds = (new Date()).getTime() / 1000;
+		//const shouldRefresh = nowInSeconds >= expirationWindowStart;
+
+		const expires_at = new Date(this.accessToken.token.expires_at);
+		const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000;
 
 		return new Promise((resolve, reject) => {
 			if (shouldRefresh) {
@@ -1133,7 +1141,22 @@ class Tado extends utils.Adapter {
 			scope: 'home.user',
 		};
 		try {
-			this.accessToken = await client.getToken(tokenParams);
+			//this.accessToken = await client.getToken(tokenParams); //replaced by code below to manage if getToken() is not replying
+			const timeoutFunc = client.getToken(tokenParams);
+			const runIt = async () => {
+				try {
+					this.accessToken = await asyncCallWithTimeout(timeoutFunc, 10000);
+					this.log.debug('Login successful');
+				}
+				catch (err) {
+					this.log.error('Error: ' + err);
+					console.error(err);
+					throw (err);
+				}
+			};
+			await runIt();
+
+
 		} catch (error) {
 			throw new Error('Login failed! Please verify Username and Password');
 		}
@@ -1388,3 +1411,19 @@ if (module.parent) {
 	// otherwise start the instance directly
 	new Tado();
 }
+
+const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
+	let timeoutHandle;
+
+	const timeoutPromise = new Promise((_resolve, reject) => {
+		timeoutHandle = setTimeout(
+			() => reject(new Error('Async call timeout limit reached')),
+			timeLimit
+		);
+	});
+
+	return Promise.race([asyncPromise, timeoutPromise]).then(result => {
+		clearTimeout(timeoutHandle);
+		return result;
+	});
+};

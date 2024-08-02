@@ -1,4 +1,12 @@
 # Older changes
+## 0.5.0 (2023-11-25)
+* (HGlab01) Breaking changes
+    - Node.js 18.0 or higher
+    - ioBroker host (js-controller) 5.0 or higher
+* (HGlab01) fix jsonConf validation issue
+* (HGlab01) Bump axios to 1.6.2
+* (HGlab01) update contact data
+
 ## 0.4.12 (2023-11-14)
 * (HGlab01) switch finaly to Admin5 UI
 * (HGlab01) Improve REST-call handling
