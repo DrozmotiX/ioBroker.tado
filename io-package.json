@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.6-alpha.0",
+    "version": "0.5.6-alpha.1",
     "news": {
+      "0.5.6-alpha.1": {
+        "en": "Improve AccessToken Management\nBump axios to 1.7.3",
+        "de": "Verbessern Sie das AccessToken Management\nBump axios bis 1.7.3",
+        "ru": "Улучшение управления доступом\nBump axios to 1.7.3",
+        "pt": "Melhorar o gerenciamento do AccessToken\nBump axios para 1.7.3",
+        "nl": "AccessToken Management verbeteren\nBump axios naar 1.7.3",
+        "fr": "Améliorer la gestion AccessToken\nAxios bouffés à 1.7.3",
+        "it": "Migliorare la gestione di AccessToken\nAssio di bump a 1.7.3",
+        "es": "Mejorar el accesoToken Management\nBump axios a 1.7.3",
+        "pl": "Poprawa zarządzania akcesoriami Token\nAksykony bumpy do 1.7.3",
+        "uk": "Покращення управління доступом\nБампер аксіос до 1.7.3",
+        "zh-cn": "改进访问端口管理\n横轴改为1.7.3"
+      },
       "0.5.6-alpha.0": {
         "en": "Improve AccessToken Management",
         "de": "Verbessern Sie das AccessToken Management",
@@ -80,19 +93,6 @@
         "pl": "Poprawa obsługi aksjow\nAxios bump do 1.6.2",
         "uk": "Поліпшення обробки осей\nБампер аксіос до 1.6.2",
         "zh-cn": "改进轴式处理\n横轴至1.6.2"
-      },
-      "0.5.1": {
-        "en": "Bump json-explorer to 0.1.15\nPrepare (c) for 2024",
-        "de": "Stoßdämpfer bis 0,1.15\nZubereitung (c) für 2024",
-        "ru": "Bump json-explorer до 0.1.15\nПодготовить (c) на 2024",
-        "pt": "Bump json-explorer para 0.1.15\nPreparar (c) para 2024",
-        "nl": "Bump Json-explorer tot 0.1.15\nBereid je voor op 2024",
-        "fr": "Bump json-explorer à 0,1.15\nPréparer (c) pour 2024",
-        "it": "Bump json-explorer a 0.1.15\nPreparare (c) per il 2024",
-        "es": "Bump json-explorer to 0.1.15\nPreparar (c) para 2024",
-        "pl": "Bump json-explorer to 0.1.15\nPrepare 2024 (ang.)",
-        "uk": "Bump json-explorer до 0.1.15\nПідготовка (c) до 2024",
-        "zh-cn": "Bump json-explorer\n2024年准备(c)"
       }
     },
     "titleLang": {

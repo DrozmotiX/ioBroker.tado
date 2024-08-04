@@ -49,8 +49,9 @@ Tado X **is not supported** by this adapter. The adapter supports Tado V3, V3+ a
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.5.6-alpha.0 (2024-08-01)
+### 0.5.6-alpha.1 (2024-08-04)
 * (HGlab01) Improve AccessToken Management
+* (HGlab01) Bump axios to 1.7.3
 
 ### 0.5.5 (2024-06-25)
 * (HGlab01) Bump axios to 1.7.2
