@@ -52,6 +52,7 @@ Tado X **is not supported** by this adapter. The adapter supports Tado V3, V3+ a
 ### 0.5.6-alpha.1 (2024-08-04)
 * (HGlab01) Improve AccessToken Management
 * (HGlab01) Bump axios to 1.7.3
+* (HGlab01) Add attribute 'language'
 
 ### 0.5.5 (2024-06-25)
 * (HGlab01) Bump axios to 1.7.2
