@@ -36,8 +36,8 @@ let pooltimer = [];
 
 class Tado extends utils.Adapter {
     /**
-	 * @param {Partial<ioBroker.AdapterOptions>} [options={}]
-	 */
+     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
+     */
     constructor(options) {
         // @ts-ignore
         super({
@@ -59,8 +59,8 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * Is called when databases are connected and adapter received configuration.
-	 */
+     * Is called when databases are connected and adapter received configuration.
+     */
     async onReady() {
         jsonExplorer.sendVersionInfo(version);
         this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
@@ -71,9 +71,9 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * Is called when adapter shuts down - callback has to be called under any circumstances!
-	 * @param {() => void} callback
-	 */
+     * Is called when adapter shuts down - callback has to be called under any circumstances!
+     * @param {() => void} callback
+     */
     onUnload(callback) {
         try {
             //this.resetTimer();
@@ -88,10 +88,10 @@ class Tado extends utils.Adapter {
     /* ON STATE CHANGE													*/
     //////////////////////////////////////////////////////////////////////
     /**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
+     * Is called if a subscribed state changes
+     * @param {string} id
+     * @param {ioBroker.State | null | undefined} state
+     */
     async onStateChange(id, state) {
         if (state) {
             // The state was changed
@@ -337,9 +337,9 @@ class Tado extends utils.Adapter {
     /* API CALLS														*/
     //////////////////////////////////////////////////////////////////////
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     */
     async clearZoneOverlay(home_id, zone_id) {
         let url = `/api/v2/homes/${home_id}/zones/${zone_id}/overlay`;
         if (await isOnline() == false) {
@@ -354,11 +354,11 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {string} device_id
-	 * @param {number} set_offset
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     * @param {string} device_id
+     * @param {number} set_offset
+     */
     async setTemperatureOffset(home_id, zone_id, device_id, set_offset) {
         if (!set_offset) set_offset = 0;
         if (set_offset <= -10 || set_offset > 10) this.log.warn('Offset out of range +/-10°');
@@ -386,10 +386,10 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {number} timetable_id
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     * @param {number} timetable_id
+     */
     async setActiveTimeTable(home_id, zone_id, timetable_id) {
         if (!timetable_id) timetable_id = 0;
         if (!(timetable_id == 0 || timetable_id == 1 || timetable_id == 2)) {
@@ -421,9 +421,9 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} homePresence
-	 */
+     * @param {string} home_id
+     * @param {string} homePresence
+     */
     async setPresenceLock(home_id, homePresence) {
         if (!homePresence) homePresence = 'HOME';
         if (homePresence !== 'HOME' && homePresence !== 'AWAY' && homePresence !== 'AUTO') {
@@ -458,21 +458,21 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {string} power
-	 * @param {number} temperature
-	 * @param {string} typeSkillBasedApp
-	 * @param {number} durationInSeconds
-	 * @param {string} type
-	 * @param {string} acMode
-	 * @param {string} fanLevel
-	 * @param {string} horizontalSwing
-	 * @param {string} verticalSwing
-	 * @param {string} fanSpeed
-	 * @param {string} swing
-	 * @param {string} light
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     * @param {string} power
+     * @param {number} temperature
+     * @param {string} typeSkillBasedApp
+     * @param {number} durationInSeconds
+     * @param {string} type
+     * @param {string} acMode
+     * @param {string} fanLevel
+     * @param {string} horizontalSwing
+     * @param {string} verticalSwing
+     * @param {string} fanSpeed
+     * @param {string} swing
+     * @param {string} light
+     */
     async setZoneOverlay(home_id, zone_id, power, temperature, typeSkillBasedApp, durationInSeconds, type, acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed, swing, light) {
         power = power.toUpperCase();
         typeSkillBasedApp = typeSkillBasedApp.toUpperCase();
@@ -520,12 +520,12 @@ class Tado extends utils.Adapter {
             }
 
             /* Capability Management
-			{"1":{"type":"HEATING","temperatures":{"celsius":{"min":5,"max":25,"step":0.1},"fahrenheit":{"min":41,"max":77,"step":0.1}}}}
-			{"0":{"type":"HOT_WATER","canSetTemperature":true,"temperatures":{"celsius":{"min":30,"max":65,"step":1},"fahrenheit":{"min":86,"max":149,"step":1}}}}
-			{"0":{"type":"HOT_WATER","canSetTemperature":false}}
-			{"1":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}},"3":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}}}
-			{"1":{"type":"AIR_CONDITIONING","HEAT":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"COOL":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"DRY":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"FAN":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"AUTO":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"HEAT":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"DRY":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"FAN":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"AUTO":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"}},"light":"ON"}}}
-			*/
+            {"1":{"type":"HEATING","temperatures":{"celsius":{"min":5,"max":25,"step":0.1},"fahrenheit":{"min":41,"max":77,"step":0.1}}}}
+            {"0":{"type":"HOT_WATER","canSetTemperature":true,"temperatures":{"celsius":{"min":30,"max":65,"step":1},"fahrenheit":{"min":86,"max":149,"step":1}}}}
+            {"0":{"type":"HOT_WATER","canSetTemperature":false}}
+            {"1":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}},"3":{"type":"AIR_CONDITIONING","COOL":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"DRY":{"fanSpeeds":["MIDDLE","LOW"],"swings":["OFF","ON"]},"FAN":{"fanSpeeds":["HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"HEAT":{"temperatures":{"celsius":{"min":16,"max":30,"step":1},"fahrenheit":{"min":61,"max":86,"step":1}},"fanSpeeds":["AUTO","HIGH","MIDDLE","LOW"],"swings":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"},"DRY":{"fanSpeed":"LOW","swing":"OFF"},"FAN":{"fanSpeed":"LOW","swing":"OFF"},"HEAT":{"temperature":{"celsius":23,"fahrenheit":74},"fanSpeed":"LOW","swing":"OFF"}}}}}
+            {"1":{"type":"AIR_CONDITIONING","HEAT":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"COOL":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"DRY":{"temperatures":{"celsius":{"min":16,"max":32,"step":1},"fahrenheit":{"min":61,"max":90,"step":1}},"fanLevel":["LEVEL2","LEVEL3","AUTO","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"FAN":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"AUTO":{"fanLevel":["LEVEL2","LEVEL3","LEVEL1"],"verticalSwing":["OFF","ON"],"horizontalSwing":["OFF","ON"],"light":["OFF","ON"]},"initialStates":{"mode":"COOL","modes":{"COOL":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"HEAT":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"DRY":{"temperature":{"celsius":24,"fahrenheit":76},"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"FAN":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"},"AUTO":{"temperature":null,"fanSpeed":null,"swing":null,"fanLevel":"LEVEL2","verticalSwing":"OFF","horizontalSwing":"OFF"}},"light":"ON"}}}
+            */
             console.log(JSON.stringify(this.roomCapabilities));
             if (!this.roomCapabilities || !this.roomCapabilities[zone_id]) {
                 this.log.error(`No room capabilities found for room '${zone_id}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
@@ -672,10 +672,10 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {object} config
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     * @param {object} config
+     */
     async poolApiCall(home_id, zone_id, config) {
         this.log.debug(`poolApiCall() entered for '${home_id}/${zone_id}'`);
         let pooltimerid = home_id + zone_id;
@@ -706,10 +706,10 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * Calls the "Active Open Window" endpoint. If the tado thermostat did not detect an open window, the call does nothing.
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 */
+     * Calls the "Active Open Window" endpoint. If the tado thermostat did not detect an open window, the call does nothing.
+     * @param {string} home_id
+     * @param {string} zone_id
+     */
     async activateOpenWindow(home_id, zone_id) {
         let url = `/api/v2/homes/${home_id}/zones/${zone_id}/state/openWindow/activate`;
         if (await isOnline() == false) {
@@ -723,10 +723,10 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {any} config Payload needs to be an object like this {"enabled":true,"timeoutInSeconds":960}
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     * @param {any} config Payload needs to be an object like this {"enabled":true,"timeoutInSeconds":960}
+     */
     async setOpenWindowDetectionSettings(home_id, zone_id, config) {
         let url = `/api/v2/homes/${home_id}/zones/${zone_id}/openWindowDetection`;
         if (await isOnline() == false) {
@@ -739,11 +739,11 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} home_id
-	 * @param {string} zone_id
-	 * @param {string} device_id
-	 * @param {boolean} enabled
-	 */
+     * @param {string} home_id
+     * @param {string} zone_id
+     * @param {string} device_id
+     * @param {boolean} enabled
+     */
     async setChildLock(home_id, zone_id, device_id, enabled) {
         let url = `/api/v2/devices/${device_id}/childLock`;
         if (await isOnline() == false) {
@@ -782,12 +782,12 @@ class Tado extends utils.Adapter {
             } else this.log.debug('Token still valid. No Re-Login needed ' + this.accessToken.token.expires_at);
 
             // Get Basic data needed for all other querys and store to global variable
-            this.log.info('Step getMeData');
+            this.log.info('Step getMeData() started');
             step = 'getMet_data';
             if (this.getMe_data === null) {
                 this.getMe_data = await this.getMe();
             }
-            this.log.info('Step getMeData done');
+            this.log.info('Step getMeData() done');
             this.log.debug('GetMe result: ' + JSON.stringify(this.getMe_data));
             //set timestamp for 'Online'-state
             await jsonExplorer.setLastStartTime();
@@ -918,11 +918,11 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} HomeId
-	 * @param {string} ZoneId
-	 * @param {string} DeviceId
-	 * @param {object} offset
-	 */
+     * @param {string} HomeId
+     * @param {string} ZoneId
+     * @param {string} DeviceId
+     * @param {object} offset
+     */
     async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
         if (offset == null) {
             offset = await this.getTemperatureOffset(DeviceId);
@@ -1003,10 +1003,10 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} HomeId
-	 * @param {string} ZoneId
-	 * @param {object} TimeTables_data
-	 */
+     * @param {string} HomeId
+     * @param {string} ZoneId
+     * @param {object} TimeTables_data
+     */
     async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
         if (TimeTables_data == null) {
             TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
@@ -1053,20 +1053,20 @@ class Tado extends utils.Adapter {
 
     //not in use
     /*
-	async DoDevices(HomeId) {
-		const Devices_data = await this.getDevices(HomeId);
-		this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
-	}*/
+    async DoDevices(HomeId) {
+        const Devices_data = await this.getDevices(HomeId);
+        this.log.debug('Devices Result: ' + JSON.stringify(Devices_data));
+        this.DoWriteJsonRespons(HomeId, 'Stage_03_Devices', Devices_data);
+    }*/
 
     //not in use
     /*
-	async DoMobileDeviceSettings(HomeId, DeviceId) {
-		const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
-		this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
-		this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
-		jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true,  2);
-	}*/
+    async DoMobileDeviceSettings(HomeId, DeviceId) {
+        const MobileDeviceSettings_data = await this.getMobileDeviceSettings(HomeId, DeviceId);
+        this.log.debug('MobileDeviceSettings_Data Result: ' + JSON.stringify(MobileDeviceSettings_data));
+        this.DoWriteJsonRespons(HomeId, 'Stage_07_MobileDevicesSettings_' + DeviceId, MobileDeviceSettings_data);
+        jsonExplorer.traverseJson(MobileDeviceSettings_data, `${HomeId}.MobileDevices.${DeviceId}.setting`, true, true,  2);
+    }*/
 
 
     //////////////////////////////////////////////////////////////////////
@@ -1109,7 +1109,6 @@ class Tado extends utils.Adapter {
     /* MISC																*/
     //////////////////////////////////////////////////////////////////////
     refreshToken() {
-        this.log.info('refreshToken() started');
         //const { token } = this.accessToken;
         //const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
         //const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
@@ -1123,6 +1122,7 @@ class Tado extends utils.Adapter {
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
+                this.log.info('refreshToken() started');
                 this.accessToken.refresh()
                     .then(result => {
                         this.accessToken = result;
@@ -1131,10 +1131,10 @@ class Tado extends utils.Adapter {
                     .catch(error => {
                         reject(error);
                     });
+                this.log.info('refreshToken() done');
             } else {
                 resolve(this.accessToken);
             }
-            this.log.info('refreshToken() done');
         });
     }
 
@@ -1168,8 +1168,8 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {number} msmin
-	 */
+     * @param {number} msmin
+     */
     async sleep(msmin, msmax = msmin) {
         let ms = Math.random() * (msmax - msmin) + msmin;
         this.log.debug('Waiting time is ' + ms + 'ms');
@@ -1179,8 +1179,8 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} url
-	 */
+     * @param {string} url
+     */
     async apiCall(url, method = 'get', data = {}) {
         try {
             const waitingTime = 300;  //time in ms to wait between calls
@@ -1247,10 +1247,10 @@ class Tado extends utils.Adapter {
     }
 
     /**
-	 * @param {string} state
-	 * @param {string} name
-	 * @param {any} value
-	 */
+     * @param {string} state
+     * @param {string} name
+     * @param {any} value
+     */
     async create_state(state, name, value) {
         this.log.debug(`Create_state called for state '${state}' and name '${name}' with value '${value}'`);
         const intervall_time = (this.config.intervall * 4);
@@ -1262,14 +1262,14 @@ class Tado extends utils.Adapter {
     async errorHandling(errorObject) {
         try {
             if (errorObject.message && (errorObject.message.includes('Login failed!') ||
-				errorObject.message.includes('conflict occurred while trying to update entity null') ||
-				errorObject.message.includes('ECONNRESET') ||
-				errorObject.message.includes('socket hang up') ||
-				errorObject.message.includes('with status code 504') ||
-				errorObject.message.includes('ETIMEDOUT') ||
-				errorObject.message.includes('EAI_AGAIN') ||
-				errorObject.message.includes('timeout of 20000ms exceeded') ||
-				errorObject.message.includes('No internet connection detected!'))) return;
+                errorObject.message.includes('conflict occurred while trying to update entity null') ||
+                errorObject.message.includes('ECONNRESET') ||
+                errorObject.message.includes('socket hang up') ||
+                errorObject.message.includes('with status code 504') ||
+                errorObject.message.includes('ETIMEDOUT') ||
+                errorObject.message.includes('EAI_AGAIN') ||
+                errorObject.message.includes('timeout of 20000ms exceeded') ||
+                errorObject.message.includes('No internet connection detected!'))) return;
             if (this.log.level != 'debug' && this.log.level != 'silly') {
                 if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                     const sentryInstance = this.getPluginInstance('sentry');
@@ -1388,17 +1388,17 @@ class Tado extends utils.Adapter {
     }
 
     /*getDevices(home_id) {
-		this.log.info('getDevices called')
-		return this.apiCall(`/api/v2/homes/${home_id}/devices`);
-	}*/
+        this.log.info('getDevices called')
+        return this.apiCall(`/api/v2/homes/${home_id}/devices`);
+    }*/
 
     /*getZoneOverlay(home_id, zone_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
-	}*/
+        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/overlay`);
+    }*/
 
     /*getInstallations(home_id) {
-		return this.apiCall(`/api/v2/homes/${home_id}/installations`);
-	}*/
+        return this.apiCall(`/api/v2/homes/${home_id}/installations`);
+    }*/
 }
 
 function toBoolean(valueToBoolean) {
@@ -1409,8 +1409,8 @@ function toBoolean(valueToBoolean) {
 if (module.parent) {
     // Export the constructor in compact mode
     /**
-	 * @param {Partial<ioBroker.AdapterOptions>} [options={}]
-	 */
+     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
+     */
     module.exports = (options) => new Tado(options);
 } else {
     // otherwise start the instance directly
