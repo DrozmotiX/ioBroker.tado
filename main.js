@@ -769,7 +769,9 @@ class Tado extends utils.Adapter {
         try {
             if (!this.accessToken || !this.accessToken.token || new Date(this.accessToken.token.expires_at).getTime() - new Date().getTime() < EXPIRATION_LOGIN_WINDOW_IN_SECONDS * 1000) {
                 step = 'login';
+                this.log.info('Login started');
                 await this.login(user, pass);
+                this.log.info('Login done');
                 if (conn_state === undefined || conn_state === null) {
                     return;
                 } else {
@@ -780,10 +782,12 @@ class Tado extends utils.Adapter {
             } else this.log.debug('Token still valid. No Re-Login needed ' + this.accessToken.token.expires_at);
 
             // Get Basic data needed for all other querys and store to global variable
+            this.log.info('Step getMeData');
             step = 'getMet_data';
             if (this.getMe_data === null) {
                 this.getMe_data = await this.getMe();
             }
+            this.log.info('Step getMeData done');
             this.log.debug('GetMe result: ' + JSON.stringify(this.getMe_data));
             //set timestamp for 'Online'-state
             await jsonExplorer.setLastStartTime();
@@ -1105,6 +1109,7 @@ class Tado extends utils.Adapter {
     /* MISC																*/
     //////////////////////////////////////////////////////////////////////
     refreshToken() {
+        this.log.info('refreshToken() started');
         //const { token } = this.accessToken;
         //const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
         //const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
@@ -1129,6 +1134,7 @@ class Tado extends utils.Adapter {
             } else {
                 resolve(this.accessToken);
             }
+            this.log.info('refreshToken() done');
         });
     }
 
