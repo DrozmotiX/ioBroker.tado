@@ -6,6 +6,7 @@
   "homepage": "https://github.com/DrozmotiX/ioBroker.tado",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "energy",
     "tado",
     "thermostat",
