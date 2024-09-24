@@ -50,6 +50,10 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) Change of attribute "light" supported
+
 ### 0.5.6 (2024-08-06)
 * (HGlab01) Improve AccessToken Management
 * (HGlab01) Bump axios to 1.7.3
