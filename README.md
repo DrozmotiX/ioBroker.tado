@@ -53,6 +53,9 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
 
 ### __WORK IN PROGRESS__
 * (HGlab01) Change of attribute "light" supported
+* (HGlab01) Add attribute 'connection'
+* (HGlab01) Add attribute 'supportsFlowTemperatureOptimization'
+* (HGlab01) Bump axios to 1.7.7
 
 ### 0.5.6 (2024-08-06)
 * (HGlab01) Improve AccessToken Management
