@@ -1,4 +1,8 @@
 # Older changes
+## 0.5.1 (2023-12-11)
+* (HGlab01) Bump json-explorer to 0.1.15
+* (HGlab01) Prepare (c) for 2024
+
 ## 0.5.0 (2023-11-25)
 * (HGlab01) Breaking changes
     - Node.js 18.0 or higher

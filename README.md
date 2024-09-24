@@ -50,8 +50,7 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-
-### __WORK IN PROGRESS__
+### 0.5.7-alpha.0 (2024-09-24)
 * (HGlab01) Change of attribute "light" supported
 * (HGlab01) Add attribute 'connection'
 * (HGlab01) Add attribute 'supportsFlowTemperatureOptimization'
@@ -73,10 +72,6 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
 ### 0.5.3 (2024-01-29)
 * (HGlab01) Improve axios handling
 * (HGlab01) Bump axios to 1.6.7
-
-### 0.5.1 (2023-12-11)
-* (HGlab01) Bump json-explorer to 0.1.15
-* (HGlab01) Prepare (c) for 2024
 
 ## License
 MIT License
