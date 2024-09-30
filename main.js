@@ -931,7 +931,7 @@ class Tado extends utils.Adapter {
      */
     async setReading(HomeId, reading) {
         let result = await this.apiCall(`https://energy-insights.tado.com/api/homes/${HomeId}/meterReadings`, 'post', JSON.stringify(reading));
-        this.log.info('setReading executed with result ' + JSON.stringify(result));
+        this.log.debug('setReading executed with result ' + JSON.stringify(result));
         await jsonExplorer.sleep(1000);
         await this.create_state(HomeId + '.meterReadings', 'meterReadings', JSON.stringify({}));
     }
