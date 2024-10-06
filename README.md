@@ -51,7 +51,7 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.5.8-alpha.0 (2024-10-06)
 * (HGlab01) Improve axios promise handling
 
 ### 0.5.7 (2024-09-30)
@@ -73,10 +73,6 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
 ### 0.5.4 (2024-04-18)
 * (HGlab01) Add attribute 'runningOfflineSchedule'
 * (HGlab01) Bump axios to 1.6.8
-
-### 0.5.3 (2024-01-29)
-* (HGlab01) Improve axios handling
-* (HGlab01) Bump axios to 1.6.7
 
 ## License
 MIT License

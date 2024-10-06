@@ -1,4 +1,8 @@
 # Older changes
+## 0.5.3 (2024-01-29)
+* (HGlab01) Improve axios handling
+* (HGlab01) Bump axios to 1.6.7
+
 ## 0.5.1 (2023-12-11)
 * (HGlab01) Bump json-explorer to 0.1.15
 * (HGlab01) Prepare (c) for 2024
