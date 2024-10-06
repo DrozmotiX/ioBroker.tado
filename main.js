@@ -1202,6 +1202,7 @@ class Tado extends utils.Adapter {
      * @param {any} data
      */
     async apiCall(url, method = 'get', data = null) {
+        let promise;
         try {
             const waitingTime = 300;  //time in ms to wait between calls
             // check if other call is in progress and if yes loop and wait
@@ -1222,7 +1223,7 @@ class Tado extends utils.Adapter {
                 console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
                 this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
             }
-            return new Promise((resolve, reject) => {
+            promise =  await new Promise((resolve, reject) => {
                 if (this.accessToken) {
                     this.refreshToken().then(() => {
 
@@ -1264,6 +1265,7 @@ class Tado extends utils.Adapter {
             console.error(`Issue at apiCall: ${error}`);
             this.errorHandling(error);
         }
+        return promise;
     }
 
     /**
