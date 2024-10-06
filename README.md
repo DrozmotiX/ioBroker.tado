@@ -51,6 +51,9 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Improve axios promise handling
+
 ### 0.5.7 (2024-09-30)
 * (HGlab01) Change of attribute "light" supported
 * (HGlab01) Add attribute 'connection'
