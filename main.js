@@ -7,6 +7,7 @@ const EXPIRATION_LOGIN_WINDOW_IN_SECONDS = 10;
 const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
 const tado_app_url = `https://app.tado.com/`;
+const tadoX_url = `https://hops.tado.com`;
 const tado_config = {
     client: {
         id: 'tado-web-app',
@@ -50,15 +51,16 @@ class Tado extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('unload', this.onUnload.bind(this));
+        jsonExplorer.init(this, state_attr);
         this.accessToken = null;
         this.getMe_data = null;
         this.Home_data = null;
         this.lastupdate = 0;
         this.apiCallinExecution = false;
-        jsonExplorer.init(this, state_attr);
         this.intervall_time = 60 * 1000;
         this.roomCapabilities = {};
         this.oldStatesVal = [];
+        this.isTadoX = false;
     }
 
     /**
@@ -837,7 +839,8 @@ class Tado extends utils.Adapter {
                 step = 'DoMobileDevices';
                 await this.DoMobileDevices(homeID);
                 step = 'DoZones';
-                await this.DoZones(homeID);
+                if (this.isTadoX) await this.DoRoomsTadoX(homeID);
+                else await this.DoZones(homeID);
                 step = 'DoWeather';
                 await this.DoWeather(homeID);
                 step = 'DoHomeState';
@@ -942,6 +945,9 @@ class Tado extends utils.Adapter {
             this.Home_data = await this.getHome(HomeId);
         }
         this.log.debug('Home_data Result: ' + JSON.stringify(this.Home_data));
+        if (this.Home_data.generation == 'LINE_X') this.isTadoX = true;
+        else this.isTadoX = false;
+        this.log.info('TadoX is ' + this.isTadoX);
         this.Home_data.masterswitch = '';
         this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.Home_data);
         jsonExplorer.traverseJson(this.Home_data, `${HomeId}.Home`, true, true, 0);
@@ -978,6 +984,23 @@ class Tado extends utils.Adapter {
         this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
         this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
         jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
+    }
+
+    async DoRoomsTadoX(homeId) {
+        let rooms = await this.getRoomsTadoX(homeId);
+        let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
+        //this.log.info(JSON.stringify(rooms));
+        this.log.info(JSON.stringify(roomsAndDevices));
+        jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
+
+        for (const i in roomsAndDevices.rooms) {
+            let roomId = roomsAndDevices.rooms[i].roomId;
+            this.log.info('RoomID is ' + roomId);
+            let roomState = await this.getRoomStateTadoX(homeId, roomId);
+            this.log.info(JSON.stringify(roomState));
+            jsonExplorer.traverseJson(roomsAndDevices.rooms[i].devices, `${homeId}.Rooms.${roomsAndDevices.rooms[i].roomId}.devices`, true, true, 1);
+            jsonExplorer.traverseJson(roomState, `${homeId}.Rooms.${roomId}`, true, true, 0);
+        }
     }
 
     async DoZones(HomeId) {
@@ -1407,6 +1430,18 @@ class Tado extends utils.Adapter {
 
     getHomeState(home_id) {
         return this.apiCall(`/api/v2/homes/${home_id}/state`);
+    }
+
+    getRoomsTadoX(home_id) {
+        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms`);
+    }
+
+    getRoomStateTadoX(home_id, zone_id) {
+        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms/${zone_id}`);
+    }
+
+    getRoomsAndDevicesTadoX(home_id) {
+        return this.apiCall(`${tadoX_url}/homes/${home_id}/roomsAndDevices`);
     }
 }
 
