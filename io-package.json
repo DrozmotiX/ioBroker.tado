@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.8-alpha.0",
+    "version": "0.6.0-alpha.0",
     "news": {
       "0.5.8-alpha.0": {
         "en": "Improve axios promise handling",
