@@ -89,6 +89,103 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} id
+     * @param {ioBroker.State} state
+     * @param {string} homeId
+     * @param {string} roomId
+     * @param {string} deviceId
+     * @param {string} statename
+     */
+    async onStateChangeTadoX(id, state, homeId, roomId, deviceId, statename, beforeStatename) {
+        const temperature = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.setting.temperature.value');
+        const mode = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.manualControlTermination.type');
+        const power = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.setting.power');
+        const durationInSeconds = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.manualControlTermination.durationInSeconds');
+        const nextTimeBlockStart = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.nextTimeBlock.start');
+        const boostMode = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.boostMode');
+
+        const set_boostMode = (boostMode == null || boostMode == undefined || boostMode.val == null || boostMode.val == '') ? false : toBoolean(boostMode);
+        const set_durationInSeconds = (durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null) ? 1800 : parseInt(durationInSeconds.val.toString());
+        const set_temp = (temperature == null || temperature == undefined || temperature.val == null || temperature.val == '') ? 20 : parseFloat(temperature.val.toString());
+        const set_NextTimeBlockStartExists = (nextTimeBlockStart == null || nextTimeBlockStart == undefined || nextTimeBlockStart.val == null || nextTimeBlockStart.val == '') ? false : true;
+        let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
+        let set_terminationMode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
+
+        this.log.info('boostMode is: ' + set_boostMode);
+        this.log.info('Power is: ' + set_power);
+        this.log.info(`Temperature is: ${set_temp}`);
+        this.log.info('Termination mode is: ' + set_terminationMode);
+        this.log.info('DurationInSeconds is: ' + set_durationInSeconds);
+        this.log.info('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
+        //this.log.debug('Mode is: ' + set_acMode);
+        //this.log.debug('FanSpeed is: ' + set_fanSpeed);
+        //this.log.debug('FanLevel is: ' + set_fanLevel);
+        //this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
+        //this.log.debug('VerticalSwing is: ' + set_verticalSwing);
+        //this.log.debug('Swing is: ' + set_swing);
+        //this.log.debug('Light is: ' + set_light);
+
+        switch (statename) {
+            case ('power'):
+                if (set_terminationMode == 'NO_OVERLAY') {
+                    if (set_power == 'ON') {
+                        this.log.info(`Overlay cleared for room '${roomId}' in home '${homeId}'`);
+                        await this.setResumeSchedule(homeId, roomId);
+                        break;
+                    }
+                    else {
+                        set_terminationMode = 'MANUAL';
+                    }
+                }
+                await this.setManualControl(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode);
+                if (set_power == 'OFF') jsonExplorer.stateSetCreate(homeId + '.Rooms.' + roomId + '.setting.temperature.value', 'value', null);
+                break;
+
+            case ('value'):
+                if (beforeStatename != 'temperature') {
+                    this.log.warn('Change of ' + id + ' ignored'); break;
+                }
+
+                if (set_terminationMode == 'NO_OVERLAY') {
+                    if (set_NextTimeBlockStartExists) set_terminationMode = 'NEXT_TIME_BLOCK';
+                    else set_terminationMode = 'MANUAL';
+                }
+                set_power = 'ON';
+                await this.setManualControl(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode);
+                break;
+        }
+    }
+
+    async setManualControl(homeId, roomId, power, temperature, terminationMode, boostMode) {
+        //{`"setting`":{`"power`":`"ON`",`"isBoost`":false,`"temperature`":{`"value`":18.5,`"valueRaw`":18.52,`"precision`":0.1}},`"termination`":{`"type`":`"NEXT_TIME_BLOCK`"}}
+        let payload = {};
+        payload.termination = {};
+        payload.termination.type = terminationMode;
+        payload.setting = {};
+        payload.setting.power = power;
+        payload.setting.isBoost = boostMode;
+
+        if (power == 'OFF') payload.setting.temperature = null;
+        else {
+            payload.setting.temperature = {};
+            payload.setting.temperature.value = temperature;
+        }
+
+        this.log.info('Payload is ' + JSON.stringify(payload));
+        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
+        this.log.info(JSON.stringify(apiResponse));
+        await this.DoRoomsStateTadoX(homeId, roomId);
+    }
+
+    async setResumeSchedule(homeId, roomId) {
+        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
+        this.log.info(JSON.stringify(apiResponse));
+        await this.DoRoomsStateTadoX(homeId, roomId);
+    }
+
+
+
     //////////////////////////////////////////////////////////////////////
     /* ON STATE CHANGE													*/
     //////////////////////////////////////////////////////////////////////
@@ -112,7 +209,14 @@ class Tado extends utils.Adapter {
                     const zone_id = idSplitted[4];
                     const device_id = idSplitted[6];
                     const statename = idSplitted[idSplitted.length - 1];
+                    const beforeStatename = idSplitted[idSplitted.length - 2];
                     this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
+
+                    this.log.info(id + ' changed');
+                    if (this.isTadoX) {
+                        await this.onStateChangeTadoX(id, state, home_id, zone_id, device_id, statename, beforeStatename);
+                        return;
+                    }
 
                     if (statename == 'meterReadings') {
                         let meterReadings = {};
@@ -849,10 +953,10 @@ class Tado extends utils.Adapter {
                 //set all outdated states to NULL
                 step = `Set outdated states to null`;
                 if (outdated) {
-                    this.log.debug('CheckExpire() at DoDataRefresh() if outdated started');
+                    this.log.info('CheckExpire() at DoDataRefresh() if outdated started');
                     await jsonExplorer.checkExpire(homeID + '.*');
                 } else {
-                    this.log.debug('CheckExpire() at DoDataRefresh() if not outdated started');
+                    this.log.info('CheckExpire() at DoDataRefresh() if not outdated started');
                     await jsonExplorer.checkExpire(homeID + '.Rooms.*');
                     await jsonExplorer.checkExpire(homeID + '.Weather.*');
                     await jsonExplorer.checkExpire(homeID + '.Mobile_Devices.*');
@@ -996,11 +1100,15 @@ class Tado extends utils.Adapter {
         for (const i in roomsAndDevices.rooms) {
             let roomId = roomsAndDevices.rooms[i].roomId;
             this.log.info('RoomID is ' + roomId);
-            let roomState = await this.getRoomStateTadoX(homeId, roomId);
-            this.log.info(JSON.stringify(roomState));
             jsonExplorer.traverseJson(roomsAndDevices.rooms[i].devices, `${homeId}.Rooms.${roomsAndDevices.rooms[i].roomId}.devices`, true, true, 1);
-            jsonExplorer.traverseJson(roomState, `${homeId}.Rooms.${roomId}`, true, true, 0);
+            await this.DoRoomsStateTadoX(homeId, roomId);
         }
+    }
+
+    async DoRoomsStateTadoX(homeId, roomId) {
+        let roomState = await this.getRoomStateTadoX(homeId, roomId);
+        this.log.info(JSON.stringify(roomState));
+        jsonExplorer.traverseJson(roomState, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
     async DoZones(HomeId) {
@@ -1246,7 +1354,7 @@ class Tado extends utils.Adapter {
                 console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
                 this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
             }
-            promise =  await new Promise((resolve, reject) => {
+            promise = await new Promise((resolve, reject) => {
                 if (this.accessToken) {
                     this.refreshToken().then(() => {
 
