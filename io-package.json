@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.8-alpha.0",
+    "version": "0.5.8",
     "news": {
+      "0.5.8": {
+        "en": "Improve axios promise handling",
+        "de": "Axios Versprechen",
+        "ru": "Улучшить аксиос",
+        "pt": "Melhorar o manuseio da promessa de axios",
+        "nl": "Verbeteren van axio's belofte behandeling",
+        "fr": "Améliorer la gestion des promesses axios",
+        "it": "Migliorare la gestione delle promesse di assi",
+        "es": "Mejorar el manejo de promesas de axios",
+        "pl": "Poprawa obsługi obietnic Axios",
+        "uk": "Покращити axios обіцянка обробка",
+        "zh-cn": "改进对承诺的处理"
+      },
       "0.5.8-alpha.0": {
         "en": "Improve axios promise handling",
         "de": "Axios Versprechen",
@@ -80,19 +93,6 @@
         "pl": "Poprawa zarządzania akcesoriami Token\nAksykony bumpy do 1.7.3",
         "uk": "Покращення управління доступом\nБампер аксіос до 1.7.3",
         "zh-cn": "改进访问端口管理\n横轴改为1.7.3"
-      },
-      "0.5.6-alpha.0": {
-        "en": "Improve AccessToken Management",
-        "de": "Verbessern Sie das AccessToken Management",
-        "ru": "Улучшение управления доступом",
-        "pt": "Melhorar o gerenciamento do AccessToken",
-        "nl": "AccessToken Management verbeteren",
-        "fr": "Améliorer la gestion AccessToken",
-        "it": "Migliorare la gestione di AccessToken",
-        "es": "Mejorar el accesoToken Management",
-        "pl": "Poprawa zarządzania akcesoriami Token",
-        "uk": "Покращення управління доступом",
-        "zh-cn": "改进访问端口管理"
       }
     },
     "titleLang": {
