@@ -1264,6 +1264,7 @@ class Tado extends utils.Adapter {
             this.log.error(`Issue at apiCall: ${error}`);
             console.error(`Issue at apiCall: ${error}`);
             this.errorHandling(error);
+            return;
         }
         return promise;
     }
