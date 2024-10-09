@@ -469,10 +469,16 @@ class Tado extends utils.Adapter {
         await this.DoRoomsStateTadoX(homeId, roomId);
     }
 
-    async setResumeScheduleTadoX(homeId, roomId) {
+    async setResumeRoomScheduleTadoX(homeId, roomId) {
         let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
         this.log.info(JSON.stringify(apiResponse));
         await this.DoRoomsStateTadoX(homeId, roomId);
+    }
+
+    async setResumeHomeScheduleTadoX(homeId) {
+        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/resumeSchedule`, 'post');
+        this.log.info(JSON.stringify(apiResponse));
+        await this.DoHome(homeId);
     }
 
     /**
