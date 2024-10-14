@@ -1108,12 +1108,17 @@ class Tado extends utils.Adapter {
     async DoRoomsTadoX(homeId) {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
-        //this.log.info(JSON.stringify(rooms));
+        this.log.info('rooms: ' + JSON.stringify(rooms));
+        this.log.info('roomsAndDevices: ' + JSON.stringify(roomsAndDevices));
         this.log.info(JSON.stringify(roomsAndDevices));
         jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
 
         for (const i in roomsAndDevices.rooms) {
             let roomId = roomsAndDevices.rooms[i].roomId;
+            //loop devices
+            for (const j in roomsAndDevices.rooms[i].devices) {
+                roomsAndDevices.rooms[i].devices[j].id = roomsAndDevices.rooms[i].devices[j].serialNumber;
+            }
             this.log.info('RoomID is ' + roomId);
             jsonExplorer.traverseJson(roomsAndDevices.rooms[i].devices, `${homeId}.Rooms.${roomsAndDevices.rooms[i].roomId}.devices`, true, true, 1);
             await this.DoRoomsStateTadoX(homeId, roomId);
@@ -1122,6 +1127,10 @@ class Tado extends utils.Adapter {
 
     async DoRoomsStateTadoX(homeId, roomId) {
         let roomState = await this.getRoomStateTadoX(homeId, roomId);
+        if (roomState.boostMode == null) {
+            roomState.boostMode = {};
+            roomState.boostMode.type = null;
+        }
         this.log.info(JSON.stringify(roomState));
         jsonExplorer.traverseJson(roomState, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
