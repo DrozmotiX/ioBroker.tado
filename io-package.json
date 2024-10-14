@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.8",
+    "version": "0.5.9-alpha.0",
     "news": {
+      "0.5.9-alpha.0": {
+        "en": "Improve axios promise handling",
+        "de": "Axios Versprechen",
+        "ru": "Улучшить аксиос",
+        "pt": "Melhorar o manuseio da promessa de axios",
+        "nl": "Verbeteren van axio's belofte behandeling",
+        "fr": "Améliorer la gestion des promesses axios",
+        "it": "Migliorare la gestione delle promesse di assi",
+        "es": "Mejorar el manejo de promesas de axios",
+        "pl": "Poprawa obsługi obietnic Axios",
+        "uk": "Покращити axios обіцянка обробка",
+        "zh-cn": "改进对承诺的处理"
+      },
       "0.5.8": {
         "en": "Improve axios promise handling",
         "de": "Axios Versprechen",
@@ -80,19 +93,6 @@
         "pl": "Poprawa zarządzania akcesoriami Token\nAksykony bumpy do 1.7.3\nDodaj język atrybutu '\nDodaj atrybut 'isHeatPumpInstalled'",
         "uk": "Покращення управління доступом\nБампер аксіос до 1.7.3\nДодати атрибут 'language Р\nДодати атрибут 'isHeatPumpInstalled Р",
         "zh-cn": "改进访问端口管理\n横轴改为1.7.3\n添加属性语言  '\n添加属性“ 是恒温泵已安装 ”  '"
-      },
-      "0.5.6-alpha.1": {
-        "en": "Improve AccessToken Management\nBump axios to 1.7.3",
-        "de": "Verbessern Sie das AccessToken Management\nBump axios bis 1.7.3",
-        "ru": "Улучшение управления доступом\nBump axios to 1.7.3",
-        "pt": "Melhorar o gerenciamento do AccessToken\nBump axios para 1.7.3",
-        "nl": "AccessToken Management verbeteren\nBump axios naar 1.7.3",
-        "fr": "Améliorer la gestion AccessToken\nAxios bouffés à 1.7.3",
-        "it": "Migliorare la gestione di AccessToken\nAssio di bump a 1.7.3",
-        "es": "Mejorar el accesoToken Management\nBump axios a 1.7.3",
-        "pl": "Poprawa zarządzania akcesoriami Token\nAksykony bumpy do 1.7.3",
-        "uk": "Покращення управління доступом\nБампер аксіос до 1.7.3",
-        "zh-cn": "改进访问端口管理\n横轴改为1.7.3"
       }
     },
     "titleLang": {
