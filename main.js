@@ -687,7 +687,7 @@ class Tado extends utils.Adapter {
             let result = await this.poolApiCall(home_id, zone_id, config);
             this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
-            if (result == null) throw new Error ('Result of setZoneOverlay is null');
+            if (result == null) throw new Error('Result of setZoneOverlay is null');
 
             if (result.setting.temperature == null) {
                 result.setting.temperature = {};
@@ -1290,7 +1290,6 @@ class Tado extends utils.Adapter {
             promise = await new Promise((resolve, reject) => {
                 if (this.accessToken) {
                     this.refreshToken().then(() => {
-
                         axiosInstance({
                             url: url,
                             method: method,
@@ -1325,10 +1324,10 @@ class Tado extends utils.Adapter {
                 }
             });
         } catch (error) {
-            this.log.error(`Issue at apiCall for ''${method} ${url}': ${error}`);
+            //this.log.error(`Issue at apiCall for ''${method} ${url}': ${error}`);
             console.error(`Issue at apiCall: ${error}`);
             this.errorHandling(error);
-            return null;
+            throw new Error((`Issue at apiCall for ''${method} ${url}': ${error}`));
         }
         return promise;
     }
@@ -1410,50 +1409,50 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
     /* GET METHODS														*/
     //////////////////////////////////////////////////////////////////////
-    getMe() {
-        return this.apiCall('/api/v2/me');
+    async getMe() {
+        return await this.apiCall('/api/v2/me');
     }
 
     // Read account information and all home related data
-    getHome(home_id) {
+    async getHome(home_id) {
         return this.apiCall(`/api/v2/homes/${home_id}`);
     }
 
     // Get weather information for home location
-    getWeather(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/weather`);
+    async getWeather(home_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/weather`);
     }
 
-    getMobileDevices(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
+    async getMobileDevices(home_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
     }
 
-    getZones(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones`);
+    async getZones(home_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/zones`);
     }
 
-    getZoneState(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
+    async getZoneState(home_id, zone_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
     }
 
-    getCapabilities(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
+    async getCapabilities(home_id, zone_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
     }
 
-    getAwayConfiguration(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
+    async getAwayConfiguration(home_id, zone_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
     }
 
-    getTimeTables(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
+    async getTimeTables(home_id, zone_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
     }
 
-    getTemperatureOffset(device_id) {
-        return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+    async getTemperatureOffset(device_id) {
+        return await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
     }
 
-    getHomeState(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/state`);
+    async getHomeState(home_id) {
+        return await this.apiCall(`/api/v2/homes/${home_id}/state`);
     }
 }
 
