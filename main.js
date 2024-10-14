@@ -687,7 +687,7 @@ class Tado extends utils.Adapter {
             let result = await this.poolApiCall(home_id, zone_id, config);
             this.log.debug(`API 'ZoneOverlay' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(config)} called.`);
 
-            if (!result) return;
+            if (result == null) throw new Error ('Result of setZoneOverlay is null');
 
             if (result.setting.temperature == null) {
                 result.setting.temperature = {};
@@ -1080,7 +1080,6 @@ class Tado extends utils.Adapter {
         ZonesState_data.overlayClearZone = false;
         ZonesState_data.activateOpenWindow = false;
         jsonExplorer.traverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 2);
-
     }
 
     async DoCapabilities(homeId, zoneId) {
