@@ -51,7 +51,7 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.5.9-alpha.1 (2024-10-14)
+### 0.5.9 (2024-10-16)
 * (HGlab01) Improve axios promise handling
 
 ### 0.5.7 (2024-09-30)
