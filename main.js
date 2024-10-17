@@ -136,7 +136,7 @@ class Tado extends utils.Adapter {
                 if (set_terminationMode == 'NO_OVERLAY') {
                     if (set_power == 'ON') {
                         this.log.info(`Overlay cleared for room '${roomId}' in home '${homeId}'`);
-                        await this.setResumeScheduleTadoX(homeId, roomId);
+                        await this.setResumeRoomScheduleTadoX(homeId, roomId);
                         break;
                     }
                     else {
@@ -182,9 +182,6 @@ class Tado extends utils.Adapter {
                 try {
                     this.log.debug('GETS INTERESSTING!!!');
                     const idSplitted = id.split('.');
-                    const homeId = idSplitted[2];
-                    const zoneId = idSplitted[4];
-                    const deviceId = idSplitted[6];
                     const homeId = idSplitted[2];
                     const zoneId = idSplitted[4];
                     const deviceId = idSplitted[6];
@@ -1110,7 +1107,7 @@ class Tado extends utils.Adapter {
             this.home_data = await this.getHome(HomeId);
         }
         this.log.debug('Home_data Result: ' + JSON.stringify(this.home_data));
-        if (this.Home_data.generation == 'LINE_X') this.isTadoX = true;
+        if (this.home_data.generation == 'LINE_X') this.isTadoX = true;
         else this.isTadoX = false;
         this.log.info('TadoX is ' + this.isTadoX);
         if (this.home_data == null) throw new Error('home_date is null');
@@ -1607,6 +1604,18 @@ class Tado extends utils.Adapter {
 
     async getHomeState(homeId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/state`);
+    }
+
+    async getRoomsTadoX(home_id) {
+        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms`);
+    }
+
+    async getRoomStateTadoX(home_id, zone_id) {
+        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms/${zone_id}`);
+    }
+
+    async getRoomsAndDevicesTadoX(home_id) {
+        return this.apiCall(`${tadoX_url}/homes/${home_id}/roomsAndDevices`);
     }
 }
 
