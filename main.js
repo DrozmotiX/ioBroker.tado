@@ -546,7 +546,7 @@ class Tado extends utils.Adapter {
         };
         let apiResponse;
         this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
-        //this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
+        //this.log.info(`Call API 'activeTimetable' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(timeTable)}`);
         try {
             if (await isOnline() == false) {
                 throw new Error('No internet connection detected!');
@@ -580,7 +580,7 @@ class Tado extends utils.Adapter {
         };
         let apiResponse;
         this.log.debug('homePresence JSON ' + JSON.stringify(homeState));
-        //this.log.info(`Call API 'activeTimetable' for home '${home_id}' and zone '${zone_id}' with body ${JSON.stringify(timeTable)}`);
+        //this.log.info(`Call API 'activeTimetable' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(timeTable)}`);
         try {
             if (await isOnline() == false) {
                 throw new Error('No internet connection detected!');
@@ -1505,75 +1505,75 @@ class Tado extends utils.Adapter {
     }
 
     // Read account information and all home related data
-    getHome(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}`);
+    getHome(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}`);
     }
 
     // Get weather information for home location
-    getWeather(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/weather`);
+    getWeather(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/weather`);
     }
 
     // User information equal to Weather, ignoring function but keep for history/feature functionality
-    getUsers(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/users`);
+    getUsers(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/users`);
     }
 
     // Function disabled, no data in API ?
-    getState_info(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/state`);
+    getState_info(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/state`);
     }
 
-    getMobileDevices(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices`);
+    getMobileDevices(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/mobileDevices`);
     }
 
-    getMobileDevice(home_id, device_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}`);
+    getMobileDevice(homeId, deviceId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/mobileDevices/${deviceId}`);
     }
 
-    getMobileDeviceSettings(home_id, device_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/mobileDevices/${device_id}/settings`);
+    getMobileDeviceSettings(homeId, deviceId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/mobileDevices/${deviceId}/settings`);
     }
 
-    getZones(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones`);
+    getZones(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/zones`);
     }
 
-    getZoneState(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/state`);
+    getZoneState(homeId, zoneId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/state`);
     }
 
-    getCapabilities(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/capabilities`);
+    getCapabilities(homeId, zoneId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/capabilities`);
     }
 
-    getAwayConfiguration(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/awayConfiguration`);
+    getAwayConfiguration(homeId, zoneId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/awayConfiguration`);
     }
 
-    getTimeTables(home_id, zone_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/zones/${zone_id}/schedule/activeTimetable`);
+    getTimeTables(homeId, zoneId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`);
     }
 
-    getTemperatureOffset(device_id) {
-        return this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+    getTemperatureOffset(deviceId) {
+        return this.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`);
     }
 
-    getHomeState(home_id) {
-        return this.apiCall(`/api/v2/homes/${home_id}/state`);
+    getHomeState(homeId) {
+        return this.apiCall(`/api/v2/homes/${homeId}/state`);
     }
 
-    getRoomsTadoX(home_id) {
-        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms`);
+    getRoomsTadoX(homeId) {
+        return this.apiCall(`${tadoX_url}/homes/${homeId}/rooms`);
     }
 
-    getRoomStateTadoX(home_id, zone_id) {
-        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms/${zone_id}`);
+    getRoomStateTadoX(homeId, zoneId) {
+        return this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${zoneId}`);
     }
 
-    getRoomsAndDevicesTadoX(home_id) {
-        return this.apiCall(`${tadoX_url}/homes/${home_id}/roomsAndDevices`);
+    getRoomsAndDevicesTadoX(homeId) {
+        return this.apiCall(`${tadoX_url}/homes/${homeId}/roomsAndDevices`);
     }
 }
 
