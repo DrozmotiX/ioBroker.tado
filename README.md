@@ -17,9 +17,9 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 
 ## TADO° X
 Basic support for Tado X available.
-If your setup is not working, please raise a ticket (https://github.com/DrozmotiX/ioBroker.tado/issues/new?assignees=HGlab01&labels=enhancement&projects=&template=Enhancement.md&title=). You will need to support some debugging session and interact with the adapter developer.
+If your setup is not working, please raise a [ticket](https://github.com/DrozmotiX/ioBroker.tado/issues/new?assignees=HGlab01&labels=enhancement&projects=&template=Enhancement.md&title=). You will need to support some debugging session and interact with the adapter developer.
 
-## Things you can steer on Tado Classic
+## Things you can steer on Tado° V3+, V3, V2
 | State | Description |
 | ----- | ----------- |
 | tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
@@ -42,7 +42,7 @@ If your setup is not working, please raise a ticket (https://github.com/Drozmoti
 | tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 | tado.[x].[yyyyyy].meterReadings | JSON-Object with {"date":"YYYY-MM-DD","reading": 1234} can be used to upload meter-readings to Energy IQ |
 
-## Things you can steer on Tado *X*
+## Things you can steer on Tado° X
 | State | Description |
 | ----- | ----------- |
 | tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
