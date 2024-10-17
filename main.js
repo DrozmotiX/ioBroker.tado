@@ -108,7 +108,7 @@ class Tado extends utils.Adapter {
                     const idSplitted = id.split('.');
                     const homeId = idSplitted[2];
                     const zoneId = idSplitted[4];
-                    const device_id = idSplitted[6];
+                    const deviceId = idSplitted[6];
                     const statename = idSplitted[idSplitted.length - 1];
                     this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
 
@@ -140,13 +140,13 @@ class Tado extends utils.Adapter {
                     else if (statename == 'offsetCelsius') {
                         const offset = state;
                         let set_offset = (offset == null || offset == undefined || offset.val == null) ? 0 : parseFloat(offset.val.toString());
-                        this.log.debug(`Offset changed for device '${device_id}' in home '${homeId}' to value '${set_offset}'`);
-                        this.setTemperatureOffset(homeId, zoneId, device_id, set_offset);
+                        this.log.debug(`Offset changed for device '${deviceId}' in home '${homeId}' to value '${set_offset}'`);
+                        this.setTemperatureOffset(homeId, zoneId, deviceId, set_offset);
                     } else if (statename == 'childLockEnabled') {
                         const childLockEnabled = state;
                         let set_childLockEnabled = (childLockEnabled == null || childLockEnabled == undefined || childLockEnabled.val == null || childLockEnabled.val == '') ? false : toBoolean(childLockEnabled.val);
-                        this.log.debug(`ChildLockEnabled changed for device '${device_id}' in home '${homeId}' to value '${set_childLockEnabled}'`);
-                        this.setChildLock(homeId, zoneId, device_id, set_childLockEnabled);
+                        this.log.debug(`ChildLockEnabled changed for device '${deviceId}' in home '${homeId}' to value '${set_childLockEnabled}'`);
+                        this.setChildLock(homeId, zoneId, deviceId, set_childLockEnabled);
                     } else if (statename == 'tt_id') {
                         const tt_id = state;
                         let set_tt_id = (tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == '') ? 0 : parseInt(tt_id.val.toString());
@@ -391,10 +391,10 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      * @param {string} zoneId
-     * @param {string} device_id
+     * @param {string} deviceId
      * @param {number} set_offset
      */
-    async setTemperatureOffset(homeId, zoneId, device_id, set_offset) {
+    async setTemperatureOffset(homeId, zoneId, deviceId, set_offset) {
         if (!set_offset) set_offset = 0;
         if (set_offset <= -10 || set_offset > 10) this.log.warn('Offset out of range +/-10°');
         set_offset = Math.round(set_offset * 100) / 100;
@@ -407,10 +407,10 @@ class Tado extends utils.Adapter {
             if (await isOnline() == false) {
                 throw new Error('No internet connection detected!');
             }
-            let apiResponse = await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`, 'put', offset);
-            this.log.debug(`API 'temperatureOffset' for home '${homeId}' and deviceID '${device_id}' with body ${JSON.stringify(offset)} called.`);
+            let apiResponse = await this.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`, 'put', offset);
+            this.log.debug(`API 'temperatureOffset' for home '${homeId}' and deviceID '${deviceId}' with body ${JSON.stringify(offset)} called.`);
             this.log.debug(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
-            if (apiResponse) await this.DoTemperatureOffset(homeId, zoneId, device_id, apiResponse);
+            if (apiResponse) await this.DoTemperatureOffset(homeId, zoneId, deviceId, apiResponse);
         }
         catch (error) {
             let eMsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
@@ -793,19 +793,19 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      * @param {string} zoneId
-     * @param {string} device_id
+     * @param {string} deviceId
      * @param {boolean} enabled
      */
-    async setChildLock(homeId, zoneId, device_id, enabled) {
+    async setChildLock(homeId, zoneId, deviceId, enabled) {
         try {
-            let url = `/api/v2/devices/${device_id}/childLock`;
+            let url = `/api/v2/devices/${deviceId}/childLock`;
             if (await isOnline() == false) {
                 throw new Error('No internet connection detected!');
             }
             await this.apiCall(url, 'put', { childLockEnabled: enabled });
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
-            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${device_id}.childLockEnabled`);
+            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${deviceId}.childLockEnabled`);
 
         }
         catch (error) {
@@ -1447,8 +1447,8 @@ class Tado extends utils.Adapter {
         return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`);
     }
 
-    async getTemperatureOffset(device_id) {
-        return await this.apiCall(`/api/v2/devices/${device_id}/temperatureOffset`);
+    async getTemperatureOffset(deviceId) {
+        return await this.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`);
     }
 
     async getHomeState(homeId) {
