@@ -123,13 +123,7 @@ class Tado extends utils.Adapter {
         this.log.info('Termination mode is: ' + set_terminationMode);
         this.log.info('DurationInSeconds is: ' + set_durationInSeconds);
         this.log.info('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
-        //this.log.debug('Mode is: ' + set_acMode);
-        //this.log.debug('FanSpeed is: ' + set_fanSpeed);
-        //this.log.debug('FanLevel is: ' + set_fanLevel);
-        //this.log.debug('HorizontalSwing is: ' + set_horizontalSwing);
-        //this.log.debug('VerticalSwing is: ' + set_verticalSwing);
-        //this.log.debug('Swing is: ' + set_swing);
-        //this.log.debug('Light is: ' + set_light);
+        this.log.debug('DevicId is: ' + deviceId);
 
         switch (statename) {
             case ('power'):
@@ -159,9 +153,33 @@ class Tado extends utils.Adapter {
                 set_power = 'ON';
                 await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode);
                 break;
-            case ('boostMode'):
-                if (set_boostMode == true) set_power = 'ON';
-                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode);
+            case ('boost'):
+                if (state.val == true) {
+                    await this.setBoostTadoX(homeId);
+                    await jsonExplorer.sleep(1000);
+                    this.create_state(id, 'boost', false);
+                }
+                break;
+            case ('resumeScheduleHome'):
+                if (state.val == true) {
+                    await this.setResumeHomeScheduleTadoX(homeId);
+                    await jsonExplorer.sleep(1000);
+                    this.create_state(id, 'resumeScheduleHome', false);
+                }
+                break;
+            case ('resumeScheduleRoom'):
+                if (state.val == true) {
+                    await this.setResumeRoomScheduleTadoX(homeId, roomId);
+                    await jsonExplorer.sleep(1000);
+                    this.create_state(id, 'resumeScheduleRoom', false);
+                }
+                break;
+            case ('allOff'):
+                if (state.val == true) {
+                    await this.setAllOffTadoX(homeId);
+                    await jsonExplorer.sleep(1000);
+                    this.create_state(id, 'allOff', false);
+                }
                 break;
         }
     }
@@ -476,9 +494,21 @@ class Tado extends utils.Adapter {
     }
 
     async setResumeHomeScheduleTadoX(homeId) {
-        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/resumeSchedule`, 'post');
+        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
         this.log.info(JSON.stringify(apiResponse));
-        await this.DoHome(homeId);
+        await this.DoRoomsTadoX(homeId);
+    }
+
+    async setBoostTadoX(homeId) {
+        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/boost`, 'post');
+        this.log.info(JSON.stringify(apiResponse));
+        await this.DoRoomsTadoX(homeId);
+    }
+
+    async setAllOffTadoX(homeId) {
+        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/allOff`, 'post');
+        this.log.info(JSON.stringify(apiResponse));
+        await this.DoRoomsTadoX(homeId);
     }
 
     /**
@@ -801,7 +831,7 @@ class Tado extends utils.Adapter {
                 }
             }
 
-            let result = await this.poolApiCall(homeId, zoneId, config);
+            let result = await this.setZoneOverlayPool(homeId, zoneId, config);
             this.log.debug(`API 'ZoneOverlay' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(config)} called.`);
 
             if (result == null) throw new Error('Result of setZoneOverlay is null');
@@ -830,7 +860,7 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      * @param {object} config
      */
-    async poolApiCall(homeId, zoneId, config) {
+    async setZoneOverlayPool(homeId, zoneId, config) {
         this.log.debug(`poolApiCall() entered for '${homeId}/${zoneId}'`);
         let pooltimerid = homeId + zoneId;
         if (await isOnline() == false) {
@@ -932,9 +962,82 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} HomeId
+     * @param {any} [reading]
+     */
+    async setReading(HomeId, reading) {
+        try {
+            let result = await this.apiCall(`https://energy-insights.tado.com/api/homes/${HomeId}/meterReadings`, 'post', JSON.stringify(reading));
+            this.log.debug('setReading executed with result ' + JSON.stringify(result));
+            await jsonExplorer.sleep(1000);
+            await this.create_state(HomeId + '.meterReadings', 'meterReadings', JSON.stringify({}));
+        }
+        catch (error) {
+            this.log.error(`Issue at setReading(): '${error}'`);
+            console.error(`Issue at setReading(): '${error}'`);
+            this.errorHandling(error);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////
     /* DO Methods														*/
     //////////////////////////////////////////////////////////////////////
+    async DoRoomsTadoX(homeId) {
+        let rooms = await this.getRoomsTadoX(homeId);
+        let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
+        this.log.info('rooms: ' + JSON.stringify(rooms));
+        this.log.info('roomsAndDevices: ' + JSON.stringify(roomsAndDevices));
+        rooms.boost = false;
+        rooms.resumeScheduleHome = false;
+        rooms.allOff = false;
+
+        for (const i in roomsAndDevices.rooms) {
+            if (rooms[i].boostMode == null) {
+                rooms[i].boostMode = {};
+                rooms[i].boostMode.type = null;
+                rooms[i].boostMode.projectedExpiry = null;
+            }
+            if (rooms[i].manualControlTermination == null) {
+                rooms[i].manualControlTermination = {};
+                rooms[i].manualControlTermination.projectedExpiry = null;
+                rooms[i].manualControlTermination.remainingTimeInSeconds = null;
+                rooms[i].manualControlTermination.type = null;
+            }
+        }
+        this.log.info('rooms modified: ' + JSON.stringify(rooms));
+        await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
+
+        for (const i in roomsAndDevices.rooms) {
+            let roomId = roomsAndDevices.rooms[i].roomId;
+            //loop devices
+            for (const j in roomsAndDevices.rooms[i].devices) {
+                roomsAndDevices.rooms[i].devices[j].id = roomsAndDevices.rooms[i].devices[j].serialNumber;
+            }
+            this.log.info(JSON.stringify(roomsAndDevices.rooms[i].devices));
+            await jsonExplorer.traverseJson(roomsAndDevices.rooms[i].devices, `${homeId}.Rooms.${roomsAndDevices.rooms[i].roomId}.devices`, true, true, 1);
+            await this.DoRoomsStateTadoX(homeId, roomId);
+        }
+    }
+
+    async DoRoomsStateTadoX(homeId, roomId) {
+        let roomsAndDevices = await this.getroomsAndDevicesTadoX(homeId, roomId);
+        if (roomsAndDevices.boostMode == null) {
+            roomsAndDevices.boostMode = {};
+            roomsAndDevices.boostMode.type = null;
+            roomsAndDevices.boostMode.projectedExpiry = null;
+        }
+        if (roomsAndDevices.manualControlTermination == null) {
+            roomsAndDevices.manualControlTermination = {};
+            roomsAndDevices.manualControlTermination.projectedExpiry = null;
+            roomsAndDevices.manualControlTermination.remainingTimeInSeconds = null;
+            roomsAndDevices.manualControlTermination.type = null;
+        }
+        roomsAndDevices.resumeScheduleRoom = false;
+        this.log.info(JSON.stringify(roomsAndDevices));
+        await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
+    }
+
     async DoData_Refresh(user, pass) {
         let now = new Date().getTime();
         let step = 'start';
@@ -967,12 +1070,12 @@ class Tado extends utils.Adapter {
             await jsonExplorer.setLastStartTime();
 
             for (const i in this.getMe_data.homes) {
-                let homeID = String(this.getMe_data.homes[i].id);
-                this.DoWriteJsonRespons(homeID, 'Stage_01_GetMe_Data', this.getMe_data);
-                this.setObjectAsync(homeID, {
+                let homeId = String(this.getMe_data.homes[i].id);
+                this.DoWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMe_data);
+                this.setObjectAsync(homeId, {
                     'type': 'folder',
                     'common': {
-                        'name': homeID,
+                        'name': homeId,
                     },
                     'native': {},
                 });
@@ -981,29 +1084,29 @@ class Tado extends utils.Adapter {
                     this.log.debug('Full refresh, data outdated (more than 60 minutes ago)');
                     this.lastupdate = now;
                     step = 'DoHome';
-                    await this.create_state(homeID + '.meterReadings', 'meterReadings', JSON.stringify({}));
-                    await this.DoHome(homeID);
+                    await this.create_state(homeId + '.meterReadings', 'meterReadings', JSON.stringify({}));
+                    await this.DoHome(homeId);
                 }
                 step = 'DoMobileDevices';
-                await this.DoMobileDevices(homeID);
+                await this.DoMobileDevices(homeId);
                 step = 'DoZones';
-                if (this.isTadoX) await this.DoRoomsTadoX(homeID);
-                else await this.DoZones(homeID);
+                if (this.isTadoX) await this.DoRoomsTadoX(homeId);
+                else await this.DoZones(homeId);
                 step = 'DoWeather';
-                await this.DoWeather(homeID);
+                await this.DoWeather(homeId);
                 step = 'DoHomeState';
-                await this.DoHomeState(homeID);
+                await this.DoHomeState(homeId);
 
                 //set all outdated states to NULL
                 step = `Set outdated states to null`;
                 if (outdated) {
                     this.log.info('CheckExpire() at DoDataRefresh() if outdated started');
-                    await jsonExplorer.checkExpire(homeID + '.*');
+                    await jsonExplorer.checkExpire(homeId + '.*');
                 } else {
                     this.log.info('CheckExpire() at DoDataRefresh() if not outdated started');
-                    await jsonExplorer.checkExpire(homeID + '.Rooms.*');
-                    await jsonExplorer.checkExpire(homeID + '.Weather.*');
-                    await jsonExplorer.checkExpire(homeID + '.Mobile_Devices.*');
+                    await jsonExplorer.checkExpire(homeId + '.Rooms.*');
+                    await jsonExplorer.checkExpire(homeId + '.Weather.*');
+                    await jsonExplorer.checkExpire(homeId + '.Mobile_Devices.*');
                 }
             }
 
@@ -1085,22 +1188,7 @@ class Tado extends utils.Adapter {
 
     /**
      * @param {string} HomeId
-     * @param {any} [reading]
      */
-    async setReading(HomeId, reading) {
-        try {
-            let result = await this.apiCall(`https://energy-insights.tado.com/api/homes/${HomeId}/meterReadings`, 'post', JSON.stringify(reading));
-            this.log.debug('setReading executed with result ' + JSON.stringify(result));
-            await jsonExplorer.sleep(1000);
-            await this.create_state(HomeId + '.meterReadings', 'meterReadings', JSON.stringify({}));
-        }
-        catch (error) {
-            this.log.error(`Issue at setReading(): '${error}'`);
-            console.error(`Issue at setReading(): '${error}'`);
-            this.errorHandling(error);
-        }
-    }
-
     async DoHome(HomeId) {
         // Get additional basic data for all homes
         if (this.home_data === null) {
@@ -1116,6 +1204,9 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(this.home_data, `${HomeId}.Home`, true, true, 0);
     }
 
+    /**
+     * @param {string} HomeId
+     */
     async DoWeather(HomeId) {
         const weather_data = await this.getWeather(HomeId);
         if (weather_data == null) throw new Error('weather_data is null');
@@ -1150,36 +1241,6 @@ class Tado extends utils.Adapter {
         this.log.debug('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
         this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
         jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
-    }
-
-    async DoRoomsTadoX(homeId) {
-        let rooms = await this.getRoomsTadoX(homeId);
-        let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
-        this.log.info('rooms: ' + JSON.stringify(rooms));
-        this.log.info('roomsAndDevices: ' + JSON.stringify(roomsAndDevices));
-        this.log.info(JSON.stringify(roomsAndDevices));
-        jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
-
-        for (const i in roomsAndDevices.rooms) {
-            let roomId = roomsAndDevices.rooms[i].roomId;
-            //loop devices
-            for (const j in roomsAndDevices.rooms[i].devices) {
-                roomsAndDevices.rooms[i].devices[j].id = roomsAndDevices.rooms[i].devices[j].serialNumber;
-            }
-            this.log.info('RoomID is ' + roomId);
-            jsonExplorer.traverseJson(roomsAndDevices.rooms[i].devices, `${homeId}.Rooms.${roomsAndDevices.rooms[i].roomId}.devices`, true, true, 1);
-            await this.DoRoomsStateTadoX(homeId, roomId);
-        }
-    }
-
-    async DoRoomsStateTadoX(homeId, roomId) {
-        let roomState = await this.getRoomStateTadoX(homeId, roomId);
-        if (roomState.boostMode == null) {
-            roomState.boostMode = {};
-            roomState.boostMode.type = null;
-        }
-        this.log.info(JSON.stringify(roomState));
-        jsonExplorer.traverseJson(roomState, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
     async DoZones(HomeId) {
@@ -1219,6 +1280,10 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} HomeId
+     * @param {string} ZoneId
+     */
     async DoZoneStates(HomeId, ZoneId) {
         let ZonesState_data = await this.getZoneState(HomeId, ZoneId);
         if (ZonesState_data == null) throw new Error('ZonesState_data is null');
@@ -1233,6 +1298,10 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 2);
     }
 
+    /**
+     * @param {string} homeId
+     * @param {string} zoneId
+     */
     async DoCapabilities(homeId, zoneId) {
         let capabilities_data;
         if (this.roomCapabilities[zoneId]) capabilities_data = this.roomCapabilities[zoneId];
@@ -1293,6 +1362,10 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} HomeId
+     * @param {object} homeState_data
+     */
     async DoHomeState(HomeId, homeState_data = null) {
         if (homeState_data == null) {
             homeState_data = await this.getHomeState(HomeId);
@@ -1307,6 +1380,9 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
     /* MASTERSWITCH														*/
     //////////////////////////////////////////////////////////////////////
+    /**
+     * @param {string} masterswitch
+     */
     async setMasterSwitch(masterswitch) {
         masterswitch = masterswitch.toUpperCase();
         if (masterswitch != 'ON' && masterswitch != 'OFF') {
@@ -1344,14 +1420,6 @@ class Tado extends utils.Adapter {
     /* MISC																*/
     //////////////////////////////////////////////////////////////////////
     refreshToken() {
-        //const { token } = this.accessToken;
-        //const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
-        //const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
-
-        //If the start of the window has passed, refresh the token
-        //const nowInSeconds = (new Date()).getTime() / 1000;
-        //const shouldRefresh = nowInSeconds >= expirationWindowStart;
-
         const expires_at = new Date(this.accessToken.token.expires_at);
         const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000;
 
@@ -1371,6 +1439,10 @@ class Tado extends utils.Adapter {
         });
     }
 
+    /**
+     * @param {string} username
+     * @param {string} password
+     */
     async login(username, password) {
         const client = new ResourceOwnerPassword(tado_config);
         const tokenParams = {
@@ -1402,6 +1474,7 @@ class Tado extends utils.Adapter {
 
     /**
      * @param {number} msmin
+     * @param {number} msmax
      */
     async sleep(msmin, msmax = msmin) {
         let ms = Math.random() * (msmax - msmin) + msmin;
@@ -1491,11 +1564,14 @@ class Tado extends utils.Adapter {
     async create_state(state, name, value) {
         this.log.debug(`Create_state called for state '${state}' and name '${name}' with value '${value}'`);
         const intervall_time = (this.config.intervall * 4);
-        if (value) {
+        if (value != undefined) {
             jsonExplorer.stateSetCreate(state, name, value, intervall_time);
         }
     }
 
+    /**
+     * @param {any} errorObject
+     */
     async errorHandling(errorObject) {
         try {
             if (errorObject.message && (errorObject.message.includes('Login failed!') ||
@@ -1565,6 +1641,9 @@ class Tado extends utils.Adapter {
     }
 
     // Read account information and all home related data
+    /**
+     * @param {string} homeId
+     */
     async getHome(homeId) {
         return this.apiCall(`/api/v2/homes/${homeId}`);
     }
@@ -1574,51 +1653,92 @@ class Tado extends utils.Adapter {
         return await this.apiCall(`/api/v2/homes/${homeId}/weather`);
     }
 
+    /**
+     * @param {string} homeId
+     */
     async getMobileDevices(homeId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/mobileDevices`);
     }
 
+    /**
+     * @param {string} homeId
+     */
     async getZones(homeId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/zones`);
     }
 
+    /**
+     * @param {string} homeId
+     * @param {string} zoneId
+     */
     async getZoneState(homeId, zoneId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/state`);
     }
 
+    /**
+    * @param {string} homeId
+    * @param {string} zoneId
+    */
     async getCapabilities(homeId, zoneId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/capabilities`);
     }
 
+    /**
+     * @param {string} homeId
+     * @param {string} zoneId
+     */
     async getAwayConfiguration(homeId, zoneId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/awayConfiguration`);
     }
 
+    /**
+     * @param {string} homeId
+     * @param {string} zoneId
+     */
     async getTimeTables(homeId, zoneId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`);
     }
 
+    /**
+     * @param {string} deviceId
+     */
     async getTemperatureOffset(deviceId) {
         return await this.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`);
     }
 
+    /**
+     * @param {string} homeId
+     */
     async getHomeState(homeId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/state`);
     }
 
-    async getRoomsTadoX(home_id) {
-        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms`);
+    /**
+     * @param {string} homeId
+     */
+    async getRoomsTadoX(homeId) {
+        return this.apiCall(`${tadoX_url}/homes/${homeId}/rooms`);
     }
 
-    async getRoomStateTadoX(home_id, zone_id) {
-        return this.apiCall(`${tadoX_url}/homes/${home_id}/rooms/${zone_id}`);
+    /**
+     * @param {string} homeId
+     * @param {string} zoneId
+     */
+    async getroomsAndDevicesTadoX(homeId, zoneId) {
+        return this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${zoneId}`);
     }
 
-    async getRoomsAndDevicesTadoX(home_id) {
-        return this.apiCall(`${tadoX_url}/homes/${home_id}/roomsAndDevices`);
+    /**
+     * @param {string} homeId
+     */
+    async getRoomsAndDevicesTadoX(homeId) {
+        return this.apiCall(`${tadoX_url}/homes/${homeId}/roomsAndDevices`);
     }
 }
 
+/**
+ * @param {string | number | boolean} valueToBoolean
+ */
 function toBoolean(valueToBoolean) {
     return (valueToBoolean === true || valueToBoolean === 'true');
 }
