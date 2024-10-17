@@ -106,7 +106,7 @@ class Tado extends utils.Adapter {
     async onStateChangeTadoX(id, state, homeId, roomId, deviceId, statename, beforeStatename) {
         this.log.info(id + ' changed');
         const temperature = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.setting.temperature.value');
-        const mode = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.manualControlTermination.type');
+        const mode = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.manualControlTermination.controlType');
         const power = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.setting.power');
         const remainingTimeInSeconds = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.manualControlTermination.remainingTimeInSeconds');
         const nextTimeBlockStart = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.nextTimeBlock.start');
@@ -156,6 +156,7 @@ class Tado extends utils.Adapter {
                 set_power = 'ON';
                 await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 break;
+
             case ('boost'):
                 if (state.val == true) {
                     await this.setBoostTadoX(homeId);
@@ -163,6 +164,7 @@ class Tado extends utils.Adapter {
                     this.create_state(id, 'boost', false);
                 }
                 break;
+
             case ('resumeScheduleHome'):
                 if (state.val == true) {
                     await this.setResumeHomeScheduleTadoX(homeId);
@@ -170,6 +172,7 @@ class Tado extends utils.Adapter {
                     this.create_state(id, 'resumeScheduleHome', false);
                 }
                 break;
+
             case ('resumeScheduleRoom'):
                 if (state.val == true) {
                     await this.setResumeRoomScheduleTadoX(homeId, roomId);
@@ -177,6 +180,7 @@ class Tado extends utils.Adapter {
                     this.create_state(id, 'resumeScheduleRoom', false);
                 }
                 break;
+
             case ('allOff'):
                 if (state.val == true) {
                     await this.setAllOffTadoX(homeId);
@@ -184,11 +188,16 @@ class Tado extends utils.Adapter {
                     this.create_state(id, 'allOff', false);
                 }
                 break;
+
             case ('remainingTimeInSeconds'):
                 set_terminationMode = 'TIMER';
                 await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 break;
-            case ('type'):
+
+            case ('controlType'):
+                if (beforeStatename != 'manualControlTermination') {
+                    this.log.warn('Change of ' + id + ' ignored'); break;
+                }
                 await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 break;
         }
@@ -1027,6 +1036,7 @@ class Tado extends utils.Adapter {
         rooms.allOff = false;
 
         for (const i in roomsAndDevices.rooms) {
+
             if (rooms[i].boostMode == null) {
                 rooms[i].boostMode = {};
                 rooms[i].boostMode.type = null;
@@ -1036,7 +1046,10 @@ class Tado extends utils.Adapter {
                 rooms[i].manualControlTermination = {};
                 rooms[i].manualControlTermination.projectedExpiry = null;
                 rooms[i].manualControlTermination.remainingTimeInSeconds = null;
-                rooms[i].manualControlTermination.type = null;
+                rooms[i].manualControlTermination.controlType = null;
+            } else {
+                rooms[i].manualControlTermination.controlType = rooms[i].manualControlTermination.type;
+                delete rooms[i].manualControlTermination.type;
             }
         }
         this.log.info('Modified rooms object is' + JSON.stringify(rooms));
@@ -1065,7 +1078,10 @@ class Tado extends utils.Adapter {
             roomsAndDevices.manualControlTermination = {};
             roomsAndDevices.manualControlTermination.projectedExpiry = null;
             roomsAndDevices.manualControlTermination.remainingTimeInSeconds = null;
-            roomsAndDevices.manualControlTermination.type = null;
+            roomsAndDevices.manualControlTermination.controlType = null;
+        } else {
+            roomsAndDevices.manualControlTermination.controlType = roomsAndDevices.manualControlTermination.type;
+            delete roomsAndDevices.manualControlTermination.type;
         }
         roomsAndDevices.resumeScheduleRoom = false;
         this.log.info('Modified RoomsAndDevices object is ' + JSON.stringify(roomsAndDevices));

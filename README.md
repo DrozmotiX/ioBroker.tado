@@ -16,10 +16,10 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## TADO° X
-Tado X **is currently not supported** by this adapter. The adapter supports Tado V3, V3+ and V2.
-If someone is supporting to add Tado X functionality, raise a ticket or send an email to <myiobrokeradapters@gmail.com>. You will need to support some debugging session and interact with the adapter developer.
+Basic support for Tado X available.
+If your setup is not working, please raise a ticket (https://github.com/DrozmotiX/ioBroker.tado/issues/new?assignees=HGlab01&labels=enhancement&projects=&template=Enhancement.md&title=). You will need to support some debugging session and interact with the adapter developer.
 
-## Things you can steer
+## Things you can steer on Tado Classic
 | State | Description |
 | ----- | ----------- |
 | tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
@@ -41,6 +41,18 @@ If someone is supporting to add Tado X functionality, raise a ticket or send an 
 | tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing | Vertical swing (only AC devices with V3+ version) |
 | tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
 | tado.[x].[yyyyyy].meterReadings | JSON-Object with {"date":"YYYY-MM-DD","reading": 1234} can be used to upload meter-readings to Energy IQ |
+
+## Things you can steer on Tado *X*
+| State | Description |
+| ----- | ----------- |
+| tado.[x].[yyyyyy].Rooms.[z].setting.power | Turn device on/off |
+| tado.[x].[yyyyyy].Rooms.[z].setting.temperature.value | Define temperature |
+| tado.[x].[yyyyyy].Rooms.[z].manualControlTermination.controlType | Set time table mode |
+| tado.[x].[yyyyyy].Rooms.[z].manualControlTermination.remainingTimeInSeconds | Duration time for timer mode |
+| tado.[x].[yyyyyy].Rooms.[z].resumeScheduleRoom | Back to automatic mode for this room |
+| tado.[x].[yyyyyy].Rooms.resumeScheduleHome | Back to automatic mode for all rooms |
+| tado.[x].[yyyyyy].Rooms.allOff | Switch all rooms of |
+| tado.[x].[yyyyyy].Rooms.boost | Switch all rooms to boost mode |
 
 ## Requires
 * Node.js 18 or higher
