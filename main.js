@@ -185,6 +185,9 @@ class Tado extends utils.Adapter {
                     const homeId = idSplitted[2];
                     const zoneId = idSplitted[4];
                     const deviceId = idSplitted[6];
+                    const homeId = idSplitted[2];
+                    const zoneId = idSplitted[4];
+                    const deviceId = idSplitted[6];
                     const statename = idSplitted[idSplitted.length - 1];
                     const beforeStatename = idSplitted[idSplitted.length - 2];
                     this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
