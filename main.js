@@ -252,7 +252,7 @@ class Tado extends utils.Adapter {
                         switch (statename) {
                             case ('overlayClearZone'):
                                 this.log.debug(`Overlay cleared for room '${zoneId}' in home '${homeId}'`);
-                                await this.clearZoneOverlay(homeId, zoneId);
+                                await this.setClearZoneOverlay(homeId, zoneId);
                                 break;
 
                             case ('fahrenheit'): //do the same as with celsius but just convert to celsius
@@ -326,7 +326,7 @@ class Tado extends utils.Adapter {
                                 if (set_mode == 'NO_OVERLAY') {
                                     if (set_power == 'ON') {
                                         this.log.debug(`Overlay cleared for room '${zoneId}' in home '${homeId}'`);
-                                        await this.clearZoneOverlay(homeId, zoneId);
+                                        await this.setClearZoneOverlay(homeId, zoneId);
                                     }
                                     else {
                                         set_mode = 'MANUAL';
@@ -368,7 +368,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async clearZoneOverlay(homeId, zoneId) {
+    async setClearZoneOverlay(homeId, zoneId) {
         try {
             let url = `/api/v2/homes/${homeId}/zones/${zoneId}/overlay`;
             if (await isOnline() == false) {
@@ -423,16 +423,16 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      * @param {string} zoneId
-     * @param {number} timetable_id
+     * @param {number} timetableId
      */
-    async setActiveTimeTable(homeId, zoneId, timetable_id) {
-        if (!timetable_id) timetable_id = 0;
-        if (!(timetable_id == 0 || timetable_id == 1 || timetable_id == 2)) {
-            this.log.error(`Invalid value '${timetable_id}' for state 'timetable_id'. Allowed values are '0', '1' and '2'.`);
+    async setActiveTimeTable(homeId, zoneId, timetableId) {
+        if (!timetableId) timetableId = 0;
+        if (!(timetableId == 0 || timetableId == 1 || timetableId == 2)) {
+            this.log.error(`Invalid value '${timetableId}' for state 'timetable_id'. Allowed values are '0', '1' and '2'.`);
             return;
         }
         const timeTable = {
-            id: timetable_id
+            id: timetableId
         };
         let apiResponse;
         this.log.debug('setActiveTimeTable JSON ' + JSON.stringify(timeTable));
