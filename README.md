@@ -16,8 +16,8 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 ## TADO° X
-Basic support for Tado X available.
-If your setup is not working, please raise a [ticket](https://github.com/DrozmotiX/ioBroker.tado/issues/new?assignees=HGlab01&labels=enhancement&projects=&template=Enhancement.md&title=). You will need to support some debugging session and interact with the adapter developer.
+Basic support for Tado° X available.
+If your setup is not working, please raise a [ticket](https://github.com/DrozmotiX/ioBroker.tado/issues/new?assignees=HGlab01&labels=enhancement&projects=&template=Enhancement.md&title=). You will need to support some debugging session and interact with the adapter developer to improve Tado° X features.
 
 ## Things you can steer on Tado° V3+, V3, V2
 | State | Description |
@@ -33,13 +33,13 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 | tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.openWindowDetectionEnabled | Enable/Disable open window detection on thermostat |
 | tado.[x].[yyyyyy].Rooms.[z].openWindowDetection.timeoutInSeconds | Timeout how long thermostats are turned off when an open window is detected |
 | tado.[x].[yyyyyy].Rooms.[z].activateOpenWindow | Switch thermostats off when an open window is detected (only works if the thermostat detects an open window) | 
-| tado.[x].[yyyyyy].Home.state.presence | Set HOME, AWAY or AUTO mode |
-| tado.[x].[yyyyyy].Home.masterswitch | Turn all devices on/off |
 | tado.[x].[yyyyyy].Rooms.[z].setting.mode | AC mode (only AC devices) |
 | tado.[x].[yyyyyy].Rooms.[z].setting.fanspeed | Fanspeed (only AC devices with V3 and older versions) |
 | tado.[x].[yyyyyy].Rooms.[z].setting.fanLebel | Fanlebel (only AC devices with V3+ version) |
 | tado.[x].[yyyyyy].Rooms.[z].setting.verticalSwing | Vertical swing (only AC devices with V3+ version) |
 | tado.[x].[yyyyyy].Rooms.[z].setting.horizontalSwing | Horizontal swing (only AC devices with V3 and olderversions) |
+| tado.[x].[yyyyyy].Home.state.presence | Set HOME, AWAY or AUTO mode |
+| tado.[x].[yyyyyy].Home.masterswitch | Turn all devices on/off |
 | tado.[x].[yyyyyy].meterReadings | JSON-Object with {"date":"YYYY-MM-DD","reading": 1234} can be used to upload meter-readings to Energy IQ |
 
 ## Things you can steer on Tado° X
@@ -53,6 +53,8 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 | tado.[x].[yyyyyy].Rooms.resumeScheduleHome | Back to automatic mode for all rooms |
 | tado.[x].[yyyyyy].Rooms.allOff | Switch all rooms of |
 | tado.[x].[yyyyyy].Rooms.boost | Switch all rooms to boost mode |
+| tado.[x].[yyyyyy].Home.state.presence | Set HOME, AWAY or AUTO mode |
+| tado.[x].[yyyyyy].meterReadings | JSON-Object with {"date":"YYYY-MM-DD","reading": 1234} can be used to upload meter-readings to Energy IQ |
 
 ## Requires
 * Node.js 18 or higher
@@ -63,8 +65,8 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
-* (HGlab01) Start supportin TadoX
+### 0.6.0-alpha.1 (2024-10-18)
+* (HGlab01) Start supporting Tado° X
 
 ### 0.5.9 (2024-10-16)
 * (HGlab01) Improve axios promise handling
@@ -84,10 +86,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 
 ### 0.5.5 (2024-06-25)
 * (HGlab01) Bump axios to 1.7.2
-
-### 0.5.4 (2024-04-18)
-* (HGlab01) Add attribute 'runningOfflineSchedule'
-* (HGlab01) Bump axios to 1.6.8
 
 ## License
 MIT License

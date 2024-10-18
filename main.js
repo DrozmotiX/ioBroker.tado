@@ -27,7 +27,7 @@ const { version } = require('./package.json');
 
 // @ts-ignore
 let axiosInstance = axios.create({
-    timeout: 20000, //20000
+    timeout: 5000, //20000
     baseURL: `${tado_url}/`,
     httpsAgent: new https.Agent({ keepAlive: true }),
     referer: tado_app_url,
@@ -226,10 +226,11 @@ class Tado extends utils.Adapter {
                     const beforeStatename = idSplitted[idSplitted.length - 2];
                     this.log.debug(`Attribute '${id}' changed. '${statename}' will be checked.`);
 
-                    this.log.debug(id + ' changed');
-                    if (this.isTadoX) {
-                        await this.onStateChangeTadoX(id, state, homeId, zoneId, deviceId, statename, beforeStatename);
-                        return;
+                    if (statename != 'meterReadings' && statename != 'presence') {
+                        if (this.isTadoX) {
+                            await this.onStateChangeTadoX(id, state, homeId, zoneId, deviceId, statename, beforeStatename);
+                            return;
+                        }
                     }
 
                     if (statename == 'meterReadings') {
@@ -283,7 +284,7 @@ class Tado extends utils.Adapter {
                         this.log.debug(`Masterswitch changed in home '${homeId}' to value '${set_masterswitch}'`);
                         await this.setMasterSwitch(set_masterswitch);
                         await this.sleep(1000);
-                        this.setStateAsync(`${homeId}.Home.masterswitch`, '', true);
+                        await this.setState(`${homeId}.Home.masterswitch`, '', true);
                     } else if (statename == 'activateOpenWindow') {
                         this.log.debug(`Activate Open Window for room '${zoneId}' in home '${homeId}'`);
                         await this.setActivateOpenWindow(homeId, zoneId);
@@ -392,7 +393,7 @@ class Tado extends utils.Adapter {
                             case ('durationInSeconds'):
                                 set_mode = 'TIMER';
                                 this.log.debug(`DurationInSecond changed for room '${zoneId}' in home '${homeId}' to '${set_durationInSeconds}'`);
-                                this.setStateAsync(`${homeId}.Rooms.${zoneId}.overlay.termination.typeSkillBasedApp`, set_mode, true);
+                                await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.typeSkillBasedApp`, set_mode, true);
                                 await this.setZoneOverlay(homeId, zoneId, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed, set_swing, set_light);
                                 break;
 
@@ -436,9 +437,9 @@ class Tado extends utils.Adapter {
                                 this.log.debug(`TypeSkillBasedApp changed for room '${zoneId}' in home '${homeId}' to '${set_mode}'`);
                                 await this.setZoneOverlay(homeId, zoneId, set_power, set_temp, set_mode, set_durationInSeconds, set_type, set_acMode, set_fanLevel, set_horizontalSwing, set_verticalSwing, set_fanSpeed, set_swing, set_light);
                                 if (set_mode == 'MANUAL') {
-                                    this.setStateAsync(`${homeId}.Rooms.${zoneId}.overlay.termination.expiry`, null, true);
-                                    this.setStateAsync(`${homeId}.Rooms.${zoneId}.overlay.termination.durationInSeconds`, null, true);
-                                    this.setStateAsync(`${homeId}.Rooms.${zoneId}.overlay.termination.remainingTimeInSeconds`, null, true);
+                                    await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.expiry`, null, true);
+                                    await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.durationInSeconds`, null, true);
+                                    await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.remainingTimeInSeconds`, null, true);
                                 }
                                 break;
 
@@ -496,12 +497,16 @@ class Tado extends utils.Adapter {
      */
     async setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds) {
         //{`"setting`":{`"power`":`"ON`",`"isBoost`":false,`"temperature`":{`"value`":18.5,`"valueRaw`":18.52,`"precision`":0.1}},`"termination`":{`"type`":`"NEXT_TIME_BLOCK`"}}
+        if (power != 'ON' && power != 'OFF') throw new Error(`Power has value ${power} but should have the value 'ON' or 'OFF'.`);
+        if (terminationMode != 'NEXT_TIME_BLOCK' && terminationMode != 'MANUAL' && terminationMode != 'TIMER') throw new Error(`TerminationMode has value ${terminationMode} but should have 'NEXT_TIMEBLOCK' or 'MANUAL' or 'TIMER'.`);
+        temperature = Math.round(temperature * 10) / 10;
+
         let payload = {};
         payload.termination = {};
         payload.termination.type = terminationMode;
         payload.setting = {};
         payload.setting.power = power;
-        payload.setting.isBoost = boostMode;
+        payload.setting.isBoost = toBoolean(boostMode);
 
         if (power == 'OFF') payload.setting.temperature = null;
         else {
@@ -1251,7 +1256,7 @@ class Tado extends utils.Adapter {
         }
         else this.isTadoX = false;
         if (this.home_data == null) throw new Error('home_date is null');
-        this.home_data.masterswitch = '';
+        if (!this.isTadoX) this.home_data.masterswitch = '';
         this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.home_data);
         jsonExplorer.traverseJson(this.home_data, `${HomeId}.Home`, true, true, 0);
     }
@@ -1453,10 +1458,10 @@ class Tado extends utils.Adapter {
                 const settingType = await this.getStateAsync(homeId + '.Rooms.' + zoneId + '.setting.type');
                 if (settingType && settingType.val == 'HEATING') {
                     if (masterswitch == 'ON') {
-                        this.setStateAsync(overlayClearZonePath, true);
+                        await this.setState(overlayClearZonePath, true);
                     } else {
-                        this.setStateAsync(powerPath, 'OFF');
-                        this.setStateAsync(typeSkillBasedAppPath, 'MANUAL');
+                        await this.setState(powerPath, 'OFF');
+                        await this.setState(typeSkillBasedAppPath, 'MANUAL');
                     }
                     await this.sleep(600);
                 }
