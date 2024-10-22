@@ -12,22 +12,34 @@
       "newLine": true,
       "type": "text",
       "label": "Username",
-      "sm": 4
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "Password": {
       "repeat": false,
       "visible": false,
-      "sm": 3,
       "type": "password",
-      "label": "Password"
+      "label": "Password",
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "intervall": {
-      "sm": 3,
       "type": "number",
       "label": "Interval in seconds",
-      "min" : 30,
-      "max" : 3600,
-      "step": 5
+      "min": 30,
+      "max": 3600,
+      "step": 5,
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     }
   }
 }
