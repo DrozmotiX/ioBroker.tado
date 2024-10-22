@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.5.9",
+    "version": "0.6.0-alpha.1",
     "news": {
+      "0.6.0-alpha.1": {
+        "en": "Start supporting Tado° X",
+        "de": "Starthilfe Tado° X",
+        "ru": "Начало поддержки Tado° x",
+        "pt": "Iniciar suporte Tadoo X",
+        "nl": "Ondersteuning starten Tado° X",
+        "fr": "Commencer à soutenir Tado° X",
+        "it": "Avviare il supporto Tado X",
+        "es": "Comienzo de apoyo Tado° X",
+        "pl": "Zacznij wspierać Tado ° X",
+        "uk": "Старт підтримки Тадо ° X",
+        "zh-cn": "开始支持 塔多°X"
+      },
       "0.5.9": {
         "en": "Improve axios promise handling",
         "de": "Axios Versprechen",
@@ -69,19 +82,6 @@
         "zh-cn": "改进对承诺的处理"
       },
       "0.5.7": {
-        "en": "Change of attribute \"light\" supported\nAdd attribute 'connection'\nAdd attribute 'supportsFlowTemperatureOptimization'\nBump axios to 1.7.7\nEnergyIQ meter-readings can be uploaded",
-        "de": "Änderung des Attributs \"light\" unterstützt\nAttribut hinzufügen 'connection '\nAttribut hinzufügen 'supportsFlowTemperaturOptimization '\nBump axios bis 1.7.7\nEnergyIQ Messgeräte können hochgeladen werden",
-        "ru": "Изменение атрибута \"свет\" поддерживается\nДобавить атрибут \"\nДобавить атрибут \"supportsFlowTemperatureOptimization \"\nBump axios to 1.7.7\nЭнергоIQ можно загрузить",
-        "pt": "Mudança de atributo \"light\" suportada\nAdicionar atributo 'conexão '\nAdicionar atributo 'supportsFlowTemperatureOptimization '\nBump axios para 1.7.7\nAs leituras de medidores EnergyIQ podem ser carregadas",
-        "nl": "Wijziging van attribuut \"licht\" ondersteund\nAttribuut 'connectie' toevoegen '\nToevoegen attribuut 'ondersteuntFlowTemperatuurOptimisatie '\nBump axios naar 1.7.7\nEnergyIQ-meters kunnen worden geüpload",
-        "fr": "Changement d'attribut \"lumière\" pris en charge\nAjouter l'attribut 'connection' '\nAjouter l'attribut 'supportsFlowTemperatureOptimisation '\nAxios bouffés à 1.7.7\nLes lecteurs EnergyIQ peuvent être téléchargés",
-        "it": "Modifica dell'attributo \"light\" supportato\nAggiungi attributo 'collegamento '\nAggiungi attributo 'supportiFlowTemperatureOptimization '\nAssio di bump a 1.7.7\nEnergyIQ può essere caricato",
-        "es": "Cambio de atributo \"light\" soportado\nAgregar atributo 'conexión '\nAgregar atributo 'apoyosFlowTemperatureOptimization '\nBump axios a 1.7.7\nLas lecturas de medidores de EnergyIQ se pueden cargar",
-        "pl": "Zmiana obsługiwanego atrybutu \"light\"\nDodaj połączenie atrybutu '\nDodaj atrybut 'supportsFlowTemperatureOptimization'\nAksykony bumpy do 1.7.7\nOdczyty mierników EnergyIQ mogą być wysłane",
-        "uk": "Зміна атрибуту \"light\"\nДодати атрибут 'connection Р\nДодати атрибут 'supportsFlowTemperatureOptimization Р\nБампер аксіос до 1.7.7\nЗавантажувати енергозберігання можна",
-        "zh-cn": "支持更改属性“ 光”\n添加属性“ 连接  '\n添加属性支持FlowTemperature Optimization  '\n横轴改为1.7.7\nEnergyIQ 仪表读取可以上传"
-      },
-      "0.5.7-alpha.1": {
         "en": "Change of attribute \"light\" supported\nAdd attribute 'connection'\nAdd attribute 'supportsFlowTemperatureOptimization'\nBump axios to 1.7.7\nEnergyIQ meter-readings can be uploaded",
         "de": "Änderung des Attributs \"light\" unterstützt\nAttribut hinzufügen 'connection '\nAttribut hinzufügen 'supportsFlowTemperaturOptimization '\nBump axios bis 1.7.7\nEnergyIQ Messgeräte können hochgeladen werden",
         "ru": "Изменение атрибута \"свет\" поддерживается\nДобавить атрибут \"\nДобавить атрибут \"supportsFlowTemperatureOptimization \"\nBump axios to 1.7.7\nЭнергоIQ можно загрузить",
