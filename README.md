@@ -51,7 +51,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 | tado.[x].[yyyyyy].Rooms.[z].manualControlTermination.remainingTimeInSeconds | Duration time for timer mode |
 | tado.[x].[yyyyyy].Rooms.[z].resumeScheduleRoom | Back to automatic mode for this room |
 | tado.[x].[yyyyyy].Rooms.resumeScheduleHome | Back to automatic mode for all rooms |
-| tado.[x].[yyyyyy].Rooms.allOff | Switch all rooms of |
+| tado.[x].[yyyyyy].Rooms.allOff | Switch all rooms off |
 | tado.[x].[yyyyyy].Rooms.boost | Switch all rooms to boost mode |
 | tado.[x].[yyyyyy].Home.state.presence | Set HOME, AWAY or AUTO mode |
 | tado.[x].[yyyyyy].meterReadings | JSON-Object with {"date":"YYYY-MM-DD","reading": 1234} can be used to upload meter-readings to Energy IQ |
