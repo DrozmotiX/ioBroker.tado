@@ -16,19 +16,6 @@
         "uk": "Старт підтримки Тадо ° X",
         "zh-cn": "开始支持 塔多°X"
       },
-      "0.6.0-alpha.1": {
-        "en": "Start supporting Tado° X",
-        "de": "Starthilfe Tado° X",
-        "ru": "Начало поддержки Tado° x",
-        "pt": "Iniciar suporte Tadoo X",
-        "nl": "Ondersteuning starten Tado° X",
-        "fr": "Commencer à soutenir Tado° X",
-        "it": "Avviare il supporto Tado X",
-        "es": "Comienzo de apoyo Tado° X",
-        "pl": "Zacznij wspierać Tado ° X",
-        "uk": "Старт підтримки Тадо ° X",
-        "zh-cn": "开始支持 塔多°X"
-      },
       "0.5.9": {
         "en": "Improve axios promise handling",
         "de": "Axios Versprechen",
@@ -42,58 +29,6 @@
         "uk": "Покращити axios обіцянка обробка",
         "zh-cn": "改进对承诺的处理"
       },
-      "0.5.9-alpha.1": {
-        "en": "Improve axios promise handling",
-        "de": "Axios Versprechen",
-        "ru": "Улучшить аксиос",
-        "pt": "Melhorar o manuseio da promessa de axios",
-        "nl": "Verbeteren van axio's belofte behandeling",
-        "fr": "Améliorer la gestion des promesses axios",
-        "it": "Migliorare la gestione delle promesse di assi",
-        "es": "Mejorar el manejo de promesas de axios",
-        "pl": "Poprawa obsługi obietnic Axios",
-        "uk": "Покращити axios обіцянка обробка",
-        "zh-cn": "改进对承诺的处理"
-      },
-      "0.5.9-alpha.0": {
-        "en": "Improve axios promise handling",
-        "de": "Axios Versprechen",
-        "ru": "Улучшить аксиос",
-        "pt": "Melhorar o manuseio da promessa de axios",
-        "nl": "Verbeteren van axio's belofte behandeling",
-        "fr": "Améliorer la gestion des promesses axios",
-        "it": "Migliorare la gestione delle promesse di assi",
-        "es": "Mejorar el manejo de promesas de axios",
-        "pl": "Poprawa obsługi obietnic Axios",
-        "uk": "Покращити axios обіцянка обробка",
-        "zh-cn": "改进对承诺的处理"
-      },
-      "0.5.8": {
-        "en": "Improve axios promise handling",
-        "de": "Axios Versprechen",
-        "ru": "Улучшить аксиос",
-        "pt": "Melhorar o manuseio da promessa de axios",
-        "nl": "Verbeteren van axio's belofte behandeling",
-        "fr": "Améliorer la gestion des promesses axios",
-        "it": "Migliorare la gestione delle promesse di assi",
-        "es": "Mejorar el manejo de promesas de axios",
-        "pl": "Poprawa obsługi obietnic Axios",
-        "uk": "Покращити axios обіцянка обробка",
-        "zh-cn": "改进对承诺的处理"
-      },
-      "0.5.8-alpha.0": {
-        "en": "Improve axios promise handling",
-        "de": "Axios Versprechen",
-        "ru": "Улучшить аксиос",
-        "pt": "Melhorar o manuseio da promessa de axios",
-        "nl": "Verbeteren van axio's belofte behandeling",
-        "fr": "Améliorer la gestion des promesses axios",
-        "it": "Migliorare la gestione delle promesse di assi",
-        "es": "Mejorar el manejo de promesas de axios",
-        "pl": "Poprawa obsługi obietnic Axios",
-        "uk": "Покращити axios обіцянка обробка",
-        "zh-cn": "改进对承诺的处理"
-      }
     },
     "titleLang": {
       "en": "Tado",
