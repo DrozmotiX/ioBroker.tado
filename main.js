@@ -104,7 +104,7 @@ class Tado extends utils.Adapter {
      * @param {string} beforeStatename
      */
     async onStateChangeTadoX(id, state, homeId, roomId, deviceId, statename, beforeStatename) {
-        this.log.info(id + ' changed');
+        this.log.debug(id + ' changed');
         const temperature = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.setting.temperature.value');
         const mode = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.manualControlTermination.controlType');
         const power = await this.getStateAsync(homeId + '.Rooms.' + roomId + '.setting.power');
@@ -119,19 +119,19 @@ class Tado extends utils.Adapter {
         let set_power = (power == null || power == undefined || power.val == null || power.val == '') ? 'OFF' : power.val.toString().toUpperCase();
         let set_terminationMode = (mode == null || mode == undefined || mode.val == null || mode.val == '') ? 'NO_OVERLAY' : mode.val.toString().toUpperCase();
 
-        this.log.info('boostMode is: ' + set_boostMode);
-        this.log.info('Power is: ' + set_power);
-        this.log.info(`Temperature is: ${set_temp}`);
-        this.log.info('Termination mode is: ' + set_terminationMode);
-        this.log.info('RemainingTimeInSeconds is: ' + set_remainingTimeInSeconds);
-        this.log.info('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
+        this.log.debug('boostMode is: ' + set_boostMode);
+        this.log.debug('Power is: ' + set_power);
+        this.log.debug(`Temperature is: ${set_temp}`);
+        this.log.debug('Termination mode is: ' + set_terminationMode);
+        this.log.debug('RemainingTimeInSeconds is: ' + set_remainingTimeInSeconds);
+        this.log.debug('NextTimeBlockStart exists: ' + set_NextTimeBlockStartExists);
         this.log.debug('DevicId is: ' + deviceId);
 
         switch (statename) {
             case ('power'):
                 if (set_terminationMode == 'NO_OVERLAY') {
                     if (set_power == 'ON') {
-                        this.log.info(`Overlay cleared for room '${roomId}' in home '${homeId}'`);
+                        this.log.debug(`Overlay cleared for room '${roomId}' in home '${homeId}'`);
                         await this.setResumeRoomScheduleTadoX(homeId, roomId);
                         break;
                     }
@@ -478,7 +478,7 @@ class Tado extends utils.Adapter {
             }
         } else {
             // The state was deleted
-            this.log.info(`state ${id} deleted`);
+            this.log.debug(`state ${id} deleted`);
         }
     }
 
@@ -516,9 +516,9 @@ class Tado extends utils.Adapter {
 
         if (terminationMode == 'TIMER') payload.termination.durationInSeconds = durationInSeconds;
 
-        this.log.info('setManualControlTadoX() payload is ' + JSON.stringify(payload));
+        this.log.debug('setManualControlTadoX() payload is ' + JSON.stringify(payload));
         let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
-        this.log.info('setManualControlTadoX() response is ' + JSON.stringify(apiResponse));
+        this.log.debug('setManualControlTadoX() response is ' + JSON.stringify(apiResponse));
         await this.DoRoomsStateTadoX(homeId, roomId);
     }
 
@@ -528,7 +528,7 @@ class Tado extends utils.Adapter {
      */
     async setResumeRoomScheduleTadoX(homeId, roomId) {
         let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
-        this.log.info('setResumeRoomScheduleTadoX() response is ' + JSON.stringify(apiResponse));
+        this.log.debug('setResumeRoomScheduleTadoX() response is ' + JSON.stringify(apiResponse));
         await this.DoRoomsStateTadoX(homeId, roomId);
     }
 
@@ -537,7 +537,7 @@ class Tado extends utils.Adapter {
      */
     async setResumeHomeScheduleTadoX(homeId) {
         let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
-        this.log.info('setResumeHomeScheduleTadoX() response is ' + JSON.stringify(apiResponse));
+        this.log.debug('setResumeHomeScheduleTadoX() response is ' + JSON.stringify(apiResponse));
         await this.DoRoomsTadoX(homeId);
     }
 
@@ -546,7 +546,7 @@ class Tado extends utils.Adapter {
      */
     async setBoostTadoX(homeId) {
         let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/boost`, 'post');
-        this.log.info('setBoostTadoX() response is ' + JSON.stringify(apiResponse));
+        this.log.debug('setBoostTadoX() response is ' + JSON.stringify(apiResponse));
         await this.DoRoomsTadoX(homeId);
     }
 
@@ -555,7 +555,7 @@ class Tado extends utils.Adapter {
      */
     async setAllOffTadoX(homeId) {
         let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/allOff`, 'post');
-        this.log.info('setAllOffTadoX() response is ' + JSON.stringify(apiResponse));
+        this.log.debug('setAllOffTadoX() response is ' + JSON.stringify(apiResponse));
         await this.DoRoomsTadoX(homeId);
     }
 
@@ -1034,8 +1034,8 @@ class Tado extends utils.Adapter {
     async DoRoomsTadoX(homeId) {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
-        this.log.info('Rooms object is ' + JSON.stringify(rooms));
-        this.log.info('RoomsAndDevices object is ' + JSON.stringify(roomsAndDevices));
+        this.log.debug('Rooms object is ' + JSON.stringify(rooms));
+        this.log.debug('RoomsAndDevices object is ' + JSON.stringify(roomsAndDevices));
         rooms.boost = false;
         rooms.resumeScheduleHome = false;
         rooms.allOff = false;
@@ -1057,7 +1057,7 @@ class Tado extends utils.Adapter {
                 delete rooms[i].manualControlTermination.type;
             }
         }
-        this.log.info('Modified rooms object is' + JSON.stringify(rooms));
+        this.log.debug('Modified rooms object is' + JSON.stringify(rooms));
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
 
         for (const i in roomsAndDevices.rooms) {
@@ -1066,7 +1066,7 @@ class Tado extends utils.Adapter {
             for (const j in roomsAndDevices.rooms[i].devices) {
                 roomsAndDevices.rooms[i].devices[j].id = roomsAndDevices.rooms[i].devices[j].serialNumber;
             }
-            this.log.info('Devices looks like ' + JSON.stringify(roomsAndDevices.rooms[i].devices));
+            this.log.debug('Devices looks like ' + JSON.stringify(roomsAndDevices.rooms[i].devices));
             await jsonExplorer.traverseJson(roomsAndDevices.rooms[i].devices, `${homeId}.Rooms.${roomsAndDevices.rooms[i].roomId}.devices`, true, true, 1);
             await this.DoRoomsStateTadoX(homeId, roomId);
         }
@@ -1089,7 +1089,7 @@ class Tado extends utils.Adapter {
             delete roomsAndDevices.manualControlTermination.type;
         }
         roomsAndDevices.resumeScheduleRoom = false;
-        this.log.info('Modified RoomsAndDevices object is ' + JSON.stringify(roomsAndDevices));
+        this.log.debug('Modified RoomsAndDevices object is ' + JSON.stringify(roomsAndDevices));
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
