@@ -27,7 +27,7 @@ const { version } = require('./package.json');
 
 // @ts-ignore
 let axiosInstance = axios.create({
-    timeout: 5000, //20000
+    timeout: 20000, //20000
     baseURL: `${tado_url}/`,
     httpsAgent: new https.Agent({ keepAlive: true }),
     referer: tado_app_url,

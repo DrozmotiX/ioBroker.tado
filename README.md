@@ -65,6 +65,10 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Add attributes 'expiryInSeconds' and 'activated'
+* (HGlab01) Extend timeout back to 20s
+
 ### 0.6.0 (2024-10-23)
 * (HGlab01) Start supporting Tado° X
 
