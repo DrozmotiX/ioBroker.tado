@@ -1,4 +1,7 @@
 # Older changes
+## 0.5.5 (2024-06-25)
+* (HGlab01) Bump axios to 1.7.2
+
 ## 0.5.4 (2024-04-18)
 * (HGlab01) Add attribute 'runningOfflineSchedule'
 * (HGlab01) Bump axios to 1.6.8

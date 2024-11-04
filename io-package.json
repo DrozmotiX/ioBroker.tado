@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "news": {
+      "0.6.1": {
+        "en": "Add attributes 'expiryInSeconds' and 'activated'\nExtend timeout back to 20s\nTado° X improvements",
+        "de": "Attribute hinzufügen 'expiryInSeconds' und 'aktiviert '\nAusdauer bis 20er Jahre\nTado° X Verbesserungen",
+        "ru": "Добавить атрибуты «expiryInSeconds» и «активированные» \"\nПродлить тайм-аут до 20-х\nTado° X улучшения",
+        "pt": "Adicionar atributos 'expiryInSeconds' e 'ativado '\nEstenda o timeout de volta para 20s\nMelhorias de Tado ° X",
+        "nl": "Attributen 'expiryInSeconds' en 'geactiveerd' toevoegen '\nVerleng timeout terug naar 20s\nTado° X verbeteringen",
+        "fr": "Ajouter les attributs 'expiryInSecond' et 'activated '\nProlongez le délai de sortie jusqu'à 20s\nAméliorations Tado° X",
+        "it": "Aggiungi attributi 'expiryInSeconds' e' attivato '\nEstendere il timeout indietro a 20s\nMiglioramenti Tado° X",
+        "es": "Añadir atributos 'expiryInSeconds' y 'activated '\nExtender el tiempo de regreso a 20\nMejoras de Tado° X",
+        "pl": "Dodaj atrybuty 'EgyInSeconds' i 'aktywowane'\nPrzedłużyć czas do 20\nPoprawa Tado ° X",
+        "uk": "Додати атрибути 'expiryInSeconds' і 'activated Р\nПродовжити час назад до 20-х\nTado° X поліпшення",
+        "zh-cn": "添加属性“ 过期 inseconds ” 和“ 激活”  '\n将超时时间延长到20s\nTado° X 改进"
+      },
       "0.6.0": {
         "en": "Start supporting Tado° X",
         "de": "Starthilfe Tado° X",

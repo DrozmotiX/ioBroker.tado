@@ -65,7 +65,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.6.1 (2024-11-04)
 * (HGlab01) Add attributes 'expiryInSeconds' and 'activated'
 * (HGlab01) Extend timeout back to 20s
 * (HGlab01) Tado° X improvements
@@ -88,9 +88,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 * (HGlab01) Bump axios to 1.7.3
 * (HGlab01) Add attribute 'language'
 * (HGlab01) Add attribute 'isHeatPumpInstalled'
-
-### 0.5.5 (2024-06-25)
-* (HGlab01) Bump axios to 1.7.2
 
 ## License
 MIT License
