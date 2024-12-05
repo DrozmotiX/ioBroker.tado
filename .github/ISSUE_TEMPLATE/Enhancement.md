@@ -16,4 +16,5 @@ A clear description of the wanted functionality
 Please add some additional information why this Enhancement should be integrated
 
 **Additional context**  
-Add any other context about the problem here.
+Add any other context about the problem here.  
+Which Tado version is in use? V2 or V3(+) or Tado X
