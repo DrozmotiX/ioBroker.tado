@@ -31,6 +31,7 @@ If applicable, add screenshots and logfiles to help explain your problem.
  - JS-Controller version: <js-controller-version> <!-- determine this with `iobroker -v` on the console -->
  - Node version: <node-version> <!-- determine this with `node -v` on the console -->
  - Operating system: <os-name>
+ - Tado: V2 or V3(+) or Tado X
 
 **Additional context**  
 Add any other context about the problem here.
