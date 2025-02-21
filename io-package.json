@@ -132,6 +132,8 @@
     "Password"
   ],
   "native": {
+    "Username": "",
+    "Password": "",
     "intervall": 30
   },
   "objects": [],
