@@ -1,4 +1,10 @@
 # Older changes
+## 0.5.6 (2024-08-06)
+* (HGlab01) Improve AccessToken Management
+* (HGlab01) Bump axios to 1.7.3
+* (HGlab01) Add attribute 'language'
+* (HGlab01) Add attribute 'isHeatPumpInstalled'
+
 ## 0.5.5 (2024-06-25)
 * (HGlab01) Bump axios to 1.7.2
 
