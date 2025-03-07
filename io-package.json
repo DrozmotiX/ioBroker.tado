@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.6.1",
+    "version": "0.6.2-alpha.0",
     "news": {
+      "0.6.2-alpha.0": {
+        "en": "Bump axios to 1.8.1\nImprove error messages for Sentry\nAdd attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'",
+        "de": "Bump axios zu 1.8.1\nFehlermeldungen für Sentry verbessern\nAttribute hinzufügen 'tariffLowPriceAlert' und 'tariffHighPriceAlert '",
+        "ru": "Аксиос удара до 1,8.1\nУлучшение сообщений об ошибках для Sentry\nДобавить атрибуты «tariffLowPriceAlert» и «tariffHighPriceAlert» \"",
+        "pt": "Bump axios para 1.8.1\nMelhore as mensagens de erro para Sentry\nAdicionar atributos 'tariffLowPriceAlert' e 'tariffHighPriceAlert '",
+        "nl": "Bump axios tot 1.8.1\nFoutmeldingen voor Sentry verbeteren\nVoeg attributen toe 'tariefLowPriceAlert' en 'tariefHighPriceAlert' '",
+        "fr": "Axios bouffés à 1.8.1\nAméliorer les messages d'erreur pour Sentry\nAjouter les attributs 'tarif bas prixAlert' et 'tarif haut prixAlert '",
+        "it": "Assio di bump a 1.8.1\nMigliorare i messaggi di errore per Sentry\nAggiungi attributi 'tariffLowPriceAlert' e 'tariffHighPriceAlert '",
+        "es": "Axios de bomba a 1.8.1\nMejorar los mensajes de error para Sentry\nAñadir atributos 'tariffLowPriceAlert' y 'tariffHighPriceAlert '",
+        "pl": "Aksykony Bump do 1.8.1\nPoprawę komunikatów błędów dla Sentry\nDodaj atrybuty 'tariffLowPriceAlert' i 'tariffHighPriceAlert' '",
+        "uk": "Бампер аксіос до 1.8.1\nПоліпшити повідомлення про помилки для Sentry\nДодати атрибути 'tariffLowPriceAlert' і 'tariffHighPriceAlert Р",
+        "zh-cn": "横轴改为1.8.1\n改进哨兵的错误消息\n添加属性“ streamLowPriceAlert” 和“ stream HighPriceAlert”  '"
+      },
       "0.6.1": {
         "en": "Add attributes 'expiryInSeconds' and 'activated'\nExtend timeout back to 20s\nTado° X improvements",
         "de": "Attribute hinzufügen 'expiryInSeconds' und 'aktiviert '\nAusdauer bis 20er Jahre\nTado° X Verbesserungen",
