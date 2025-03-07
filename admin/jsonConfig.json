@@ -1,45 +1,80 @@
 {
-  "type": "panel",
-  "i18n": true,
+  "i18n": false,
+  "type": "tabs",
+  "tabsStyle": {
+    "width": "calc(100% - 100px)"
+  },
   "items": {
-    "_basicSettings": {
-      "newLine": true,
-      "type": "header",
-      "text": "Please provide your credentials",
-      "size": 3
+    "General": {
+      "type": "panel",
+      "label": "General",
+      "items": {
+        "_Header": {
+          "newLine": true,
+          "type": "header",
+          "text": "Please provide your credentials",
+          "size": 3
+        },
+        "Username": {
+          "newLine": true,
+          "type": "text",
+          "label": "Username",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
+        },
+        "Password": {
+          "repeat": false,
+          "visible": false,
+          "type": "password",
+          "label": "Password",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
+        },
+        "intervall": {
+          "type": "number",
+          "label": "Interval in seconds",
+          "min": 30,
+          "max": 3600,
+          "step": 5,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
+        }
+      }
     },
-    "Username": {
-      "newLine": true,
-      "type": "text",
-      "label": "Username",
-      "xs": 12,
-      "sm": 12,
-      "md": 6,
-      "lg": 4,
-      "xl": 4
-    },
-    "Password": {
-      "repeat": false,
-      "visible": false,
-      "type": "password",
-      "label": "Password",
-      "xs": 12,
-      "sm": 12,
-      "md": 6,
-      "lg": 4,
-      "xl": 4
-    },
-    "intervall": {
-      "type": "number",
-      "label": "Interval in seconds",
-      "min": 30,
-      "max": 3600,
-      "step": 5,
-      "xs": 12,
-      "sm": 12,
-      "md": 6,
-      "lg": 4,
-      "xl": 4
+    "neu": {
+      "type": "panel",
+      "label": "neu",
+      "items": {
+        "_auth1": {
+          "newLine": true,
+          "variant": "contained",
+          "color": "primary",
+          "type": "sendTo",
+          "label": "Auth Step1",
+          "icon": "info",
+          "command": "auth1",
+          "jsonData": "{ \"clientId\": \"aaa\"}"
+        },
+        "_auth2": {
+          "newLine": true,
+          "variant": "contained",
+          "color": "primary",
+          "type": "sendTo",
+          "label": "Auth Step2",
+          "icon": "info",
+          "command": "auth2",
+          "jsonData": "{ \"clientId\": \"aaa\"}"
+        }
+      }
     }
   }
 }

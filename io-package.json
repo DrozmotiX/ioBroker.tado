@@ -97,6 +97,7 @@
     "readme": "https://github.com/DrozmotiX/ioBroker.tado/blob/main/README.md",
     "loglevel": "info",
     "tier": 3,
+    "messagebox": true,
     "mode": "daemon",
     "type": "climate-control",
     "jsonConfig": true,
@@ -158,6 +159,17 @@
         "def": false
       },
       "native": {}
+    },
+    {
+      "_id": "_config",
+      "type": "config",
+      "common": {
+        "name": "Token data for Tado",
+        "expert": true
+      },
+      "native": {
+        "tokenSet": null
+      }
     }
   ]
 }
