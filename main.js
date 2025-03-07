@@ -2,7 +2,6 @@
 
 const utils = require('@iobroker/adapter-core');
 const EXPIRATION_WINDOW_IN_SECONDS = 10;
-const EXPIRATION_LOGIN_WINDOW_IN_SECONDS = 10;
 
 const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
@@ -34,6 +33,7 @@ let axiosInstance = axios.create({
     origin: tado_app_url
 });
 
+// @ts-ignore
 const axiosInstanceToken = axios.create({
     baseURL: 'https://login.tado.com/'
 });
@@ -136,6 +136,7 @@ class Tado extends utils.Adapter {
                             that.log.info('TOKEN is ' + JSON.stringify(that.accessToken));
                             await that.updateTokenSetForAdapter(that.accessToken);
                             msg.callback && that.sendTo(msg.from, msg.command, { error: `Done!` }, msg.callback);
+                            await that.DoConnect();
                         })
                         .catch(error => {
                             this.log.info(error);
@@ -1164,7 +1165,7 @@ class Tado extends utils.Adapter {
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
-    async DoData_Refresh(user, pass) {
+    async DoData_Refresh() {
         let now = new Date().getTime();
         let step = 'start';
         let outdated = now - this.lastupdate > ONEHOUR;
@@ -1191,7 +1192,6 @@ class Tado extends utils.Adapter {
             }
 
             // Get Basic data needed for all other querys and store to global variable
-            this.log.info('getMe_data');
             step = 'getMet_data';
             if (this.getMe_data === null) {
                 this.getMe_data = await this.getMe();
@@ -1257,7 +1257,6 @@ class Tado extends utils.Adapter {
                 clearTimeout(polling);
                 polling = null;
             }
-            this.log.info('Timer erstellen');
             // timer
             polling = setTimeout(() => {
                 this.DoConnect();
@@ -1303,7 +1302,7 @@ class Tado extends utils.Adapter {
             // Check if credentials are not empty
             if (user !== '' && pass !== '') {
                 try {
-                    await this.DoData_Refresh(user, pass);
+                    await this.DoData_Refresh();
                 } catch (error) {
                     this.log.error(String(error));
                 }
@@ -1586,7 +1585,7 @@ class Tado extends utils.Adapter {
     }
 
     async updateTokenSetForAdapter(tokenSet) {
-        this.log.info('Daikin token updated in adapter configuration ...');
+        this.log.info('Tado token updated in adapter configuration ...');
         await this.extendObject(`_config`, {
             native: {
                 tokenSet

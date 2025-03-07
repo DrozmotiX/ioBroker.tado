@@ -5,38 +5,18 @@
     "width": "calc(100% - 100px)"
   },
   "items": {
-    "General": {
+    "Authorization": {
       "type": "panel",
-      "label": "General",
+      "label": "Authorization",
       "items": {
-        "_Header": {
+        "_intervall": {
           "newLine": true,
           "type": "header",
-          "text": "Please provide your credentials",
+          "text": "Set the polling interval",
           "size": 3
         },
-        "Username": {
-          "newLine": true,
-          "type": "text",
-          "label": "Username",
-          "xs": 12,
-          "sm": 12,
-          "md": 6,
-          "lg": 4,
-          "xl": 4
-        },
-        "Password": {
-          "repeat": false,
-          "visible": false,
-          "type": "password",
-          "label": "Password",
-          "xs": 12,
-          "sm": 12,
-          "md": 6,
-          "lg": 4,
-          "xl": 4
-        },
         "intervall": {
+          "newLine": true,
           "type": "number",
           "label": "Interval in seconds",
           "min": 30,
@@ -47,32 +27,52 @@
           "md": 6,
           "lg": 4,
           "xl": 4
-        }
-      }
-    },
-    "neu": {
-      "type": "panel",
-      "label": "neu",
-      "items": {
+        },
+        "auth": {
+          "newLine": true,
+          "type": "header",
+          "text": "Now it is time to get the authentification running",
+          "size": 3
+        },
+        "auth_text1": {
+          "newLine": true,
+          "type": "staticText",
+          "text": "Start with step 1 and proceed in browser all steps until success notification. Don't be irritated about PopUp-Titel \"Error\"!"
+        },
         "_auth1": {
           "newLine": true,
           "variant": "contained",
           "color": "primary",
           "type": "sendTo",
-          "label": "Auth Step1",
+          "label": "Step 1",
           "icon": "info",
           "command": "auth1",
-          "jsonData": "{ \"clientId\": \"aaa\"}"
+          "jsonData": "{ \"clientId\": \"aaa\"}",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
+        },
+        "auth_text2": {
+          "newLine": true,
+          "type": "staticText",
+          "text": "If step 1 was successfull just click Step 2 - thats it!"
         },
         "_auth2": {
           "newLine": true,
           "variant": "contained",
           "color": "primary",
           "type": "sendTo",
-          "label": "Auth Step2",
+          "label": "Step 2",
           "icon": "info",
           "command": "auth2",
-          "jsonData": "{ \"clientId\": \"aaa\"}"
+          "jsonData": "{ \"clientId\": \"aaa\"}",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
         }
       }
     }

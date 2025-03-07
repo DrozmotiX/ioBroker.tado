@@ -65,7 +65,8 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.6.2-alpha.0 (2025-03-06)
+### 0.6.2-alpha.1 (2025-03-07)
+* (HGlab01) new Authentification method (#954)
 * (HGlab01) Bump axios to 1.8.1
 * (HGlab01) Improve error messages for Sentry
 * (HGlab01) Add attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'
