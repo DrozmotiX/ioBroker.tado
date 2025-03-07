@@ -65,6 +65,11 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.6.2-alpha.0 (2025-03-06)
+* (HGlab01) Bump axios to 1.8.1
+* (HGlab01) Improve error messages for Sentry
+* (HGlab01) Add attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'
+
 ### 0.6.1 (2024-11-04)
 * (HGlab01) Add attributes 'expiryInSeconds' and 'activated'
 * (HGlab01) Extend timeout back to 20s
@@ -82,12 +87,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 * (HGlab01) Add attribute 'supportsFlowTemperatureOptimization'
 * (HGlab01) Bump axios to 1.7.7
 * (HGlab01) EnergyIQ meter-readings can be uploaded
-
-### 0.5.6 (2024-08-06)
-* (HGlab01) Improve AccessToken Management
-* (HGlab01) Bump axios to 1.7.3
-* (HGlab01) Add attribute 'language'
-* (HGlab01) Add attribute 'isHeatPumpInstalled'
 
 ## License
 MIT License

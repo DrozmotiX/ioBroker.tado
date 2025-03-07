@@ -320,7 +320,7 @@ class Tado extends utils.Adapter {
                             }
                             let regEx = /^\d{4}-\d{2}-\d{2}$/;
                             if (!date.match(regEx)) {
-                                this.log.error('dmeterReadings.date hat other format thanYYYY-MM-DD');
+                                this.log.error('meterReadings.date has other format than YYYY-MM-DD');
                                 return;
                             }
                             await this.setReading(homeId, meterReadings);
@@ -650,7 +650,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at clearZoneOverlay(): '${error}'`);
             console.error(`Issue at clearZoneOverlay(): '${error}'`);
-            this.errorHandling(error);
+            this.errorHandling(`'${error}' at clearZoneOverlay()`);
         }
     }
 
@@ -1629,10 +1629,10 @@ class Tado extends utils.Adapter {
                     this.accessToken = await asyncCallWithTimeout(timeoutFunc, 10000);
                     this.log.debug('Login successful');
                 }
-                catch (err) {
-                    this.log.error('Error: ' + err);
-                    console.error(err);
-                    throw (err);
+                catch (error) {
+                    this.log.error(`Issue at login(): ${error}`);
+                    console.error(`Issue at login(): ${error}`);
+                    throw (error);
                 }
             };
             await runIt();
@@ -1719,10 +1719,10 @@ class Tado extends utils.Adapter {
                 }
             });
         } catch (error) {
-            //this.log.error(`Issue at apiCall for ''${method} ${url}': ${error}`);
-            console.error(`Issue at apiCall: ${error}`);
-            this.errorHandling(error);
-            throw new Error((`Issue at apiCall for ''${method} ${url}': ${error}`));
+            let eMsg = `Issue at apiCall for '${method} ${url}': ${error}`;
+            this.log.error(eMsg);
+            console.error(eMsg);
+            throw new Error((`${error} at apiCall for '${method} ${url}'`));
         }
         return promise;
     }
@@ -1745,7 +1745,7 @@ class Tado extends utils.Adapter {
      */
     async errorHandling(errorObject) {
         try {
-            if (errorObject.message && (errorObject.message.includes('Login failed!') ||
+            /*if (errorObject.message && (errorObject.message.includes('Login failed!') ||
                 errorObject.message.includes('conflict occurred while trying to update entity null') ||
                 errorObject.message.includes('ECONNRESET') ||
                 errorObject.message.includes('socket hang up') ||
@@ -1753,7 +1753,7 @@ class Tado extends utils.Adapter {
                 errorObject.message.includes('ETIMEDOUT') ||
                 errorObject.message.includes('EAI_AGAIN') ||
                 errorObject.message.includes('timeout of 20000ms exceeded') ||
-                errorObject.message.includes('No internet connection detected!'))) return;
+                errorObject.message.includes('No internet connection detected!'))) return;*/
             if (this.log.level != 'debug' && this.log.level != 'silly') {
                 if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                     const sentryInstance = this.getPluginInstance('sentry');
