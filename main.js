@@ -67,10 +67,10 @@ class Tado extends utils.Adapter {
         this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 
         const tokenObject = await this.getObjectAsync('_config');
-        this.log.info('tokenObject from config is' + JSON.stringify(tokenObject));
+        this.log.debug('tokenObject from config is' + JSON.stringify(tokenObject));
         console.log('tokenObject from config is' + JSON.stringify(tokenObject));
         this.accessToken = tokenObject && tokenObject.native && tokenObject.native.tokenSet ? tokenObject.native.tokenSet : null;
-        this.log.info('accessToken is ' + JSON.stringify(this.accessToken));
+        this.log.debug('accessToken is ' + JSON.stringify(this.accessToken));
         console.log('accessToken is ' + JSON.stringify(this.accessToken));
         if (this.accessToken == null) {
             this.accessToken = {};
@@ -85,13 +85,13 @@ class Tado extends utils.Adapter {
         if (typeof msg === 'object' && msg.message) {
             switch (msg.command) {
                 case 'auth1': {
-                    this.log.info(`Received OAuth start message`);
+                    this.log.debug(`Received OAuth start message`);
                     console.log(`Received OAuth start message`);
                     let that = this;
                     axiosInstanceToken.post(`https://login.tado.com/oauth2/device_authorize?client_id=${client_id}&scope=offline_access`, {})
                         .then(function (responseRaw) {
                             let response = responseRaw.data;
-                            that.log.info('Response oAuth Step 1 is ' + JSON.stringify(response));
+                            that.log.debug('Response oAuth Step 1 is ' + JSON.stringify(response));
                             that.device_code = response.device_code;
                             let uri = response.verification_uri_complete;
                             msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${uri}` }, msg.callback);
@@ -104,14 +104,14 @@ class Tado extends utils.Adapter {
                     break;
                 }
                 case 'auth2': {
-                    this.log.info(`Received OAuth step 2 message`);
+                    this.log.debug(`Received OAuth step 2 message`);
                     console.log(`Received OAuth step 2 message`);
                     let that = this;
                     const uri = `https://login.tado.com/oauth2/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
                     this.log.debug('OAuth Step 2 Url is ' + uri);
                     axiosInstanceToken.post(uri, {})
                         .then(async function (responseRaw) {
-                            that.log.info('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
+                            that.log.debug('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
                             console.log('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
                             await that.manageNewToken(responseRaw.data);
                             msg.callback && that.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
@@ -1529,13 +1529,13 @@ class Tado extends utils.Adapter {
     }
 
     async manageNewToken(responseData) {
-        this.log.info('Response data from refresh token is ' + JSON.stringify(responseData));
+        this.log.debug('Response data from refresh token is ' + JSON.stringify(responseData));
         console.log('Response data from refresh token is ' + JSON.stringify(responseData));
         this.accessToken.token.access_token = responseData.access_token;
         let expireMS = responseData.expires_in * 1000 + new Date().getTime();
         this.accessToken.token.expires_at = new Date(expireMS);
         this.accessToken.token.refresh_token = responseData.refresh_token;
-        this.log.info('New accessToken is ' + JSON.stringify(this.accessToken));
+        this.log.debug('New accessToken is ' + JSON.stringify(this.accessToken));
         console.log('New accessToken is ' + JSON.stringify(this.accessToken));
         await this.updateTokenSetForAdapter(this.accessToken);
         return (this.accessToken);
