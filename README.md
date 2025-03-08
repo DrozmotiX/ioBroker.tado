@@ -11,7 +11,7 @@
 [![NPM](https://nodei.co/npm/iobroker.tado.png?downloads=true)](https://nodei.co/npm/iobroker.tado/)
 
 ## Login no longer working?
-Due to a new authorization method from Tado, which is mandatory by March 21st (see https://github.com/DrozmotiX/ioBroker.tado/issues/954), the authentification method was switched from UserId and Password to Token. Therefore you have to upgrade to version 0.7.0 or later! After the update go to the adapter's config page and follow the process with the Buttons "step 1" and "step 2".
+Due to a new authorization method from Tado, which is mandatory by March 21st (see https://github.com/DrozmotiX/ioBroker.tado/issues/954), the authentification method was switched from UserId and Password to Token. Therefore you have to upgrade to version 0.7.0 or later! After the update go to the adapter's config page and follow the process with the Buttons "Step 1" and "Step 2".
 
 ## tado adapter for ioBroker
 Tado° (https://www.tado.com) is the expert in smart heating and energy management for your home, designed and developed in Germany. Save energy and cut costs for good with us – enjoy a cosy and sustainable home.
