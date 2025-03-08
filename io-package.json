@@ -151,17 +151,10 @@
       }
     }
   },
-  "encryptedNative": [
-    "Password"
-  ],
-  "protectedNative": [
-    "Username",
-    "Password"
-  ],
+  "encryptedNative": [],
+  "protectedNative": [],
   "native": {
-    "Username": "",
-    "Password": "",
-    "intervall": 30
+    "intervall": 60
   },
   "objects": [],
   "instanceObjects": [
@@ -195,7 +188,13 @@
       },
       "native": {
         "tokenSet": null
-      }
+      },
+      "encryptedNative": [
+        "tokenset"
+      ],
+      "protectedNative": [
+        "tokenset"
+      ]
     }
   ]
 }
