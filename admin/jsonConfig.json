@@ -37,7 +37,12 @@
         "auth_text1": {
           "newLine": true,
           "type": "staticText",
-          "text": "Start with step 1 and proceed in browser all steps until success notification. Don't be irritated about PopUp-Titel \"Error\"!"
+          "text": "Start with step 1 and proceed in browser all steps until success notification. Don't be irritated about PopUp-Titel \"Error\"!",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "_auth1": {
           "newLine": true,
@@ -51,13 +56,18 @@
           "xs": 12,
           "sm": 12,
           "md": 6,
-          "lg": 4,
+          "lg": 6,
           "xl": 4
         },
         "auth_text2": {
           "newLine": true,
           "type": "staticText",
-          "text": "If step 1 was successfull just click Step 2 - thats it!"
+          "text": "If step 1 was successfull just click Step 2 - thats it!",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         },
         "_auth2": {
           "newLine": true,
@@ -71,7 +81,7 @@
           "xs": 12,
           "sm": 12,
           "md": 6,
-          "lg": 4,
+          "lg": 6,
           "xl": 4
         }
       }
