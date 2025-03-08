@@ -10,6 +10,9 @@
 
 [![NPM](https://nodei.co/npm/iobroker.tado.png?downloads=true)](https://nodei.co/npm/iobroker.tado/)
 
+## Login no longer working?
+Due to a new authorization method from Tado, which is mandatory by March 21st (see #954), the authentification method was switched from UserId and Password to Token. Therefore you have to upgrade to version 0.7.0 or later! After the update go to the adapter's config page and follow the process with the Buttons "step 1" and "step 2".
+
 ## tado adapter for ioBroker
 Tado° (https://www.tado.com) is the expert in smart heating and energy management for your home, designed and developed in Germany. Save energy and cut costs for good with us – enjoy a cosy and sustainable home.
 
@@ -65,8 +68,8 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.6.2-alpha.1 (2025-03-07)
-* (HGlab01) new Authentification method (#954)
+### __WORK IN PROGRESS__
+* (HGlab01) !!!BREAKING CHANGE!!! new Authentification method (#954)
 * (HGlab01) Bump axios to 1.8.1
 * (HGlab01) Improve error messages for Sentry
 * (HGlab01) Add attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'

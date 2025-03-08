@@ -7,16 +7,6 @@ const tado_url = 'https://my.tado.com';
 const tado_app_url = `https://app.tado.com/`;
 const tadoX_url = `https://hops.tado.com`;
 const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
-/*let tado_config = {
-    client: {
-        id: 'tado-web-app',
-        secret: 'jNQ4HugiN6oIi_GlcqzyRHcN7NPM1qXsSpJ0Rm4neeZHYUIsw63bBuKE-DzRLfR5',
-    },
-    auth: {
-        tokenHost: tado_auth_url,
-    }
-};*/
-//const { ResourceOwnerPassword } = require('simple-oauth2');
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
@@ -1520,7 +1510,6 @@ class Tado extends utils.Adapter {
         const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
         let that = this;
         this.log.debug('Need to refresh token is ' + shouldRefresh + '  as expire time is ' + expires_at);
-        console.log('Need to refresh token is ' + shouldRefresh + '  as expire time is ' + expires_at);
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
