@@ -7,6 +7,7 @@ const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
 const tado_app_url = `https://app.tado.com/`;
 const tadoX_url = `https://hops.tado.com`;
+const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
 let tado_config = {
     client: {
         id: 'tado-web-app',
@@ -94,52 +95,40 @@ class Tado extends utils.Adapter {
     }
 
     async onMessage(msg) {
-        this.log.info('message');
         if (typeof msg === 'object' && msg.message) {
-            this.log.debug(`Message received: ${JSON.stringify(msg)}`);
             switch (msg.command) {
                 case 'auth1': {
-                    const args = msg.message;
-                    this.log.info(`Received OAuth start message: ${JSON.stringify(args)}`);
-                    //let response = await this.apiCall(`https://login.tado.com/oauth2/device_authorize?client_id=1bb50063-6b0c-4d11-bd99-387f4a91cc46&scope=offline_access`, 'post', {});
+                    this.log.info(`Received OAuth start message`);
                     let that = this;
-                    axiosInstanceToken.post(`https://login.tado.com/oauth2/device_authorize?client_id=1bb50063-6b0c-4d11-bd99-387f4a91cc46&scope=offline_access`, {})
+                    axiosInstanceToken.post(`https://login.tado.com/oauth2/device_authorize?client_id=${client_id}&scope=offline_access`, {})
                         .then(function (responseRaw) {
                             let response = responseRaw.data;
-                            that.log.info(JSON.stringify(response));
+                            that.log.info('Response oAuth Step 1 is ' + JSON.stringify(response));
                             that.device_code = response.device_code;
                             let uri = response.verification_uri_complete;
                             msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${uri}` }, msg.callback);
                         })
                         .catch(error => {
-                            this.log.info(error);
+                            this.log.error('Error at oAuth Step 1 ' + error);
+                            this.errorHandling(error);
                         });
                     break;
                 }
                 case 'auth2': {
-                    //this.device_code = 'a5mFlWSddNNC_6vsRTk1P8w1c1yP00qyLeliPrCzdVQ';
-                    const args = msg.message;
-                    this.log.info(`Received FollowwUp message: ${JSON.stringify(args)}`);
-                    //let response = await this.apiCall(`https://login.tado.com/oauth2/token?client_id=1bb50063-6b0c-4d11-bd99-387f4a91cc46&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`, 'post', {});
+                    this.log.info(`Received OAuth step 2 message`);
                     let that = this;
-                    const uri = `https://login.tado.com/oauth2/token?client_id=1bb50063-6b0c-4d11-bd99-387f4a91cc46&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
-                    this.log.info('call ' + uri);
+                    const uri = `https://login.tado.com/oauth2/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
+                    this.log.debug('OAuth Step 2 Url is ' + uri);
                     axiosInstanceToken.post(uri, {})
                         .then(async function (responseRaw) {
-                            let response = responseRaw.data;
-                            that.log.info(JSON.stringify(response));
-                            that.accessToken.token.access_token = response.access_token;
-                            let expireMS = response.expires_in * 1000 + new Date().getTime();
-                            that.log.info(expireMS + '');
-                            that.accessToken.token.expires_at = new Date(expireMS);
-                            that.accessToken.token.refresh_token = response.refresh_token;
-                            that.log.info('TOKEN is ' + JSON.stringify(that.accessToken));
-                            await that.updateTokenSetForAdapter(that.accessToken);
+                            that.log.info('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
+                            await that.manageNewToken(responseRaw.data);
                             msg.callback && that.sendTo(msg.from, msg.command, { error: `Done!` }, msg.callback);
                             await that.DoConnect();
                         })
                         .catch(error => {
-                            this.log.info(error);
+                            this.log.error('Error at oAuth Step 2 ' + error);
+                            this.errorHandling(error);
                         });
                     break;
                 }
@@ -1557,15 +1546,15 @@ class Tado extends utils.Adapter {
         const expires_at = new Date(this.accessToken.token.expires_at);
         const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
         let that = this;
-        this.log.info('Lets refresh token ' + shouldRefresh + ' ' + this.accessToken.token.expires_at);
+        this.log.debug('Need to refresh token is ' + shouldRefresh + '  as expire time is ' + expires_at);
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
-                let uri = `https://login.tado.com/oauth2/token?client_id=1bb50063-6b0c-4d11-bd99-387f4a91cc46&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
+                let uri = `https://login.tado.com/oauth2/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.info(uri);
                 axiosInstanceToken.post(uri, {})
                     .then(async function (responseRaw) {
-                        let response = responseRaw.data;
+                        /*let response = responseRaw.data;
                         that.log.info(JSON.stringify(response));
                         that.accessToken.token.access_token = response.access_token;
                         let expireMS = response.expires_in * 1000 + new Date().getTime();
@@ -1573,8 +1562,8 @@ class Tado extends utils.Adapter {
                         that.accessToken.token.expires_at = new Date(expireMS);
                         that.accessToken.token.refresh_token = response.refresh_token;
                         that.log.info(JSON.stringify(that.accessToken));
-                        await that.updateTokenSetForAdapter(that.accessToken);
-                        resolve(that.accessToken);
+                        await that.updateTokenSetForAdapter(that.accessToken);*/
+                        resolve(await that.manageNewToken(responseRaw.data));
                     })
                     .catch(error => {
                         reject(error);
@@ -1582,6 +1571,17 @@ class Tado extends utils.Adapter {
             }
             else resolve(that.accessToken);
         });
+    }
+
+    async manageNewToken(responseData) {
+        this.log.info(JSON.stringify(responseData));
+        this.accessToken.token.access_token = responseData.access_token;
+        let expireMS = responseData.expires_in * 1000 + new Date().getTime();
+        this.accessToken.token.expires_at = new Date(expireMS);
+        this.accessToken.token.refresh_token = responseData.refresh_token;
+        this.log.info(JSON.stringify(this.accessToken));
+        await this.updateTokenSetForAdapter(this.accessToken);
+        return (this.accessToken);
     }
 
     async updateTokenSetForAdapter(tokenSet) {
