@@ -25,7 +25,7 @@ let axiosInstance = axios.create({
 
 // @ts-ignore
 const axiosInstanceToken = axios.create({
-    baseURL: 'https://login.tado.com/'
+    baseURL: 'https://login.tado.com//oauth2'
 });
 
 const ONEHOUR = 60 * 60 * 1000;
@@ -88,7 +88,7 @@ class Tado extends utils.Adapter {
                     this.log.debug(`Received OAuth start message`);
                     console.log(`Received OAuth start message`);
                     let that = this;
-                    axiosInstanceToken.post(`https://login.tado.com/oauth2/device_authorize?client_id=${client_id}&scope=offline_access`, {})
+                    axiosInstanceToken.post(`/device_authorize?client_id=${client_id}&scope=offline_access`, {})
                         .then(function (responseRaw) {
                             let response = responseRaw.data;
                             that.log.debug('Response oAuth Step 1 is ' + JSON.stringify(response));
@@ -107,7 +107,7 @@ class Tado extends utils.Adapter {
                     this.log.debug(`Received OAuth step 2 message`);
                     console.log(`Received OAuth step 2 message`);
                     let that = this;
-                    const uri = `https://login.tado.com/oauth2/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
+                    const uri = `/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
                     this.log.debug('OAuth Step 2 Url is ' + uri);
                     axiosInstanceToken.post(uri, {})
                         .then(async function (responseRaw) {
@@ -1084,6 +1084,9 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
     /* DO Methods														*/
     //////////////////////////////////////////////////////////////////////
+    /**
+     * @param {string} homeId
+     */
     async DoRoomsTadoX(homeId) {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
@@ -1125,6 +1128,10 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} homeId
+     * @param {string} roomId
+     */
     async DoRoomsStateTadoX(homeId, roomId) {
         let roomsAndDevices = await this.getroomsAndDevicesTadoX(homeId, roomId);
         if (roomsAndDevices.boostMode == null) {
@@ -1321,6 +1328,9 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 2);
     }
 
+    /**
+     * @param {string} HomeId
+     */
     async DoMobileDevices(HomeId) {
         this.MobileDevices_data = await this.getMobileDevices(HomeId);
         if (this.MobileDevices_data == null) throw new Error('MobileDevices_data is null');
@@ -1329,6 +1339,9 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
     }
 
+    /**
+     * @param {string} HomeId
+     */
     async DoZones(HomeId) {
         this.Zones_data = await this.getZones(HomeId);
         this.log.debug('Zones_data Result: ' + JSON.stringify(this.Zones_data));
@@ -1425,6 +1438,11 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 2);
     }
 
+    /**
+     * @param {string} HomeId
+     * @param {string} state_name
+     * @param {any} value
+     */
     async DoWriteJsonRespons(HomeId, state_name, value) {
         try {
             if (this.log.level == 'debug' || this.log.level == 'silly') {
@@ -1503,7 +1521,7 @@ class Tado extends utils.Adapter {
     }
 
     //////////////////////////////////////////////////////////////////////
-    /* MISC																*/
+    /* TOKEN MANAGEMENT													*/
     //////////////////////////////////////////////////////////////////////
     refreshToken() {
         const expires_at = new Date(this.accessToken.token.expires_at);
@@ -1513,7 +1531,7 @@ class Tado extends utils.Adapter {
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
-                let uri = `https://login.tado.com/oauth2/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
+                let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 console.log(`Uri for refresh token is ${uri}`);
                 this.log.debug(`Uri for refresh token is ${uri}`);
                 axiosInstanceToken.post(uri, {})
@@ -1528,6 +1546,9 @@ class Tado extends utils.Adapter {
         });
     }
 
+    /**
+     * @param {{ access_token: any; expires_in: number; refresh_token: any; }} responseData
+     */
     async manageNewToken(responseData) {
         this.log.debug('Response data from refresh token is ' + JSON.stringify(responseData));
         console.log('Response data from refresh token is ' + JSON.stringify(responseData));
@@ -1541,6 +1562,9 @@ class Tado extends utils.Adapter {
         return (this.accessToken);
     }
 
+    /**
+     * @param {any} tokenSet
+     */
     async updateTokenSetForAdapter(tokenSet) {
         await this.extendObject(`_config`, {
             native: {
@@ -1548,6 +1572,10 @@ class Tado extends utils.Adapter {
             }
         });
     }
+
+    //////////////////////////////////////////////////////////////////////
+    /* MISC																*/
+    //////////////////////////////////////////////////////////////////////
 
     /**
      * @param {number} msmin
@@ -1673,6 +1701,9 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} message
+     */
     async sendSentryWarn(message) {
         try {
             if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
@@ -1726,6 +1757,9 @@ class Tado extends utils.Adapter {
     }
 
     // Get weather information for home location
+    /**
+     * @param {string} homeId
+     */
     async getWeather(homeId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/weather`);
     }

@@ -68,7 +68,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.7.0-alpha.1 (2025-03-08)
+### 0.7.0-alpha.2 (2025-03-09)
 * (HGlab01) !!!BREAKING CHANGE!!! new Authentification method (#954)
 * (HGlab01) Bump axios to 1.8.1
 * (HGlab01) Improve error messages for Sentry
