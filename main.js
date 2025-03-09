@@ -1,23 +1,12 @@
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
-const EXPIRATION_WINDOW_IN_SECONDS = 125; //bit more than 2 minutes
-const EXPIRATION_LOGIN_WINDOW_IN_SECONDS = 10;
+const EXPIRATION_WINDOW_IN_SECONDS = 10;
 
-const tado_auth_url = 'https://auth.tado.com';
 const tado_url = 'https://my.tado.com';
 const tado_app_url = `https://app.tado.com/`;
 const tadoX_url = `https://hops.tado.com`;
-const tado_config = {
-    client: {
-        id: 'tado-web-app',
-        secret: 'wZaRN7rpjn3FoNyF5IFuxg9uMzYJcvOoQ8QWiIqS3hfk6gLhVlG57j5YNoZL2Rtc',
-    },
-    auth: {
-        tokenHost: tado_auth_url,
-    }
-};
-const { ResourceOwnerPassword } = require('simple-oauth2');
+const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
@@ -32,6 +21,11 @@ let axiosInstance = axios.create({
     httpsAgent: new https.Agent({ keepAlive: true }),
     referer: tado_app_url,
     origin: tado_app_url
+});
+
+// @ts-ignore
+const axiosInstanceToken = axios.create({
+    baseURL: 'https://login.tado.com//oauth2'
 });
 
 const ONEHOUR = 60 * 60 * 1000;
@@ -51,8 +45,8 @@ class Tado extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('unload', this.onUnload.bind(this));
+        this.on('message', this.onMessage.bind(this));
         jsonExplorer.init(this, state_attr);
-        this.accessToken = null;
         this.getMe_data = null;
         this.home_data = null;
         this.lastupdate = 0;
@@ -61,6 +55,7 @@ class Tado extends utils.Adapter {
         this.roomCapabilities = {};
         this.oldStatesVal = [];
         this.isTadoX = false;
+        this.device_code = '';
     }
 
     /**
@@ -70,9 +65,67 @@ class Tado extends utils.Adapter {
         jsonExplorer.sendVersionInfo(version);
         this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
         this.intervall_time = Math.max(30, this.config.intervall) * 1000;
-        // Reset the connection indicator during startup
+
+        const tokenObject = await this.getObjectAsync('_config');
+        this.log.debug('tokenObject from config is' + JSON.stringify(tokenObject));
+        console.log('tokenObject from config is' + JSON.stringify(tokenObject));
+        this.accessToken = tokenObject && tokenObject.native && tokenObject.native.tokenSet ? tokenObject.native.tokenSet : null;
+        this.log.debug('accessToken is ' + JSON.stringify(this.accessToken));
+        console.log('accessToken is ' + JSON.stringify(this.accessToken));
+        if (this.accessToken == null) {
+            this.accessToken = {};
+            this.accessToken.token = {};
+            this.accessToken.token.refresh_token = '';
+        }
         await jsonExplorer.stateSetCreate('info.connection', 'connection', false);
         await this.DoConnect();
+    }
+
+    async onMessage(msg) {
+        if (typeof msg === 'object' && msg.message) {
+            switch (msg.command) {
+                case 'auth1': {
+                    this.log.debug(`Received OAuth start message`);
+                    console.log(`Received OAuth start message`);
+                    let that = this;
+                    axiosInstanceToken.post(`/device_authorize?client_id=${client_id}&scope=offline_access`, {})
+                        .then(function (responseRaw) {
+                            let response = responseRaw.data;
+                            that.log.debug('Response oAuth Step 1 is ' + JSON.stringify(response));
+                            that.device_code = response.device_code;
+                            let uri = response.verification_uri_complete;
+                            msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${uri}` }, msg.callback);
+                        })
+                        .catch(error => {
+                            this.log.error('Error at oAuth Step 1 ' + error);
+                            console.error('Error at oAuth Step 1 ' + error);
+                            this.errorHandling(error);
+                        });
+                    break;
+                }
+                case 'auth2': {
+                    this.log.debug(`Received OAuth step 2 message`);
+                    console.log(`Received OAuth step 2 message`);
+                    let that = this;
+                    const uri = `/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
+                    this.log.debug('OAuth Step 2 Url is ' + uri);
+                    axiosInstanceToken.post(uri, {})
+                        .then(async function (responseRaw) {
+                            that.log.debug('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
+                            console.log('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
+                            await that.manageNewToken(responseRaw.data);
+                            msg.callback && that.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
+                            await that.DoConnect();
+                        })
+                        .catch(error => {
+                            this.log.error('Error at oAuth Step 2 ' + error);
+                            console.error('Error at oAuth Step 2 ' + error);
+                            this.errorHandling(error);
+                        });
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -1031,6 +1084,9 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
     /* DO Methods														*/
     //////////////////////////////////////////////////////////////////////
+    /**
+     * @param {string} homeId
+     */
     async DoRoomsTadoX(homeId) {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
@@ -1072,6 +1128,10 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} homeId
+     * @param {string} roomId
+     */
     async DoRoomsStateTadoX(homeId, roomId) {
         let roomsAndDevices = await this.getroomsAndDevicesTadoX(homeId, roomId);
         if (roomsAndDevices.boostMode == null) {
@@ -1093,27 +1153,14 @@ class Tado extends utils.Adapter {
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
-    async DoData_Refresh(user, pass) {
+    async DoData_Refresh() {
         let now = new Date().getTime();
         let step = 'start';
         let outdated = now - this.lastupdate > ONEHOUR;
         let conn_state = await this.getStateAsync('info.connection');
         this.log.debug('ConnState ' + JSON.stringify(conn_state));
 
-        // Get login token
         try {
-            if (!this.accessToken || !this.accessToken.token || new Date(this.accessToken.token.expires_at).getTime() - new Date().getTime() < EXPIRATION_LOGIN_WINDOW_IN_SECONDS * 1000) {
-                step = 'login';
-                await this.login(user, pass);
-                if (conn_state === undefined || conn_state === null) {
-                    return;
-                } else {
-                    if (conn_state.val === false) {
-                        this.log.info('Connected to Tado cloud, initialyzing... ');
-                    }
-                }
-            } else this.log.debug('Token still valid. No Re-Login needed ' + this.accessToken.token.expires_at);
-
             // Get Basic data needed for all other querys and store to global variable
             step = 'getMet_data';
             if (this.getMe_data === null) {
@@ -1200,11 +1247,6 @@ class Tado extends utils.Adapter {
 
     async DoConnect() {
         try {
-            // @ts-ignore
-            const user = this.config.Username;
-            // @ts-ignore
-            let pass = this.config.Password;
-
             if (await isOnline() == false) {
                 this.log.warn(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
                 // Clear running timer
@@ -1222,21 +1264,15 @@ class Tado extends utils.Adapter {
                 this.log.debug('Internet connection detected. Everything fine!');
             }
 
-            // Check if credentials are not empty
-            if (user !== '' && pass !== '') {
-                try {
-                    await this.DoData_Refresh(user, pass);
-                } catch (error) {
-                    this.log.error(String(error));
-                }
-            } else {
-                this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
-                this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+            if (!this.accessToken.token.refresh_token) {
+                this.log.error(`Adapter not running! No token configured. Go to adapter's config page and execute Step 1 and Step 2`);
+                return;
             }
+            await this.DoData_Refresh();
         }
         catch (error) {
-            this.log.error(`Issue at DoConnect(): '${error}'`);
-            console.error(`Issue at DoConnect(): '${error}'`);
+            this.log.error(`Issue at DoConnect(): ${error}`);
+            console.error(`Issue at DoConnect(): ${error}`);
             this.errorHandling(error);
         }
     }
@@ -1292,6 +1328,9 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 2);
     }
 
+    /**
+     * @param {string} HomeId
+     */
     async DoMobileDevices(HomeId) {
         this.MobileDevices_data = await this.getMobileDevices(HomeId);
         if (this.MobileDevices_data == null) throw new Error('MobileDevices_data is null');
@@ -1300,6 +1339,9 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
     }
 
+    /**
+     * @param {string} HomeId
+     */
     async DoZones(HomeId) {
         this.Zones_data = await this.getZones(HomeId);
         this.log.debug('Zones_data Result: ' + JSON.stringify(this.Zones_data));
@@ -1396,6 +1438,11 @@ class Tado extends utils.Adapter {
         jsonExplorer.traverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 2);
     }
 
+    /**
+     * @param {string} HomeId
+     * @param {string} state_name
+     * @param {any} value
+     */
     async DoWriteJsonRespons(HomeId, state_name, value) {
         try {
             if (this.log.level == 'debug' || this.log.level == 'silly') {
@@ -1474,60 +1521,61 @@ class Tado extends utils.Adapter {
     }
 
     //////////////////////////////////////////////////////////////////////
-    /* MISC																*/
+    /* TOKEN MANAGEMENT													*/
     //////////////////////////////////////////////////////////////////////
     refreshToken() {
         const expires_at = new Date(this.accessToken.token.expires_at);
-        const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000;
+        const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
+        let that = this;
+        this.log.debug('Need to refresh token is ' + shouldRefresh + '  as expire time is ' + expires_at);
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
-                this.accessToken.refresh()
-                    .then(result => {
-                        this.accessToken = result;
-                        resolve(this.accessToken);
+                let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
+                console.log(`Uri for refresh token is ${uri}`);
+                this.log.debug(`Uri for refresh token is ${uri}`);
+                axiosInstanceToken.post(uri, {})
+                    .then(async function (responseRaw) {
+                        resolve(await that.manageNewToken(responseRaw.data));
                     })
                     .catch(error => {
                         reject(error);
                     });
-            } else {
-                resolve(this.accessToken);
             }
+            else resolve(that.accessToken);
         });
     }
 
     /**
-     * @param {string} username
-     * @param {string} password
+     * @param {{ access_token: any; expires_in: number; refresh_token: any; }} responseData
      */
-    async login(username, password) {
-        const client = new ResourceOwnerPassword(tado_config);
-        const tokenParams = {
-            username: username,
-            password: password,
-            scope: 'home.user',
-        };
-        try {
-            //this.accessToken = await client.getToken(tokenParams); //replaced by code below to manage if getToken() is not replying
-            const timeoutFunc = client.getToken(tokenParams);
-            const runIt = async () => {
-                try {
-                    this.accessToken = await asyncCallWithTimeout(timeoutFunc, 10000);
-                    this.log.debug('Login successful');
-                }
-                catch (error) {
-                    this.log.error(`Issue at login(): ${error}`);
-                    console.error(`Issue at login(): ${error}`);
-                    throw (error);
-                }
-            };
-            await runIt();
-
-
-        } catch {
-            throw new Error('Login failed! Please verify Username and Password');
-        }
+    async manageNewToken(responseData) {
+        this.log.debug('Response data from refresh token is ' + JSON.stringify(responseData));
+        console.log('Response data from refresh token is ' + JSON.stringify(responseData));
+        this.accessToken.token.access_token = responseData.access_token;
+        let expireMS = responseData.expires_in * 1000 + new Date().getTime();
+        this.accessToken.token.expires_at = new Date(expireMS);
+        this.accessToken.token.refresh_token = responseData.refresh_token;
+        this.log.debug('New accessToken is ' + JSON.stringify(this.accessToken));
+        console.log('New accessToken is ' + JSON.stringify(this.accessToken));
+        await this.updateTokenSetForAdapter(this.accessToken);
+        return (this.accessToken);
     }
+
+    /**
+     * @param {any} tokenSet
+     */
+    async updateTokenSetForAdapter(tokenSet) {
+        await this.extendObject(`_config`, {
+            native: {
+                tokenSet
+            }
+        });
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    /* MISC																*/
+    //////////////////////////////////////////////////////////////////////
 
     /**
      * @param {number} msmin
@@ -1653,6 +1701,9 @@ class Tado extends utils.Adapter {
         }
     }
 
+    /**
+     * @param {string} message
+     */
     async sendSentryWarn(message) {
         try {
             if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
@@ -1706,6 +1757,9 @@ class Tado extends utils.Adapter {
     }
 
     // Get weather information for home location
+    /**
+     * @param {string} homeId
+     */
     async getWeather(homeId) {
         return await this.apiCall(`/api/v2/homes/${homeId}/weather`);
     }
@@ -1812,7 +1866,7 @@ if (module.parent) {
     new Tado();
 }
 
-const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
+/*const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
     let timeoutHandle;
 
     const timeoutPromise = new Promise((_resolve, reject) => {
@@ -1826,4 +1880,4 @@ const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
         clearTimeout(timeoutHandle);
         return result;
     });
-};
+};*/

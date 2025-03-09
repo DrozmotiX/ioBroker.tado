@@ -1,45 +1,90 @@
 {
-  "type": "panel",
-  "i18n": true,
+  "i18n": false,
+  "type": "tabs",
+  "tabsStyle": {
+    "width": "calc(100% - 100px)"
+  },
   "items": {
-    "_basicSettings": {
-      "newLine": true,
-      "type": "header",
-      "text": "Please provide your credentials",
-      "size": 3
-    },
-    "Username": {
-      "newLine": true,
-      "type": "text",
-      "label": "Username",
-      "xs": 12,
-      "sm": 12,
-      "md": 6,
-      "lg": 4,
-      "xl": 4
-    },
-    "Password": {
-      "repeat": false,
-      "visible": false,
-      "type": "password",
-      "label": "Password",
-      "xs": 12,
-      "sm": 12,
-      "md": 6,
-      "lg": 4,
-      "xl": 4
-    },
-    "intervall": {
-      "type": "number",
-      "label": "Interval in seconds",
-      "min": 30,
-      "max": 3600,
-      "step": 5,
-      "xs": 12,
-      "sm": 12,
-      "md": 6,
-      "lg": 4,
-      "xl": 4
+    "Authorization": {
+      "type": "panel",
+      "label": "Authorization",
+      "items": {
+        "_intervall": {
+          "newLine": true,
+          "type": "header",
+          "text": "Set the polling interval",
+          "size": 3
+        },
+        "intervall": {
+          "newLine": true,
+          "type": "number",
+          "label": "Interval in seconds",
+          "min": 30,
+          "max": 3600,
+          "step": 5,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 4,
+          "xl": 4
+        },
+        "auth": {
+          "newLine": true,
+          "type": "header",
+          "text": "Now it is time to get the authentification running",
+          "size": 3
+        },
+        "auth_text1": {
+          "newLine": true,
+          "type": "staticText",
+          "text": "Start with step 1 and proceed in browser all steps until success notification. Don't be irritated about PopUp-Titel \"Error\"!",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "_auth1": {
+          "newLine": true,
+          "variant": "contained",
+          "color": "primary",
+          "type": "sendTo",
+          "label": "Step 1",
+          "icon": "info",
+          "command": "auth1",
+          "jsonData": "{ \"clientId\": \"aaa\"}",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 4
+        },
+        "auth_text2": {
+          "newLine": true,
+          "type": "staticText",
+          "text": "If step 1 was successfull just click Step 2 - thats it!",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "_auth2": {
+          "newLine": true,
+          "variant": "contained",
+          "color": "primary",
+          "type": "sendTo",
+          "label": "Step 2",
+          "icon": "info",
+          "command": "auth2",
+          "jsonData": "{ \"clientId\": \"aaa\"}",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 4
+        }
+      }
     }
   }
 }
