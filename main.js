@@ -82,7 +82,7 @@ class Tado extends utils.Adapter {
     }
 
     async onMessage(msg) {
-        if (typeof msg === 'object' && msg.message) {
+        if (typeof msg === 'object' && msg.command) {
             switch (msg.command) {
                 case 'auth1': {
                     this.log.debug(`Received OAuth start message`);
