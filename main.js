@@ -1656,7 +1656,8 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at apiCall for '${method} ${url}': ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            throw new Error((`${error} at apiCall for '${method} ${url}'`));
+            let errorMsg = `${error} at apiCall for '${method} ${url}'`;
+            throw new Error(replaceNumbers(errorMsg));
         }
         return promise;
     }
@@ -1852,6 +1853,18 @@ class Tado extends utils.Adapter {
  */
 function toBoolean(valueToBoolean) {
     return (valueToBoolean === true || valueToBoolean === 'true');
+}
+
+function replaceNumbers(inputString) {
+    // Regulärer Ausdruck, um Zahlen zu finden, die mit / oder /RU beginnen
+    // /RU wird beibehalten, da es nicht ersetzt werden soll
+    const regex = /(\/RU|\/)\d+/g;
+    const replacedString = inputString.replace(regex, (match, prefix) => {  // Ersetzungsfunktion, die für jedes übereinstimmende Muster aufgerufen wird
+        const numberPart = match.substring(prefix.length);                  // Der Präfix (/ oder /RU) wird beibehalten
+        const replacedNumberPart = numberPart.replace(/\d/g, 'x');          // Ersetzt jede Ziffer im Zahlenteil durch 'X'
+        return prefix + replacedNumberPart;                                 // Gibt den Präfix und den ersetzten Zahlenteil zurück
+    });
+    return replacedString;
 }
 
 // @ts-ignore parent is a valid property on module
