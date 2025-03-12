@@ -1586,7 +1586,6 @@ class Tado extends utils.Adapter {
         this.log.debug('Waiting time is ' + ms + 'ms');
         await jsonExplorer.sleep(ms);
         return;
-        //return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**
@@ -1850,17 +1849,20 @@ class Tado extends utils.Adapter {
 
 /**
  * @param {string | number | boolean} valueToBoolean
+ * @returns {boolean}
  */
 function toBoolean(valueToBoolean) {
     return (valueToBoolean === true || valueToBoolean === 'true');
 }
 
+/**
+ * @param {string} inputString
+ * @returns {string}
+ */
 function replaceNumbers(inputString) {
-    // Regulärer Ausdruck, um Zahlen zu finden, die mit / oder /RU beginnen
-    // /RU wird beibehalten, da es nicht ersetzt werden soll
-    const regex = /(\/RU|\/)\d+/g;
+    const regex = /(\/SU|\/RU|\/)\d+/g;                                     // Regulärer Ausdruck, um Zahlen zu finden, die mit / oder /RU oder /SU beginnen
     const replacedString = inputString.replace(regex, (match, prefix) => {  // Ersetzungsfunktion, die für jedes übereinstimmende Muster aufgerufen wird
-        const numberPart = match.substring(prefix.length);                  // Der Präfix (/ oder /RU) wird beibehalten
+        const numberPart = match.substring(prefix.length);                  // Der Präfix (/ oder /RU oder /SU) wird beibehalten
         const replacedNumberPart = numberPart.replace(/\d/g, 'x');          // Ersetzt jede Ziffer im Zahlenteil durch 'X'
         return prefix + replacedNumberPart;                                 // Gibt den Präfix und den ersetzten Zahlenteil zurück
     });
