@@ -1860,11 +1860,11 @@ function toBoolean(valueToBoolean) {
  * @returns {string}
  */
 function replaceNumbers(inputString) {
-    const regex = /(\/SU|\/RU|\/)\d+/g;                                     // Regulärer Ausdruck, um Zahlen zu finden, die mit / oder /RU oder /SU beginnen
-    const replacedString = inputString.replace(regex, (match, prefix) => {  // Ersetzungsfunktion, die für jedes übereinstimmende Muster aufgerufen wird
-        const numberPart = match.substring(prefix.length);                  // Der Präfix (/ oder /RU oder /SU) wird beibehalten
-        const replacedNumberPart = numberPart.replace(/\d/g, 'x');          // Ersetzt jede Ziffer im Zahlenteil durch 'X'
-        return prefix + replacedNumberPart;                                 // Gibt den Präfix und den ersetzten Zahlenteil zurück
+    const regex = /(\/SU|\/RU|\/)\d+/g;                                     // Regular expression to find numbers that start with / or /RU or /SU
+    const replacedString = inputString.replace(regex, (match, prefix) => {  // Replacement function called for each matching pattern
+        const numberPart = match.substring(prefix.length);                  // The prefix (/ or /RU or /SU) is retained
+        const replacedNumberPart = numberPart.replace(/\d/g, 'x');          // Replaces each digit in the number part with 'x'
+        return prefix + replacedNumberPart;                                 // Returns the prefix and the replaced number part
     });
     return replacedString;
 }
