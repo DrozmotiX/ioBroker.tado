@@ -1586,7 +1586,6 @@ class Tado extends utils.Adapter {
         this.log.debug('Waiting time is ' + ms + 'ms');
         await jsonExplorer.sleep(ms);
         return;
-        //return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**
@@ -1656,7 +1655,8 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at apiCall for '${method} ${url}': ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            throw new Error((`${error} at apiCall for '${method} ${url}'`));
+            let errorMsg = `${error} at apiCall for '${method} ${url}'`;
+            throw new Error(replaceNumbers(errorMsg));
         }
         return promise;
     }
@@ -1849,9 +1849,24 @@ class Tado extends utils.Adapter {
 
 /**
  * @param {string | number | boolean} valueToBoolean
+ * @returns {boolean}
  */
 function toBoolean(valueToBoolean) {
     return (valueToBoolean === true || valueToBoolean === 'true');
+}
+
+/**
+ * @param {string} inputString
+ * @returns {string}
+ */
+function replaceNumbers(inputString) {
+    const regex = /(\/SU|\/RU|\/)\d+/g;                                     // Regular expression to find numbers that start with / or /RU or /SU
+    const replacedString = inputString.replace(regex, (match, prefix) => {  // Replacement function called for each matching pattern
+        const numberPart = match.substring(prefix.length);                  // The prefix (/ or /RU or /SU) is retained
+        const replacedNumberPart = numberPart.replace(/\d/g, 'x');          // Replaces each digit in the number part with 'x'
+        return prefix + replacedNumberPart;                                 // Returns the prefix and the replaced number part
+    });
+    return replacedString;
 }
 
 // @ts-ignore parent is a valid property on module

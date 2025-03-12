@@ -1,4 +1,11 @@
 # Older changes
+## 0.5.7 (2024-09-30)
+* (HGlab01) Change of attribute "light" supported
+* (HGlab01) Add attribute 'connection'
+* (HGlab01) Add attribute 'supportsFlowTemperatureOptimization'
+* (HGlab01) Bump axios to 1.7.7
+* (HGlab01) EnergyIQ meter-readings can be uploaded
+
 ## 0.5.6 (2024-08-06)
 * (HGlab01) Improve AccessToken Management
 * (HGlab01) Bump axios to 1.7.3

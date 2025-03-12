@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.1",
+    "version": "0.7.2-alpha.0",
     "news": {
       "0.7.1": {
         "en": "!!!BREAKING CHANGE!!! new Authentification method (#954)\nBump axios to 1.8.2\nImprove error messages for Sentry\nAdd attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'",
