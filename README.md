@@ -68,7 +68,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.7.2-alpha.0 (2025-03-12)
+### 0.7.2 (2025-03-12)
 * (HGlab01) improve sentry logs
 
 ### 0.7.1 (2025-03-09)
