@@ -68,6 +68,9 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.7.2-alpha.0 (2025-03-12)
+* (HGlab01) improve sentry logs
+
 ### 0.7.1 (2025-03-09)
 * (HGlab01) !!!BREAKING CHANGE!!! new Authentification method (https://github.com/DrozmotiX/ioBroker.tado/issues/954)
 * (HGlab01) Bump axios to 1.8.2
@@ -84,13 +87,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 
 ### 0.5.9 (2024-10-16)
 * (HGlab01) Improve axios promise handling
-
-### 0.5.7 (2024-09-30)
-* (HGlab01) Change of attribute "light" supported
-* (HGlab01) Add attribute 'connection'
-* (HGlab01) Add attribute 'supportsFlowTemperatureOptimization'
-* (HGlab01) Bump axios to 1.7.7
-* (HGlab01) EnergyIQ meter-readings can be uploaded
 
 ## License
 MIT License

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.1",
+    "version": "0.7.2-alpha.0",
     "news": {
+      "0.7.2-alpha.0": {
+        "en": "improve sentry logs",
+        "de": "versendete protokolle verbessern",
+        "ru": "улучшение часовых бревен",
+        "pt": "melhorar registros de sentinela",
+        "nl": "verbetering van wachtwoorden",
+        "fr": "améliorer les registres des sentinelles",
+        "it": "migliorare i registri delle sentinelle",
+        "es": "mejorar los registros de centinelas",
+        "pl": "ulepszenie dzienników wartowniczych",
+        "uk": "поліпшення відправлень колод",
+        "zh-cn": "改进哨兵记录"
+      },
       "0.7.1": {
         "en": "!!!BREAKING CHANGE!!! new Authentification method (#954)\nBump axios to 1.8.2\nImprove error messages for Sentry\nAdd attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'",
         "de": "! BREAKING CHANGE!!! neue Authentisierungsmethode (#954)\nBump axios zu 1.8.2\nFehlermeldungen für Sentry verbessern\nAttribute hinzufügen 'tariffLowPriceAlert' und 'tariffHighPriceAlert '",
