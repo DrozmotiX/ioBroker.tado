@@ -68,7 +68,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.7.3 (2025-03-17)
 * (HGlab01) refactoring debug logs
 * (HGlab01) Bump axios to 1.8.3
 
@@ -88,9 +88,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 
 ### 0.6.0 (2024-10-23)
 * (HGlab01) Start supporting Tado° X
-
-### 0.5.9 (2024-10-16)
-* (HGlab01) Improve axios promise handling
 
 ## License
 MIT License

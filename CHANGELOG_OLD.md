@@ -1,4 +1,7 @@
 # Older changes
+## 0.5.9 (2024-10-16)
+* (HGlab01) Improve axios promise handling
+
 ## 0.5.7 (2024-09-30)
 * (HGlab01) Change of attribute "light" supported
 * (HGlab01) Add attribute 'connection'
