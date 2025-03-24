@@ -1,4 +1,7 @@
 # Older changes
+## 0.6.0 (2024-10-23)
+* (HGlab01) Start supporting Tado° X
+
 ## 0.5.9 (2024-10-16)
 * (HGlab01) Improve axios promise handling
 

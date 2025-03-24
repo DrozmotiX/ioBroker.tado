@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.3",
+    "version": "0.7.4",
     "news": {
+      "0.7.4": {
+        "en": "some refactorings\nBump axios to 1.8.4",
+        "de": "einige refactorings\nBump axios zu 1.8.4",
+        "ru": "некоторые рефакторинги\nАксиос удара до 1,8.4",
+        "pt": "algumas refatorações\nBump axios para 1.8.4",
+        "nl": "sommige refactorings\nBump axios naar 1.8.4",
+        "fr": "quelques refacturations\nAxios bouffés à 1.8.4",
+        "it": "alcuni refactorings\nAssio di bump a 1.8.4",
+        "es": "algunos refactorios\nAxios de bomba a 1.8.4",
+        "pl": "niektóre refakturowanie\nAksykony bumpy do 1.8.4",
+        "uk": "деякі рефакторинги\nБампер аксіос до 1.8.4",
+        "zh-cn": "一些重构内容\n横轴改为1.8.4"
+      },
       "0.7.3": {
         "en": "refactoring debug logs\nBump axios to 1.8.3",
         "de": "refactoring debug logs\nBump axios zu 1.8.3",
