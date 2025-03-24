@@ -25,7 +25,7 @@ let axiosInstance = axios.create({
 
 // @ts-ignore
 const axiosInstanceToken = axios.create({
-    baseURL: 'https://login.tado.com//oauth2'
+    baseURL: `https://login.tado.com/oauth2`
 });
 
 const ONEHOUR = 60 * 60 * 1000;
@@ -521,8 +521,8 @@ class Tado extends utils.Adapter {
 
             } else {
                 this.oldStatesVal[id] = state.val;
-                this.debugLog(`Changed value ${state.val} for ID ${id} stored`);
-                this.debugLog(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+                //this.debugLog(`Changed value ${state.val} for ID ${id} stored`);
+                //this.debugLog(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             }
         } else {
             // The state was deleted
@@ -1153,11 +1153,11 @@ class Tado extends utils.Adapter {
         let step = 'start';
         let outdated = now - this.lastupdate > ONEHOUR;
         let conn_state = await this.getStateAsync('info.connection');
-        this.debugLog('ConnState ' + JSON.stringify(conn_state));
+        if (conn_state) this.debugLog('info.connection is ' + conn_state.val);
 
         try {
             // Get Basic data needed for all other querys and store to global variable
-            step = 'getMet_data';
+            step = 'getMe_data';
             if (this.getMe_data === null) {
                 this.getMe_data = await this.getMe();
             }
@@ -1197,10 +1197,10 @@ class Tado extends utils.Adapter {
                 //set all outdated states to NULL
                 step = `Set outdated states to null`;
                 if (outdated) {
-                    this.debugLog('CheckExpire() at DoDataRefresh() if outdated started');
+                    this.debugLog(`CheckExpire() at DoDataRefresh() scenario 'outdated' started`);
                     await jsonExplorer.checkExpire(homeId + '.*');
                 } else {
-                    this.debugLog('CheckExpire() at DoDataRefresh() if not outdated started');
+                    this.debugLog(`CheckExpire() at DoDataRefresh() scenario 'not outdated' started`);
                     await jsonExplorer.checkExpire(homeId + '.Rooms.*');
                     await jsonExplorer.checkExpire(homeId + '.Weather.*');
                     await jsonExplorer.checkExpire(homeId + '.Mobile_Devices.*');
@@ -1273,12 +1273,12 @@ class Tado extends utils.Adapter {
     }
 
     /**
-     * @param {string} HomeId
+     * @param {string} homeId
      */
-    async DoHome(HomeId) {
+    async DoHome(homeId) {
         // Get additional basic data for all homes
         if (this.home_data === null) {
-            this.home_data = await this.getHome(HomeId);
+            this.home_data = await this.getHome(homeId);
         }
         this.debugLog('Home_data Result: ' + JSON.stringify(this.home_data));
         if (this.home_data.generation == 'LINE_X') {
@@ -1288,108 +1288,108 @@ class Tado extends utils.Adapter {
         else this.isTadoX = false;
         if (this.home_data == null) throw new Error('home_date is null');
         if (!this.isTadoX) this.home_data.masterswitch = '';
-        this.DoWriteJsonRespons(HomeId, 'Stage_02_HomeData', this.home_data);
-        jsonExplorer.traverseJson(this.home_data, `${HomeId}.Home`, true, true, 0);
+        this.DoWriteJsonRespons(homeId, 'Stage_02_HomeData', this.home_data);
+        jsonExplorer.traverseJson(this.home_data, `${homeId}.Home`, true, true, 0);
     }
 
     /**
-     * @param {string} HomeId
+     * @param {string} homeId
      */
-    async DoWeather(HomeId) {
-        const weather_data = await this.getWeather(HomeId);
+    async DoWeather(homeId) {
+        const weather_data = await this.getWeather(homeId);
         if (weather_data == null) throw new Error('weather_data is null');
         this.debugLog('Weather_data Result: ' + JSON.stringify(weather_data));
-        this.DoWriteJsonRespons(HomeId, 'Stage_04_Weather', weather_data);
-        jsonExplorer.traverseJson(weather_data, `${HomeId}.Weather`, true, true, 0);
+        this.DoWriteJsonRespons(homeId, 'Stage_04_Weather', weather_data);
+        jsonExplorer.traverseJson(weather_data, `${homeId}.Weather`, true, true, 0);
     }
 
     /**
-     * @param {string} HomeId
-     * @param {string} ZoneId
-     * @param {string} DeviceId
+     * @param {string} homeId
+     * @param {string} zoneId
+     * @param {string} deviceId
      * @param {object} offset
      */
-    async DoTemperatureOffset(HomeId, ZoneId, DeviceId, offset = null) {
+    async DoTemperatureOffset(homeId, zoneId, deviceId, offset = null) {
         if (offset == null) {
-            offset = await this.getTemperatureOffset(DeviceId);
+            offset = await this.getTemperatureOffset(deviceId);
         }
-        this.debugLog(`Offset Result for DeviceID '${DeviceId}': ${JSON.stringify(offset)}`);
+        this.debugLog(`Offset Result for DeviceID '${deviceId}': ${JSON.stringify(offset)}`);
         if (offset == null) throw new Error('offset is null');
-        this.DoWriteJsonRespons(HomeId, `Stage_12_Offset_${HomeId}`, offset);
+        this.DoWriteJsonRespons(homeId, `Stage_12_Offset_${homeId}`, offset);
         if (offset.celsius != undefined) offset.offsetCelsius = offset.celsius;
         if (offset.fahrenheit != undefined) offset.offsetFahrenheit = offset.fahrenheit;
         delete offset.celsius;
         delete offset.fahrenheit;
-        jsonExplorer.traverseJson(offset, `${HomeId}.Rooms.${ZoneId}.devices.${DeviceId}.offset`, true, true, 2);
+        jsonExplorer.traverseJson(offset, `${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset`, true, true, 2);
     }
 
     /**
-     * @param {string} HomeId
+     * @param {string} homeId
      */
-    async DoMobileDevices(HomeId) {
-        this.MobileDevices_data = await this.getMobileDevices(HomeId);
+    async DoMobileDevices(homeId) {
+        this.MobileDevices_data = await this.getMobileDevices(homeId);
         if (this.MobileDevices_data == null) throw new Error('MobileDevices_data is null');
         this.debugLog('MobileDevices_data Result: ' + JSON.stringify(this.MobileDevices_data));
-        this.DoWriteJsonRespons(HomeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
-        jsonExplorer.traverseJson(this.MobileDevices_data, `${HomeId}.Mobile_Devices`, true, true, 0);
+        this.DoWriteJsonRespons(homeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
+        jsonExplorer.traverseJson(this.MobileDevices_data, `${homeId}.Mobile_Devices`, true, true, 0);
     }
 
     /**
-     * @param {string} HomeId
+     * @param {string} homeId
      */
-    async DoZones(HomeId) {
-        this.Zones_data = await this.getZones(HomeId);
-        this.debugLog('Zones_data Result: ' + JSON.stringify(this.Zones_data));
-        if (this.Zones_data == null) throw new Error('Zones_data is null');
-        this.DoWriteJsonRespons(HomeId, 'Stage_08_ZonesData', this.Zones_data);
+    async DoZones(homeId) {
+        let zones_data = await this.getZones(homeId);
+        this.debugLog('Zones_data Result: ' + JSON.stringify(zones_data));
+        if (zones_data == null) throw new Error('Zones_data is null');
+        this.DoWriteJsonRespons(homeId, 'Stage_08_ZonesData', zones_data);
 
         //Search for DeviceIDs to get Offset
-        for (const j in this.Zones_data) {
-            for (const k in this.Zones_data[j]) {
-                for (const l in this.Zones_data[j][k]) {
-                    let ZoneId = this.Zones_data[j].id;
-                    let DeviceId = this.Zones_data[j][k][l].serialNo;
-                    if (DeviceId != undefined) {
-                        this.debugLog('DeviceID for offset found: ' + JSON.stringify(this.Zones_data[j][k][l].serialNo));
-                        this.Zones_data[j][k][l].id = this.Zones_data[j][k][l].serialNo;
-                        if (this.Zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
-                            await this.DoTemperatureOffset(HomeId, ZoneId, DeviceId);
+        for (const j in zones_data) {
+            for (const k in zones_data[j]) {
+                for (const l in zones_data[j][k]) {
+                    let zoneId = zones_data[j].id;
+                    let deviceId = zones_data[j][k][l].serialNo;
+                    if (deviceId != undefined) {
+                        this.debugLog('DeviceID for offset found: ' + JSON.stringify(zones_data[j][k][l].serialNo));
+                        zones_data[j][k][l].id = zones_data[j][k][l].serialNo;
+                        if (zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
+                            await this.DoTemperatureOffset(homeId, zoneId, deviceId);
                         }
                     }
                 }
             }
             // Change `enabled` to `openWindowDetectionEnabled`
-            this.Zones_data[j].openWindowDetection.openWindowDetectionEnabled = this.Zones_data[j].openWindowDetection.enabled;
-            delete this.Zones_data[j].openWindowDetection.enabled;
+            zones_data[j].openWindowDetection.openWindowDetectionEnabled = zones_data[j].openWindowDetection.enabled;
+            delete zones_data[j].openWindowDetection.enabled;
         }
 
-        jsonExplorer.traverseJson(this.Zones_data, `${HomeId}.Rooms`, true, true, 0);
+        jsonExplorer.traverseJson(zones_data, `${homeId}.Rooms`, true, true, 0);
 
-        for (const i in this.Zones_data) {
-            let zoneId = this.Zones_data[i].id;
-            await this.DoZoneStates(HomeId, zoneId);
-            await this.DoCapabilities(HomeId, zoneId);
-            await this.DoAwayConfiguration(HomeId, zoneId);
-            await this.DoTimeTables(HomeId, zoneId);
+        for (const i in zones_data) {
+            let zoneId = zones_data[i].id;
+            await this.DoZoneStates(homeId, zoneId);
+            await this.DoCapabilities(homeId, zoneId);
+            await this.DoAwayConfiguration(homeId, zoneId);
+            await this.DoTimeTables(homeId, zoneId);
         }
     }
 
     /**
-     * @param {string} HomeId
-     * @param {string} ZoneId
+     * @param {string} homeId
+     * @param {string} zoneId
      */
-    async DoZoneStates(HomeId, ZoneId) {
-        let ZonesState_data = await this.getZoneState(HomeId, ZoneId);
+    async DoZoneStates(homeId, zoneId) {
+        let ZonesState_data = await this.getZoneState(homeId, zoneId);
         if (ZonesState_data == null) throw new Error('ZonesState_data is null');
-        this.debugLog(`ZoneStates_data result for room '${ZoneId}' is ${JSON.stringify(ZonesState_data)}`);
+        this.debugLog(`ZoneStates_data result for room '${zoneId}' is ${JSON.stringify(ZonesState_data)}`);
         if (ZonesState_data.setting.temperature == null) {
             ZonesState_data.setting.temperature = {};
             ZonesState_data.setting.temperature.celsius = null;
         }
-        this.DoWriteJsonRespons(HomeId, 'Stage_09_ZoneStates_data_' + ZoneId, ZonesState_data);
+        this.DoWriteJsonRespons(homeId, 'Stage_09_ZoneStates_data_' + zoneId, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
         ZonesState_data.activateOpenWindow = false;
-        jsonExplorer.traverseJson(ZonesState_data, HomeId + '.Rooms.' + ZoneId, true, true, 2);
+        jsonExplorer.traverseJson(ZonesState_data, homeId + '.Rooms.' + zoneId, true, true, 2);
     }
 
     /**
@@ -1408,50 +1408,54 @@ class Tado extends utils.Adapter {
     }
 
     /**
-     * @param {string} HomeId
-     * @param {string} ZoneId
-     * @param {object} TimeTables_data
+     * @param {string} homeId
+     * @param {string} zoneId
+     * @param {object} timeTablesData
      */
-    async DoTimeTables(HomeId, ZoneId, TimeTables_data = null) {
-        if (TimeTables_data == null) {
-            TimeTables_data = await this.getTimeTables(HomeId, ZoneId);
+    async DoTimeTables(homeId, zoneId, timeTablesData = null) {
+        if (timeTablesData == null) {
+            timeTablesData = await this.getTimeTables(homeId, zoneId);
         }
-        if (TimeTables_data == null) throw new Error('TimeTables_data is null');
-        TimeTables_data.tt_id = TimeTables_data.id;
-        delete TimeTables_data.id;
-        this.debugLog('ZoneOverlay_data Result: ' + JSON.stringify(TimeTables_data));
-        this.DoWriteJsonRespons(HomeId, 'Stage_13_TimeTables_' + ZoneId, TimeTables_data);
-        this.debugLog('Timetable for room ' + ZoneId + ' is ' + JSON.stringify(TimeTables_data));
-        jsonExplorer.traverseJson(TimeTables_data, HomeId + '.Rooms.' + ZoneId + '.timeTables', true, true, 2);
-    }
-
-    async DoAwayConfiguration(HomeId, ZoneId) {
-        const AwayConfiguration_data = await this.getAwayConfiguration(HomeId, ZoneId);
-        if (AwayConfiguration_data == null) throw new Error('AwayConfiguration_data is null');
-        this.debugLog('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
-        this.DoWriteJsonRespons(HomeId, 'Stage_10_AwayConfiguration_' + ZoneId, AwayConfiguration_data);
-        jsonExplorer.traverseJson(AwayConfiguration_data, HomeId + '.Rooms.' + ZoneId + '.awayConfig', true, true, 2);
+        if (timeTablesData == null) throw new Error('TimeTables_data is null');
+        timeTablesData.tt_id = timeTablesData.id;
+        delete timeTablesData.id;
+        this.debugLog('ZoneOverlay_data Result: ' + JSON.stringify(timeTablesData));
+        this.DoWriteJsonRespons(homeId, 'Stage_13_TimeTables_' + zoneId, timeTablesData);
+        this.debugLog('Timetable for room ' + zoneId + ' is ' + JSON.stringify(timeTablesData));
+        jsonExplorer.traverseJson(timeTablesData, homeId + '.Rooms.' + zoneId + '.timeTables', true, true, 2);
     }
 
     /**
-     * @param {string} HomeId
+     * @param {string} homeId
+     * @param {string} zoneId
+     */
+    async DoAwayConfiguration(homeId, zoneId) {
+        const AwayConfiguration_data = await this.getAwayConfiguration(homeId, zoneId);
+        if (AwayConfiguration_data == null) throw new Error('AwayConfiguration_data is null');
+        this.debugLog('AwayConfiguration_data Result: ' + JSON.stringify(AwayConfiguration_data));
+        this.DoWriteJsonRespons(homeId, 'Stage_10_AwayConfiguration_' + zoneId, AwayConfiguration_data);
+        jsonExplorer.traverseJson(AwayConfiguration_data, homeId + '.Rooms.' + zoneId + '.awayConfig', true, true, 2);
+    }
+
+    /**
+     * @param {string} homeId
      * @param {string} state_name
      * @param {any} value
      */
-    async DoWriteJsonRespons(HomeId, state_name, value) {
+    async DoWriteJsonRespons(homeId, state_name, value) {
         try {
             if (this.log.level == 'debug' || this.log.level == 'silly') {
                 this.debugLog('JSON data written for ' + state_name + ' with values: ' + JSON.stringify(value));
-                this.debugLog('HomeId ' + HomeId + ' name: ' + state_name + state_name + ' value ' + JSON.stringify(value));
+                this.debugLog('HomeId ' + homeId + ' name: ' + state_name + state_name + ' value ' + JSON.stringify(value));
 
-                await this.setObjectNotExistsAsync(HomeId + '._JSON_response', {
+                await this.setObjectNotExistsAsync(homeId + '._JSON_response', {
                     type: 'device',
                     common: {
                         name: 'Plain JSON data from API',
                     },
                     native: {},
                 });
-                await this.create_state(HomeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
+                await this.create_state(homeId + '._JSON_response.' + state_name, state_name, JSON.stringify(value));
             }
         }
         catch (error) {
@@ -1462,17 +1466,17 @@ class Tado extends utils.Adapter {
     }
 
     /**
-     * @param {string} HomeId
-     * @param {object} homeState_data
+     * @param {string} homeId
+     * @param {object} homeStateData
      */
-    async DoHomeState(HomeId, homeState_data = null) {
-        if (homeState_data == null) {
-            homeState_data = await this.getHomeState(HomeId);
+    async DoHomeState(homeId, homeStateData = null) {
+        if (homeStateData == null) {
+            homeStateData = await this.getHomeState(homeId);
         }
-        if (homeState_data == null) throw new Error('homeState_data is null');
-        this.debugLog('HomeState_data Result: ' + JSON.stringify(homeState_data));
-        this.DoWriteJsonRespons(HomeId, 'Stage_11_HomeState', homeState_data);
-        jsonExplorer.traverseJson(homeState_data, HomeId + '.Home.state', true, true, 1);
+        if (homeStateData == null) throw new Error('homeState_data is null');
+        this.debugLog('HomeState_data Result: ' + JSON.stringify(homeStateData));
+        this.DoWriteJsonRespons(homeId, 'Stage_11_HomeState', homeStateData);
+        jsonExplorer.traverseJson(homeStateData, homeId + '.Home.state', true, true, 1);
     }
 
 
@@ -1480,12 +1484,12 @@ class Tado extends utils.Adapter {
     /* MASTERSWITCH														*/
     //////////////////////////////////////////////////////////////////////
     /**
-     * @param {string} masterswitch
+     * @param {string} masterSwitch
      */
-    async setMasterSwitch(masterswitch) {
-        masterswitch = masterswitch.toUpperCase();
-        if (masterswitch != 'ON' && masterswitch != 'OFF') {
-            this.log.error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterswitch}'`);
+    async setMasterSwitch(masterSwitch) {
+        masterSwitch = masterSwitch.toUpperCase();
+        if (masterSwitch != 'ON' && masterSwitch != 'OFF') {
+            this.log.error(`Masterswitch value 'ON' or 'OFF' expected but received '${masterSwitch}'`);
             return;
         }
         try {
@@ -1499,7 +1503,7 @@ class Tado extends utils.Adapter {
                 let typeSkillBasedAppPath = homeId + '.Rooms.' + zoneId + '.overlay.termination.typeSkillBasedApp';
                 const settingType = await this.getStateAsync(homeId + '.Rooms.' + zoneId + '.setting.type');
                 if (settingType && settingType.val == 'HEATING') {
-                    if (masterswitch == 'ON') {
+                    if (masterSwitch == 'ON') {
                         await this.setState(overlayClearZonePath, true);
                     } else {
                         await this.setState(powerPath, 'OFF');
@@ -1590,9 +1594,9 @@ class Tado extends utils.Adapter {
      */
     async apiCall(url, method = 'get', data = null) {
         let promise;
-        this.debugLog(`TadoX ${this.isTadoX} | body "${JSON.stringify(data)}" for API call "${url}"`);
+        this.debugLog(`TadoX ${this.isTadoX} | method ${method} | URL ${url} |body "${JSON.stringify(data)}"`);
+        const waitingTime = 300;  //time in ms to wait between calls
         try {
-            const waitingTime = 300;  //time in ms to wait between calls
             // check if other call is in progress and if yes loop and wait
             if (method != 'get' && this.apiCallinExecution == true) {
                 for (let i = 0; i < 10; i++) {
@@ -1608,8 +1612,6 @@ class Tado extends utils.Adapter {
             }
             if (method != 'get') {
                 this.apiCallinExecution = true;
-                //console.log(`Body "${JSON.stringify(data)}" for API call "${url}"`);
-                //this.log.debug(`Body "${JSON.stringify(data)}" for API call "${url}"`);
             }
             promise = await new Promise((resolve, reject) => {
                 if (this.accessToken) {
@@ -1640,7 +1642,7 @@ class Tado extends utils.Adapter {
                             reject(error);
                         });
                     }).catch(error => {
-                        reject(error);
+                        reject('refreshToken() failed: ' + error);
                     });
                 } else {
                     if (method != 'get') this.apiCallinExecution = false;
