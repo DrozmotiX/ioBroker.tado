@@ -973,8 +973,8 @@ class Tado extends utils.Adapter {
         let that = this;
         return new Promise((resolve, reject) => {
             pooltimer[pooltimerid] = setTimeout(async () => {
-                that.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be caled.`);
-                await that.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config).then(apiResponse => {
+                that.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be called.`);
+                await that.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool').then(apiResponse => {
                     resolve(apiResponse);
                     that.log.debug(`API request finalized for '${homeId}/${zoneId}'`);
                 }).catch(error => {
@@ -1591,11 +1591,21 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} url
      * @param {string} method
-     * @param {any} data
+     * @param {any} payload
+     * @param {string} caller
      */
-    async apiCall(url, method = 'get', data = null) {
+    async apiCall(url, method = 'get', payload = null, caller = '') {
+        const stack = new Error().stack;
+        if (stack && !caller) {
+            let stackParts = stack.split(' at ');
+            const regex = /Tado\.\s*(\S+)/;
+            const match = stackParts[2].match(regex);
+            if (match) {
+                caller = match[1];
+            }
+        }
         let promise;
-        this.debugLog(`TadoX ${this.isTadoX} | method ${method} | URL ${url} |body "${JSON.stringify(data)}"`);
+        this.debugLog(`TadoX ${this.isTadoX} | method ${method} | URL ${url} |body "${JSON.stringify(payload)}"`);
         const waitingTime = 300;  //time in ms to wait between calls
         try {
             // check if other call is in progress and if yes loop and wait
@@ -1621,7 +1631,7 @@ class Tado extends utils.Adapter {
                             axiosInstance({
                                 url: url,
                                 method: method,
-                                data: data,
+                                data: payload,
                                 headers: {
                                     'Authorization': 'Bearer ' + this.accessToken.token.access_token,
                                     'Source': 'iobroker.tado@' + version
@@ -1641,7 +1651,7 @@ class Tado extends utils.Adapter {
                                     console.error(error);
                                     this.log.error(error);
                                 }
-                                reject('axiosInstance() failed: ' + error);
+                                reject(`axiosInstance(${caller}) failed: ${error}`);
                             });
                         }).catch(error => {
                             reject('refreshToken() failed: ' + error);
