@@ -973,8 +973,8 @@ class Tado extends utils.Adapter {
         let that = this;
         return new Promise((resolve, reject) => {
             pooltimer[pooltimerid] = setTimeout(async () => {
-                that.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be caled.`);
-                await that.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config).then(apiResponse => {
+                that.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be called.`);
+                await that.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool').then(apiResponse => {
                     resolve(apiResponse);
                     that.log.debug(`API request finalized for '${homeId}/${zoneId}'`);
                 }).catch(error => {
@@ -1526,18 +1526,21 @@ class Tado extends utils.Adapter {
         const expires_at = new Date(this.accessToken.token.expires_at);
         const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
         let that = this;
-        this.debugLog('Need to refresh token is ' + shouldRefresh + '  as expire time is ' + expires_at);
+        this.debugLog('Need to refresh t_o_k_e_n is ' + shouldRefresh + '  as expire time is ' + expires_at);
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
                 let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
-                console.log(`Uri for refresh token is ${uri}`);
-                this.debugLog(`Uri for refresh token is ${uri}`);
+                this.log.debug(`Uri for refresh token is ${uri}`);
                 axiosInstanceToken.post(uri, {})
                     .then(async function (responseRaw) {
                         resolve(await that.manageNewToken(responseRaw.data));
                     })
                     .catch(error => {
+                        if (error.response && error.response.data) {
+                            console.error(error + ' with response ' + JSON.stringify(error.response.data));
+                            this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+                        }
                         reject(error);
                     });
             }
@@ -1549,14 +1552,12 @@ class Tado extends utils.Adapter {
      * @param {{ access_token: any; expires_in: number; refresh_token: any; }} responseData
      */
     async manageNewToken(responseData) {
-        this.debugLog('Response data from refresh token is ' + JSON.stringify(responseData));
-        console.log('Response data from refresh token is ' + JSON.stringify(responseData));
+        this.log.debug('Response data from refresh token is ' + JSON.stringify(responseData));
         this.accessToken.token.access_token = responseData.access_token;
-        let expireMS = responseData.expires_in * 1000 + new Date().getTime();
-        this.accessToken.token.expires_at = new Date(expireMS);
+        let expires_atMs = responseData.expires_in * 1000 + new Date().getTime();
+        this.accessToken.token.expires_at = new Date(expires_atMs);
         this.accessToken.token.refresh_token = responseData.refresh_token;
-        this.debugLog('New accessToken is ' + JSON.stringify(this.accessToken));
-        console.log('New accessToken is ' + JSON.stringify(this.accessToken));
+        this.debugLog('New accessT is ' + JSON.stringify(this.accessToken));
         await this.updateTokenSetForAdapter(this.accessToken);
         return (this.accessToken);
     }
@@ -1577,11 +1578,11 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * @param {number} msmin
-     * @param {number} msmax
+     * @param {number} waitingTimeMin
+     * @param {number} waitingTimeMax
      */
-    async sleep(msmin, msmax = msmin) {
-        let ms = Math.random() * (msmax - msmin) + msmin;
+    async sleep(waitingTimeMin, waitingTimeMax = waitingTimeMin) {
+        let ms = Math.round(Math.random() * (waitingTimeMax - waitingTimeMin) + waitingTimeMin);
         this.debugLog('Waiting time is ' + ms + 'ms');
         await jsonExplorer.sleep(ms);
         return;
@@ -1590,18 +1591,28 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} url
      * @param {string} method
-     * @param {any} data
+     * @param {any} payload
+     * @param {string} caller
      */
-    async apiCall(url, method = 'get', data = null) {
+    async apiCall(url, method = 'get', payload = null, caller = '') {
+        const stack = new Error().stack;
+        if (stack && !caller) {
+            let stackParts = stack.split(' at ');
+            const regex = /Tado\.\s*(\S+)/;
+            const match = stackParts[2].match(regex);
+            if (match) {
+                caller = match[1];
+            }
+        }
         let promise;
-        this.debugLog(`TadoX ${this.isTadoX} | method ${method} | URL ${url} |body "${JSON.stringify(data)}"`);
+        this.debugLog(`TadoX ${this.isTadoX} | method ${method} | URL ${url} |body "${JSON.stringify(payload)}"`);
         const waitingTime = 300;  //time in ms to wait between calls
         try {
             // check if other call is in progress and if yes loop and wait
             if (method != 'get' && this.apiCallinExecution == true) {
                 for (let i = 0; i < 10; i++) {
                     this.debugLog('Other API call in action, waiting... ' + url);
-                    await this.sleep(waitingTime + 300, waitingTime + 400);
+                    await this.sleep(waitingTime, waitingTime * 2);
                     this.debugLog('Waiting done! ' + url);
                     if (this.apiCallinExecution != true) {
                         this.debugLog('Time to execute ' + url); break;
@@ -1615,35 +1626,36 @@ class Tado extends utils.Adapter {
             }
             promise = await new Promise((resolve, reject) => {
                 if (this.accessToken) {
-                    this.refreshToken().then(() => {
-                        axiosInstance({
-                            url: url,
-                            method: method,
-                            data: data,
-                            headers: {
-                                'Authorization': 'Bearer ' + this.accessToken.token.access_token,
-                                'Source': 'iobroker.tado@' + version
-                            }
-                        }).then(response => {
-                            if (method != 'get') {
-                                setTimeout(() => { this.apiCallinExecution = false; }, waitingTime);
-                            }
-                            resolve(response.data);
+                    this.refreshToken()
+                        .then(() => {
+                            axiosInstance({
+                                url: url,
+                                method: method,
+                                data: payload,
+                                headers: {
+                                    'Authorization': 'Bearer ' + this.accessToken.token.access_token,
+                                    'Source': 'iobroker.tado@' + version
+                                }
+                            }).then(response => {
+                                if (method != 'get') {
+                                    setTimeout(() => { this.apiCallinExecution = false; }, waitingTime);
+                                }
+                                resolve(response.data);
+                            }).catch(error => {
+                                if (method != 'get') this.apiCallinExecution = false;
+                                if (error.response && error.response.data) {
+                                    console.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                    this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                }
+                                else {
+                                    console.error(error);
+                                    this.log.error(error);
+                                }
+                                reject(`axiosInstance(${caller}) failed: ${error}`);
+                            });
                         }).catch(error => {
-                            if (method != 'get') this.apiCallinExecution = false;
-                            if (error.response && error.response.data) {
-                                console.error(error + ' with response ' + JSON.stringify(error.response.data));
-                                this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
-                            }
-                            else {
-                                console.error(error);
-                                this.log.error(error);
-                            }
-                            reject(error);
+                            reject('refreshToken() failed: ' + error);
                         });
-                    }).catch(error => {
-                        reject('refreshToken() failed: ' + error);
-                    });
                 } else {
                     if (method != 'get') this.apiCallinExecution = false;
                     reject(new Error('Not yet logged in'));
@@ -1653,8 +1665,9 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at apiCall for '${method} ${url}': ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            let errorMsg = `${error} at apiCall for '${method} ${url}'`;
-            throw new Error(replaceNumbers(errorMsg));
+            //let errorMsg = `${error} at apiCall for '${method} ${url}'`;
+            //throw new Error(replaceNumbers(errorMsg));
+            throw error;
         }
         return promise;
     }
@@ -1865,6 +1878,8 @@ function toBoolean(valueToBoolean) {
  * @param {string} inputString
  * @returns {string}
  */
+// @ts-ignore
+// eslint-disable-next-line no-unused-vars
 function replaceNumbers(inputString) {
     const regex = /(\/SU|\/VA|\/RU|\/)\d+/g;                                // Regular expression to find numbers that start with / or /RU or /SU or /VA
     const replacedString = inputString.replace(regex, (match, prefix) => {  // Replacement function called for each matching pattern

@@ -177,10 +177,10 @@
         "tokenSet": null
       },
       "encryptedNative": [
-        "tokenset"
+        "tokenSet"
       ],
       "protectedNative": [
-        "tokenset"
+        "tokenSet"
       ]
     }
   ]
