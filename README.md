@@ -68,7 +68,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.7.5 (2025-03-31)
 * (HGlab01) some further refactorings
 * (HGlab01) Bump axios to 1.8.4
 
