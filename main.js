@@ -1578,11 +1578,11 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
 
     /**
-     * @param {number} msmin
-     * @param {number} msmax
+     * @param {number} waitingTimeMin
+     * @param {number} waitingTimeMax
      */
-    async sleep(msmin, msmax = msmin) {
-        let ms = Math.random() * (msmax - msmin) + msmin;
+    async sleep(waitingTimeMin, waitingTimeMax = waitingTimeMin) {
+        let ms = Math.round(Math.random() * (waitingTimeMax - waitingTimeMin) + waitingTimeMin);
         this.debugLog('Waiting time is ' + ms + 'ms');
         await jsonExplorer.sleep(ms);
         return;
@@ -1612,7 +1612,7 @@ class Tado extends utils.Adapter {
             if (method != 'get' && this.apiCallinExecution == true) {
                 for (let i = 0; i < 10; i++) {
                     this.debugLog('Other API call in action, waiting... ' + url);
-                    await this.sleep(waitingTime + 300, waitingTime + 400);
+                    await this.sleep(waitingTime, waitingTime * 2);
                     this.debugLog('Waiting done! ' + url);
                     if (this.apiCallinExecution != true) {
                         this.debugLog('Time to execute ' + url); break;
