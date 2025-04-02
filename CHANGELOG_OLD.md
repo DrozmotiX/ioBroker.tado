@@ -1,4 +1,9 @@
 # Older changes
+## 0.6.1 (2024-11-04)
+* (HGlab01) Add attributes 'expiryInSeconds' and 'activated'
+* (HGlab01) Extend timeout back to 20s
+* (HGlab01) Tado° X improvements
+
 ## 0.6.0 (2024-10-23)
 * (HGlab01) Start supporting Tado° X
 

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.5",
+    "version": "0.7.6",
     "news": {
+      "0.7.6": {
+        "en": "optimize sentry usage",
+        "de": "optimieren sie den versand",
+        "ru": "оптимизация использования sentry",
+        "pt": "otimizar o uso de sentinela",
+        "nl": "het gebruik van wachters optimaliseren",
+        "fr": "optimiser l'utilisation des sentinelles",
+        "it": "ottimizzare l'utilizzo della sentinella",
+        "es": "optimizar el uso de centry",
+        "pl": "optymalizacja użytkowania czujnika",
+        "uk": "оптимізація використання відправлень",
+        "zh-cn": "优化哨兵使用"
+      },
       "0.7.5": {
         "en": "some further refactorings\nBump axios to 1.8.4",
         "de": "weitere refactorings\nBump axios zu 1.8.4",
