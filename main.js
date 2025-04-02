@@ -57,6 +57,7 @@ class Tado extends utils.Adapter {
         this.isTadoX = false;
         this.device_code = '';
         this.uri4token = '';
+        this.retryCount = 0;
     }
 
     /**
@@ -1252,17 +1253,20 @@ class Tado extends utils.Adapter {
             polling = setTimeout(() => {
                 this.DoConnect();
             }, this.intervall_time);
+            this.retryCount = 0;
         } catch (error) {
+            this.retryCount = this.retryCount + 1;
+            let retryDelay = 30 * this.retryCount;
             let eMsg = `Error in data refresh at step ${step}: ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
             this.errorHandling(error);
-            this.log.error('Disconnected from Tado cloud service ..., retry in 30 seconds ! ');
+            this.log.error(`Disconnected from Tado cloud service ..., retry in ${retryDelay} seconds !`);
             this.setState('info.connection', false, true);
             // retry connection
             polling = setTimeout(() => {
                 this.DoConnect();
-            }, 30000);
+            }, retryDelay * 1000);
         }
     }
 
@@ -1733,7 +1737,7 @@ class Tado extends utils.Adapter {
             if (this.log.level != 'debug' && this.log.level != 'silly') {
                 if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                     const sentryInstance = this.getPluginInstance('sentry');
-                    if (sentryInstance) {
+                    if (sentryInstance && sentryInstance.getSentryObject()) {
                         sentryInstance.getSentryObject().captureException(errorObject);
                     }
                 }
