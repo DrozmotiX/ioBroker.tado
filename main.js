@@ -56,6 +56,7 @@ class Tado extends utils.Adapter {
         this.oldStatesVal = [];
         this.isTadoX = false;
         this.device_code = '';
+        this.uri4token = '';
     }
 
     /**
@@ -91,8 +92,8 @@ class Tado extends utils.Adapter {
                                 let response = responseRaw.data;
                                 that.log.debug('Response t_o_k_e_n Step 1 is ' + JSON.stringify(response));
                                 that.device_code = response.device_code;
-                                let uri = response.verification_uri_complete;
-                                msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${uri}` }, msg.callback);
+                                that.uri4token = response.verification_uri_complete;
+                                msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${that.uri4token}` }, msg.callback);
                                 that.debugLog('t_o_k_e_n Step 1 done');
                             })
                             .catch(error => {
@@ -129,7 +130,7 @@ class Tado extends utils.Adapter {
                                 if (error.response && error.response.data) {
                                     let message = JSON.stringify(error.response.data);
                                     if (message.includes('authorization_pending')) {
-                                        this.log.error('Step 1 not completed. Copy Link and open in browser and follow described steps on webpage');
+                                        this.log.error(`Step 1 not completed. Open link '${that.uri4token}' in your browser and follow described steps on webpage`);
                                         return;
                                     } else {
                                         console.error(error + ' with response ' + JSON.stringify(error.response.data));
