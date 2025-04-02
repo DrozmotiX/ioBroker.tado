@@ -56,6 +56,7 @@ class Tado extends utils.Adapter {
         this.oldStatesVal = [];
         this.isTadoX = false;
         this.device_code = '';
+        this.uri4token = '';
     }
 
     /**
@@ -80,46 +81,71 @@ class Tado extends utils.Adapter {
     }
 
     async onMessage(msg) {
-        if (typeof msg === 'object' && msg.command) {
-            switch (msg.command) {
-                case 'auth1': {
-                    this.debugLog(`Received OAuth start message`);
-                    let that = this;
-                    axiosInstanceToken.post(`/device_authorize?client_id=${client_id}&scope=offline_access`, {})
-                        .then(function (responseRaw) {
-                            let response = responseRaw.data;
-                            that.debugLog('Response oAuth Step 1 is ' + JSON.stringify(response));
-                            that.device_code = response.device_code;
-                            let uri = response.verification_uri_complete;
-                            msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${uri}` }, msg.callback);
-                        })
-                        .catch(error => {
-                            this.log.error('Error at oAuth Step 1 ' + error);
-                            console.error('Error at oAuth Step 1 ' + error);
-                            this.errorHandling(error);
-                        });
-                    break;
-                }
-                case 'auth2': {
-                    this.debugLog(`Received OAuth step 2 message`);
-                    let that = this;
-                    const uri = `/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
-                    this.debugLog('OAuth Step 2 Url is ' + uri);
-                    axiosInstanceToken.post(uri, {})
-                        .then(async function (responseRaw) {
-                            that.debugLog('Response oAuth Step 2 is ' + JSON.stringify(responseRaw.data));
-                            await that.manageNewToken(responseRaw.data);
-                            msg.callback && that.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
-                            await that.DoConnect();
-                        })
-                        .catch(error => {
-                            this.log.error('Error at oAuth Step 2 ' + error);
-                            console.error('Error at oAuth Step 2 ' + error);
-                            this.errorHandling(error);
-                        });
-                    break;
+        try {
+            if (typeof msg === 'object' && msg.command) {
+                switch (msg.command) {
+                    case 'auth1': {
+                        this.debugLog(`Received t_o_k_e_n creation Step 1 message`);
+                        let that = this;
+                        axiosInstanceToken.post(`/device_authorize?client_id=${client_id}&scope=offline_access`, {})
+                            .then(function (responseRaw) {
+                                let response = responseRaw.data;
+                                that.log.debug('Response t_o_k_e_n Step 1 is ' + JSON.stringify(response));
+                                that.device_code = response.device_code;
+                                that.uri4token = response.verification_uri_complete;
+                                msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${that.uri4token}` }, msg.callback);
+                                that.debugLog('t_o_k_e_n Step 1 done');
+                            })
+                            .catch(error => {
+                                this.log.error('Error at token creation Step 1 ' + error);
+                                console.error('Error at t_o_k_e_n creation Step 1 ' + error);
+                                if (error.response && error.response.data) {
+                                    console.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                    this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                }
+                                this.errorHandling('CreateT Step1 failed: ' + error);
+                            });
+                        break;
+                    }
+                    case 'auth2': {
+                        this.debugLog(`Received t_o_k_e_n step 2 message`);
+                        let that = this;
+                        if (!this.device_code) {
+                            this.log.error('Step 1 was not executed, but step 2 startet! Please start/restart with Step 1.');
+                            break;
+                        }
+                        const uri = `/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
+                        this.debugLog('t_o_k_e_n Step 2 Url is ' + uri);
+                        axiosInstanceToken.post(uri, {})
+                            .then(async function (responseRaw) {
+                                that.debugLog('Response t_o_k_e_n Step 2 is ' + JSON.stringify(responseRaw.data));
+                                await that.manageNewToken(responseRaw.data);
+                                msg.callback && that.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
+                                that.debugLog('t_o_k_e_n Step 2 done');
+                                await that.DoConnect();
+                            })
+                            .catch(error => {
+                                this.log.error('Error at token creation Step 2 ' + error);
+                                console.error('Error at t_o_k_e_n creation Step 2 ' + error);
+                                if (error.response && error.response.data) {
+                                    let message = JSON.stringify(error.response.data);
+                                    if (message.includes('authorization_pending')) {
+                                        this.log.error(`Step 1 not completed. Open link '${that.uri4token}' in your browser and follow described steps on webpage`);
+                                        return;
+                                    } else {
+                                        console.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                        this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                    }
+                                }
+                                this.errorHandling('CreateT Step2 failed: ' + error);
+                            });
+                        break;
+                    }
                 }
             }
+        } catch (error) {
+            this.log.error(`Issue at token process: ${error}`);
+            this.errorHandling(error);
         }
     }
 
@@ -1530,11 +1556,14 @@ class Tado extends utils.Adapter {
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
+                this.debugLog('RefreshT started');
                 let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.debug(`Uri for refresh token is ${uri}`);
                 axiosInstanceToken.post(uri, {})
                     .then(async function (responseRaw) {
-                        resolve(await that.manageNewToken(responseRaw.data));
+                        let result = await that.manageNewToken(responseRaw.data);
+                        that.debugLog('RefreshT done');
+                        resolve(result);
                     })
                     .catch(error => {
                         if (error.response && error.response.data) {
@@ -1552,13 +1581,15 @@ class Tado extends utils.Adapter {
      * @param {{ access_token: any; expires_in: number; refresh_token: any; }} responseData
      */
     async manageNewToken(responseData) {
-        this.log.debug('Response data from refresh token is ' + JSON.stringify(responseData));
+        this.log.debug('Response data from refresh t_o_k_e_n is ' + JSON.stringify(responseData));
+        this.debugLog('ManageT startet');
         this.accessToken.token.access_token = responseData.access_token;
         let expires_atMs = responseData.expires_in * 1000 + new Date().getTime();
         this.accessToken.token.expires_at = new Date(expires_atMs);
         this.accessToken.token.refresh_token = responseData.refresh_token;
-        this.debugLog('New accessT is ' + JSON.stringify(this.accessToken));
+        this.log.debug('New accessT is ' + JSON.stringify(this.accessToken));
         await this.updateTokenSetForAdapter(this.accessToken);
+        this.debugLog('ManageT done');
         return (this.accessToken);
     }
 
@@ -1709,6 +1740,7 @@ class Tado extends utils.Adapter {
             }
         } catch (error) {
             console.log(error);
+            this.log.error(error + 'at errorHandling()');
         }
     }
 
