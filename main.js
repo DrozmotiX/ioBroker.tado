@@ -104,7 +104,8 @@ class Tado extends utils.Adapter {
                                     console.error(error + ' with response ' + JSON.stringify(error.response.data));
                                     this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
                                 }
-                                this.errorHandling('CreateT Step1 failed: ' + error);
+                                if (error.message) error.message = `CreateT Step1 failed: ${error.message}`;
+                                this.errorHandling(error);
                             });
                         break;
                     }
@@ -138,7 +139,8 @@ class Tado extends utils.Adapter {
                                         this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
                                     }
                                 }
-                                this.errorHandling('CreateT Step2 failed: ' + error);
+                                if (error.message) error.message = `CreateT Step2 failed: ${error.message}`;
+                                this.errorHandling(error);
                             });
                         break;
                     }
@@ -146,7 +148,7 @@ class Tado extends utils.Adapter {
             }
         } catch (error) {
             this.log.error(`Issue at token process: ${error}`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -543,7 +545,7 @@ class Tado extends utils.Adapter {
                 } catch (error) {
                     this.log.error(`Issue at state change: ${error}`);
                     console.error(`Issue at state change: ${error}`);
-                    this.errorHandling(error);
+                    if (error instanceof Error) this.errorHandling(error);
                 }
 
             } else {
@@ -654,7 +656,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at clearZoneOverlay(): '${error}'`);
             console.error(`Issue at clearZoneOverlay(): '${error}'`);
-            this.errorHandling(`'${error}' at clearZoneOverlay()`);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -686,7 +688,7 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -721,7 +723,7 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -758,7 +760,7 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at setPresenceLock: '${error}'. Based on body ${JSON.stringify(homeState)}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -974,7 +976,7 @@ class Tado extends utils.Adapter {
             console.log(`Body: ${JSON.stringify(config)}`);
             this.log.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
             console.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1032,7 +1034,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at activateOpenWindow(): '${error}'`);
             console.error(`Issue at activateOpenWindow(): '${error}'`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1056,7 +1058,7 @@ class Tado extends utils.Adapter {
             console.log(`Body: ${JSON.stringify(config)}`);
             this.log.error(`Issue at setOpenWindowDetectionSettings(): '${error}'`);
             console.error(`Issue at setOpenWindowDetectionSettings(): '${error}'`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1081,7 +1083,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at setChildLock(): '${error}'`);
             console.error(`Issue at setChildLock(): '${error}'`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1099,7 +1101,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at setReading(): '${error}'`);
             console.error(`Issue at setReading(): '${error}'`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1256,17 +1258,23 @@ class Tado extends utils.Adapter {
             this.retryCount = 0;
         } catch (error) {
             this.retryCount = this.retryCount + 1;
-            let retryDelay = 30 * this.retryCount;
+            let retryDelay = 60 * this.retryCount;
             let eMsg = `Error in data refresh at step ${step}: ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            this.errorHandling(error);
-            this.log.error(`Disconnected from Tado cloud service ..., retry in ${retryDelay} seconds !`);
-            this.setState('info.connection', false, true);
-            // retry connection
-            polling = setTimeout(() => {
-                this.DoConnect();
-            }, retryDelay * 1000);
+            if (error instanceof Error) this.errorHandling(error);
+
+            if (this.retryCount <= 20) {
+                this.log.error(`Disconnected from Tado cloud service ..., retry in ${retryDelay} seconds !`);
+                this.setState('info.connection', false, true);
+                // retry connection
+                polling = setTimeout(() => {
+                    this.DoConnect();
+                }, retryDelay * 1000);
+            }
+            else {
+                this.log.error(`Retry limit reached! No further retries.`);
+            }
         }
     }
 
@@ -1298,7 +1306,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at DoConnect(): ${error}`);
             console.error(`Issue at DoConnect(): ${error}`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1491,7 +1499,7 @@ class Tado extends utils.Adapter {
         catch (error) {
             this.log.error(`Issue at DoWriteJsonRespons(): '${error}'`);
             console.error(`Issue at DoWriteJsonRespons(): '${error}'`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1545,7 +1553,7 @@ class Tado extends utils.Adapter {
         } catch (error) {
             this.log.error(`Issue at getAllPowerSwitches(): ${error}`);
             console.error(`Issue at getAllPowerSwitches(): ${error}`);
-            this.errorHandling(error);
+            if (error instanceof Error) this.errorHandling(error);
         }
     }
 
@@ -1686,10 +1694,12 @@ class Tado extends utils.Adapter {
                                     console.error(error);
                                     this.log.error(error);
                                 }
-                                reject(`axiosInstance(${caller}) failed: ${error}`);
+                                if (error.message) error.message = `axiosInstance(${caller}) failed: ${error.message}`;
+                                reject(error);
                             });
                         }).catch(error => {
-                            reject('refreshToken() failed: ' + error);
+                            if (error.message) error.message = `refreshToken() failed: ${error.message}`;
+                            reject(error);
                         });
                 } else {
                     if (method != 'get') this.apiCallinExecution = false;
@@ -1700,9 +1710,7 @@ class Tado extends utils.Adapter {
             let eMsg = `Issue at apiCall for '${method} ${url}': ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
-            //let errorMsg = `${error} at apiCall for '${method} ${url}'`;
-            //throw new Error(replaceNumbers(errorMsg));
-            throw error;
+            if (error instanceof Error) throw error;
         }
         return promise;
     }
@@ -1719,21 +1727,26 @@ class Tado extends utils.Adapter {
             jsonExplorer.stateSetCreate(state, name, value, intervall_time);
         }
     }
-
     /**
-     * @param {any} errorObject
+     * @param {Error} errorObject
      */
     async errorHandling(errorObject) {
         try {
-            /*if (errorObject.message && (errorObject.message.includes('Login failed!') ||
-                errorObject.message.includes('conflict occurred while trying to update entity null') ||
-                errorObject.message.includes('ECONNRESET') ||
-                errorObject.message.includes('socket hang up') ||
-                errorObject.message.includes('with status code 504') ||
-                errorObject.message.includes('ETIMEDOUT') ||
-                errorObject.message.includes('EAI_AGAIN') ||
-                errorObject.message.includes('timeout of 20000ms exceeded') ||
-                errorObject.message.includes('No internet connection detected!'))) return;*/
+            if (errorObject instanceof Error == false) return;
+
+            let message = errorObject.message ?? '';
+            // @ts-ignore
+            let status = parseInt(errorObject.status ?? 0);
+
+            if (status == 401 || status == 403 || status == 504) return;
+
+            if (message.includes('ECONNRESET') ||
+                message.includes('socket hang up') ||
+                message.includes('ETIMEDOUT') ||
+                message.includes('EAI_AGAIN') ||
+                message.includes('No internet connection detected!')
+            ) return;
+
             if (this.log.level != 'debug' && this.log.level != 'silly') {
                 if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                     const sentryInstance = this.getPluginInstance('sentry');
@@ -1901,6 +1914,10 @@ class Tado extends utils.Adapter {
         return this.apiCall(`${tadoX_url}/homes/${homeId}/roomsAndDevices`);
     }
 }
+
+//////////////////////////////////////////////////////////////////////
+/* HELPERS														    */
+//////////////////////////////////////////////////////////////////////
 
 /**
  * @param {string | number | boolean} valueToBoolean
