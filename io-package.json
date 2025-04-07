@@ -162,7 +162,10 @@
       "sentry": {
         "dsn": "https://9417776af8984b5090f8c4ff8635cead@sentry.iobroker.net/20"
       }
-    }
+    },
+    "blockedVersions": [
+      "<0.7.0"
+    ]
   },
   "encryptedNative": [],
   "protectedNative": [],

@@ -69,9 +69,9 @@ class Tado extends utils.Adapter {
         this.intervall_time = Math.max(30, this.config.intervall) * 1000;
 
         const tokenObject = await this.getObjectAsync('_config');
-        this.debugLog('tokenObject from config is' + JSON.stringify(tokenObject));
+        this.debugLog('T-Object from config is' + JSON.stringify(tokenObject));
         this.accessToken = tokenObject && tokenObject.native && tokenObject.native.tokenSet ? tokenObject.native.tokenSet : null;
-        this.debugLog('accessToken is ' + JSON.stringify(this.accessToken));
+        this.debugLog('accessT is ' + JSON.stringify(this.accessToken));
         if (this.accessToken == null) {
             this.accessToken = {};
             this.accessToken.token = {};
@@ -100,7 +100,7 @@ class Tado extends utils.Adapter {
                             .catch(error => {
                                 this.log.error('Error at token creation Step 1 ' + error);
                                 console.error('Error at t_o_k_e_n creation Step 1 ' + error);
-                                if (error.response && error.response.data) {
+                                if (error?.response?.data) {
                                     console.error(error + ' with response ' + JSON.stringify(error.response.data));
                                     this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
                                 }
@@ -129,7 +129,7 @@ class Tado extends utils.Adapter {
                             .catch(error => {
                                 this.log.error('Error at token creation Step 2 ' + error);
                                 console.error('Error at t_o_k_e_n creation Step 2 ' + error);
-                                if (error.response && error.response.data) {
+                                if (error?.response?.data) {
                                     let message = JSON.stringify(error.response.data);
                                     if (message.includes('authorization_pending')) {
                                         this.log.error(`Step 1 not completed. Open link '${that.uri4token}' in your browser and follow described steps on webpage`);
@@ -1274,6 +1274,7 @@ class Tado extends utils.Adapter {
             }
             else {
                 this.log.error(`Retry limit reached! No further retries.`);
+                this.setState('info.connection', false, true);
             }
         }
     }
@@ -1324,7 +1325,7 @@ class Tado extends utils.Adapter {
             this.log.info('TadoX is ' + this.isTadoX);
         }
         else this.isTadoX = false;
-        if (this.home_data == null) throw new Error('home_date is null');
+        if (this.home_data == null) throw new Error('home_data is null');
         if (!this.isTadoX) this.home_data.masterswitch = '';
         this.DoWriteJsonRespons(homeId, 'Stage_02_HomeData', this.home_data);
         jsonExplorer.traverseJson(this.home_data, `${homeId}.Home`, true, true, 0);
@@ -1578,7 +1579,7 @@ class Tado extends utils.Adapter {
                         resolve(result);
                     })
                     .catch(error => {
-                        if (error.response && error.response.data) {
+                        if (error?.response?.data) {
                             console.error(error + ' with response ' + JSON.stringify(error.response.data));
                             this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
                         }
@@ -1739,12 +1740,11 @@ class Tado extends utils.Adapter {
             let status = parseInt(errorObject.status ?? 0);
 
             if (status == 401 || status == 403 || status == 504) return;
-
             if (message.includes('ECONNRESET') ||
                 message.includes('socket hang up') ||
                 message.includes('ETIMEDOUT') ||
                 message.includes('EAI_AGAIN') ||
-                message.includes('No internet connection detected!')
+                message.includes('No internet connection detected')
             ) return;
 
             if (this.log.level != 'debug' && this.log.level != 'silly') {
