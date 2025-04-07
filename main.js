@@ -1750,7 +1750,7 @@ class Tado extends utils.Adapter {
             if (this.log.level != 'debug' && this.log.level != 'silly') {
                 if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                     const sentryInstance = this.getPluginInstance('sentry');
-                    if (sentryInstance && sentryInstance.getSentryObject()) {
+                    if (sentryInstance?.getSentryObject()) {
                         sentryInstance.getSentryObject().captureException(errorObject);
                     }
                 }
