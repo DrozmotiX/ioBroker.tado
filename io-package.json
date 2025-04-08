@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.6",
+    "version": "0.7.7",
     "news": {
+      "0.7.7": {
+        "en": "optimize sentry usage\nimprove retry-mechanism when it comes to erros",
+        "de": "optimieren sie den versand\nverbesserung der retry-mechanismus bei erros",
+        "ru": "оптимизация использования sentry\nулучшение ретри-механизма, когда дело доходит до эрроса",
+        "pt": "otimizar o uso de sentinela\nmelhorar o retry-mecanismo quando se trata de erros",
+        "nl": "het gebruik van wachters optimaliseren\nretry-mechanism verbeteren als het gaat om erros",
+        "fr": "optimiser l'utilisation des sentinelles\naméliorer la rétry-mécanisme en ce qui concerne les erros",
+        "it": "ottimizzare l'utilizzo della sentinella\nmigliorare il retry-meccanismo quando si tratta di erros",
+        "es": "optimizar el uso de centry\nmejorar el retry-mechanism cuando se trata de erros",
+        "pl": "optymalizacja użytkowania czujnika\nusprawnić mechanizm rehabilitacji w przypadku errosów",
+        "uk": "оптимізація використання відправлень\nполіпшення дерроси-механізму, коли мова йде про ерозію",
+        "zh-cn": "优化哨兵使用\n在错误发生时改进重试机制"
+      },
       "0.7.6": {
         "en": "optimize sentry usage",
         "de": "optimieren sie den versand",
