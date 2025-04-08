@@ -68,8 +68,9 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.7.6 (2025-04-02)
+### __WORK IN PROGRESS__
 * (HGlab01) optimize sentry usage
+* (HGlab01) improve retry-mechanism when it comes to erros
 
 ### 0.7.5 (2025-03-31)
 * (HGlab01) some further refactorings

@@ -160,7 +160,7 @@
     ],
     "plugins": {
       "sentry": {
-        "dsn": "https://9417776af8984b5090f8c4ff8635cead@sentry.iobroker.net/20"
+        "dsn": "https://f93bcbb8596de55bb803fe211ab22276@sentry.iobroker.net/20"
       }
     },
     "blockedVersions": [
