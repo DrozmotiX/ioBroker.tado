@@ -1,4 +1,10 @@
 # Older changes
+## 0.7.1 (2025-03-09)
+* (HGlab01) !!!BREAKING CHANGE!!! new Authentification method (https://github.com/DrozmotiX/ioBroker.tado/issues/954)
+* (HGlab01) Bump axios to 1.8.2
+* (HGlab01) Improve error messages for Sentry
+* (HGlab01) Add attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'
+
 ## 0.6.1 (2024-11-04)
 * (HGlab01) Add attributes 'expiryInSeconds' and 'activated'
 * (HGlab01) Extend timeout back to 20s

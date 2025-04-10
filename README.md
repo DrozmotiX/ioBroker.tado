@@ -68,7 +68,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.7.8 (2025-04-10)
 * (HGlab01) fix issue 'definition missing for balanceControl'
 
 ### 0.7.7 (2025-04-08)
@@ -85,12 +85,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 
 ### 0.7.2 (2025-03-12)
 * (HGlab01) improve sentry logs
-
-### 0.7.1 (2025-03-09)
-* (HGlab01) !!!BREAKING CHANGE!!! new Authentification method (https://github.com/DrozmotiX/ioBroker.tado/issues/954)
-* (HGlab01) Bump axios to 1.8.2
-* (HGlab01) Improve error messages for Sentry
-* (HGlab01) Add attributes 'tariffLowPriceAlert' and 'tariffHighPriceAlert'
 
 ## License
 MIT License
