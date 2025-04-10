@@ -1136,8 +1136,11 @@ class Tado extends utils.Adapter {
                 rooms[i].manualControlTermination.controlType = rooms[i].manualControlTermination.type;
                 delete rooms[i].manualControlTermination.type;
             }
+            if (rooms[i].balanceControl === null) { // === attribute exists and is null
+                delete rooms[i].balanceControl;
+            }
         }
-        this.debugLog('Modified rooms object is' + JSON.stringify(rooms));
+        this.debugLog('Modified rooms object is ' + JSON.stringify(rooms));
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
 
         for (const i in roomsAndDevices.rooms) {
@@ -1171,6 +1174,9 @@ class Tado extends utils.Adapter {
         } else {
             roomsAndDevices.manualControlTermination.controlType = roomsAndDevices.manualControlTermination.type;
             delete roomsAndDevices.manualControlTermination.type;
+        }
+        if (roomsAndDevices.balanceControl === null) { // === attribute exists and is null
+            delete roomsAndDevices.balanceControl;
         }
         roomsAndDevices.resumeScheduleRoom = false;
         this.debugLog('Modified RoomsAndDevices object is ' + JSON.stringify(roomsAndDevices));
