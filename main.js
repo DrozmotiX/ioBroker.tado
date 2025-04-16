@@ -1577,7 +1577,7 @@ class Tado extends utils.Adapter {
         this.refreshTokenInProgress = true;
         while (this.refreshTokenInProgress && shouldRefresh) {
             this.debugLog('Waiting for refresh t_o_k_e_n to finish...');
-            await jsonExplorer.sleep(500);
+            await this.sleep(500);
             this.debugLog('Waiting done!');
             i++;
             if (i > 10) break;
