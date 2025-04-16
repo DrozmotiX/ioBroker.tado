@@ -58,6 +58,7 @@ class Tado extends utils.Adapter {
         this.device_code = '';
         this.uri4token = '';
         this.retryCount = 0;
+        this.refreshTokenInProgress = false;
     }
 
     /**
@@ -1567,14 +1568,24 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
     /* TOKEN MANAGEMENT													*/
     //////////////////////////////////////////////////////////////////////
-    refreshToken() {
+    async refreshToken() {
         const expires_at = new Date(this.accessToken.token.expires_at);
         const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
         let that = this;
         this.debugLog('Need to refresh t_o_k_e_n is ' + shouldRefresh + '  as expire time is ' + expires_at);
+        let i = 0;
+        this.refreshTokenInProgress = true;
+        while (this.refreshTokenInProgress && shouldRefresh) {
+            this.debugLog('Waiting for refresh t_o_k_e_n to finish...');
+            await this.sleep(500);
+            this.debugLog('Waiting done!');
+            i++;
+            if (i > 10) break;
+        }
 
         return new Promise((resolve, reject) => {
             if (shouldRefresh) {
+                this.refreshTokenInProgress = true;
                 this.debugLog('RefreshT started');
                 let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.debug(`Uri for refresh token is ${uri}`);
@@ -1583,12 +1594,14 @@ class Tado extends utils.Adapter {
                         let result = await that.manageNewToken(responseRaw.data);
                         that.debugLog('RefreshT done');
                         resolve(result);
+                        this.refreshTokenInProgress = false;
                     })
                     .catch(error => {
                         if (error?.response?.data) {
                             console.error(error + ' with response ' + JSON.stringify(error.response.data));
                             this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
                         }
+                        this.refreshTokenInProgress = false;
                         reject(error);
                     });
             }
