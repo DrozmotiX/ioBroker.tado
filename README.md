@@ -68,6 +68,9 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) fix issue 'refreshToken() failed'
+
 ### 0.7.8 (2025-04-10)
 * (HGlab01) fix issue 'definition missing for balanceControl'
 
