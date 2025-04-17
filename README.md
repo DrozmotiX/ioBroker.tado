@@ -68,7 +68,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.7.9 (2025-04-17)
 * (HGlab01) fix issue 'refreshToken() failed'
 
 ### 0.7.8 (2025-04-10)
@@ -85,9 +85,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 ### 0.7.3 (2025-03-17)
 * (HGlab01) refactoring debug logs
 * (HGlab01) Bump axios to 1.8.3
-
-### 0.7.2 (2025-03-12)
-* (HGlab01) improve sentry logs
 
 ## License
 MIT License

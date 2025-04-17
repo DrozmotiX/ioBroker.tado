@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.8",
+    "version": "0.7.9",
     "news": {
+      "0.7.9": {
+        "en": "fix issue 'refreshToken() failed'",
+        "de": "problem beheben 'refreshToken() fehlgeschlagen '",
+        "ru": "обсуждение RefreshToken() \"",
+        "pt": "corrigir problema 'refreshToken() falhou '",
+        "nl": "fix probleem 'refreshToken() mislukt '",
+        "fr": "correction du problème 'refreshToken() a échoué '",
+        "it": "risolvere problema 'refreshToken() guasto '",
+        "es": "solucionar el problema 'refreshToken() falló '",
+        "pl": "fix issue 'recurToken () nie powiodło się'",
+        "uk": "виправити проблему 'refreshToken() не вдалося Р",
+        "zh-cn": "修复问题“ refreeToken () 失败  '"
+      },
       "0.7.8": {
         "en": "fix issue 'definition missing for balanceControl'",
         "de": "problem beheben 'Definition fehlt für Balance Steuerung '",
@@ -80,19 +93,6 @@
         "pl": "refaktoring dzienników debugowania\nAxios bump do 1.8.3",
         "uk": "рефакторинг debug журнали\nБампер аксіос до 1.8.3",
         "zh-cn": "正在重构调试日志\n横轴改为1.8.3"
-      },
-      "0.7.2": {
-        "en": "improve sentry logs",
-        "de": "versendete protokolle verbessern",
-        "ru": "улучшение часовых бревен",
-        "pt": "melhorar registros de sentinela",
-        "nl": "verbetering van wachtwoorden",
-        "fr": "améliorer les registres des sentinelles",
-        "it": "migliorare i registri delle sentinelle",
-        "es": "mejorar los registros de centinelas",
-        "pl": "ulepszenie dzienników wartowniczych",
-        "uk": "поліпшення відправлень колод",
-        "zh-cn": "改进哨兵记录"
       }
     },
     "titleLang": {

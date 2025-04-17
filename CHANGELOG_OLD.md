@@ -1,4 +1,7 @@
 # Older changes
+## 0.7.2 (2025-03-12)
+* (HGlab01) improve sentry logs
+
 ## 0.7.1 (2025-03-09)
 * (HGlab01) !!!BREAKING CHANGE!!! new Authentification method (https://github.com/DrozmotiX/ioBroker.tado/issues/954)
 * (HGlab01) Bump axios to 1.8.2
