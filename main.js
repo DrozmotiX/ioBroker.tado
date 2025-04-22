@@ -1769,8 +1769,10 @@ class Tado extends utils.Adapter {
             if (this.log.level != 'debug' && this.log.level != 'silly') {
                 if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                     const sentryInstance = this.getPluginInstance('sentry');
-                    if (sentryInstance?.getSentryObject()) {
-                        sentryInstance.getSentryObject().captureException(errorObject);
+                    const sentry = sentryInstance?.getSentryObject();
+                    if (sentry) {
+                        sentry.setTag('tadoX', this.isTadoX);
+                        sentry.captureException(errorObject);
                     }
                 }
             }
@@ -1787,15 +1789,15 @@ class Tado extends utils.Adapter {
         try {
             if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                 const sentryInstance = this.getPluginInstance('sentry');
-                if (sentryInstance) {
-                    const Sentry = sentryInstance.getSentryObject();
-                    Sentry && Sentry.withScope(scope => {
-                        scope.setLevel(Sentry.Severity.Warning);
-                        Sentry.captureMessage(message);
-                    });
-                }
+                const sentry = sentryInstance?.getSentryObject();
+                sentry?.withScope(scope => {
+                    scope.setLevel('warning');
+                    sentry.setTag('tadoX', this.isTadoX);
+                    sentry.captureMessage(message);
+                });
             }
         } catch (error) {
+            this.log.error(error + ' at sendSentryWarn()');
             console.log(error);
         }
     }
