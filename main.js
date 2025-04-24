@@ -54,11 +54,15 @@ class Tado extends utils.Adapter {
         this.intervall_time = 60 * 1000;
         this.roomCapabilities = {};
         this.oldStatesVal = [];
-        this.isTadoX = false;
         this.device_code = '';
         this.uri4token = '';
         this.retryCount = 0;
+        /** @type {boolean} */
+        this.isTadoX = false;
+        /** @type {boolean} */
         this.refreshTokenInProgress = false;
+        /** @type {boolean} */
+        this.shouldRefreshToken = false;
     }
 
     /**
@@ -88,16 +92,15 @@ class Tado extends utils.Adapter {
                 switch (msg.command) {
                     case 'auth1': {
                         this.debugLog(`Received t_o_k_e_n creation Step 1 message`);
-                        let that = this;
                         axiosInstanceToken.post(`/device_authorize?client_id=${client_id}&scope=offline_access`, {})
-                            .then(function (responseRaw) {
+                            .then((responseRaw) => {
                                 let response = responseRaw.data;
-                                that.log.debug('Response t_o_k_e_n Step 1 is ' + JSON.stringify(response));
-                                that.device_code = response.device_code;
-                                that.uri4token = response.verification_uri_complete;
-                                msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${that.uri4token}` }, msg.callback);
-                                that.log.info('Copy address in your browser and proceed ' + that.uri4token);
-                                that.debugLog('t_o_k_e_n Step 1 done');
+                                this.log.debug('Response t_o_k_e_n Step 1 is ' + JSON.stringify(response));
+                                this.device_code = response.device_code;
+                                this.uri4token = response.verification_uri_complete;
+                                msg.callback && this.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${this.uri4token}` }, msg.callback);
+                                this.log.info('Copy address in your browser and proceed ' + this.uri4token);
+                                this.debugLog('t_o_k_e_n Step 1 done');
                             })
                             .catch(error => {
                                 this.log.error('Error at token creation Step 1 ' + error);
@@ -113,7 +116,6 @@ class Tado extends utils.Adapter {
                     }
                     case 'auth2': {
                         this.debugLog(`Received t_o_k_e_n step 2 message`);
-                        let that = this;
                         if (!this.device_code) {
                             this.log.error('Step 1 was not executed, but step 2 startet! Please start/restart with Step 1.');
                             break;
@@ -121,13 +123,13 @@ class Tado extends utils.Adapter {
                         const uri = `/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
                         this.debugLog('t_o_k_e_n Step 2 Url is ' + uri);
                         axiosInstanceToken.post(uri, {})
-                            .then(async function (responseRaw) {
-                                that.debugLog('Response t_o_k_e_n Step 2 is ' + JSON.stringify(responseRaw.data));
-                                await that.manageNewToken(responseRaw.data);
-                                msg.callback && that.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
-                                that.log.info(`Token process done! Adapter starts now...`);
-                                that.debugLog('t_o_k_e_n Step 2 done');
-                                await that.DoConnect();
+                            .then(async (responseRaw) => {
+                                this.debugLog('Response t_o_k_e_n Step 2 is ' + JSON.stringify(responseRaw.data));
+                                await this.manageNewToken(responseRaw.data);
+                                msg.callback && this.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
+                                this.log.info(`Token process done! Adapter starts now...`);
+                                this.debugLog('t_o_k_e_n Step 2 done');
+                                await this.DoConnect();
                             })
                             .catch(error => {
                                 this.log.error('Error at token creation Step 2 ' + error);
@@ -135,7 +137,7 @@ class Tado extends utils.Adapter {
                                 if (error?.response?.data) {
                                     let message = JSON.stringify(error.response.data);
                                     if (message.includes('authorization_pending')) {
-                                        this.log.error(`Step 1 not completed. Open link '${that.uri4token}' in your browser and follow described steps on webpage`);
+                                        this.log.error(`Step 1 not completed. Open link '${this.uri4token}' in your browser and follow described steps on webpage`);
                                         return;
                                     } else {
                                         console.error(error + ' with response ' + JSON.stringify(error.response.data));
@@ -1002,17 +1004,16 @@ class Tado extends utils.Adapter {
             clearTimeout(pooltimer[pooltimerid]);
             pooltimer[pooltimerid] = null;
         }
-        let that = this;
         return new Promise((resolve, reject) => {
             pooltimer[pooltimerid] = setTimeout(async () => {
-                that.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be called.`);
-                await that.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool').then(apiResponse => {
+                this.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be called.`);
+                await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool').then(apiResponse => {
                     resolve(apiResponse);
-                    that.log.debug(`API request finalized for '${homeId}/${zoneId}'`);
+                    this.log.debug(`API request finalized for '${homeId}/${zoneId}'`);
                 }).catch(error => {
                     reject(error);
                 });
-                that.log.debug(`API called with ${JSON.stringify(config)}`);
+                this.log.debug(`API called with ${JSON.stringify(config)}`);
             }, 750);
         });
     }
@@ -1571,31 +1572,40 @@ class Tado extends utils.Adapter {
     /* TOKEN MANAGEMENT													*/
     //////////////////////////////////////////////////////////////////////
     async refreshToken() {
+        const id = '#' + Math.floor(Math.random() * 1000) + '#';
         const expires_at = new Date(this.accessToken.token.expires_at);
-        let shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
-        let that = this;
-        this.debugLog('Need to refresh t_o_k_e_n is ' + shouldRefresh + '  as expire time is ' + expires_at);
-        let i = 0;
-        while (this.refreshTokenInProgress && shouldRefresh) {
-            this.debugLog(`Waiting for refresh t_o_k_e_n to be finished... [${i}]`);
-            await this.sleep(500);
-            this.debugLog(`Waiting done! [${i}]`);
-            i++;
-            if (i > 10) break;
+        if (this.refreshTokenInProgress == false) { //check for expire only if refreshToken is not in progress
+            this.shouldRefreshToken = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
+            //this.shouldRefreshToken = true; //for testing only
+            this.debugLog('Need to refreshT is ' + this.shouldRefreshToken + '  as expire time is ' + expires_at);
+            /*setTimeout(() => {
+                this.refreshToken();
+            }, 70);*/ //for testing only
+        }
+        else {
+            this.debugLog('RefreshT in progress, therfore I just wait until refresh is done...' + ` [${id}]`);
+            let i = 0;
+            while (this.refreshTokenInProgress && this.shouldRefreshToken) {    //waiting until refreshToken is finished
+                this.debugLog(`Waiting for refreshT to be finished... [${id} / ${i}]`);
+                await this.sleep(500);
+                this.debugLog(`Waiting done! [${id} / ${i}]`);
+                i++;
+                if (i > 10) break;
+            }
         }
 
         return new Promise((resolve, reject) => {
-            if (shouldRefresh) {
+            if (this.shouldRefreshToken) {
                 this.refreshTokenInProgress = true;
-                this.debugLog('RefreshT started');
+                this.debugLog('RefreshT started' + ` [${id}]`);
                 let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.debug(`Uri for refresh token is ${uri}`);
                 axiosInstanceToken.post(uri, {})
-                    .then(async function (responseRaw) {
-                        let result = await that.manageNewToken(responseRaw.data);
-                        that.debugLog('RefreshT done');
+                    .then(async (responseRaw) => {
+                        let result = await this.manageNewToken(responseRaw.data);
+                        this.debugLog('RefreshT done' + ` [${id}]`);
                         resolve(result);
-                        shouldRefresh = false;
+                        this.shouldRefreshToken = false;
                         this.refreshTokenInProgress = false;
                     })
                     .catch(error => {
@@ -1608,7 +1618,7 @@ class Tado extends utils.Adapter {
                         reject(error);
                     });
             }
-            else resolve(that.accessToken);
+            else resolve(this.accessToken);
         });
     }
 
