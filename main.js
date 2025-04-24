@@ -96,6 +96,7 @@ class Tado extends utils.Adapter {
                                 that.device_code = response.device_code;
                                 that.uri4token = response.verification_uri_complete;
                                 msg.callback && that.sendTo(msg.from, msg.command, { error: `Copy address in your browser and proceed ${that.uri4token}` }, msg.callback);
+                                that.log.info('Copy address in your browser and proceed ' + that.uri4token);
                                 that.debugLog('t_o_k_e_n Step 1 done');
                             })
                             .catch(error => {
@@ -124,6 +125,7 @@ class Tado extends utils.Adapter {
                                 that.debugLog('Response t_o_k_e_n Step 2 is ' + JSON.stringify(responseRaw.data));
                                 await that.manageNewToken(responseRaw.data);
                                 msg.callback && that.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
+                                that.log.info(`Token process done! Adapter starts now...`);
                                 that.debugLog('t_o_k_e_n Step 2 done');
                                 await that.DoConnect();
                             })
@@ -1570,15 +1572,14 @@ class Tado extends utils.Adapter {
     //////////////////////////////////////////////////////////////////////
     async refreshToken() {
         const expires_at = new Date(this.accessToken.token.expires_at);
-        const shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
+        let shouldRefresh = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
         let that = this;
         this.debugLog('Need to refresh t_o_k_e_n is ' + shouldRefresh + '  as expire time is ' + expires_at);
         let i = 0;
-        this.refreshTokenInProgress = true;
         while (this.refreshTokenInProgress && shouldRefresh) {
-            this.debugLog('Waiting for refresh t_o_k_e_n to finish...');
+            this.debugLog(`Waiting for refresh t_o_k_e_n to be finished... [${i}]`);
             await this.sleep(500);
-            this.debugLog('Waiting done!');
+            this.debugLog(`Waiting done! [${i}]`);
             i++;
             if (i > 10) break;
         }
@@ -1594,10 +1595,12 @@ class Tado extends utils.Adapter {
                         let result = await that.manageNewToken(responseRaw.data);
                         that.debugLog('RefreshT done');
                         resolve(result);
+                        shouldRefresh = false;
                         this.refreshTokenInProgress = false;
                     })
                     .catch(error => {
                         if (error?.response?.data) {
+                            if (error?.response?.data?.error) console.error('RefreshT error is: ' + error.response.data.error);
                             console.error(error + ' with response ' + JSON.stringify(error.response.data));
                             this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
                         }
