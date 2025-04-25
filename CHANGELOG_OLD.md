@@ -1,4 +1,8 @@
 # Older changes
+## 0.7.3 (2025-03-17)
+* (HGlab01) refactoring debug logs
+* (HGlab01) Bump axios to 1.8.3
+
 ## 0.7.2 (2025-03-12)
 * (HGlab01) improve sentry logs
 

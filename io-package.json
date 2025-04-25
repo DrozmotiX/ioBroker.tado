@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.9",
+    "version": "0.7.10",
     "news": {
+      "0.7.10": {
+        "en": "further token refresh optimizations",
+        "de": "weitere token-erfrischungsoptimierungen",
+        "ru": "дальнейшая оптимизация обновления маркеров",
+        "pt": "novas otimizações de atualização",
+        "nl": "verdere verfrissen van token optimalisaties",
+        "fr": "poursuite des optimisations de rafraîchissement des jetons",
+        "it": "ulteriori ottimizzazioni di aggiornamento token",
+        "es": "nuevas optimizaciones de actualización",
+        "pl": "dalsze optymalizacje odświeżania symboli",
+        "uk": "подальші оптимізації оновлень токена",
+        "zh-cn": "进一步的符号刷新优化"
+      },
       "0.7.9": {
         "en": "fix issue 'refreshToken() failed'",
         "de": "problem beheben 'refreshToken() fehlgeschlagen '",
@@ -80,19 +93,6 @@
         "pl": "niektóre refakturowanie\nAksykony bumpy do 1.8.4",
         "uk": "деякі рефакторинги\nБампер аксіос до 1.8.4",
         "zh-cn": "一些重构内容\n横轴改为1.8.4"
-      },
-      "0.7.3": {
-        "en": "refactoring debug logs\nBump axios to 1.8.3",
-        "de": "refactoring debug logs\nBump axios zu 1.8.3",
-        "ru": "рефакторинг отладочных журналов\nАксиос удара до 1,8.3",
-        "pt": "logs de depuração refactoring\nBump axios para 1.8.3",
-        "nl": "refactoring debug logs\nBump axio's tot 1.8.3",
-        "fr": "refactoring des journaux de débogage\nAxios bouffés à 1.8.3",
-        "it": "refactoring debug logs\nAssio di bump a 1.8.3",
-        "es": "refactoring debug logs\nAxios de bomba a 1.8.3",
-        "pl": "refaktoring dzienników debugowania\nAxios bump do 1.8.3",
-        "uk": "рефакторинг debug журнали\nБампер аксіос до 1.8.3",
-        "zh-cn": "正在重构调试日志\n横轴改为1.8.3"
       }
     },
     "titleLang": {
