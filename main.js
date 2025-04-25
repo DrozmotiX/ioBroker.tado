@@ -1577,13 +1577,13 @@ class Tado extends utils.Adapter {
         if (this.refreshTokenInProgress == false) { //check for expire only if refreshToken is not in progress
             this.shouldRefreshToken = expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
             //this.shouldRefreshToken = true; //for testing only
-            this.debugLog('Need to refreshT is ' + this.shouldRefreshToken + '  as expire time is ' + expires_at);
+            this.debugLog(`Need to refreshT is ${this.shouldRefreshToken} as expire time is ${expires_at}`);
             /*setTimeout(() => {
                 this.refreshToken();
             }, 70);*/ //for testing only
         }
         else {
-            this.debugLog('RefreshT in progress, therfore I just wait until refresh is done...' + ` [${id}]`);
+            this.debugLog(`RefreshT in progress, therfore I just wait until refresh is done... [${id}]`);
             let i = 0;
             while (this.refreshTokenInProgress && this.shouldRefreshToken) {    //waiting until refreshToken is finished
                 this.debugLog(`Waiting for refreshT to be finished... [${id} / ${i}]`);
@@ -1597,13 +1597,13 @@ class Tado extends utils.Adapter {
         return new Promise((resolve, reject) => {
             if (this.shouldRefreshToken) {
                 this.refreshTokenInProgress = true;
-                this.debugLog('RefreshT started' + ` [${id}]`);
+                this.debugLog(`RefreshT started [${id}]`);
                 let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.debug(`Uri for refresh token is ${uri}`);
                 axiosInstanceToken.post(uri, {})
                     .then(async (responseRaw) => {
                         let result = await this.manageNewToken(responseRaw.data);
-                        this.debugLog('RefreshT done' + ` [${id}]`);
+                        this.debugLog(`RefreshT done [${id}]`);
                         resolve(result);
                         this.shouldRefreshToken = false;
                         this.refreshTokenInProgress = false;
