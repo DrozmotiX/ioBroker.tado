@@ -47,7 +47,7 @@
     "sinon-chai": "^4.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.0.0"
   },
   "main": "main.js",
   "scripts": {
