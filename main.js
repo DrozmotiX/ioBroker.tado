@@ -1143,6 +1143,12 @@ class Tado extends utils.Adapter {
             if (rooms[i].balanceControl === null) { // === attribute exists and is null
                 delete rooms[i].balanceControl;
             }
+            if (rooms[i].openWindow === null) {     // === attribute exists and is null
+                delete rooms[i].openWindow;
+            }
+            if (rooms[i].awayMode === null) {       // === attribute exists and is null
+                delete rooms[i].awayMode;
+            }
         }
         this.debugLog('Modified rooms object is ' + JSON.stringify(rooms));
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
@@ -1600,7 +1606,7 @@ class Tado extends utils.Adapter {
                 this.debugLog(`RefreshT started [${id}]`);
                 let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.debug(`Uri for refresh token is ${uri}`);
-                axiosInstanceToken.post(uri, {})
+                axiosInstanceToken.post(uri, { timeout: 10000 })
                     .then(async (responseRaw) => {
                         let result = await this.manageNewToken(responseRaw.data);
                         this.debugLog(`RefreshT done [${id}]`);
@@ -1610,9 +1616,15 @@ class Tado extends utils.Adapter {
                     })
                     .catch(error => {
                         if (error?.response?.data) {
-                            if (error?.response?.data?.error) console.error('RefreshT error is: ' + error.response.data.error);
-                            console.error(error + ' with response ' + JSON.stringify(error.response.data));
-                            this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+                            if (error?.response?.data?.error) {
+                                console.error('RefreshT error is: ' + error.response.data.error);
+                                this.log.error('Refresh-Token error is: ' + error.response.data.error);
+                                if (error.response.data.error.includes('invalid_grant')) this.log.warn('If this error happens again, re-create token in adapter settings by starting with step 1');
+                            }
+                            else {
+                                console.error(error + ' with response ' + JSON.stringify(error.response.data));
+                                this.log.error(error + ' with response ' + JSON.stringify(error.response.data));
+                            }
                         }
                         this.refreshTokenInProgress = false;
                         reject(error);
