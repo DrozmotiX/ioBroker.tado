@@ -183,7 +183,17 @@
   "encryptedNative": [],
   "protectedNative": [],
   "native": {
-    "intervall": 60
+    "intervall": 60,
+    "standard": 90,
+    "mobildevices": 720,
+    "weather": 10,
+    "zones": 180,
+    "temperatureOffset": 0,
+    "homeState": 720,
+    "awayConfiguration": 720,
+    "timeTables": 0,
+    "logCalls": false,
+    "logCallsDetail": false
   },
   "objects": [],
   "instanceObjects": [
