@@ -71,7 +71,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.7.11-alpha.0 (2025-09-10)
 * (HGlab01) fix issue 'definition missing for awayMode' [TadoX]
 * (HGlab01) fix issue 'definition missing for preheating' [TadoX]
 * (HGlab01) Additional guidance/log when it comes to RefreshToken issue
@@ -89,10 +89,6 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 ### 0.7.7 (2025-04-08)
 * (HGlab01) optimize sentry usage
 * (HGlab01) improve retry-mechanism when it comes to erros
-
-### 0.7.5 (2025-03-31)
-* (HGlab01) some further refactorings
-* (HGlab01) Bump axios to 1.8.4
 
 ## License
 MIT License

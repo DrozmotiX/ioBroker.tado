@@ -1,4 +1,8 @@
 # Older changes
+## 0.7.5 (2025-03-31)
+* (HGlab01) some further refactorings
+* (HGlab01) Bump axios to 1.8.4
+
 ## 0.7.3 (2025-03-17)
 * (HGlab01) refactoring debug logs
 * (HGlab01) Bump axios to 1.8.3
