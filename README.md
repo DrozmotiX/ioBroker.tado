@@ -15,6 +15,12 @@ Tado° (https://www.tado.com) is the expert in smart heating and energy manageme
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
+## !IMPORTANT! Tado° will introduce API call limits
+Tado will introduce a limit on API calls. Users without an Auto-Assist subscription are restricted to 100 calls per day, with subsription to 20.000 calls.  
+For more information, please refer to [this](https://support.tado.com/en/articles/12165739-limitation-for-rest-api-usage) article.  
+A new feature has been added to the Tado ioBroker adapter, providing new configuration capabilities to manage API usage. Nevertheless, the daily limit of 100 calls means the adapter is unusable without an Auto-Assist subscription. This translates to only about four requests per hour, which significantly hinders the adapter’s functionality.  
+If you're not happy with Tado's decision, you should let them [know](https://support.tado.com/de/articles/3590239-wie-kann-ich-den-kundensupport-von-tado-kontaktieren)!
+
 ## Tado° X
 Basic support for Tado° X available.
 If your setup is not working, please raise a [ticket](https://github.com/DrozmotiX/ioBroker.tado/issues/new?assignees=HGlab01&labels=enhancement&projects=&template=Enhancement.md&title=). You will need to support some debugging session and interact with the adapter developer to improve Tado° X features.
@@ -69,6 +75,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 * (HGlab01) fix issue 'definition missing for awayMode' [TadoX]
 * (HGlab01) fix issue 'definition missing for preheating' [TadoX]
 * (HGlab01) Additional guidance/log when it comes to RefreshToken issue
+*  (HGlab01) new configuration capabilities to manage API usage (#1047, #1048)
 
 ### 0.7.10 (2025-04-25)
 * (HGlab01) further token refresh optimizations
