@@ -147,9 +147,8 @@ class Tado extends utils.Adapter {
             if (outdated[key].intervall === 0) {
                 outdated[key].intervall = 999999999999999;
             }
-            this.log.info(`${key}: ${outdated[key].intervall}`);
+            this.debugLog(`${key}: ${outdated[key].intervall}`);
         }
-        this.log.info(`${outdated.DoTemperatureOffset.intervall}`);
 
         const tokenObject = await this.getObjectAsync('_config');
         this.debugLog(`T-Object from config is${JSON.stringify(tokenObject)}`);
@@ -1869,11 +1868,7 @@ class Tado extends utils.Adapter {
                 });
 
                 step = 'DoHome';
-                //if (outdated[step].isOutdated) {
-                //    outdated[step].lastUpdate = now;
                 await this.DoHome(homeId); //API Call only needed once, because data is static
-                //await jsonExplorer.checkExpire(`${homeId}.*`);
-                //}
 
                 step = 'DoMobileDevices';
                 if (outdated[step].isOutdated) {

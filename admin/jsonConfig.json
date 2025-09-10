@@ -9,25 +9,6 @@
       "type": "panel",
       "label": "Authorization",
       "items": {
-        "_intervall": {
-          "newLine": true,
-          "type": "header",
-          "text": "Set the polling interval",
-          "size": 3
-        },
-        "intervall": {
-          "newLine": true,
-          "type": "number",
-          "label": "Interval in seconds",
-          "min": 30,
-          "max": 3600,
-          "step": 5,
-          "xs": 12,
-          "sm": 12,
-          "md": 6,
-          "lg": 4,
-          "xl": 4
-        },
         "auth": {
           "newLine": true,
           "type": "header",
@@ -97,7 +78,7 @@
         "standard": {
           "newLine": true,
           "type": "number",
-          "label": "Standard interval in seconds",
+          "label": "Standard interval in SECONDS",
           "min": 60,
           "max": 3600,
           "step": 5,
@@ -110,7 +91,7 @@
         "mobildevices": {
           "newLine": false,
           "type": "number",
-          "label": "MobileDevices interval in minutes (${homeId}.Mobile_Devices)",
+          "label": "MobileDevices interval in MINUTES (${homeId}.Mobile_Devices)",
           "min": 0,
           "step": 1,
           "xs": 12,
@@ -122,7 +103,7 @@
         "weather": {
           "newLine": true,
           "type": "number",
-          "label": "Weather interval in minutes (${homeId}.Weather)",
+          "label": "Weather interval in MINUTES (${homeId}.Weather)",
           "min": 0,
           "step": 1,
           "xs": 12,
@@ -134,7 +115,7 @@
         "zones": {
           "newLine": false,
           "type": "number",
-          "label": "Zones interval in minutes (${homeId}.Rooms - only static data like devices)",
+          "label": "Zones interval in MINUTES (${homeId}.Rooms - only static data like devices)",
           "min": 0,
           "step": 1,
           "xs": 12,
@@ -146,7 +127,7 @@
         "temperatureOffset": {
           "newLine": true,
           "type": "number",
-          "label": "TemperatureOffset interval in minutes (${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset)",
+          "label": "TemperatureOffset interval in MINUTES (${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset)",
           "min": 0,
           "step": 1,
           "xs": 12,
@@ -158,7 +139,7 @@
         "timeTables": {
           "newLine": false,
           "type": "number",
-          "label": "TimeTables interval in minutes (${homeId}.Rooms.${zoneId}.timeTables)",
+          "label": "TimeTables interval in MINUTES (${homeId}.Rooms.${zoneId}.timeTables)",
           "min": 0,
           "step": 1,
           "xs": 12,
@@ -170,7 +151,7 @@
         "awayConfiguration": {
           "newLine": true,
           "type": "number",
-          "label": "AwayConfiguration interval in minutes (${homeId}.Rooms.${zoneId}.awayConfig)",
+          "label": "AwayConfiguration interval in MINUTES (${homeId}.Rooms.${zoneId}.awayConfig)",
           "min": 0,
           "step": 1,
           "xs": 12,
@@ -182,7 +163,7 @@
         "homeState": {
           "newLine": false,
           "type": "number",
-          "label": "HomeState interval in minutes (${homeId}.Home.state) - cannot be 0",
+          "label": "HomeState interval in MINUTES (${homeId}.Home.state) - cannot be 0",
           "min": 1,
           "step": 1,
           "xs": 12,
@@ -214,7 +195,7 @@
         "interval_text1": {
           "newLine": true,
           "type": "staticText",
-          "text": "Tado is limiting the number of API calls. Without Auto-Assist subscription it is only 100 calls a day! <br>For details check https://support.tado.com/en/articles/12165739-limitation-for-rest-api-usage. <br> Configuration above allows to tune the number of calls for your specific needs. <br> If you are not happy with Tado's decision, maybe Tado should know it https://support.tado.com/de/articles/3590239-wie-kann-ich-den-kundensupport-von-tado-kontaktieren",
+          "text": "Tado is limiting the number of API calls. Without Auto-Assist subscription it is only 100 calls a day! <br>For details check [this](https://support.tado.com/en/articles/12165739-limitation-for-rest-api-usage). <br> Configuration above allows to tune the number of calls for your specific needs. <br> If you're not happy with Tado's decision, you should let them know. https://support.tado.com/de/articles/3590239-wie-kann-ich-den-kundensupport-von-tado-kontaktieren <br> Note: First attribute is in seconds, all others in minutes.",
           "xs": 12,
           "sm": 12,
           "md": 12,
