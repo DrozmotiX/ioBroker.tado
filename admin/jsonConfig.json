@@ -175,7 +175,7 @@
         "logCalls": {
           "newLine": true,
           "type": "checkbox",
-          "label": "Log number of API calls to calculate daily consumption",
+          "label": "Log every 20th API call to verify daily consumption",
           "xs": 12,
           "sm": 12,
           "md": 6,
@@ -185,7 +185,7 @@
         "logCallsDetail": {
           "newLine": true,
           "type": "checkbox",
-          "label": "Log number of API calls in detail to calculate daily consumption",
+          "label": "Log number after each API call incl. URL to verify daily consumption (may produce a lot of log entries!)",
           "xs": 12,
           "sm": 12,
           "md": 6,
@@ -195,7 +195,7 @@
         "interval_text1": {
           "newLine": true,
           "type": "staticText",
-          "text": "Tado is limiting the number of API calls. Without Auto-Assist subscription it is only 100 calls a day! <br>For details check [this](https://support.tado.com/en/articles/12165739-limitation-for-rest-api-usage). <br> Configuration above allows to tune the number of calls for your specific needs. <br> If you're not happy with Tado's decision, you should let them know. https://support.tado.com/de/articles/3590239-wie-kann-ich-den-kundensupport-von-tado-kontaktieren <br> Note: First attribute is in seconds, all others in minutes.",
+          "text": "Tado is limiting the number of API calls. Without Auto-Assist subscription it is only 100 calls a day! <br>For details check https://support.tado.com/en/articles/12165739-limitation-for-rest-api-usage. <br> Configuration above allows to tune the number of calls for your specific needs. <br> If you're not happy with Tado's decision, you should let them know. https://support.tado.com/de/articles/3590239-wie-kann-ich-den-kundensupport-von-tado-kontaktieren <br> Note: First attribute is in seconds, all others in minutes.",
           "xs": 12,
           "sm": 12,
           "md": 12,

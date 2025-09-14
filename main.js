@@ -2495,6 +2495,7 @@ class Tado extends utils.Adapter {
             numberOfCalls.calls = numberOfCalls.calls + 1;
         } else {
             //new day, reset counter
+            this.log.info(`${numberOfCalls.calls} API calls at the end of yesterday.`);
             numberOfCalls.calls = 1;
             numberOfCalls.day = new Date().getDate();
         }
