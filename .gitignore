@@ -1,5 +1,6 @@
 .git
 .idea
+.commitinfo
 node_modules
 nbproject
 
