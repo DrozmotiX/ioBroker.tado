@@ -71,11 +71,12 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.7.11-alpha.0 (2025-09-10)
+### __WORK IN PROGRESS__
 * (HGlab01) fix issue 'definition missing for awayMode' [TadoX]
 * (HGlab01) fix issue 'definition missing for preheating' [TadoX]
 * (HGlab01) Additional guidance/log when it comes to RefreshToken issue
-*  (HGlab01) new configuration capabilities to manage API usage (#1047, #1048)
+* (HGlab01) new configuration capabilities to manage API usage quota (#1047, #1048)
+* (HGlab01) Bump axios to 1.12.2
 
 ### 0.7.10 (2025-04-25)
 * (HGlab01) further token refresh optimizations
