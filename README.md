@@ -65,7 +65,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 ## Requires
 * Node.js 20 or higher
 * ioBroker host (js-controller) 7.0.6 or higher
-* iorbroker.admin 7.7.2 or higher
+* iorBroker.admin 7.7.2 or higher
 
 ## Changelog
 <!--
