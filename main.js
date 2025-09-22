@@ -28,9 +28,64 @@ const axiosInstanceToken = axios.create({
     baseURL: `https://login.tado.com/oauth2`,
 });
 
-const ONEHOUR = 60 * 60 * 1000;
+//const ONEHOUR = 60 * 60 * 1000;
 let polling; // Polling timer
 let pooltimer = [];
+let numberOfCalls = {};
+numberOfCalls.calls = 0;
+numberOfCalls.day = new Date().getDate();
+
+let outdated = {
+    //${homeId}.Mobile_Devices
+    DoMobileDevices: {
+        isOutdated: false,
+        lastUpdate: 0,
+        intervall: 60,
+    },
+    //${homeId}.Weather
+    DoWeather: {
+        isOutdated: false,
+        lastUpdate: 0,
+        intervall: 10,
+    },
+    //${homeId}.Rooms
+    DoZones: {
+        isOutdated: false,
+        lastUpdate: 0,
+        intervall: 60,
+    },
+    //${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset
+    DoTemperatureOffset: {
+        isOutdated: false,
+        lastUpdate: 0,
+        intervall: 60 * 24,
+    },
+    //${homeId}.Rooms.${zoneId}.timeTables
+    DoTimeTables: {
+        isOutdated: false,
+        lastUpdate: 0,
+        intervall: 60 * 24,
+    },
+    //${homeId}.Rooms.${zoneId}.awayConfig
+    DoAwayConfiguration: {
+        isOutdated: false,
+        lastUpdate: 0,
+        intervall: 60 * 24,
+    },
+    //${homeId}.Home.state
+    DoHomeState: {
+        isOutdated: false,
+        lastUpdate: 60,
+    },
+};
+
+//let ikey = 0;
+for (let key in outdated) {
+    //outdated[key].intervall = (1 + ikey) * 60 * 1000; //5min
+    //ikey++;
+    outdated[key].intervall = outdated[key].intervall * 60 * 1000;
+}
+//outdated['DoHomeState'].intervall = 999999999999999;
 
 class Tado extends utils.Adapter {
     /**
@@ -47,17 +102,23 @@ class Tado extends utils.Adapter {
         this.on('unload', this.onUnload.bind(this));
         this.on('message', this.onMessage.bind(this));
         jsonExplorer.init(this, state_attr);
-        this.getMe_data = null;
-        this.home_data = null;
         this.lastupdate = 0;
+        this.retryCount = 0;
         this.apiCallinExecution = false;
         this.intervall_time = 60 * 1000;
-        this.roomCapabilities = {};
         this.oldStatesVal = [];
+        this.isTadoX = false;
+        //data objects
+        this.getMeData = null;
+        this.homeData = null;
+        this.zonesData = {};
+        this.timeTablesData = {};
+        this.awayConfigurationData = {};
+        this.roomCapabilities = {};
+        //token
         this.device_code = '';
         this.uri4token = '';
-        this.retryCount = 0;
-        this.isTadoX = false;
+        this.accessToken = {};
         this.refreshTokenInProgress = false;
         this.shouldRefreshToken = false;
     }
@@ -68,7 +129,26 @@ class Tado extends utils.Adapter {
     async onReady() {
         jsonExplorer.sendVersionInfo(version);
         this.log.info(`Started with JSON-Explorer version ${jsonExplorer.version}`);
+
+        //read config
         this.intervall_time = Math.max(30, this.config.intervall) * 1000;
+        this.logCalls = this.config.logCalls || false;
+        this.logCallsDetail = this.config.logCallsDetail || false;
+        this.intervall_time = Math.max(60, this.config.standard || 60) * 1000;
+        outdated.DoMobileDevices.intervall = (this.config.mobildevices || 0) * 60 * 1000;
+        outdated.DoWeather.intervall = (this.config.weather || 0) * 60 * 1000;
+        outdated.DoZones.intervall = (this.config.zones || 0) * 60 * 1000;
+        outdated.DoTemperatureOffset.intervall = (this.config.temperatureOffset || 0) * 60 * 1000;
+        outdated.DoHomeState.intervall = (this.config.homeState || 0) * 60 * 1000;
+        outdated.DoAwayConfiguration.intervall = (this.config.awayConfiguration || 0) * 60 * 1000;
+        outdated.DoTimeTables.intervall = (this.config.timeTables || 0) * 60 * 1000;
+
+        for (let key in outdated) {
+            if (outdated[key].intervall === 0) {
+                outdated[key].intervall = 999999999999999;
+            }
+            this.debugLog(`${key}: ${outdated[key].intervall}`);
+        }
 
         const tokenObject = await this.getObjectAsync('_config');
         this.debugLog(`T-Object from config is${JSON.stringify(tokenObject)}`);
@@ -1750,7 +1830,14 @@ class Tado extends utils.Adapter {
     async DoData_Refresh() {
         let now = new Date().getTime();
         let step = 'start';
-        let outdated = now - this.lastupdate > ONEHOUR;
+        //outdated = now - this.lastupdate > ONEHOUR;
+        //check outdate status for all objects
+        for (const key in outdated) {
+            if (Object.prototype.hasOwnProperty.call(outdated, key)) {
+                outdated[key].isOutdated = now - outdated[key].lastUpdate > outdated[key].intervall;
+                this.log.debug(`${key} is outdated: ${outdated[key].isOutdated}`);
+            }
+        }
         let conn_state = await this.getStateAsync('info.connection');
         if (conn_state) {
             this.debugLog(`info.connection is ${conn_state.val}`);
@@ -1758,20 +1845,20 @@ class Tado extends utils.Adapter {
 
         try {
             // Get Basic data needed for all other querys and store to global variable
-            step = 'getMe_data';
-            if (this.getMe_data === null) {
-                this.getMe_data = await this.getMe();
+            step = 'getMeData';
+            if (this.getMeData == null) {
+                this.getMeData = await this.getMe();
             }
-            this.debugLog(`GetMe result: ${JSON.stringify(this.getMe_data)}`);
-            if (!this.getMe_data) {
+            this.debugLog(`GetMe result: ${JSON.stringify(this.getMeData)}`);
+            if (!this.getMeData) {
                 throw new Error('getMe_data was null');
             }
             //set timestamp for 'Online'-state
             await jsonExplorer.setLastStartTime();
 
-            for (const i in this.getMe_data.homes) {
-                let homeId = String(this.getMe_data.homes[i].id);
-                this.DoWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMe_data);
+            for (const i in this.getMeData.homes) {
+                let homeId = String(this.getMeData.homes[i].id);
+                this.DoWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMeData);
                 this.setObjectAsync(homeId, {
                     type: 'folder',
                     common: {
@@ -1780,36 +1867,36 @@ class Tado extends utils.Adapter {
                     native: {},
                 });
 
-                if (outdated) {
-                    this.debugLog('Full refresh, data outdated (more than 60 minutes ago)');
-                    this.lastupdate = now;
-                    step = 'DoHome';
-                    await this.create_state(`${homeId}.meterReadings`, 'meterReadings', JSON.stringify({}));
-                    await this.DoHome(homeId);
-                }
+                step = 'DoHome';
+                await this.DoHome(homeId); //API Call only needed once, because data is static
+
                 step = 'DoMobileDevices';
-                await this.DoMobileDevices(homeId);
+                if (outdated[step].isOutdated) {
+                    outdated[step].lastUpdate = now;
+                    await this.DoMobileDevices(homeId);
+                    await jsonExplorer.checkExpire(`${homeId}.Mobile_Devices.*`);
+                }
+
+                step = 'DoWeather';
+                if (outdated[step].isOutdated) {
+                    outdated[step].lastUpdate = now;
+                    await this.DoWeather(homeId);
+                    await jsonExplorer.checkExpire(`${homeId}.Weather.*`);
+                }
+
                 step = 'DoZones';
                 if (this.isTadoX) {
                     await this.DoRoomsTadoX(homeId);
                 } else {
                     await this.DoZones(homeId);
                 }
-                step = 'DoWeather';
-                await this.DoWeather(homeId);
-                step = 'DoHomeState';
-                await this.DoHomeState(homeId);
+                await jsonExplorer.checkExpire(`${homeId}.Rooms.*`);
 
-                //set all outdated states to NULL
-                step = `Set outdated states to null`;
-                if (outdated) {
-                    this.debugLog(`CheckExpire() at DoDataRefresh() scenario 'outdated' started`);
-                    await jsonExplorer.checkExpire(`${homeId}.*`);
-                } else {
-                    this.debugLog(`CheckExpire() at DoDataRefresh() scenario 'not outdated' started`);
-                    await jsonExplorer.checkExpire(`${homeId}.Rooms.*`);
-                    await jsonExplorer.checkExpire(`${homeId}.Weather.*`);
-                    await jsonExplorer.checkExpire(`${homeId}.Mobile_Devices.*`);
+                step = 'DoHomeState';
+                if (outdated[step].isOutdated) {
+                    outdated[step].lastUpdate = now;
+                    await this.DoHomeState(homeId);
+                    await jsonExplorer.checkExpire(`${homeId}.Home.state.*`);
                 }
             }
 
@@ -1834,6 +1921,7 @@ class Tado extends utils.Adapter {
                 this.DoConnect();
             }, this.intervall_time);
             this.retryCount = 0;
+            //this.log.info(`${numberOfCalls.calls} API calls since start.`);
         } catch (error) {
             this.retryCount = this.retryCount + 1;
             let retryDelay = 60 * this.retryCount;
@@ -1849,6 +1937,12 @@ class Tado extends utils.Adapter {
                 this.setState('info.connection', false, true);
                 // retry connection
                 polling = setTimeout(() => {
+                    for (let key in outdated) {
+                        this.getMeData = null;
+                        this.homeData = null;
+                        this.roomCapabilities = {};
+                        outdated[key].lastUpdate = 0; //reset all lastUpdate to 0 to force refresh of all data
+                    }
                     this.DoConnect();
                 }, retryDelay * 1000);
             } else {
@@ -1897,24 +1991,25 @@ class Tado extends utils.Adapter {
      */
     async DoHome(homeId) {
         // Get additional basic data for all homes
-        if (this.home_data === null) {
-            this.home_data = await this.getHome(homeId);
+        if (this.homeData === null) {
+            this.homeData = await this.getHome(homeId);
+            await this.create_state(`${homeId}.meterReadings`, 'meterReadings', JSON.stringify({}));
         }
-        this.debugLog(`Home_data Result: ${JSON.stringify(this.home_data)}`);
-        if (this.home_data.generation == 'LINE_X') {
+        this.debugLog(`Home_data Result: ${JSON.stringify(this.homeData)}`);
+        if (this.homeData.generation == 'LINE_X') {
             this.isTadoX = true;
             this.log.info(`TadoX is ${this.isTadoX}`);
         } else {
             this.isTadoX = false;
         }
-        if (this.home_data == null) {
+        if (this.homeData == null) {
             throw new Error('home_data is null');
         }
         if (!this.isTadoX) {
-            this.home_data.masterswitch = '';
+            this.homeData.masterswitch = '';
         }
-        this.DoWriteJsonRespons(homeId, 'Stage_02_HomeData', this.home_data);
-        jsonExplorer.traverseJson(this.home_data, `${homeId}.Home`, true, true, 0);
+        this.DoWriteJsonRespons(homeId, 'Stage_02_HomeData', this.homeData);
+        await jsonExplorer.traverseJson(this.homeData, `${homeId}.Home`, true, true, 0);
     }
 
     /**
@@ -1973,7 +2068,11 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async DoZones(homeId) {
-        let zones_data = await this.getZones(homeId);
+        if (outdated['DoZones'].isOutdated) {
+            outdated['DoZones'].lastUpdate = new Date().getTime();
+            this.zonesData = await this.getZones(homeId);
+        }
+        let zones_data = structuredClone(this.zonesData);
         this.debugLog(`Zones_data Result: ${JSON.stringify(zones_data)}`);
         if (zones_data == null) {
             throw new Error('Zones_data is null');
@@ -1989,7 +2088,11 @@ class Tado extends utils.Adapter {
                     if (deviceId != undefined) {
                         this.debugLog(`DeviceID for offset found: ${JSON.stringify(zones_data[j][k][l].serialNo)}`);
                         zones_data[j][k][l].id = zones_data[j][k][l].serialNo;
-                        if (zones_data[j][k][l].duties.includes(`ZONE_LEADER`)) {
+                        if (
+                            zones_data[j][k][l].duties.includes(`ZONE_LEADER`) &&
+                            outdated['DoTemperatureOffset'].isOutdated
+                        ) {
+                            outdated['DoTemperatureOffset'].lastUpdate = new Date().getTime();
                             await this.DoTemperatureOffset(homeId, zoneId, deviceId);
                         }
                     }
@@ -2054,21 +2157,26 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      * @param {string} zoneId
-     * @param {object} timeTablesData
+     * @param {object} timeTablesDataInput
      */
-    async DoTimeTables(homeId, zoneId, timeTablesData = null) {
-        if (timeTablesData == null) {
-            timeTablesData = await this.getTimeTables(homeId, zoneId);
+    async DoTimeTables(homeId, zoneId, timeTablesDataInput = null) {
+        if (timeTablesDataInput != null) {
+            this.timeTablesData = timeTablesDataInput;
+        } else {
+            if (outdated['DoTimeTables'].isOutdated) {
+                outdated['DoTimeTables'].lastUpdate = new Date().getTime();
+                this.timeTablesData = await this.getTimeTables(homeId, zoneId);
+            }
         }
-        if (timeTablesData == null) {
+        if (this.timeTablesData == null) {
             throw new Error('TimeTables_data is null');
         }
-        timeTablesData.tt_id = timeTablesData.id;
-        delete timeTablesData.id;
-        this.debugLog(`ZoneOverlay_data Result: ${JSON.stringify(timeTablesData)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_13_TimeTables_${zoneId}`, timeTablesData);
-        this.debugLog(`Timetable for room ${zoneId} is ${JSON.stringify(timeTablesData)}`);
-        jsonExplorer.traverseJson(timeTablesData, `${homeId}.Rooms.${zoneId}.timeTables`, true, true, 2);
+        this.timeTablesData.tt_id = this.timeTablesData.id;
+        delete this.timeTablesData.id;
+        this.debugLog(`ZoneOverlay_data Result: ${JSON.stringify(this.timeTablesData)}`);
+        this.DoWriteJsonRespons(homeId, `Stage_13_TimeTables_${zoneId}`, this.timeTablesData);
+        this.debugLog(`Timetable for room ${zoneId} is ${JSON.stringify(this.timeTablesData)}`);
+        jsonExplorer.traverseJson(this.timeTablesData, `${homeId}.Rooms.${zoneId}.timeTables`, true, true, 2);
     }
 
     /**
@@ -2076,13 +2184,16 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async DoAwayConfiguration(homeId, zoneId) {
-        const AwayConfiguration_data = await this.getAwayConfiguration(homeId, zoneId);
-        if (AwayConfiguration_data == null) {
+        if (outdated['DoAwayConfiguration'].isOutdated) {
+            outdated['DoAwayConfiguration'].lastUpdate = new Date().getTime();
+            this.awayConfigurationData = await this.getAwayConfiguration(homeId, zoneId);
+        }
+        if (this.awayConfigurationData == null) {
             throw new Error('AwayConfiguration_data is null');
         }
-        this.debugLog(`AwayConfiguration_data Result: ${JSON.stringify(AwayConfiguration_data)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, AwayConfiguration_data);
-        jsonExplorer.traverseJson(AwayConfiguration_data, `${homeId}.Rooms.${zoneId}.awayConfig`, true, true, 2);
+        this.debugLog(`AwayConfiguration_data Result: ${JSON.stringify(this.awayConfigurationData)}`);
+        this.DoWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, this.awayConfigurationData);
+        jsonExplorer.traverseJson(this.awayConfigurationData, `${homeId}.Rooms.${zoneId}.awayConfig`, true, true, 2);
     }
 
     /**
@@ -2378,6 +2489,21 @@ class Tado extends utils.Adapter {
             if (error instanceof Error) {
                 throw error;
             }
+        }
+        if (numberOfCalls.day == new Date().getDate()) {
+            //same day
+            numberOfCalls.calls = numberOfCalls.calls + 1;
+        } else {
+            //new day, reset counter
+            this.log.info(`${numberOfCalls.calls} API calls at the end of yesterday.`);
+            numberOfCalls.calls = 1;
+            numberOfCalls.day = new Date().getDate();
+        }
+        if (numberOfCalls.calls % 20 === 0 && this.logCalls) {
+            this.log.info(`${numberOfCalls.calls} API calls for today.`);
+        }
+        if (this.logCallsDetail) {
+            this.log.info(`${numberOfCalls.calls} API calls for today. [${url}]`);
         }
         return promise;
     }

@@ -1,8 +1,34 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.7.10",
+    "version": "0.8.0-alpha.0",
     "news": {
+      "0.8.0-alpha.0": {
+        "en": "fix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nnew configuration capabilities to manage API usage quota (#1047, #1048)\nBump axios to 1.12.2",
+        "de": "problem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nneue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nBump axios zu 1.12.2",
+        "ru": "обсуждение Definition Missing for awayMode (TadoX)\nпроблема исправления «определение, отсутствующее для предварительного нагрева» [ТадоХ]\nДополнительное руководство / журнал, когда дело доходит до проблемы RefreshToken\nновые возможности конфигурации для управления квотой использования API (#1047, #1048)\nАксиос накачки до 1.12.2",
+        "pt": "corrigir problema 'definição em falta para awayMode' [TadoX]\ncorrigir a questão 'definição em falta para o pré-aquecimento' [TadoX]\nOrientação/log adicional quando se trata de questão RefreshToken\nnovos recursos de configuração para gerenciar a quota de uso da API (#1047, #1048)\nBump axios a 1.12.2",
+        "nl": "fix issue 'definitie ontbreekt voor wegMode' [TadoX]\nfix issue 'definitie ontbreekt voor voorverwarming' [TadoX]\nAanvullende richtsnoeren/log als het gaat om RefreshToken kwestie\nnieuwe configuratiemogelijkheden voor het beheren van API-gebruiksquota (#1047, #1048)\nBump axios naar 1.12.2",
+        "fr": "correction du problème 'définition manquante pour awayMode' [TadoX]\ncorrection de la question \"définition manquante pour le préchauffage\" [TadoX]\nConseils/log supplémentaires pour la question RefreshToken\nnouvelles capacités de configuration pour gérer le quota d'utilisation de l'API (#1047, #1048)\nAxios de pompe au 1.12.2",
+        "it": "risolvere problema 'definizione mancante per viaMode' [TadoX]\nrisolvere problema 'definizione mancante per preriscaldamento' [TadoX]\nUlteriori indicazioni/log quando si tratta di RefreshToken problema\nnuove funzionalità di configurazione per gestire la quota di utilizzo API (#1047, #1048)\nAssio di bump a 1.12.2",
+        "es": "solucionar el problema 'definición falta para awayMode' [TadoX]\nsolucionar el problema 'definición falta para precalentar' [TadoX]\nOrientación/log adicional cuando se trata de asunto RefreshToken\nnuevas capacidades de configuración para gestionar la cuota de uso de API (#1047, #1048)\nAxios de bomba a 1.12.2",
+        "pl": "fix issue \"brakuje definicji dla awayMode\" [TadoX]\nfix issue \"brakuje definicji dla podgrzewania wstępnego\" [TadoX]\nDodatkowe wytyczne / dziennik w odniesieniu do wydania ReforecToken\nnowe możliwości konfiguracji w celu zarządzania kwotą użytkowania API (# 1047, # 1048)\nAksykony bumpy do 1.12.2",
+        "uk": "виправлено проблему «відхилення відліку» [TadoX]\nвиправлено проблему «відхилення від прогріву» [Тадокс]\nДодаткові вказівки / журнал, коли мова йде про RefreshToken\nнові можливості налаштування для управління квотою використання API (#1047, #1048)\nБампер аксіос до 1.12.2",
+        "zh-cn": "固定问题“ 定义缺失, 用于远程模式 ” [TadoX]\n修复问题“ 预热定义缺失 ” [塔多\n关于刷新问题的补充指导/记录\n管理API使用配额的新配置能力(#1047,#1048)\n横轴改为1.12.2"
+      },
+      "0.7.11-alpha.0": {
+        "en": "fix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nnew configuration capabilities to manage API usage (#1047, #1048)",
+        "de": "Problem „Definition für awayMode fehlt“ behoben [TadoX]\nProblem „Definition für Vorheizen fehlt“ behoben [TadoX]\nZusätzliche Anleitung/Protokoll zum RefreshToken-Problem\nneue Konfigurationsmöglichkeiten zur Verwaltung der API-Nutzung (#1047, #1048)",
+        "ru": "Исправлена ошибка «отсутствует определение для awayMode» [TadoX]\nИсправлена ошибка «Отсутствует определение предварительного нагрева» [TadoX]\nДополнительные рекомендации/журналы по проблеме RefreshToken\nновые возможности конфигурации для управления использованием API (#1047, #1048)",
+        "pt": "corrigir problema 'definição ausente para awayMode' [TadoX]\ncorrigir problema 'definição ausente para pré-aquecimento' [TadoX]\nOrientação/registro adicional quando se trata de problemas com RefreshToken\nnovos recursos de configuração para gerenciar o uso da API (#1047, #1048)",
+        "nl": "probleem 'definitie ontbreekt voor awayMode' oplossen [TadoX]\nprobleem oplossen 'definitie ontbreekt voor voorverwarmen' [TadoX]\nAanvullende richtlijnen/logboeken met betrekking tot RefreshToken-problemen\nnieuwe configuratiemogelijkheden voor het beheren van API-gebruik (#1047, #1048)",
+        "fr": "correction du problème « définition manquante pour awayMode » [TadoX]\ncorrection du problème « définition manquante pour le préchauffage » [TadoX]\nConseils/journaux supplémentaires concernant le problème RefreshToken\nnouvelles capacités de configuration pour gérer l'utilisation des API (#1047, #1048)",
+        "it": "risolvere il problema \"definizione mancante per awayMode\" [TadoX]\nrisolvere il problema \"definizione mancante per il preriscaldamento\" [TadoX]\nUlteriori indicazioni/registri in caso di problemi con RefreshToken\nnuove capacità di configurazione per gestire l'utilizzo delle API (#1047, #1048)",
+        "es": "Solucionar el problema de \"falta definición para el modo Ausente\" [TadoX]\nSoluciona el problema de «falta definición para precalentamiento» [TadoX]\nOrientación/registro adicional cuando se trata del problema de RefreshToken\nNuevas capacidades de configuración para gestionar el uso de la API (#1047, #1048)",
+        "pl": "napraw problem „brak definicji dla awayMode” [TadoX]\nnapraw problem „brak definicji podgrzewania wstępnego” [TadoX]\nDodatkowe wskazówki/logi dotyczące problemu z RefreshToken\nnowe możliwości konfiguracji umożliwiające zarządzanie wykorzystaniem interfejsu API (#1047, #1048)",
+        "uk": "виправлено проблему «відсутнє визначення для awayMode» [TadoX]\nвиправлено проблему «відсутнє визначення для попереднього нагрівання» [TadoX]\nДодаткові інструкції/журнал щодо проблеми з RefreshToken\nнові можливості конфігурації для керування використанням API (#1047, #1048)",
+        "zh-cn": "修复问题‘缺少 awayMode 定义’ [TadoX]\n修复问题‘预热定义缺失’ [TadoX]\n关于 RefreshToken 问题的附加指导/日志\n管理 API 使用情况的新配置功能（#1047、#1048）"
+      },
       "0.7.10": {
         "en": "further token refresh optimizations",
         "de": "weitere token-erfrischungsoptimierungen",
@@ -67,32 +93,6 @@
         "pl": "optymalizacja użytkowania czujnika",
         "uk": "оптимізація використання відправлень",
         "zh-cn": "优化哨兵使用"
-      },
-      "0.7.5": {
-        "en": "some further refactorings\nBump axios to 1.8.4",
-        "de": "weitere refactorings\nBump axios zu 1.8.4",
-        "ru": "некоторые дополнительные рефакторинги\nАксиос удара до 1,8.4",
-        "pt": "alguns outros fatores\nBump axios para 1.8.4",
-        "nl": "enkele verdere refactoren\nBump axios naar 1.8.4",
-        "fr": "quelques remaniements supplémentaires\nAxios bouffés à 1.8.4",
-        "it": "alcuni ulteriori rifattori\nAssio di bump a 1.8.4",
-        "es": "algunos refactorios adicionales\nAxios de bomba a 1.8.4",
-        "pl": "kilka kolejnych refaktur\nAksykony bumpy do 1.8.4",
-        "uk": "деякі подальші рефакторинги\nБампер аксіос до 1.8.4",
-        "zh-cn": "一些进一步的重构\n横轴改为1.8.4"
-      },
-      "0.7.4": {
-        "en": "some refactorings\nBump axios to 1.8.4",
-        "de": "einige refactorings\nBump axios zu 1.8.4",
-        "ru": "некоторые рефакторинги\nАксиос удара до 1,8.4",
-        "pt": "algumas refatorações\nBump axios para 1.8.4",
-        "nl": "sommige refactorings\nBump axios naar 1.8.4",
-        "fr": "quelques refacturations\nAxios bouffés à 1.8.4",
-        "it": "alcuni refactorings\nAssio di bump a 1.8.4",
-        "es": "algunos refactorios\nAxios de bomba a 1.8.4",
-        "pl": "niektóre refakturowanie\nAksykony bumpy do 1.8.4",
-        "uk": "деякі рефакторинги\nБампер аксіос до 1.8.4",
-        "zh-cn": "一些重构内容\n横轴改为1.8.4"
       }
     },
     "titleLang": {
@@ -183,7 +183,17 @@
   "encryptedNative": [],
   "protectedNative": [],
   "native": {
-    "intervall": 60
+    "intervall": 60,
+    "standard": 90,
+    "mobildevices": 720,
+    "weather": 10,
+    "zones": 180,
+    "temperatureOffset": 0,
+    "homeState": 720,
+    "awayConfiguration": 720,
+    "timeTables": 0,
+    "logCalls": false,
+    "logCallsDetail": false
   },
   "objects": [],
   "instanceObjects": [

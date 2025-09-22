@@ -9,25 +9,6 @@
       "type": "panel",
       "label": "Authorization",
       "items": {
-        "_intervall": {
-          "newLine": true,
-          "type": "header",
-          "text": "Set the polling interval",
-          "size": 3
-        },
-        "intervall": {
-          "newLine": true,
-          "type": "number",
-          "label": "Interval in seconds",
-          "min": 30,
-          "max": 3600,
-          "step": 5,
-          "xs": 12,
-          "sm": 12,
-          "md": 6,
-          "lg": 4,
-          "xl": 4
-        },
         "auth": {
           "newLine": true,
           "type": "header",
@@ -81,6 +62,145 @@
           "md": 6,
           "lg": 6,
           "xl": 4
+        }
+      }
+    },
+    "Polling": {
+      "type": "panel",
+      "label": "Polling Intervall",
+      "items": {
+        "_intervall": {
+          "newLine": true,
+          "type": "header",
+          "text": "Set the polling interval",
+          "size": 3
+        },
+        "standard": {
+          "newLine": true,
+          "type": "number",
+          "label": "Standard interval in SECONDS",
+          "min": 60,
+          "max": 3600,
+          "step": 5,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "mobildevices": {
+          "newLine": false,
+          "type": "number",
+          "label": "MobileDevices interval in MINUTES (${homeId}.Mobile_Devices)",
+          "min": 0,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "weather": {
+          "newLine": true,
+          "type": "number",
+          "label": "Weather interval in MINUTES (${homeId}.Weather)",
+          "min": 0,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "zones": {
+          "newLine": false,
+          "type": "number",
+          "label": "Zones interval in MINUTES (${homeId}.Rooms - only static data like devices)",
+          "min": 0,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "temperatureOffset": {
+          "newLine": true,
+          "type": "number",
+          "label": "TemperatureOffset interval in MINUTES (${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset)",
+          "min": 0,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "timeTables": {
+          "newLine": false,
+          "type": "number",
+          "label": "TimeTables interval in MINUTES (${homeId}.Rooms.${zoneId}.timeTables)",
+          "min": 0,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "awayConfiguration": {
+          "newLine": true,
+          "type": "number",
+          "label": "AwayConfiguration interval in MINUTES (${homeId}.Rooms.${zoneId}.awayConfig)",
+          "min": 0,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "homeState": {
+          "newLine": false,
+          "type": "number",
+          "label": "HomeState interval in MINUTES (${homeId}.Home.state) - cannot be 0",
+          "min": 1,
+          "step": 1,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "logCalls": {
+          "newLine": true,
+          "type": "checkbox",
+          "label": "Log every 20th API call to verify daily consumption",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "logCallsDetail": {
+          "newLine": true,
+          "type": "checkbox",
+          "label": "Log number after each API call incl. URL to verify daily consumption (may produce a lot of log entries!)",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "interval_text1": {
+          "newLine": true,
+          "type": "staticText",
+          "text": "Tado is limiting the number of API calls. Without Auto-Assist subscription it is only 100 calls a day! <br>For details check https://support.tado.com/en/articles/12165739-limitation-for-rest-api-usage. <br> Configuration above allows to tune the number of calls for your specific needs. Value 0 means, that this API shall not be called at all. <br>If you're not happy with Tado's decision, you should let them know. https://support.tado.com/de/articles/3590239-wie-kann-ich-den-kundensupport-von-tado-kontaktieren <br> Note: First attribute is in seconds, all others in minutes.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
         }
       }
     }
