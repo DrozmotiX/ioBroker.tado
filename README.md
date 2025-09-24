@@ -77,7 +77,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 * (HGlab01) fix issue 'definition missing for preheating' [TadoX]
 * (HGlab01) Additional guidance/log when it comes to RefreshToken issue
 * (HGlab01) new configuration capabilities to manage API usage quota (#1047, #1048)
-* (HGlab01) openWindow" is missing the required property "common.type" #1059
+* (HGlab01) fix Object of state "tado.0.xxxxx.Rooms.y.openWindow" is missing the required property "common.type" (#1059)
 * (HGlab01) Bump axios to 1.12.2
 
 ### 0.7.10 (2025-04-25)
