@@ -1177,7 +1177,7 @@ class Tado extends utils.Adapter {
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
             this.debugLog('CheckExpire() at clearZoneOverlay() started');
-            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.overlay.*`);
+            jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.overlay.*`);
         } catch (error) {
             this.log.error(`Issue at clearZoneOverlay(): '${error}'`);
             console.error(`Issue at clearZoneOverlay(): '${error}'`);
@@ -1583,7 +1583,7 @@ class Tado extends utils.Adapter {
             await jsonExplorer.traverseJson(result, `${homeId}.Rooms.${zoneId}.overlay`, true, true, 2);
             await jsonExplorer.traverseJson(result.setting, `${homeId}.Rooms.${zoneId}.setting`, true, true, 2);
             this.debugLog('CheckExpire() at setZoneOverlay() started');
-            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.overlay.*`);
+            jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.overlay.*`);
         } catch (error) {
             console.log(`Body: ${JSON.stringify(config)}`);
             this.log.error(`Issue at setZoneOverlay: '${error}'. Based on config ${JSON.stringify(config)}`);
@@ -1651,7 +1651,7 @@ class Tado extends utils.Adapter {
             this.debugLog(`Called 'POST ${url}'`);
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
-            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindow.*`);
+            jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindow.*`);
         } catch (error) {
             this.log.error(`Issue at activateOpenWindow(): '${error}'`);
             console.error(`Issue at activateOpenWindow(): '${error}'`);
@@ -1675,7 +1675,7 @@ class Tado extends utils.Adapter {
             await this.apiCall(url, 'put', config);
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
-            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindowDetection.*`);
+            jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindowDetection.*`);
         } catch (error) {
             console.log(`Body: ${JSON.stringify(config)}`);
             this.log.error(`Issue at setOpenWindowDetectionSettings(): '${error}'`);
@@ -1701,7 +1701,7 @@ class Tado extends utils.Adapter {
             await this.apiCall(url, 'put', { childLockEnabled: enabled });
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
-            await jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${deviceId}.childLockEnabled`);
+            jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${deviceId}.childLockEnabled`);
         } catch (error) {
             this.log.error(`Issue at setChildLock(): '${error}'`);
             console.error(`Issue at setChildLock(): '${error}'`);
@@ -1874,14 +1874,14 @@ class Tado extends utils.Adapter {
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
                     await this.DoMobileDevices(homeId);
-                    await jsonExplorer.checkExpire(`${homeId}.Mobile_Devices.*`);
+                    jsonExplorer.checkExpire(`${homeId}.Mobile_Devices.*`);
                 }
 
                 step = 'DoWeather';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
                     await this.DoWeather(homeId);
-                    await jsonExplorer.checkExpire(`${homeId}.Weather.*`);
+                    jsonExplorer.checkExpire(`${homeId}.Weather.*`);
                 }
 
                 step = 'DoZones';
@@ -1890,13 +1890,14 @@ class Tado extends utils.Adapter {
                 } else {
                     await this.DoZones(homeId);
                 }
-                await jsonExplorer.checkExpire(`${homeId}.Rooms.*`);
+                await this.sleep(500); //as timestamp updates for state updates are async
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*`);
 
                 step = 'DoHomeState';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
                     await this.DoHomeState(homeId);
-                    await jsonExplorer.checkExpire(`${homeId}.Home.state.*`);
+                    jsonExplorer.checkExpire(`${homeId}.Home.state.*`);
                 }
             }
 
@@ -2124,10 +2125,17 @@ class Tado extends utils.Adapter {
             throw new Error('ZonesState_data is null');
         }
         this.debugLog(`ZoneStates_data result for room '${zoneId}' is ${JSON.stringify(ZonesState_data)}`);
-        if (ZonesState_data.setting.temperature == null) {
+
+        if (ZonesState_data.setting.temperature === null) {
             ZonesState_data.setting.temperature = {};
-            ZonesState_data.setting.temperature.celsius = null;
         }
+        if (ZonesState_data.overlay === null) {
+            ZonesState_data.overlay = {};
+        }
+        if (ZonesState_data.openWindow === null) {
+            ZonesState_data.openWindow = {};
+        }
+
         this.DoWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
         ZonesState_data.activateOpenWindow = false;
