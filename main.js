@@ -1890,7 +1890,6 @@ class Tado extends utils.Adapter {
                 } else {
                     await this.DoZones(homeId);
                 }
-                await this.sleep(500); //as timestamp updates for state updates are async
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*`);
 
                 step = 'DoHomeState';
