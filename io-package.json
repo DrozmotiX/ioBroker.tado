@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.8.0-alpha.0",
+    "version": "0.8.0-alpha.1",
     "news": {
+      "0.8.0-alpha.1": {
+        "en": "fix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nnew configuration capabilities to manage API usage quota (#1047, #1048)\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" is missing the required property \"common.type\" (#1059)\nBump axios to 1.12.2",
+        "de": "problem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nneue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nfix Objekt des Staates \"tado.0.xxxxx.Rooms.y.openWindow\" fehlt die erforderliche Eigenschaft \"common.type\" (#1059)\nBump axios zu 1.12.2",
+        "ru": "обсуждение Definition Missing for awayMode (TadoX)\nпроблема исправления «определение, отсутствующее для предварительного нагрева» [ТадоХ]\nДополнительное руководство / журнал, когда дело доходит до проблемы RefreshToken\nновые возможности конфигурации для управления квотой использования API (#1047, #1048)\nисправить Объект состояния \"tado.0.xxxxx.Rooms.y.openWindow\" отсутствует требуемое свойство \"common.type\" (#1059)\nАксиос накачки до 1.12.2",
+        "pt": "corrigir problema 'definição em falta para awayMode' [TadoX]\ncorrigir a questão 'definição em falta para o pré-aquecimento' [TadoX]\nOrientação/log adicional quando se trata de questão RefreshToken\nnovos recursos de configuração para gerenciar a quota de uso da API (#1047, #1048)\ncorrigir objeto de estado \"tado.0.xxxxxx.Quartos.y.openWindow\" está faltando a propriedade necessária \"common.type\" (#1059)\nBump axios a 1.12.2",
+        "nl": "fix issue 'definitie ontbreekt voor wegMode' [TadoX]\nfix issue 'definitie ontbreekt voor voorverwarming' [TadoX]\nAanvullende richtsnoeren/log als het gaat om RefreshToken kwestie\nnieuwe configuratiemogelijkheden voor het beheren van API-gebruiksquota (#1047, #1048)\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" mist de vereiste eigenschap \"common.type\" (#1059)\nBump axios naar 1.12.2",
+        "fr": "correction du problème 'définition manquante pour awayMode' [TadoX]\ncorrection de la question \"définition manquante pour le préchauffage\" [TadoX]\nConseils/log supplémentaires pour la question RefreshToken\nnouvelles capacités de configuration pour gérer le quota d'utilisation de l'API (#1047, #1048)\ncorrection Objet de l'état \"tado.0.xxxx.Rooms.y.openWindow\" manque la propriété requise \"common.type\" (#1059)\nAxios de pompe au 1.12.2",
+        "it": "risolvere problema 'definizione mancante per viaMode' [TadoX]\nrisolvere problema 'definizione mancante per preriscaldamento' [TadoX]\nUlteriori indicazioni/log quando si tratta di RefreshToken problema\nnuove funzionalità di configurazione per gestire la quota di utilizzo API (#1047, #1048)\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" manca la proprietà richiesta \"common.type\" (#1059)\nAssio di bump a 1.12.2",
+        "es": "solucionar el problema 'definición falta para awayMode' [TadoX]\nsolucionar el problema 'definición falta para precalentar' [TadoX]\nOrientación/log adicional cuando se trata de asunto RefreshToken\nnuevas capacidades de configuración para gestionar la cuota de uso de API (#1047, #1048)\nfijado Objeto de estado \"tado.0.xxxxx.Rooms.y.openWindow\" está perdiendo la propiedad requerida \"common.type\" (#1059)\nAxios de bomba a 1.12.2",
+        "pl": "fix issue \"brakuje definicji dla awayMode\" [TadoX]\nfix issue \"brakuje definicji dla podgrzewania wstępnego\" [TadoX]\nDodatkowe wytyczne / dziennik w odniesieniu do wydania ReforecToken\nnowe możliwości konfiguracji w celu zarządzania kwotą użytkowania API (# 1047, # 1048)\nfix Obiekt stanu \"tado.0.xxxxx.Rooms.yopenWindow\" brakuje właściwości \"common.type\" (# 1059)\nAksykony bumpy do 1.12.2",
+        "uk": "виправлено проблему «відхилення відліку» [TadoX]\nвиправлено проблему «відхилення від прогріву» [Тадокс]\nДодаткові вказівки / журнал, коли мова йде про RefreshToken\nнові можливості налаштування для управління квотою використання API (#1047, #1048)\nвиправлено об'єкт держави \"tado.0.xxxxx.Rooms.y.openWindow\" відсутній необхідний майно \"common.type\" (#1059)\nБампер аксіос до 1.12.2",
+        "zh-cn": "固定问题“ 定义缺失, 用于远程模式 ” [TadoX]\n修复问题“ 预热定义缺失 ” [塔多\n关于刷新问题的补充指导/记录\n管理API使用配额的新配置能力(#1047,#1048)\n固定状态对象\"tado.0.xxxxxx. Rooms.y.openWindow\"缺少所需的属性\"common.type\"(#1059)\n横轴改为1.12.2"
+      },
       "0.8.0-alpha.0": {
         "en": "fix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nnew configuration capabilities to manage API usage quota (#1047, #1048)\nBump axios to 1.12.2",
         "de": "problem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nneue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nBump axios zu 1.12.2",
@@ -80,19 +93,6 @@
         "pl": "optymalizacja użytkowania czujnika\nusprawnić mechanizm rehabilitacji w przypadku errosów",
         "uk": "оптимізація використання відправлень\nполіпшення дерроси-механізму, коли мова йде про ерозію",
         "zh-cn": "优化哨兵使用\n在错误发生时改进重试机制"
-      },
-      "0.7.6": {
-        "en": "optimize sentry usage",
-        "de": "optimieren sie den versand",
-        "ru": "оптимизация использования sentry",
-        "pt": "otimizar o uso de sentinela",
-        "nl": "het gebruik van wachters optimaliseren",
-        "fr": "optimiser l'utilisation des sentinelles",
-        "it": "ottimizzare l'utilizzo della sentinella",
-        "es": "optimizar el uso de centry",
-        "pl": "optymalizacja użytkowania czujnika",
-        "uk": "оптимізація використання відправлень",
-        "zh-cn": "优化哨兵使用"
       }
     },
     "titleLang": {
