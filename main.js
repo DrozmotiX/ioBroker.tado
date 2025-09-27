@@ -1,18 +1,19 @@
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
-const EXPIRATION_WINDOW_IN_SECONDS = 10;
-
-const tado_url = 'https://my.tado.com';
-const tado_app_url = `https://app.tado.com/`;
-const tadoX_url = `https://hops.tado.com`;
-const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
+const TadoApi = require('./lib/tadoApi.js').default;
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const https = require('https');
 const axios = require('axios');
 const { version } = require('./package.json');
+
+const EXPIRATION_WINDOW_IN_SECONDS = 10;
+const tadoX_url = `https://hops.tado.com`;
+const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
+const tado_url = 'https://my.tado.com';
+const tado_app_url = `https://app.tado.com/`;
 
 // @ts-expect-error create axios instance
 let axiosInstance = axios.create({
@@ -28,13 +29,8 @@ const axiosInstanceToken = axios.create({
     baseURL: `https://login.tado.com/oauth2`,
 });
 
-//const ONEHOUR = 60 * 60 * 1000;
 let polling; // Polling timer
 let pooltimer = [];
-let numberOfCalls = {};
-numberOfCalls.calls = 0;
-numberOfCalls.day = new Date().getDate();
-
 let outdated = {
     //${homeId}.Mobile_Devices
     DoMobileDevices: {
@@ -79,13 +75,9 @@ let outdated = {
     },
 };
 
-//let ikey = 0;
 for (let key in outdated) {
-    //outdated[key].intervall = (1 + ikey) * 60 * 1000; //5min
-    //ikey++;
     outdated[key].intervall = outdated[key].intervall * 60 * 1000;
 }
-//outdated['DoHomeState'].intervall = 999999999999999;
 
 class Tado extends utils.Adapter {
     /**
@@ -108,6 +100,7 @@ class Tado extends utils.Adapter {
         this.intervall_time = 60 * 1000;
         this.oldStatesVal = [];
         this.isTadoX = false;
+        this.numberOfCalls = { day: new Date().getDate(), calls: 0 };
         //data objects
         this.getMeData = null;
         this.homeData = null;
@@ -121,6 +114,8 @@ class Tado extends utils.Adapter {
         this.accessToken = {};
         this.refreshTokenInProgress = false;
         this.shouldRefreshToken = false;
+        //API Call
+        this.api = new TadoApi(this, axiosInstance, 300);
     }
 
     /**
@@ -1116,7 +1111,7 @@ class Tado extends utils.Adapter {
         }
 
         this.debugLog(`setManualControlTadoX() payload is ${JSON.stringify(payload)}`);
-        let apiResponse = await this.apiCall(
+        let apiResponse = await this.api.apiCall(
             `${tadoX_url}/homes/${homeId}/rooms/${roomId}/manualControl`,
             'post',
             payload,
@@ -1130,7 +1125,7 @@ class Tado extends utils.Adapter {
      * @param {string} roomId
      */
     async setResumeRoomScheduleTadoX(homeId, roomId) {
-        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
+        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
         this.debugLog(`setResumeRoomScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsStateTadoX(homeId, roomId);
     }
@@ -1139,7 +1134,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async setResumeHomeScheduleTadoX(homeId) {
-        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
+        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
         this.debugLog(`setResumeHomeScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsTadoX(homeId);
     }
@@ -1148,7 +1143,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async setBoostTadoX(homeId) {
-        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/boost`, 'post');
+        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/boost`, 'post');
         this.debugLog(`setBoostTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsTadoX(homeId);
     }
@@ -1157,7 +1152,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async setAllOffTadoX(homeId) {
-        let apiResponse = await this.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/allOff`, 'post');
+        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/allOff`, 'post');
         this.debugLog(`setAllOffTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsTadoX(homeId);
     }
@@ -1172,7 +1167,7 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            await this.apiCall(url, 'delete');
+            await this.api.apiCall(url, 'delete');
             this.debugLog(`Called 'DELETE ${url}'`);
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
@@ -1210,7 +1205,7 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            let apiResponse = await this.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`, 'put', offset);
+            let apiResponse = await this.api.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`, 'put', offset);
             this.debugLog(
                 `API 'temperatureOffset' for home '${homeId}' and deviceID '${deviceId}' with body ${JSON.stringify(offset)} called.`,
             );
@@ -1253,7 +1248,7 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            apiResponse = await this.apiCall(
+            apiResponse = await this.api.apiCall(
                 `/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`,
                 'put',
                 timeTable,
@@ -1301,9 +1296,9 @@ class Tado extends utils.Adapter {
                 throw new Error('No internet connection detected!');
             }
             if (homePresence === 'AUTO') {
-                apiResponse = await this.apiCall(`/api/v2/homes/${homeId}/presenceLock`, 'delete');
+                apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/presenceLock`, 'delete');
             } else {
-                apiResponse = await this.apiCall(`/api/v2/homes/${homeId}/presenceLock`, 'put', homeState);
+                apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/presenceLock`, 'put', homeState);
             }
             await this.DoHomeState(homeId);
             this.debugLog(`API 'state' for home '${homeId}' with body ${JSON.stringify(homeState)} called.`);
@@ -1595,6 +1590,9 @@ class Tado extends utils.Adapter {
     }
 
     /**
+     * executes the API call after 750ms. If during this time another call is requested, the timer resets.
+     * To avoid mulitple API calls
+     *
      * @param {string} homeId
      * @param {string} zoneId
      * @param {object} config
@@ -1617,12 +1615,8 @@ class Tado extends utils.Adapter {
         return new Promise((resolve, reject) => {
             pooltimer[pooltimerid] = setTimeout(async () => {
                 this.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be called.`);
-                await this.apiCall(
-                    `/api/v2/homes/${homeId}/zones/${zoneId}/overlay`,
-                    'put',
-                    config,
-                    'setZoneOverlayPool',
-                )
+                await this.api
+                    .apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool')
                     .then(apiResponse => {
                         resolve(apiResponse);
                         this.log.debug(`API request finalized for '${homeId}/${zoneId}'`);
@@ -1647,7 +1641,7 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            await this.apiCall(url, 'post');
+            await this.api.apiCall(url, 'post');
             this.debugLog(`Called 'POST ${url}'`);
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
@@ -1672,7 +1666,7 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            await this.apiCall(url, 'put', config);
+            await this.api.apiCall(url, 'put', config);
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindowDetection.*`);
@@ -1698,7 +1692,7 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            await this.apiCall(url, 'put', { childLockEnabled: enabled });
+            await this.api.apiCall(url, 'put', { childLockEnabled: enabled });
             await jsonExplorer.setLastStartTime();
             await this.DoZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${deviceId}.childLockEnabled`);
@@ -1717,7 +1711,7 @@ class Tado extends utils.Adapter {
      */
     async setReading(HomeId, reading) {
         try {
-            let result = await this.apiCall(
+            let result = await this.api.apiCall(
                 `https://energy-insights.tado.com/api/homes/${HomeId}/meterReadings`,
                 'post',
                 JSON.stringify(reading),
@@ -1890,7 +1884,7 @@ class Tado extends utils.Adapter {
                 } else {
                     await this.DoZones(homeId);
                 }
-                jsonExplorer.checkExpire(`${homeId}.Rooms.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
 
                 step = 'DoHomeState';
                 if (outdated[step].isOutdated) {
@@ -2202,8 +2196,13 @@ class Tado extends utils.Adapter {
         }
         this.debugLog(`AwayConfiguration_data Result: ${JSON.stringify(this.awayConfigurationData)}`);
         this.DoWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, this.awayConfigurationData);
-        // eslint-disable-next-line prettier/prettier
-        await jsonExplorer.traverseJson(this.awayConfigurationData, `${homeId}.Rooms.${zoneId}.awayConfig`, true, true, 2);
+        await jsonExplorer.traverseJson(
+            this.awayConfigurationData,
+            `${homeId}.Rooms.${zoneId}.awayConfig`,
+            true,
+            true,
+            2,
+        );
     }
 
     /**
@@ -2405,120 +2404,6 @@ class Tado extends utils.Adapter {
     }
 
     /**
-     * @param {string} url
-     * @param {string} method
-     * @param {any} payload
-     * @param {string} caller
-     */
-    async apiCall(url, method = 'get', payload = null, caller = '') {
-        const stack = new Error().stack;
-        if (stack && !caller) {
-            let stackParts = stack.split(' at ');
-            const regex = /Tado\.\s*(\S+)/;
-            const match = stackParts[2].match(regex);
-            if (match) {
-                caller = match[1];
-            }
-        }
-        let promise;
-        this.debugLog(`TadoX ${this.isTadoX} | method ${method} | URL ${url} |body "${JSON.stringify(payload)}"`);
-        const waitingTime = 300; //time in ms to wait between calls
-        try {
-            // check if other call is in progress and if yes loop and wait
-            if (method != 'get' && this.apiCallinExecution == true) {
-                for (let i = 0; i < 10; i++) {
-                    this.debugLog(`Other API call in action, waiting... ${url}`);
-                    await this.sleep(waitingTime, waitingTime * 2);
-                    this.debugLog(`Waiting done! ${url}`);
-                    if (this.apiCallinExecution != true) {
-                        this.debugLog(`Time to execute ${url}`);
-                        break;
-                    } else {
-                        this.debugLog(`Oh, no! One more loop! ${url}`);
-                    }
-                }
-            }
-            if (method != 'get') {
-                this.apiCallinExecution = true;
-            }
-            promise = await new Promise((resolve, reject) => {
-                if (this.accessToken) {
-                    this.refreshToken()
-                        .then(() => {
-                            axiosInstance({
-                                url: url,
-                                method: method,
-                                data: payload,
-                                headers: {
-                                    Authorization: `Bearer ${this.accessToken.token.access_token}`,
-                                    Source: `iobroker.tado@${version}`,
-                                },
-                            })
-                                .then(response => {
-                                    if (method != 'get') {
-                                        setTimeout(() => {
-                                            this.apiCallinExecution = false;
-                                        }, waitingTime);
-                                    }
-                                    resolve(response.data);
-                                })
-                                .catch(error => {
-                                    if (method != 'get') {
-                                        this.apiCallinExecution = false;
-                                    }
-                                    if (error.response && error.response.data) {
-                                        console.error(`${error} with response ${JSON.stringify(error.response.data)}`);
-                                        this.log.error(`${error} with response ${JSON.stringify(error.response.data)}`);
-                                    } else {
-                                        console.error(error);
-                                        this.log.error(error);
-                                    }
-                                    if (error.message) {
-                                        error.message = `axiosInstance(${caller}) failed: ${error.message}`;
-                                    }
-                                    reject(error);
-                                });
-                        })
-                        .catch(error => {
-                            if (error.message) {
-                                error.message = `refreshToken() failed: ${error.message}`;
-                            }
-                            reject(error);
-                        });
-                } else {
-                    if (method != 'get') {
-                        this.apiCallinExecution = false;
-                    }
-                    reject(new Error('Not yet logged in'));
-                }
-            });
-        } catch (error) {
-            let eMsg = `Issue at apiCall for '${method} ${url}': ${error}`;
-            this.log.error(eMsg);
-            console.error(eMsg);
-            if (error instanceof Error) {
-                throw error;
-            }
-        }
-        if (numberOfCalls.day == new Date().getDate()) {
-            //same day
-            numberOfCalls.calls = numberOfCalls.calls + 1;
-        } else {
-            //new day, reset counter
-            this.log.info(`${numberOfCalls.calls} API calls at the end of yesterday.`);
-            numberOfCalls.calls = 1;
-            numberOfCalls.day = new Date().getDate();
-        }
-        if (numberOfCalls.calls % 20 === 0 && this.logCalls) {
-            this.log.info(`${numberOfCalls.calls} API calls for today.`);
-        }
-        if (this.logCallsDetail) {
-            this.log.info(`${numberOfCalls.calls} API calls for today. [${url}]`);
-        }
-        return promise;
-    }
-
-    /**
      * @param {string} state
      * @param {string} name
      * @param {any} value
@@ -2623,7 +2508,7 @@ class Tado extends utils.Adapter {
     /* GET METHODS														*/
     //////////////////////////////////////////////////////////////////////
     async getMe() {
-        return await this.apiCall('/api/v2/me');
+        return await this.api.apiCall('/api/v2/me');
     }
 
     // Read account information and all home related data
@@ -2631,7 +2516,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async getHome(homeId) {
-        return this.apiCall(`/api/v2/homes/${homeId}`);
+        return this.api.apiCall(`/api/v2/homes/${homeId}`);
     }
 
     // Get weather information for home location
@@ -2639,21 +2524,21 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async getWeather(homeId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/weather`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/weather`);
     }
 
     /**
      * @param {string} homeId
      */
     async getMobileDevices(homeId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/mobileDevices`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/mobileDevices`);
     }
 
     /**
      * @param {string} homeId
      */
     async getZones(homeId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/zones`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/zones`);
     }
 
     /**
@@ -2661,7 +2546,7 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async getZoneState(homeId, zoneId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/state`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/state`);
     }
 
     /**
@@ -2669,7 +2554,7 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async getCapabilities(homeId, zoneId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/capabilities`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/capabilities`);
     }
 
     /**
@@ -2677,7 +2562,7 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async getAwayConfiguration(homeId, zoneId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/awayConfiguration`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/awayConfiguration`);
     }
 
     /**
@@ -2685,28 +2570,28 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async getTimeTables(homeId, zoneId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`);
     }
 
     /**
      * @param {string} deviceId
      */
     async getTemperatureOffset(deviceId) {
-        return await this.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`);
+        return await this.api.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`);
     }
 
     /**
      * @param {string} homeId
      */
     async getHomeState(homeId) {
-        return await this.apiCall(`/api/v2/homes/${homeId}/state`);
+        return await this.api.apiCall(`/api/v2/homes/${homeId}/state`);
     }
 
     /**
      * @param {string} homeId
      */
     async getRoomsTadoX(homeId) {
-        return this.apiCall(`${tadoX_url}/homes/${homeId}/rooms`);
+        return this.api.apiCall(`${tadoX_url}/homes/${homeId}/rooms`);
     }
 
     /**
@@ -2714,14 +2599,14 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async getroomsAndDevicesTadoX(homeId, zoneId) {
-        return this.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${zoneId}`);
+        return this.api.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${zoneId}`);
     }
 
     /**
      * @param {string} homeId
      */
     async getRoomsAndDevicesTadoX(homeId) {
-        return this.apiCall(`${tadoX_url}/homes/${homeId}/roomsAndDevices`);
+        return this.api.apiCall(`${tadoX_url}/homes/${homeId}/roomsAndDevices`);
     }
 }
 
