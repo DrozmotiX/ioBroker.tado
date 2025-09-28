@@ -8,12 +8,15 @@ const isOnline = require('@esm2cjs/is-online').default;
 const https = require('https');
 const axios = require('axios');
 const { version } = require('./package.json');
+const debounce = require('lodash.debounce');
 
 const EXPIRATION_WINDOW_IN_SECONDS = 10;
 const tadoX_url = `https://hops.tado.com`;
 const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
 const tado_url = 'https://my.tado.com';
 const tado_app_url = `https://app.tado.com/`;
+const DEBOUNCE_TIME = 750; //750ms debouncing (waiting if further calls come in and just execute the last one)
+const DELAY_AFTER_CALL = 300; //300ms pause between api calls
 
 // @ts-expect-error create axios instance
 let axiosInstance = axios.create({
@@ -114,8 +117,14 @@ class Tado extends utils.Adapter {
         this.accessToken = {};
         this.refreshTokenInProgress = false;
         this.shouldRefreshToken = false;
-        //API Call
-        this.api = new TadoApi(this, axiosInstance, 300);
+
+        this.api = new TadoApi(this, axiosInstance, DELAY_AFTER_CALL); //pause between calls
+        this.debouncedSetZoneOverlay = debounce(
+            (homeId, zoneId, config, resolve, reject) => {
+                this._setZoneOverlay(homeId, zoneId, config).then(resolve).catch(reject);
+            },
+            DEBOUNCE_TIME, // debouncing (waiting if further calls come in and just execute the last one)
+        );
     }
 
     /**
@@ -1560,7 +1569,7 @@ class Tado extends utils.Adapter {
                 }
             }
 
-            let result = await this.setZoneOverlayPool(homeId, zoneId, config);
+            let result = await this.setZoneOverlayDebounced(homeId, zoneId, config);
             this.debugLog(
                 `API 'ZoneOverlay' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(config)} called.`,
             );
@@ -1597,36 +1606,27 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      * @param {object} config
      */
-    async setZoneOverlayPool(homeId, zoneId, config) {
-        this.debugLog(`poolApiCall() entered for '${homeId}/${zoneId}'`);
-        let pooltimerid = homeId + zoneId;
-        if ((await isOnline()) == false) {
-            if (pooltimer[pooltimerid]) {
-                clearTimeout(pooltimer[pooltimerid]);
-                pooltimer[pooltimerid] = null;
-            }
-            throw new Error('No internet connection detected!');
-        }
-        if (pooltimer[pooltimerid]) {
-            //Important, that there is no await function between clearTimeout() and setTimeout())
-            clearTimeout(pooltimer[pooltimerid]);
-            pooltimer[pooltimerid] = null;
-        }
+    async setZoneOverlayDebounced(homeId, zoneId, config) {
         return new Promise((resolve, reject) => {
-            pooltimer[pooltimerid] = setTimeout(async () => {
-                this.log.debug(`750ms queuing done [timer:'${pooltimerid}']. API will be called.`);
-                await this.api
-                    .apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool')
-                    .then(apiResponse => {
-                        resolve(apiResponse);
-                        this.log.debug(`API request finalized for '${homeId}/${zoneId}'`);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
-                this.log.debug(`API called with ${JSON.stringify(config)}`);
-            }, 750);
+            this.debouncedSetZoneOverlay(homeId, zoneId, config, resolve, reject);
         });
+    }
+
+    async _setZoneOverlay(homeId, zoneId, config) {
+        try {
+            this.log.debug(`Calling API for setZoneOverlay with config: ${JSON.stringify(config)}`);
+            const apiResponse = await this.api.apiCall(
+                `/api/v2/homes/${homeId}/zones/${zoneId}/overlay`,
+                'put',
+                config,
+                'setZoneOverlayPool',
+            );
+            this.log.debug(`API response for setZoneOverlay: ${JSON.stringify(apiResponse)}`);
+            return apiResponse;
+        } catch (error) {
+            this.log.error(`Error in _setZoneOverlay: ${error}`);
+            throw error;
+        }
     }
 
     /**
