@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.8.0-alpha.2",
+    "version": "0.8.0-alpha.3",
     "news": {
+      "0.8.0-alpha.3": {
+        "en": "new configuration capabilities to manage API usage quota (#1047, #1048)\nImplement API debouncing\nRefactorings Tado API calls\nfix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" is missing the required property \"common.type\" (#1059)\nBump axios to 1.12.2\nBump iobroker-jsonexplorer to 0.2.0",
+        "de": "neue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nImplementierung API debouncing\nRefactorings Tado API Anrufe\nproblem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nfix Objekt des Staates \"tado.0.xxxxx.Rooms.y.openWindow\" fehlt die erforderliche Eigenschaft \"common.type\" (#1059)\nBump axios zu 1.12.2\nBump iobroker-jsonexplorer auf 0,2.0",
+        "ru": "новые возможности конфигурации для управления квотой использования API (#1047, #1048)\nСкачать API Debouncing\nРефакторинг вызовов Tado API\nобсуждение Definition Missing for awayMode (TadoX)\nпроблема исправления «определение, отсутствующее для предварительного нагрева» [ТадоХ]\nДополнительное руководство / журнал, когда дело доходит до проблемы RefreshToken\nисправить Объект состояния \"tado.0.xxxxx.Rooms.y.openWindow\" отсутствует требуемое свойство \"common.type\" (#1059)\nАксиос накачки до 1.12.2\nBump iobroker-jsonexplorer 0.2.0",
+        "pt": "novos recursos de configuração para gerenciar a quota de uso da API (#1047, #1048)\nImplementar o debuncing da API\nRefactorings Chamadas da API do Tado\ncorrigir problema 'definição em falta para awayMode' [TadoX]\ncorrigir a questão 'definição em falta para o pré-aquecimento' [TadoX]\nOrientação/log adicional quando se trata de questão RefreshToken\ncorrigir objeto de estado \"tado.0.xxxxxx.Quartos.y.openWindow\" está faltando a propriedade necessária \"common.type\" (#1059)\nBump axios a 1.12.2\nBump iobroker-jsonexplorer a 0.2.0",
+        "nl": "nieuwe configuratiemogelijkheden voor het beheren van API-gebruiksquota (#1047, #1048)\nAPI-debounting uitvoeren\nRefactorings Tado API calls\nfix issue 'definitie ontbreekt voor wegMode' [TadoX]\nfix issue 'definitie ontbreekt voor voorverwarming' [TadoX]\nAanvullende richtsnoeren/log als het gaat om RefreshToken kwestie\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" mist de vereiste eigenschap \"common.type\" (#1059)\nBump axios naar 1.12.2\nBump iobroker-jsonexplorer naar 0.2.0",
+        "fr": "nouvelles capacités de configuration pour gérer le quota d'utilisation de l'API (#1047, #1048)\nMettre en œuvre le débouncing API\nRefactorings Appels API Tado\ncorrection du problème 'définition manquante pour awayMode' [TadoX]\ncorrection de la question \"définition manquante pour le préchauffage\" [TadoX]\nConseils/log supplémentaires pour la question RefreshToken\ncorrection Objet de l'état \"tado.0.xxxx.Rooms.y.openWindow\" manque la propriété requise \"common.type\" (#1059)\nAxios de pompe au 1.12.2\nBump iobroker-jsonexplorer à 0,2.0",
+        "it": "nuove funzionalità di configurazione per gestire la quota di utilizzo API (#1047, #1048)\nAttuazione API debouing\nRefactorings Tado API chiama\nrisolvere problema 'definizione mancante per viaMode' [TadoX]\nrisolvere problema 'definizione mancante per preriscaldamento' [TadoX]\nUlteriori indicazioni/log quando si tratta di RefreshToken problema\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" manca la proprietà richiesta \"common.type\" (#1059)\nAssio di bump a 1.12.2\nBump iobroker-jsonexplorer a 0.2.0",
+        "es": "nuevas capacidades de configuración para gestionar la cuota de uso de API (#1047, #1048)\nImplementar rebote de API\nRefactorings Tado API llamadas\nsolucionar el problema 'definición falta para awayMode' [TadoX]\nsolucionar el problema 'definición falta para precalentar' [TadoX]\nOrientación/log adicional cuando se trata de asunto RefreshToken\nfijado Objeto de estado \"tado.0.xxxxx.Rooms.y.openWindow\" está perdiendo la propiedad requerida \"common.type\" (#1059)\nAxios de bomba a 1.12.2\nBomba iobroker-jsonexplorer a 0.2.0",
+        "pl": "nowe możliwości konfiguracji w celu zarządzania kwotą użytkowania API (# 1047, # 1048)\nWdrożenie debouncing API\nRefactorings Tado API wzywa\nfix issue \"brakuje definicji dla awayMode\" [TadoX]\nfix issue \"brakuje definicji dla podgrzewania wstępnego\" [TadoX]\nDodatkowe wytyczne / dziennik w odniesieniu do wydania ReforecToken\nfix Obiekt stanu \"tado.0.xxxxx.Rooms.yopenWindow\" brakuje właściwości \"common.type\" (# 1059)\nAksykony bumpy do 1.12.2\nBump iobroker- jsonexplorer do 0.2.0",
+        "uk": "нові можливості налаштування для управління квотою використання API (#1047, #1048)\nРеалізувати розбір API\nРефакторинги Tado API дзвінки\nвиправлено проблему «відхилення відліку» [TadoX]\nвиправлено проблему «відхилення від прогріву» [Тадокс]\nДодаткові вказівки / журнал, коли мова йде про RefreshToken\nвиправлено об'єкт держави \"tado.0.xxxxx.Rooms.y.openWindow\" відсутній необхідний майно \"common.type\" (#1059)\nБампер аксіос до 1.12.2\nBump iobroker-jsonexplorer до 0.2.0",
+        "zh-cn": "管理API使用配额的新配置能力(#1047,#1048)\n执行 API 调试\n重构 Tado API 调用\n固定问题“ 定义缺失, 用于远程模式 ” [TadoX]\n修复问题“ 预热定义缺失 ” [塔多\n关于刷新问题的补充指导/记录\n固定状态对象\"tado.0.xxxxxx. Rooms.y.openWindow\"缺少所需的属性\"common.type\"(#1059)\n横轴改为1.12.2\nBump io 经纪人- Json Explorer 改为 0.2.0"
+      },
       "0.8.0-alpha.2": {
         "en": "new configuration capabilities to manage API usage quota (#1047, #1048)\nImplement API debouncing\nRefactorings Tado API calls\nfix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" is missing the required property \"common.type\" (#1059)\nBump axios to 1.12.2\nBump iobroker-jsonexplorer to 0.2.0",
         "de": "neue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nImplementierung API debouncing\nRefactorings Tado API Anrufe\nproblem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nfix Objekt des Staates \"tado.0.xxxxx.Rooms.y.openWindow\" fehlt die erforderliche Eigenschaft \"common.type\" (#1059)\nBump axios zu 1.12.2\nBump iobroker-jsonexplorer auf 0,2.0",
@@ -80,19 +93,6 @@
         "pl": "fix issue 'recurToken () nie powiodło się'",
         "uk": "виправити проблему 'refreshToken() не вдалося Р",
         "zh-cn": "修复问题“ refreeToken () 失败  '"
-      },
-      "0.7.8": {
-        "en": "fix issue 'definition missing for balanceControl'",
-        "de": "problem beheben 'Definition fehlt für Balance Steuerung '",
-        "ru": "решение проблемы 'определение отсутствует для баланса Контроль \"",
-        "pt": "corrigir problema 'definição falta para equilíbrio Controlo '",
-        "nl": "fix issue 'definitie ontbreekt voor evenwicht Controle '",
-        "fr": "résoudre problème 'définition manquante pour l'équilibre Contrôle '",
-        "it": "risolvere problema 'definizione mancante per equilibrio Controllo '",
-        "es": "solucionar el problema 'definición falta para el equilibrio Control '",
-        "pl": "fix issue \"brak definicji bilansu Kontrola '",
-        "uk": "виправлено проблему «відхилення від залишку» Контроль Р",
-        "zh-cn": "缺少余额定义 控件  '"
       }
     },
     "titleLang": {
