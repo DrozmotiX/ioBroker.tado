@@ -80,7 +80,7 @@
           "type": "number",
           "label": "Standard interval in SECONDS",
           "min": 60,
-          "max": 3600,
+          "max": 86400,
           "step": 5,
           "xs": 12,
           "sm": 12,
