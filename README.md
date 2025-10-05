@@ -72,7 +72,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.8.0-alpha.3 (2025-10-03)
+### 0.8.0-alpha.4 (2025-10-05)
 * (HGlab01) new configuration capabilities to manage API usage quota (#1047, #1048)
 * (HGlab01) Implement API debouncing
 * (HGlab01) Refactorings Tado API calls
