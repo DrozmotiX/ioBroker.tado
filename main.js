@@ -1759,15 +1759,12 @@ class Tado extends utils.Adapter {
                 delete rooms[i].manualControlTermination.type;
             }
             if (rooms[i].balanceControl === null) {
-                // === attribute exists and is null
                 delete rooms[i].balanceControl;
             }
             if (rooms[i].openWindow === null) {
-                // === attribute exists and is null
                 delete rooms[i].openWindow;
             }
             if (rooms[i].awayMode === null) {
-                // === attribute exists and is null
                 delete rooms[i].awayMode;
             }
         }
