@@ -1758,15 +1758,9 @@ class Tado extends utils.Adapter {
                 rooms[i].manualControlTermination.controlType = rooms[i].manualControlTermination.type;
                 delete rooms[i].manualControlTermination.type;
             }
-            if (rooms[i].balanceControl === null) {
-                delete rooms[i].balanceControl;
-            }
-            if (rooms[i].openWindow === null) {
-                delete rooms[i].openWindow;
-            }
-            if (rooms[i].awayMode === null) {
-                delete rooms[i].awayMode;
-            }
+            rooms[i].balanceControl = rooms[i].balanceControl === null ? {} : rooms[i].balanceControl;
+            rooms[i].openWindow = rooms[i].openWindow === null ? {} : rooms[i].openWindow;
+            rooms[i].awayMode = rooms[i].awayMode === null ? {} : rooms[i].awayMode;
         }
         this.debugLog(`Modified rooms object is ${JSON.stringify(rooms)}`);
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
@@ -1809,10 +1803,8 @@ class Tado extends utils.Adapter {
             roomsAndDevices.manualControlTermination.controlType = roomsAndDevices.manualControlTermination.type;
             delete roomsAndDevices.manualControlTermination.type;
         }
-        if (roomsAndDevices.balanceControl === null) {
-            // === attribute exists and is null
-            delete roomsAndDevices.balanceControl;
-        }
+
+        roomsAndDevices.balanceControl = roomsAndDevices.balanceControl === null ? {} : roomsAndDevices.balanceControl;
         roomsAndDevices.resumeScheduleRoom = false;
         this.debugLog(`Modified RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
