@@ -2127,6 +2127,9 @@ class Tado extends utils.Adapter {
         if (ZonesState_data.openWindow === null) {
             ZonesState_data.openWindow = {};
         }
+        if (ZonesState_data.preparation === null) {
+            ZonesState_data.preparation = {};
+        }
 
         this.DoWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
