@@ -2121,15 +2121,12 @@ class Tado extends utils.Adapter {
             ZonesState_data.setting.temperature.celsius = null; //add states to be subsribed
             ZonesState_data.setting.temperature.fahrenheit = null;
         }
-        if (ZonesState_data.overlay === null) {
-            ZonesState_data.overlay = {};
-        }
-        if (ZonesState_data.openWindow === null) {
-            ZonesState_data.openWindow = {};
-        }
-        if (ZonesState_data.preparation === null) {
-            ZonesState_data.preparation = {};
-        }
+        ZonesState_data.overlay = ZonesState_data.overlay === null ? {} : ZonesState_data.overlay;
+        ZonesState_data.openWindow = ZonesState_data.openWindow === null ? {} : ZonesState_data.openWindow;
+        ZonesState_data.preparation = ZonesState_data.preparation === null ? {} : ZonesState_data.preparation;
+        ZonesState_data.nextScheduleChange =
+            ZonesState_data.nextScheduleChange === null ? {} : ZonesState_data.nextScheduleChange;
+        ZonesState_data.nextTimeBlock = ZonesState_data.nextTimeBlock === null ? {} : ZonesState_data.nextTimeBlock;
 
         this.DoWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
