@@ -1,7 +1,7 @@
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
-const TadoApi = require('./lib/tadoApi.js').default;
+const TadoApi = require('./lib/tadoApi.js');
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
@@ -1759,15 +1759,12 @@ class Tado extends utils.Adapter {
                 delete rooms[i].manualControlTermination.type;
             }
             if (rooms[i].balanceControl === null) {
-                // === attribute exists and is null
                 delete rooms[i].balanceControl;
             }
             if (rooms[i].openWindow === null) {
-                // === attribute exists and is null
                 delete rooms[i].openWindow;
             }
             if (rooms[i].awayMode === null) {
-                // === attribute exists and is null
                 delete rooms[i].awayMode;
             }
         }
