@@ -11,20 +11,20 @@ const { version } = require('./package.json');
 const debounce = require('lodash.debounce');
 
 const EXPIRATION_WINDOW_IN_SECONDS = 10;
-const tadoX_url = `https://hops.tado.com`;
-const client_id = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
-const tado_url = 'https://my.tado.com';
-const tado_app_url = `https://app.tado.com/`;
+const TADO_X_URL = `https://hops.tado.com`;
+const CLIENT_ID = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
+const TADO_URL = 'https://my.tado.com';
+const TADO_APP_URL = `https://app.tado.com/`;
 const DEBOUNCE_TIME = 750; //750ms debouncing (waiting if further calls come in and just execute the last one)
 const DELAY_AFTER_CALL = 300; //300ms pause between api calls
 
 // @ts-expect-error create axios instance
 let axiosInstance = axios.create({
     timeout: 20000, //20000
-    baseURL: `${tado_url}/`,
+    baseURL: `${TADO_URL}/`,
     httpsAgent: new https.Agent({ keepAlive: true }),
-    referer: tado_app_url,
-    origin: tado_app_url,
+    referer: TADO_APP_URL,
+    origin: TADO_APP_URL,
 });
 
 // @ts-expect-error create axios instance
@@ -175,7 +175,7 @@ class Tado extends utils.Adapter {
                     case 'auth1': {
                         this.debugLog(`Received t_o_k_e_n creation Step 1 message`);
                         axiosInstanceToken
-                            .post(`/device_authorize?client_id=${client_id}&scope=offline_access`, {})
+                            .post(`/device_authorize?client_id=${CLIENT_ID}&scope=offline_access`, {})
                             .then(responseRaw => {
                                 let response = responseRaw.data;
                                 this.log.debug(`Response t_o_k_e_n Step 1 is ${JSON.stringify(response)}`);
@@ -213,7 +213,7 @@ class Tado extends utils.Adapter {
                             );
                             break;
                         }
-                        const uri = `/token?client_id=${client_id}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
+                        const uri = `/token?client_id=${CLIENT_ID}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
                         this.debugLog(`t_o_k_e_n Step 2 Url is ${uri}`);
                         axiosInstanceToken
                             .post(uri, {})
@@ -1121,7 +1121,7 @@ class Tado extends utils.Adapter {
 
         this.debugLog(`setManualControlTadoX() payload is ${JSON.stringify(payload)}`);
         let apiResponse = await this.api.apiCall(
-            `${tadoX_url}/homes/${homeId}/rooms/${roomId}/manualControl`,
+            `${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`,
             'post',
             payload,
         );
@@ -1134,7 +1134,10 @@ class Tado extends utils.Adapter {
      * @param {string} roomId
      */
     async setResumeRoomScheduleTadoX(homeId, roomId) {
-        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
+        let apiResponse = await this.api.apiCall(
+            `${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/resumeSchedule`,
+            'post',
+        );
         this.debugLog(`setResumeRoomScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsStateTadoX(homeId, roomId);
     }
@@ -1143,7 +1146,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async setResumeHomeScheduleTadoX(homeId) {
-        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
+        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
         this.debugLog(`setResumeHomeScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsTadoX(homeId);
     }
@@ -1152,7 +1155,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async setBoostTadoX(homeId) {
-        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/boost`, 'post');
+        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/boost`, 'post');
         this.debugLog(`setBoostTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsTadoX(homeId);
     }
@@ -1161,7 +1164,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async setAllOffTadoX(homeId) {
-        let apiResponse = await this.api.apiCall(`${tadoX_url}/homes/${homeId}/quickActions/allOff`, 'post');
+        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/allOff`, 'post');
         this.debugLog(`setAllOffTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.DoRoomsTadoX(homeId);
     }
@@ -1758,15 +1761,9 @@ class Tado extends utils.Adapter {
                 rooms[i].manualControlTermination.controlType = rooms[i].manualControlTermination.type;
                 delete rooms[i].manualControlTermination.type;
             }
-            if (rooms[i].balanceControl === null) {
-                delete rooms[i].balanceControl;
-            }
-            if (rooms[i].openWindow === null) {
-                delete rooms[i].openWindow;
-            }
-            if (rooms[i].awayMode === null) {
-                delete rooms[i].awayMode;
-            }
+            rooms[i].balanceControl = rooms[i].balanceControl === null ? {} : rooms[i].balanceControl;
+            rooms[i].openWindow = rooms[i].openWindow === null ? {} : rooms[i].openWindow;
+            rooms[i].awayMode = rooms[i].awayMode === null ? {} : rooms[i].awayMode;
         }
         this.debugLog(`Modified rooms object is ${JSON.stringify(rooms)}`);
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
@@ -1809,10 +1806,8 @@ class Tado extends utils.Adapter {
             roomsAndDevices.manualControlTermination.controlType = roomsAndDevices.manualControlTermination.type;
             delete roomsAndDevices.manualControlTermination.type;
         }
-        if (roomsAndDevices.balanceControl === null) {
-            // === attribute exists and is null
-            delete roomsAndDevices.balanceControl;
-        }
+
+        roomsAndDevices.balanceControl = roomsAndDevices.balanceControl === null ? {} : roomsAndDevices.balanceControl;
         roomsAndDevices.resumeScheduleRoom = false;
         this.debugLog(`Modified RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
@@ -2121,12 +2116,12 @@ class Tado extends utils.Adapter {
             ZonesState_data.setting.temperature.celsius = null; //add states to be subsribed
             ZonesState_data.setting.temperature.fahrenheit = null;
         }
-        if (ZonesState_data.overlay === null) {
-            ZonesState_data.overlay = {};
-        }
-        if (ZonesState_data.openWindow === null) {
-            ZonesState_data.openWindow = {};
-        }
+        ZonesState_data.overlay = ZonesState_data.overlay === null ? {} : ZonesState_data.overlay;
+        ZonesState_data.openWindow = ZonesState_data.openWindow === null ? {} : ZonesState_data.openWindow;
+        ZonesState_data.preparation = ZonesState_data.preparation === null ? {} : ZonesState_data.preparation;
+        ZonesState_data.nextScheduleChange =
+            ZonesState_data.nextScheduleChange === null ? {} : ZonesState_data.nextScheduleChange;
+        ZonesState_data.nextTimeBlock = ZonesState_data.nextTimeBlock === null ? {} : ZonesState_data.nextTimeBlock;
 
         this.DoWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
@@ -2323,7 +2318,7 @@ class Tado extends utils.Adapter {
             if (this.shouldRefreshToken) {
                 this.refreshTokenInProgress = true;
                 this.debugLog(`RefreshT started [${id}]`);
-                let uri = `/token?client_id=${client_id}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
+                let uri = `/token?client_id=${CLIENT_ID}&grant_type=refresh_token&refresh_token=${this.accessToken.token.refresh_token}`;
                 this.log.debug(`Uri for refresh token is ${uri}`);
                 axiosInstanceToken
                     .post(uri, { timeout: 10000 })
@@ -2588,7 +2583,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      */
     async getRoomsTadoX(homeId) {
-        return this.api.apiCall(`${tadoX_url}/homes/${homeId}/rooms`);
+        return this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms`);
     }
 
     /**
@@ -2596,14 +2591,14 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      */
     async getroomsAndDevicesTadoX(homeId, zoneId) {
-        return this.api.apiCall(`${tadoX_url}/homes/${homeId}/rooms/${zoneId}`);
+        return this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${zoneId}`);
     }
 
     /**
      * @param {string} homeId
      */
     async getRoomsAndDevicesTadoX(homeId) {
-        return this.api.apiCall(`${tadoX_url}/homes/${homeId}/roomsAndDevices`);
+        return this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/roomsAndDevices`);
     }
 }
 
@@ -2617,6 +2612,18 @@ class Tado extends utils.Adapter {
  */
 function toBoolean(valueToBoolean) {
     return valueToBoolean === true || valueToBoolean === 'true';
+}
+
+// @ts-expect-error parent is a valid property on module
+if (module.parent) {
+    // Export the constructor in compact mode
+    /**
+     * @param {Partial<ioBroker.AdapterOptions>} [options]
+     */
+    module.exports = options => new Tado(options);
+} else {
+    // otherwise start the instance directly
+    new Tado();
 }
 
 /**
@@ -2633,18 +2640,6 @@ function toBoolean(valueToBoolean) {
     });
     return replacedString;
 }*/
-
-// @ts-expect-error parent is a valid property on module
-if (module.parent) {
-    // Export the constructor in compact mode
-    /**
-     * @param {Partial<ioBroker.AdapterOptions>} [options]
-     */
-    module.exports = options => new Tado(options);
-} else {
-    // otherwise start the instance directly
-    new Tado();
-}
 
 /*const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
     let timeoutHandle;
