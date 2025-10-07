@@ -1035,36 +1035,18 @@ class Tado extends utils.Adapter {
      * @param {string} options.light
      */
     async setZoneOverlay(homeId, zoneId, options) {
-        let {
-            power,
-            temperature,
-            typeSkillBasedApp,
-            durationInSeconds,
-            type,
-            acMode,
-            fanLevel,
-            horizontalSwing,
-            verticalSwing,
-            fanSpeed,
-            swing,
-            light,
-        } = options;
-
-        power = power.toUpperCase();
-        typeSkillBasedApp = typeSkillBasedApp.toUpperCase();
-        durationInSeconds = Math.max(10, durationInSeconds);
-        type = type.toUpperCase();
-        fanSpeed = fanSpeed.toUpperCase();
-        acMode = acMode.toUpperCase();
-        fanLevel = fanLevel.toUpperCase();
-        horizontalSwing = horizontalSwing.toUpperCase();
-        verticalSwing = verticalSwing.toUpperCase();
-        swing = swing.toUpperCase();
-        light = light.toUpperCase();
-        if (!temperature) {
-            temperature = 21;
-        }
-        temperature = Math.round(temperature * 100) / 100;
+        const power = options.power.toUpperCase();
+        const temperature = Math.round((options.temperature ?? 20) * 100) / 100;
+        const typeSkillBasedApp = options.typeSkillBasedApp.toUpperCase();
+        const durationInSeconds = Math.max(10, options.durationInSeconds);
+        const type = options.type.toUpperCase();
+        const fanSpeed = options.fanSpeed.toUpperCase();
+        const acMode = options.acMode.toUpperCase();
+        const fanLevel = options.fanLevel.toUpperCase();
+        const horizontalSwing = options.horizontalSwing.toUpperCase();
+        const verticalSwing = options.verticalSwing.toUpperCase();
+        const swing = options.swing.toUpperCase();
+        const light = options.light.toUpperCase();
 
         let config = {
             setting: {
