@@ -3,6 +3,7 @@ import prettierConfig from '@iobroker/eslint-config/prettier.config.mjs';
 
 export default {
     ...prettierConfig,
+    printWidth: 120, //140
     // uncomment next line if you prefer double quotes
     // singleQuote: false,
-}
+};
