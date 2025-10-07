@@ -1,5 +1,6 @@
 {
     "eslint.enable": true,
+    "files.eol": "\n",
     "json.schemas": [
         {
             "fileMatch": [
