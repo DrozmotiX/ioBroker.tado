@@ -283,12 +283,14 @@ class Tado extends utils.Adapter {
      */
     async onStateChangeTadoX(id, state, homeId, roomId, deviceId, statename, beforeStatename) {
         this.debugLog(`${id} changed`);
-        const temperature = await this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.temperature.value`);
-        const mode = await this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.controlType`);
-        const power = await this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.power`);
-        const remainingTimeInSeconds = await this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.remainingTimeInSeconds`);
-        const nextTimeBlockStart = await this.getStateAsync(`${homeId}.Rooms.${roomId}.nextTimeBlock.start`);
-        const boostMode = await this.getStateAsync(`${homeId}.Rooms.${roomId}.boostMode`);
+        const [temperature, mode, power, remainingTimeInSeconds, nextTimeBlockStart, boostMode] = await Promise.all([
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.temperature.value`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.controlType`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.power`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.remainingTimeInSeconds`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.nextTimeBlock.start`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.boostMode`),
+        ]);
 
         const set_boostMode = getStateValue(boostMode, false, toBoolean);
         const set_remainingTimeInSeconds = getStateValue(remainingTimeInSeconds, 1800, val => parseInt(val.toString()));
@@ -500,16 +502,12 @@ class Tado extends utils.Adapter {
 
                         let acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed, swing, light;
 
-                        let set_type = getStateValue(type, 'HEATING', val => val.toString().toUpperCase());
-
-                        let set_durationInSeconds = getStateValue(durationInSeconds, 1800, val => parseInt(val.toString()));
-
+                        const set_type = getStateValue(type, 'HEATING', val => val.toString().toUpperCase());
+                        const set_durationInSeconds = getStateValue(durationInSeconds, 1800, parseInt);
                         let set_temp = getStateValue(temperature, 20, val => parseFloat(val.toString()));
-
                         let set_power = getStateValue(power, 'OFF', val => val.toString().toUpperCase());
                         let set_mode = getStateValue(mode, 'NO_OVERLAY', val => val.toString().toUpperCase());
-
-                        let set_NextTimeBlockStartExists = getStateValue(nextTimeBlockStart, false, () => true); //return always true if exists
+                        const set_NextTimeBlockStartExists = getStateValue(nextTimeBlockStart, false, () => true); //return always true if exists
 
                         if (set_type == 'AIR_CONDITIONING') {
                             [acMode, fanSpeed, fanLevel, horizontalSwing, verticalSwing, swing, light] = await Promise.all([
@@ -653,11 +651,8 @@ class Tado extends utils.Adapter {
                 }
             } else {
                 this.oldStatesVal[id] = state.val;
-                //this.debugLog(`Changed value ${state.val} for ID ${id} stored`);
-                //this.debugLog(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             }
         } else {
-            // The state was deleted
             this.debugLog(`state ${id} deleted`);
         }
     }
@@ -1279,6 +1274,7 @@ class Tado extends utils.Adapter {
             rooms[i].balanceControl = rooms[i].balanceControl === null ? {} : rooms[i].balanceControl;
             rooms[i].openWindow = rooms[i].openWindow === null ? {} : rooms[i].openWindow;
             rooms[i].awayMode = rooms[i].awayMode === null ? {} : rooms[i].awayMode;
+            rooms[i].holidayMode = rooms[i].holidayMode === null ? {} : rooms[i].holidayMode;
         }
         this.debugLog(`Modified rooms object is ${JSON.stringify(rooms)}`);
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
@@ -1329,7 +1325,7 @@ class Tado extends utils.Adapter {
     }
 
     async DoData_Refresh() {
-        let now = new Date().getTime();
+        const now = new Date().getTime();
         let step = 'start';
         //outdated = now - this.lastupdate > ONEHOUR;
         //check outdate status for all objects
@@ -1918,7 +1914,7 @@ class Tado extends utils.Adapter {
             // @ts-expect-error status exists
             let status = parseInt(errorObject.status ?? 0);
 
-            if (status == 401 || status == 403 || status == 504) {
+            if (status == 401 || status == 403 || status == 429 || status == 504) {
                 return;
             }
             if (
