@@ -36,43 +36,43 @@ let polling; // Polling timer
 let pooltimer = [];
 let outdated = {
     //${homeId}.Mobile_Devices
-    DoMobileDevices: {
+    manageMobileDevices: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60,
     },
     //${homeId}.Weather
-    DoWeather: {
+    manageWeather: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 10,
     },
     //${homeId}.Rooms
-    DoZones: {
+    manageZones: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60,
     },
     //${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset
-    DoTemperatureOffset: {
+    manageTemperatureOffset: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60 * 24,
     },
     //${homeId}.Rooms.${zoneId}.timeTables
-    DoTimeTables: {
+    manageTimeTables: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60 * 24,
     },
     //${homeId}.Rooms.${zoneId}.awayConfig
-    DoAwayConfiguration: {
+    manageAwayConfiguration: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60 * 24,
     },
     //${homeId}.Home.state
-    DoHomeState: {
+    manageHomeState: {
         isOutdated: false,
         lastUpdate: 60,
     },
@@ -139,13 +139,13 @@ class Tado extends utils.Adapter {
         this.logCalls = this.config.logCalls || false;
         this.logCallsDetail = this.config.logCallsDetail || false;
         this.intervall_time = Math.max(60, this.config.standard || 60) * 1000;
-        outdated.DoMobileDevices.intervall = (this.config.mobildevices || 0) * 60 * 1000;
-        outdated.DoWeather.intervall = (this.config.weather || 0) * 60 * 1000;
-        outdated.DoZones.intervall = (this.config.zones || 0) * 60 * 1000;
-        outdated.DoTemperatureOffset.intervall = (this.config.temperatureOffset || 0) * 60 * 1000;
-        outdated.DoHomeState.intervall = (this.config.homeState || 0) * 60 * 1000;
-        outdated.DoAwayConfiguration.intervall = (this.config.awayConfiguration || 0) * 60 * 1000;
-        outdated.DoTimeTables.intervall = (this.config.timeTables || 0) * 60 * 1000;
+        outdated.manageMobileDevices.intervall = (this.config.mobildevices || 0) * 60 * 1000;
+        outdated.manageWeather.intervall = (this.config.weather || 0) * 60 * 1000;
+        outdated.manageZones.intervall = (this.config.zones || 0) * 60 * 1000;
+        outdated.manageTemperatureOffset.intervall = (this.config.temperatureOffset || 0) * 60 * 1000;
+        outdated.manageHomeState.intervall = (this.config.homeState || 0) * 60 * 1000;
+        outdated.manageAwayConfiguration.intervall = (this.config.awayConfiguration || 0) * 60 * 1000;
+        outdated.manageTimeTables.intervall = (this.config.timeTables || 0) * 60 * 1000;
 
         for (let key in outdated) {
             if (outdated[key].intervall === 0) {
@@ -164,7 +164,7 @@ class Tado extends utils.Adapter {
             this.accessToken.token.refresh_token = '';
         }
         await jsonExplorer.stateSetCreate('info.connection', 'connection', false);
-        await this.DoConnect();
+        await this.connect();
     }
 
     async onMessage(msg) {
@@ -220,7 +220,7 @@ class Tado extends utils.Adapter {
                                 msg.callback && this.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
                                 this.log.info(`Token process done! Adapter starts now...`);
                                 this.debugLog('t_o_k_e_n Step 2 done');
-                                await this.DoConnect();
+                                await this.connect();
                             })
                             .catch(error => {
                                 this.log.error(`Error at token creation Step 2 ${error}`);
@@ -700,7 +700,7 @@ class Tado extends utils.Adapter {
         this.debugLog(`setManualControlTadoX() payload is ${JSON.stringify(payload)}`);
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
         this.debugLog(`setManualControlTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsStateTadoX(homeId, roomId);
+        await this.manageRoomStatesTadoX(homeId, roomId);
     }
 
     /**
@@ -710,7 +710,7 @@ class Tado extends utils.Adapter {
     async setResumeRoomScheduleTadoX(homeId, roomId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
         this.debugLog(`setResumeRoomScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsStateTadoX(homeId, roomId);
+        await this.manageRoomStatesTadoX(homeId, roomId);
     }
 
     /**
@@ -719,7 +719,7 @@ class Tado extends utils.Adapter {
     async setResumeHomeScheduleTadoX(homeId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
         this.debugLog(`setResumeHomeScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsTadoX(homeId);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -728,7 +728,7 @@ class Tado extends utils.Adapter {
     async setBoostTadoX(homeId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/boost`, 'post');
         this.debugLog(`setBoostTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsTadoX(homeId);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -737,7 +737,7 @@ class Tado extends utils.Adapter {
     async setAllOffTadoX(homeId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/allOff`, 'post');
         this.debugLog(`setAllOffTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsTadoX(homeId);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -753,7 +753,7 @@ class Tado extends utils.Adapter {
             await this.api.apiCall(url, 'delete');
             this.debugLog(`Called 'DELETE ${url}'`);
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             this.debugLog('CheckExpire() at clearZoneOverlay() started');
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.overlay.*`);
         } catch (error) {
@@ -792,7 +792,7 @@ class Tado extends utils.Adapter {
             this.debugLog(`API 'temperatureOffset' for home '${homeId}' and deviceID '${deviceId}' with body ${JSON.stringify(offset)} called.`);
             this.debugLog(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
             if (apiResponse) {
-                await this.DoTemperatureOffset(homeId, zoneId, deviceId, apiResponse);
+                await this.manageTemperatureOffset(homeId, zoneId, deviceId, apiResponse);
             }
         } catch (error) {
             let eMsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
@@ -830,7 +830,7 @@ class Tado extends utils.Adapter {
             apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`, 'put', timeTable);
 
             if (apiResponse) {
-                await this.DoTimeTables(homeId, zoneId, apiResponse);
+                await this.manageTimeTables(homeId, zoneId, apiResponse);
             }
             this.debugLog(`API 'activeTimetable' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(timeTable)} called.`);
             this.debugLog(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
@@ -871,7 +871,7 @@ class Tado extends utils.Adapter {
             } else {
                 apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/presenceLock`, 'put', homeState);
             }
-            await this.DoHomeState(homeId);
+            await this.manageHomeState(homeId);
             this.debugLog(`API 'state' for home '${homeId}' with body ${JSON.stringify(homeState)} called.`);
             this.debugLog(`Response from 'presenceLock' is ${JSON.stringify(apiResponse)}`);
         } catch (error) {
@@ -1157,7 +1157,7 @@ class Tado extends utils.Adapter {
             await this.api.apiCall(url, 'post');
             this.debugLog(`Called 'POST ${url}'`);
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindow.*`);
         } catch (error) {
             this.log.error(`Issue at activateOpenWindow(): '${error}'`);
@@ -1181,7 +1181,7 @@ class Tado extends utils.Adapter {
             }
             await this.api.apiCall(url, 'put', config);
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindowDetection.*`);
         } catch (error) {
             console.log(`Body: ${JSON.stringify(config)}`);
@@ -1207,7 +1207,7 @@ class Tado extends utils.Adapter {
             }
             await this.api.apiCall(url, 'put', { childLockEnabled: enabled });
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${deviceId}.childLockEnabled`);
         } catch (error) {
             this.log.error(`Issue at setChildLock(): '${error}'`);
@@ -1247,7 +1247,7 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      */
-    async DoRoomsTadoX(homeId) {
+    async manageRoomsTadoX(homeId) {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
         this.debugLog(`Rooms object is ${JSON.stringify(rooms)}`);
@@ -1293,7 +1293,7 @@ class Tado extends utils.Adapter {
                 true,
                 1,
             );
-            await this.DoRoomsStateTadoX(homeId, roomId);
+            await this.manageRoomStatesTadoX(homeId, roomId);
         }
     }
 
@@ -1301,7 +1301,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} roomId
      */
-    async DoRoomsStateTadoX(homeId, roomId) {
+    async manageRoomStatesTadoX(homeId, roomId) {
         let roomsAndDevices = await this.getroomsAndDevicesTadoX(homeId, roomId);
         if (roomsAndDevices.boostMode == null) {
             roomsAndDevices.boostMode = {};
@@ -1324,7 +1324,7 @@ class Tado extends utils.Adapter {
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
-    async DoData_Refresh() {
+    async refreshData() {
         const now = new Date().getTime();
         let step = 'start';
         //outdated = now - this.lastupdate > ONEHOUR;
@@ -1355,7 +1355,7 @@ class Tado extends utils.Adapter {
 
             for (const i in this.getMeData.homes) {
                 let homeId = String(this.getMeData.homes[i].id);
-                this.DoWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMeData);
+                this.manageWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMeData);
                 this.setObjectAsync(homeId, {
                     type: 'folder',
                     common: {
@@ -1365,34 +1365,34 @@ class Tado extends utils.Adapter {
                 });
 
                 step = 'DoHome';
-                await this.DoHome(homeId); //API Call only needed once, because data is static
+                await this.manageHome(homeId); //API Call only needed once, because data is static
 
-                step = 'DoMobileDevices';
+                step = 'manageMobileDevices';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
-                    await this.DoMobileDevices(homeId);
+                    await this.manageMobileDevices(homeId);
                     jsonExplorer.checkExpire(`${homeId}.Mobile_Devices.*`);
                 }
 
-                step = 'DoWeather';
+                step = 'manageWeather';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
-                    await this.DoWeather(homeId);
+                    await this.manageWeather(homeId);
                     jsonExplorer.checkExpire(`${homeId}.Weather.*`);
                 }
 
-                step = 'DoZones';
+                step = 'manageZones';
                 if (this.isTadoX) {
-                    await this.DoRoomsTadoX(homeId);
+                    await this.manageRoomsTadoX(homeId);
                 } else {
-                    await this.DoZones(homeId);
+                    await this.manageZones(homeId);
                 }
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
 
-                step = 'DoHomeState';
+                step = 'manageHomeState';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
-                    await this.DoHomeState(homeId);
+                    await this.manageHomeState(homeId);
                     jsonExplorer.checkExpire(`${homeId}.Home.state.*`);
                 }
             }
@@ -1413,7 +1413,7 @@ class Tado extends utils.Adapter {
             }
             // timer
             polling = setTimeout(() => {
-                this.DoConnect();
+                this.connect();
             }, this.intervall_time);
             this.retryCount = 0;
             //this.log.info(`${numberOfCalls.calls} API calls since start.`);
@@ -1438,7 +1438,7 @@ class Tado extends utils.Adapter {
                         this.roomCapabilities = {};
                         outdated[key].lastUpdate = 0; //reset all lastUpdate to 0 to force refresh of all data
                     }
-                    this.DoConnect();
+                    this.connect();
                 }, retryDelay * 1000);
             } else {
                 this.log.error(`Retry limit reached! No further retries.`);
@@ -1447,7 +1447,7 @@ class Tado extends utils.Adapter {
         }
     }
 
-    async DoConnect() {
+    async connect() {
         try {
             if ((await isOnline()) == false) {
                 this.log.warn(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
@@ -1458,7 +1458,7 @@ class Tado extends utils.Adapter {
                 }
                 // timer
                 polling = setTimeout(() => {
-                    this.DoConnect();
+                    this.connect();
                 }, this.intervall_time);
                 return;
             }
@@ -1469,7 +1469,7 @@ class Tado extends utils.Adapter {
                 this.log.error(`Adapter not running! No token configured. Go to adapter's config page and execute Step 1 and Step 2`);
                 return;
             }
-            await this.DoData_Refresh();
+            await this.refreshData();
         } catch (error) {
             this.log.error(`Issue at DoConnect(): ${error}`);
             console.error(`Issue at DoConnect(): ${error}`);
@@ -1482,7 +1482,7 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      */
-    async DoHome(homeId) {
+    async manageHome(homeId) {
         // Get additional basic data for all homes
         if (this.homeData === null) {
             this.homeData = await this.getHome(homeId);
@@ -1501,20 +1501,20 @@ class Tado extends utils.Adapter {
         if (!this.isTadoX) {
             this.homeData.masterswitch = '';
         }
-        this.DoWriteJsonRespons(homeId, 'Stage_02_HomeData', this.homeData);
+        this.manageWriteJsonRespons(homeId, 'Stage_02_HomeData', this.homeData);
         await jsonExplorer.traverseJson(this.homeData, `${homeId}.Home`, true, true, 0);
     }
 
     /**
      * @param {string} homeId
      */
-    async DoWeather(homeId) {
+    async manageWeather(homeId) {
         const weather_data = await this.getWeather(homeId);
         if (weather_data == null) {
             throw new Error('weather_data is null');
         }
         this.debugLog(`Weather_data Result: ${JSON.stringify(weather_data)}`);
-        this.DoWriteJsonRespons(homeId, 'Stage_04_Weather', weather_data);
+        this.manageWriteJsonRespons(homeId, 'Stage_04_Weather', weather_data);
         await jsonExplorer.traverseJson(weather_data, `${homeId}.Weather`, true, true, 0);
     }
 
@@ -1524,7 +1524,7 @@ class Tado extends utils.Adapter {
      * @param {string} deviceId
      * @param {object} offset
      */
-    async DoTemperatureOffset(homeId, zoneId, deviceId, offset = null) {
+    async manageTemperatureOffset(homeId, zoneId, deviceId, offset = null) {
         if (offset == null) {
             offset = await this.getTemperatureOffset(deviceId);
         }
@@ -1532,7 +1532,7 @@ class Tado extends utils.Adapter {
         if (offset == null) {
             throw new Error('offset is null');
         }
-        this.DoWriteJsonRespons(homeId, `Stage_12_Offset_${homeId}`, offset);
+        this.manageWriteJsonRespons(homeId, `Stage_12_Offset_${homeId}`, offset);
         if (offset.celsius != undefined) {
             offset.offsetCelsius = offset.celsius;
         }
@@ -1547,22 +1547,22 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      */
-    async DoMobileDevices(homeId) {
+    async manageMobileDevices(homeId) {
         this.MobileDevices_data = await this.getMobileDevices(homeId);
         if (this.MobileDevices_data == null) {
             throw new Error('MobileDevices_data is null');
         }
         this.debugLog(`MobileDevices_data Result: ${JSON.stringify(this.MobileDevices_data)}`);
-        this.DoWriteJsonRespons(homeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
+        this.manageWriteJsonRespons(homeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
         await jsonExplorer.traverseJson(this.MobileDevices_data, `${homeId}.Mobile_Devices`, true, true, 0);
     }
 
     /**
      * @param {string} homeId
      */
-    async DoZones(homeId) {
-        if (outdated['DoZones'].isOutdated) {
-            outdated['DoZones'].lastUpdate = new Date().getTime();
+    async manageZones(homeId) {
+        if (outdated['manageZones'].isOutdated) {
+            outdated['manageZones'].lastUpdate = new Date().getTime();
             this.zonesData = await this.getZones(homeId);
         }
         let zones_data = structuredClone(this.zonesData);
@@ -1570,7 +1570,7 @@ class Tado extends utils.Adapter {
         if (zones_data == null) {
             throw new Error('Zones_data is null');
         }
-        this.DoWriteJsonRespons(homeId, 'Stage_08_ZonesData', zones_data);
+        this.manageWriteJsonRespons(homeId, 'Stage_08_ZonesData', zones_data);
 
         //Search for DeviceIDs to get Offset
         for (const j in zones_data) {
@@ -1581,9 +1581,9 @@ class Tado extends utils.Adapter {
                     if (deviceId != undefined) {
                         this.debugLog(`DeviceID for offset found: ${JSON.stringify(zones_data[j][k][l].serialNo)}`);
                         zones_data[j][k][l].id = zones_data[j][k][l].serialNo;
-                        if (zones_data[j][k][l].duties.includes(`ZONE_LEADER`) && outdated['DoTemperatureOffset'].isOutdated) {
-                            outdated['DoTemperatureOffset'].lastUpdate = new Date().getTime();
-                            await this.DoTemperatureOffset(homeId, zoneId, deviceId);
+                        if (zones_data[j][k][l].duties.includes(`ZONE_LEADER`) && outdated['manageTemperatureOffset'].isOutdated) {
+                            outdated['manageTemperatureOffset'].lastUpdate = new Date().getTime();
+                            await this.manageTemperatureOffset(homeId, zoneId, deviceId);
                         }
                     }
                 }
@@ -1597,10 +1597,10 @@ class Tado extends utils.Adapter {
 
         for (const i in zones_data) {
             let zoneId = zones_data[i].id;
-            await this.DoZoneStates(homeId, zoneId);
-            await this.DoCapabilities(homeId, zoneId);
-            await this.DoAwayConfiguration(homeId, zoneId);
-            await this.DoTimeTables(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
+            await this.manageCapabilities(homeId, zoneId);
+            await this.manageAwayConfiguration(homeId, zoneId);
+            await this.manageTimeTables(homeId, zoneId);
         }
     }
 
@@ -1608,7 +1608,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async DoZoneStates(homeId, zoneId) {
+    async manageZoneStates(homeId, zoneId) {
         let ZonesState_data = await this.getZoneState(homeId, zoneId);
         if (ZonesState_data == null) {
             throw new Error('ZonesState_data is null');
@@ -1626,7 +1626,7 @@ class Tado extends utils.Adapter {
         ZonesState_data.nextScheduleChange = ZonesState_data.nextScheduleChange === null ? {} : ZonesState_data.nextScheduleChange;
         ZonesState_data.nextTimeBlock = ZonesState_data.nextTimeBlock === null ? {} : ZonesState_data.nextTimeBlock;
 
-        this.DoWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
+        this.manageWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
         ZonesState_data.activateOpenWindow = false;
         await jsonExplorer.traverseJson(ZonesState_data, `${homeId}.Rooms.${zoneId}`, true, true, 2);
@@ -1636,7 +1636,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async DoCapabilities(homeId, zoneId) {
+    async manageCapabilities(homeId, zoneId) {
         let capabilities_data;
         if (this.roomCapabilities[zoneId]) {
             capabilities_data = this.roomCapabilities[zoneId];
@@ -1648,7 +1648,7 @@ class Tado extends utils.Adapter {
         }
         this.roomCapabilities[zoneId] = capabilities_data;
         this.debugLog(`Capabilities_data result for room '${zoneId}' is ${JSON.stringify(capabilities_data)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_09_Capabilities_data_${zoneId}`, capabilities_data);
+        this.manageWriteJsonRespons(homeId, `Stage_09_Capabilities_data_${zoneId}`, capabilities_data);
         await jsonExplorer.traverseJson(capabilities_data, `${homeId}.Rooms.${zoneId}.capabilities`, true, true, 2);
     }
 
@@ -1657,12 +1657,12 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      * @param {object} timeTablesDataInput
      */
-    async DoTimeTables(homeId, zoneId, timeTablesDataInput = null) {
+    async manageTimeTables(homeId, zoneId, timeTablesDataInput = null) {
         if (timeTablesDataInput != null) {
             this.timeTablesData = timeTablesDataInput;
         } else {
-            if (outdated['DoTimeTables'].isOutdated) {
-                outdated['DoTimeTables'].lastUpdate = new Date().getTime();
+            if (outdated['manageTimeTables'].isOutdated) {
+                outdated['manageTimeTables'].lastUpdate = new Date().getTime();
                 this.timeTablesData = await this.getTimeTables(homeId, zoneId);
             }
         }
@@ -1672,7 +1672,7 @@ class Tado extends utils.Adapter {
         this.timeTablesData.tt_id = this.timeTablesData.id;
         delete this.timeTablesData.id;
         this.debugLog(`ZoneOverlay_data Result: ${JSON.stringify(this.timeTablesData)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_13_TimeTables_${zoneId}`, this.timeTablesData);
+        this.manageWriteJsonRespons(homeId, `Stage_13_TimeTables_${zoneId}`, this.timeTablesData);
         this.debugLog(`Timetable for room ${zoneId} is ${JSON.stringify(this.timeTablesData)}`);
         await jsonExplorer.traverseJson(this.timeTablesData, `${homeId}.Rooms.${zoneId}.timeTables`, true, true, 2);
     }
@@ -1681,16 +1681,16 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async DoAwayConfiguration(homeId, zoneId) {
-        if (outdated['DoAwayConfiguration'].isOutdated) {
-            outdated['DoAwayConfiguration'].lastUpdate = new Date().getTime();
+    async manageAwayConfiguration(homeId, zoneId) {
+        if (outdated['manageAwayConfiguration'].isOutdated) {
+            outdated['manageAwayConfiguration'].lastUpdate = new Date().getTime();
             this.awayConfigurationData = await this.getAwayConfiguration(homeId, zoneId);
         }
         if (this.awayConfigurationData == null) {
             throw new Error('AwayConfiguration_data is null');
         }
         this.debugLog(`AwayConfiguration_data Result: ${JSON.stringify(this.awayConfigurationData)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, this.awayConfigurationData);
+        this.manageWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, this.awayConfigurationData);
         await jsonExplorer.traverseJson(this.awayConfigurationData, `${homeId}.Rooms.${zoneId}.awayConfig`, true, true, 2);
     }
 
@@ -1699,7 +1699,7 @@ class Tado extends utils.Adapter {
      * @param {string} state_name
      * @param {any} value
      */
-    async DoWriteJsonRespons(homeId, state_name, value) {
+    async manageWriteJsonRespons(homeId, state_name, value) {
         try {
             if (this.log.level == 'debug' || this.log.level == 'silly') {
                 this.debugLog(`JSON data written for ${state_name} with values: ${JSON.stringify(value)}`);
@@ -1727,7 +1727,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {object} homeStateData
      */
-    async DoHomeState(homeId, homeStateData = null) {
+    async manageHomeState(homeId, homeStateData = null) {
         if (homeStateData == null) {
             homeStateData = await this.getHomeState(homeId);
         }
@@ -1735,7 +1735,7 @@ class Tado extends utils.Adapter {
             throw new Error('homeState_data is null');
         }
         this.debugLog(`HomeState_data Result: ${JSON.stringify(homeStateData)}`);
-        this.DoWriteJsonRespons(homeId, 'Stage_11_HomeState', homeStateData);
+        this.manageWriteJsonRespons(homeId, 'Stage_11_HomeState', homeStateData);
         await jsonExplorer.traverseJson(homeStateData, `${homeId}.Home.state`, true, true, 1);
     }
 
