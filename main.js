@@ -36,43 +36,43 @@ let polling; // Polling timer
 let pooltimer = [];
 let outdated = {
     //${homeId}.Mobile_Devices
-    DoMobileDevices: {
+    manageMobileDevices: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60,
     },
     //${homeId}.Weather
-    DoWeather: {
+    manageWeather: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 10,
     },
     //${homeId}.Rooms
-    DoZones: {
+    manageZones: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60,
     },
     //${homeId}.Rooms.${zoneId}.devices.${deviceId}.offset
-    DoTemperatureOffset: {
+    manageTemperatureOffset: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60 * 24,
     },
     //${homeId}.Rooms.${zoneId}.timeTables
-    DoTimeTables: {
+    manageTimeTables: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60 * 24,
     },
     //${homeId}.Rooms.${zoneId}.awayConfig
-    DoAwayConfiguration: {
+    manageAwayConfiguration: {
         isOutdated: false,
         lastUpdate: 0,
         intervall: 60 * 24,
     },
     //${homeId}.Home.state
-    DoHomeState: {
+    manageHomeState: {
         isOutdated: false,
         lastUpdate: 60,
     },
@@ -139,13 +139,13 @@ class Tado extends utils.Adapter {
         this.logCalls = this.config.logCalls || false;
         this.logCallsDetail = this.config.logCallsDetail || false;
         this.intervall_time = Math.max(60, this.config.standard || 60) * 1000;
-        outdated.DoMobileDevices.intervall = (this.config.mobildevices || 0) * 60 * 1000;
-        outdated.DoWeather.intervall = (this.config.weather || 0) * 60 * 1000;
-        outdated.DoZones.intervall = (this.config.zones || 0) * 60 * 1000;
-        outdated.DoTemperatureOffset.intervall = (this.config.temperatureOffset || 0) * 60 * 1000;
-        outdated.DoHomeState.intervall = (this.config.homeState || 0) * 60 * 1000;
-        outdated.DoAwayConfiguration.intervall = (this.config.awayConfiguration || 0) * 60 * 1000;
-        outdated.DoTimeTables.intervall = (this.config.timeTables || 0) * 60 * 1000;
+        outdated.manageMobileDevices.intervall = (this.config.mobildevices || 0) * 60 * 1000;
+        outdated.manageWeather.intervall = (this.config.weather || 0) * 60 * 1000;
+        outdated.manageZones.intervall = (this.config.zones || 0) * 60 * 1000;
+        outdated.manageTemperatureOffset.intervall = (this.config.temperatureOffset || 0) * 60 * 1000;
+        outdated.manageHomeState.intervall = (this.config.homeState || 0) * 60 * 1000;
+        outdated.manageAwayConfiguration.intervall = (this.config.awayConfiguration || 0) * 60 * 1000;
+        outdated.manageTimeTables.intervall = (this.config.timeTables || 0) * 60 * 1000;
 
         for (let key in outdated) {
             if (outdated[key].intervall === 0) {
@@ -156,8 +156,7 @@ class Tado extends utils.Adapter {
 
         const tokenObject = await this.getObjectAsync('_config');
         this.debugLog(`T-Object from config is${JSON.stringify(tokenObject)}`);
-        this.accessToken =
-            tokenObject && tokenObject.native && tokenObject.native.tokenSet ? tokenObject.native.tokenSet : null;
+        this.accessToken = tokenObject && tokenObject.native && tokenObject.native.tokenSet ? tokenObject.native.tokenSet : null;
         this.debugLog(`accessT is ${JSON.stringify(this.accessToken)}`);
         if (this.accessToken == null) {
             this.accessToken = {};
@@ -165,7 +164,7 @@ class Tado extends utils.Adapter {
             this.accessToken.token.refresh_token = '';
         }
         await jsonExplorer.stateSetCreate('info.connection', 'connection', false);
-        await this.DoConnect();
+        await this.connect();
     }
 
     async onMessage(msg) {
@@ -208,9 +207,7 @@ class Tado extends utils.Adapter {
                     case 'auth2': {
                         this.debugLog(`Received t_o_k_e_n step 2 message`);
                         if (!this.device_code) {
-                            this.log.error(
-                                'Step 1 was not executed, but step 2 startet! Please start/restart with Step 1.',
-                            );
+                            this.log.error('Step 1 was not executed, but step 2 startet! Please start/restart with Step 1.');
                             break;
                         }
                         const uri = `/token?client_id=${CLIENT_ID}&device_code=${this.device_code}&grant_type=urn:ietf:params:oauth:grant-type:device_code`;
@@ -220,16 +217,10 @@ class Tado extends utils.Adapter {
                             .then(async responseRaw => {
                                 this.debugLog(`Response t_o_k_e_n Step 2 is ${JSON.stringify(responseRaw.data)}`);
                                 await this.manageNewToken(responseRaw.data);
-                                msg.callback &&
-                                    this.sendTo(
-                                        msg.from,
-                                        msg.command,
-                                        { error: `Done! Adapter starts now...` },
-                                        msg.callback,
-                                    );
+                                msg.callback && this.sendTo(msg.from, msg.command, { error: `Done! Adapter starts now...` }, msg.callback);
                                 this.log.info(`Token process done! Adapter starts now...`);
                                 this.debugLog('t_o_k_e_n Step 2 done');
-                                await this.DoConnect();
+                                await this.connect();
                             })
                             .catch(error => {
                                 this.log.error(`Error at token creation Step 2 ${error}`);
@@ -292,42 +283,21 @@ class Tado extends utils.Adapter {
      */
     async onStateChangeTadoX(id, state, homeId, roomId, deviceId, statename, beforeStatename) {
         this.debugLog(`${id} changed`);
-        const temperature = await this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.temperature.value`);
-        const mode = await this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.controlType`);
-        const power = await this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.power`);
-        const remainingTimeInSeconds = await this.getStateAsync(
-            `${homeId}.Rooms.${roomId}.manualControlTermination.remainingTimeInSeconds`,
-        );
-        const nextTimeBlockStart = await this.getStateAsync(`${homeId}.Rooms.${roomId}.nextTimeBlock.start`);
-        const boostMode = await this.getStateAsync(`${homeId}.Rooms.${roomId}.boostMode`);
+        const [temperature, mode, power, remainingTimeInSeconds, nextTimeBlockStart, boostMode] = await Promise.all([
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.temperature.value`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.controlType`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.power`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.remainingTimeInSeconds`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.nextTimeBlock.start`),
+            this.getStateAsync(`${homeId}.Rooms.${roomId}.boostMode`),
+        ]);
 
-        const set_boostMode =
-            boostMode == null || boostMode == undefined || boostMode.val == null || boostMode.val == ''
-                ? false
-                : toBoolean(boostMode.val);
-        const set_remainingTimeInSeconds =
-            remainingTimeInSeconds == null || remainingTimeInSeconds == undefined || remainingTimeInSeconds.val == null
-                ? 1800
-                : parseInt(remainingTimeInSeconds.val.toString());
-        const set_temp =
-            temperature == null || temperature == undefined || temperature.val == null || temperature.val == ''
-                ? 20
-                : parseFloat(temperature.val.toString());
-        const set_NextTimeBlockStartExists =
-            nextTimeBlockStart == null ||
-            nextTimeBlockStart == undefined ||
-            nextTimeBlockStart.val == null ||
-            nextTimeBlockStart.val == ''
-                ? false
-                : true;
-        let set_power =
-            power == null || power == undefined || power.val == null || power.val == ''
-                ? 'OFF'
-                : power.val.toString().toUpperCase();
-        let set_terminationMode =
-            mode == null || mode == undefined || mode.val == null || mode.val == ''
-                ? 'NO_OVERLAY'
-                : mode.val.toString().toUpperCase();
+        const set_boostMode = getStateValue(boostMode, false, toBoolean);
+        const set_remainingTimeInSeconds = getStateValue(remainingTimeInSeconds, 1800, val => parseInt(val.toString()));
+        const set_temp = getStateValue(temperature, 20, val => parseFloat(val.toString()));
+        const set_NextTimeBlockStartExists = getStateValue(nextTimeBlockStart, false, () => true); //return always true if exists
+        let set_power = getStateValue(power, 'OFF', val => val.toString().toUpperCase());
+        let set_terminationMode = getStateValue(mode, 'NO_OVERLAY', val => val.toString().toUpperCase());
 
         this.debugLog(`boostMode is: ${set_boostMode}`);
         this.debugLog(`Power is: ${set_power}`);
@@ -349,15 +319,7 @@ class Tado extends utils.Adapter {
                     }
                 }
 
-                await this.setManualControlTadoX(
-                    homeId,
-                    roomId,
-                    set_power,
-                    set_temp,
-                    set_terminationMode,
-                    set_boostMode,
-                    set_remainingTimeInSeconds,
-                );
+                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 if (set_power == 'OFF') {
                     jsonExplorer.stateSetCreate(`${homeId}.Rooms.${roomId}.setting.temperature.value`, 'value', null);
                 }
@@ -377,15 +339,7 @@ class Tado extends utils.Adapter {
                     }
                 }
                 set_power = 'ON';
-                await this.setManualControlTadoX(
-                    homeId,
-                    roomId,
-                    set_power,
-                    set_temp,
-                    set_terminationMode,
-                    set_boostMode,
-                    set_remainingTimeInSeconds,
-                );
+                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 break;
 
             case 'boost':
@@ -422,15 +376,7 @@ class Tado extends utils.Adapter {
 
             case 'remainingTimeInSeconds':
                 set_terminationMode = 'TIMER';
-                await this.setManualControlTadoX(
-                    homeId,
-                    roomId,
-                    set_power,
-                    set_temp,
-                    set_terminationMode,
-                    set_boostMode,
-                    set_remainingTimeInSeconds,
-                );
+                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 break;
 
             case 'controlType':
@@ -438,15 +384,7 @@ class Tado extends utils.Adapter {
                     this.log.warn(`Change of ${id} ignored`);
                     break;
                 }
-                await this.setManualControlTadoX(
-                    homeId,
-                    roomId,
-                    set_power,
-                    set_temp,
-                    set_terminationMode,
-                    set_boostMode,
-                    set_remainingTimeInSeconds,
-                );
+                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
                 break;
         }
     }
@@ -477,15 +415,7 @@ class Tado extends utils.Adapter {
 
                     if (statename != 'meterReadings' && statename != 'presence') {
                         if (this.isTadoX) {
-                            await this.onStateChangeTadoX(
-                                id,
-                                state,
-                                homeId,
-                                zoneId,
-                                deviceId,
-                                statename,
-                                beforeStatename,
-                            );
+                            await this.onStateChangeTadoX(id, state, homeId, zoneId, deviceId, statename, beforeStatename);
                             return;
                         }
                     }
@@ -515,55 +445,23 @@ class Tado extends utils.Adapter {
                             return;
                         }
                     } else if (statename == 'offsetCelsius') {
-                        const offset = state;
-                        let set_offset =
-                            offset == null || offset == undefined || offset.val == null
-                                ? 0
-                                : parseFloat(offset.val.toString());
-                        this.debugLog(
-                            `Offset changed for device '${deviceId}' in home '${homeId}' to value '${set_offset}'`,
-                        );
+                        let set_offset = getStateValue(state, 0, parseFloat);
+                        this.debugLog(`Offset changed for device '${deviceId}' in home '${homeId}' to value '${set_offset}'`);
                         this.setTemperatureOffset(homeId, zoneId, deviceId, set_offset);
                     } else if (statename == 'childLockEnabled') {
-                        const childLockEnabled = state;
-                        let set_childLockEnabled =
-                            childLockEnabled == null ||
-                            childLockEnabled == undefined ||
-                            childLockEnabled.val == null ||
-                            childLockEnabled.val == ''
-                                ? false
-                                : toBoolean(childLockEnabled.val);
-                        this.debugLog(
-                            `ChildLockEnabled changed for device '${deviceId}' in home '${homeId}' to value '${set_childLockEnabled}'`,
-                        );
+                        let set_childLockEnabled = getStateValue(state, false, toBoolean);
+                        this.debugLog(`ChildLockEnabled changed for device '${deviceId}' in home '${homeId}' to value '${set_childLockEnabled}'`);
                         this.setChildLock(homeId, zoneId, deviceId, set_childLockEnabled);
                     } else if (statename == 'tt_id') {
-                        const tt_id = state;
-                        let set_tt_id =
-                            tt_id == null || tt_id == undefined || tt_id.val == null || tt_id.val == ''
-                                ? 0
-                                : parseInt(tt_id.val.toString());
-                        this.debugLog(
-                            `TimeTable changed for room '${zoneId}' in home '${homeId}' to value '${set_tt_id}'`,
-                        );
+                        let set_tt_id = getStateValue(state, 0, parseInt);
+                        this.debugLog(`TimeTable changed for room '${zoneId}' in home '${homeId}' to value '${set_tt_id}'`);
                         this.setActiveTimeTable(homeId, zoneId, set_tt_id);
                     } else if (statename == 'presence') {
-                        const presence = state;
-                        let set_presence =
-                            presence == null || presence == undefined || presence.val == null || presence.val == ''
-                                ? 'HOME'
-                                : presence.val.toString().toUpperCase();
+                        let set_presence = getStateValue(state, 'HOME', val => val.toString().toUpperCase());
                         this.debugLog(`Presence changed in home '${homeId}' to value '${set_presence}'`);
                         this.setPresenceLock(homeId, set_presence);
                     } else if (statename == 'masterswitch') {
-                        const masterswitch = state;
-                        let set_masterswitch =
-                            masterswitch == null ||
-                            masterswitch == undefined ||
-                            masterswitch.val == null ||
-                            masterswitch.val == ''
-                                ? 'unknown'
-                                : masterswitch.val.toString().toUpperCase();
+                        let set_masterswitch = getStateValue(state, 'unknown', val => val.toString().toUpperCase());
                         this.debugLog(`Masterswitch changed in home '${homeId}' to value '${set_masterswitch}'`);
                         await this.setMasterSwitch(set_masterswitch);
                         await this.sleep(1000);
@@ -581,20 +479,8 @@ class Tado extends utils.Adapter {
                         const openWindowDetectionTimeoutInSeconds = await this.getStateAsync(
                             `${homeId}.Rooms.${zoneId}.openWindowDetection.timeoutInSeconds`,
                         );
-                        let set_openWindowDetectionEnabled =
-                            openWindowDetectionEnabled == null ||
-                            openWindowDetectionEnabled == undefined ||
-                            openWindowDetectionEnabled.val == null ||
-                            openWindowDetectionEnabled.val == ''
-                                ? false
-                                : toBoolean(openWindowDetectionEnabled.val);
-                        let set_openWindowDetectionTimeoutInSeconds =
-                            openWindowDetectionTimeoutInSeconds == null ||
-                            openWindowDetectionTimeoutInSeconds == undefined ||
-                            openWindowDetectionTimeoutInSeconds.val == null ||
-                            openWindowDetectionTimeoutInSeconds.val == ''
-                                ? 900
-                                : Number(openWindowDetectionTimeoutInSeconds.val);
+                        let set_openWindowDetectionEnabled = getStateValue(openWindowDetectionEnabled, false, toBoolean);
+                        let set_openWindowDetectionTimeoutInSeconds = getStateValue(openWindowDetectionTimeoutInSeconds, 900, Number);
 
                         this.debugLog(`Open Window Detection enabled: ${set_openWindowDetectionEnabled}`);
                         this.debugLog(`Open Window Detection Timeout is: ${set_openWindowDetectionTimeoutInSeconds}`);
@@ -605,127 +491,50 @@ class Tado extends utils.Adapter {
                             timeoutInSeconds: set_openWindowDetectionTimeoutInSeconds,
                         });
                     } else {
-                        const type = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.type`);
-                        const temperature = await this.getStateAsync(
-                            `${homeId}.Rooms.${zoneId}.setting.temperature.celsius`,
-                        );
-                        const mode = await this.getStateAsync(
-                            `${homeId}.Rooms.${zoneId}.overlay.termination.typeSkillBasedApp`,
-                        );
-                        const power = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.power`);
-                        const durationInSeconds = await this.getStateAsync(
-                            `${homeId}.Rooms.${zoneId}.overlay.termination.durationInSeconds`,
-                        );
-                        const nextTimeBlockStart = await this.getStateAsync(
-                            `${homeId}.Rooms.${zoneId}.nextTimeBlock.start`,
-                        );
+                        const [type, temperature, mode, power, durationInSeconds, nextTimeBlockStart] = await Promise.all([
+                            this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.type`),
+                            this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.temperature.celsius`),
+                            this.getStateAsync(`${homeId}.Rooms.${zoneId}.overlay.termination.typeSkillBasedApp`),
+                            this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.power`),
+                            this.getStateAsync(`${homeId}.Rooms.${zoneId}.overlay.termination.durationInSeconds`),
+                            this.getStateAsync(`${homeId}.Rooms.${zoneId}.nextTimeBlock.start`),
+                        ]);
+
                         let acMode, fanLevel, horizontalSwing, verticalSwing, fanSpeed, swing, light;
 
-                        let set_type =
-                            type == null || type == undefined || type.val == null || type.val == ''
-                                ? 'HEATING'
-                                : type.val.toString().toUpperCase();
-                        let set_durationInSeconds =
-                            durationInSeconds == null || durationInSeconds == undefined || durationInSeconds.val == null
-                                ? 1800
-                                : parseInt(durationInSeconds.val.toString());
-                        let set_temp =
-                            temperature == null ||
-                            temperature == undefined ||
-                            temperature.val == null ||
-                            temperature.val == ''
-                                ? 20
-                                : parseFloat(temperature.val.toString());
-                        let set_power =
-                            power == null || power == undefined || power.val == null || power.val == ''
-                                ? 'OFF'
-                                : power.val.toString().toUpperCase();
-                        let set_mode =
-                            mode == null || mode == undefined || mode.val == null || mode.val == ''
-                                ? 'NO_OVERLAY'
-                                : mode.val.toString().toUpperCase();
-                        let set_NextTimeBlockStartExists =
-                            nextTimeBlockStart == null ||
-                            nextTimeBlockStart == undefined ||
-                            nextTimeBlockStart.val == null ||
-                            nextTimeBlockStart.val == ''
-                                ? false
-                                : true;
+                        const set_type = getStateValue(type, 'HEATING', val => val.toString().toUpperCase());
+                        const set_durationInSeconds = getStateValue(durationInSeconds, 1800, parseInt);
+                        let set_temp = getStateValue(temperature, 20, val => parseFloat(val.toString()));
+                        let set_power = getStateValue(power, 'OFF', val => val.toString().toUpperCase());
+                        let set_mode = getStateValue(mode, 'NO_OVERLAY', val => val.toString().toUpperCase());
+                        const set_NextTimeBlockStartExists = getStateValue(nextTimeBlockStart, false, () => true); //return always true if exists
 
                         if (set_type == 'AIR_CONDITIONING') {
-                            acMode = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.mode`);
-                            fanSpeed = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.fanSpeed`);
-                            fanLevel = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.fanLevel`);
-                            horizontalSwing = await this.getStateAsync(
-                                `${homeId}.Rooms.${zoneId}.setting.horizontalSwing`,
-                            );
-                            verticalSwing = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.verticalSwing`);
-                            swing = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.swing`);
-                            light = await this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.light`);
+                            [acMode, fanSpeed, fanLevel, horizontalSwing, verticalSwing, swing, light] = await Promise.all([
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.mode`),
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.fanSpeed`),
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.fanLevel`),
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.horizontalSwing`),
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.verticalSwing`),
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.swing`),
+                                this.getStateAsync(`${homeId}.Rooms.${zoneId}.setting.light`),
+                            ]);
                         }
-                        let set_light = '',
-                            set_swing = '',
-                            set_horizontalSwing = '',
-                            set_verticalSwing = '',
-                            set_fanLevel = '',
-                            set_fanSpeed = '',
-                            set_acMode = '';
-                        if (acMode == undefined) {
-                            set_acMode = 'NOT_AVAILABLE';
-                        } else {
-                            set_acMode =
-                                acMode == null || acMode.val == null || acMode.val == ''
-                                    ? 'COOL'
-                                    : acMode.val.toString().toUpperCase();
-                        }
-                        if (fanSpeed == undefined) {
-                            set_fanSpeed = 'NOT_AVAILABLE';
-                        } else {
-                            set_fanSpeed =
-                                fanSpeed == null || fanSpeed.val == null || fanSpeed.val == ''
-                                    ? 'AUTO'
-                                    : fanSpeed.val.toString().toUpperCase();
-                        }
-                        if (fanLevel == undefined) {
-                            set_fanLevel = 'NOT_AVAILABLE';
-                        } else {
-                            set_fanLevel =
-                                fanLevel == null || fanLevel.val == null || fanLevel.val == ''
-                                    ? 'AUTO'
-                                    : fanLevel.val.toString().toUpperCase();
-                        }
-                        if (horizontalSwing == undefined) {
-                            set_horizontalSwing = 'NOT_AVAILABLE';
-                        } else {
-                            set_horizontalSwing =
-                                horizontalSwing == null || horizontalSwing.val == null || horizontalSwing.val == ''
-                                    ? 'OFF'
-                                    : horizontalSwing.val.toString().toUpperCase();
-                        }
-                        if (verticalSwing == undefined) {
-                            set_verticalSwing = 'NOT_AVAILABLE';
-                        } else {
-                            set_verticalSwing =
-                                verticalSwing == null || verticalSwing.val == null || verticalSwing.val == ''
-                                    ? 'OFF'
-                                    : verticalSwing.val.toString().toUpperCase();
-                        }
-                        if (swing == undefined) {
-                            set_swing = 'NOT_AVAILABLE';
-                        } else {
-                            set_swing =
-                                swing == null || swing.val == null || swing.val == ''
-                                    ? 'OFF'
-                                    : swing.val.toString().toUpperCase();
-                        }
-                        if (light == undefined) {
-                            set_light = 'NOT_AVAILABLE';
-                        } else {
-                            set_light =
-                                light == null || light.val == null || light.val == ''
-                                    ? 'OFF'
-                                    : light.val.toString().toUpperCase();
-                        }
+                        const set_acMode =
+                            acMode === undefined ? 'NOT_AVAILABLE' : getStateValue(acMode, 'COOL', val => val.toString().toUpperCase());
+                        const set_fanSpeed =
+                            fanSpeed === undefined ? 'NOT_AVAILABLE' : getStateValue(fanSpeed, 'AUTO', val => val.toString().toUpperCase());
+                        const set_fanLevel =
+                            fanLevel === undefined ? 'NOT_AVAILABLE' : getStateValue(fanLevel, 'AUTO', val => val.toString().toUpperCase());
+                        const set_horizontalSwing =
+                            horizontalSwing === undefined
+                                ? 'NOT_AVAILABLE'
+                                : getStateValue(horizontalSwing, 'OFF', val => val.toString().toUpperCase());
+                        const set_verticalSwing =
+                            verticalSwing === undefined ? 'NOT_AVAILABLE' : getStateValue(verticalSwing, 'OFF', val => val.toString().toUpperCase());
+                        const set_swing = swing === undefined ? 'NOT_AVAILABLE' : getStateValue(swing, 'OFF', val => val.toString().toUpperCase());
+                        const set_light = light === undefined ? 'NOT_AVAILABLE' : getStateValue(light, 'OFF', val => val.toString().toUpperCase());
+
                         this.debugLog(`Type is: ${set_type}`);
                         this.debugLog(`Power is: ${set_power}`);
                         this.debugLog(`Temperature is: ${set_temp}`);
@@ -740,6 +549,7 @@ class Tado extends utils.Adapter {
                         this.debugLog(`Swing is: ${set_swing}`);
                         this.debugLog(`Light is: ${set_light}`);
 
+                        let shouldSetOverlay = false;
                         switch (statename) {
                             case 'overlayClearZone':
                                 this.debugLog(`Overlay cleared for room '${zoneId}' in home '${homeId}'`);
@@ -759,249 +569,35 @@ class Tado extends utils.Adapter {
                                     }
                                 }
                                 set_power = 'ON';
-                                this.debugLog(
-                                    `Temperature changed for room '${zoneId}' in home '${homeId}' to '${set_temp}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
+                                this.debugLog(`Temperature changed for room '${zoneId}' in home '${homeId}' to '${set_temp}'`);
+                                shouldSetOverlay = true;
                                 break;
 
                             case 'durationInSeconds':
                                 set_mode = 'TIMER';
-                                this.debugLog(
-                                    `DurationInSecond changed for room '${zoneId}' in home '${homeId}' to '${set_durationInSeconds}'`,
-                                );
-                                await this.setState(
-                                    `${homeId}.Rooms.${zoneId}.overlay.termination.typeSkillBasedApp`,
-                                    set_mode,
-                                    true,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
+                                await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.typeSkillBasedApp`, set_mode, true);
+                            // fallthrough
                             case 'fanSpeed':
-                                this.debugLog(
-                                    `FanSpeed changed for room '${zoneId}' in home '${homeId}' to '${set_fanSpeed}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
                             case 'mode':
-                                this.debugLog(
-                                    `Mode changed for room '${zoneId}' in home '${homeId}' to '${set_acMode}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
                             case 'fanLevel':
-                                this.debugLog(
-                                    `fanLevel changed for room '${zoneId}' in home '${homeId}' to '${set_fanLevel}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
                             case 'swing':
-                                this.debugLog(
-                                    `swing changed for room '${zoneId}' in home '${homeId}' to '${set_swing}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
                             case 'light':
-                                this.debugLog(
-                                    `light changed for room '${zoneId}' in home '${homeId}' to '${set_light}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
                             case 'horizontalSwing':
-                                this.debugLog(
-                                    `horizontalSwing changed for room '${zoneId}' in home '${homeId}' to '${set_horizontalSwing}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
-                                break;
-
                             case 'verticalSwing':
-                                this.debugLog(
-                                    `verticalSwing changed for room '${zoneId}' in home '${homeId}' to '${set_verticalSwing}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
+                                shouldSetOverlay = true;
                                 break;
 
                             case 'typeSkillBasedApp':
                                 if (set_mode == 'NO_OVERLAY') {
                                     break;
                                 }
-                                this.debugLog(
-                                    `TypeSkillBasedApp changed for room '${zoneId}' in home '${homeId}' to '${set_mode}'`,
-                                );
-                                await this.setZoneOverlay(
-                                    homeId,
-                                    zoneId,
-                                    set_power,
-                                    set_temp,
-                                    set_mode,
-                                    set_durationInSeconds,
-                                    set_type,
-                                    set_acMode,
-                                    set_fanLevel,
-                                    set_horizontalSwing,
-                                    set_verticalSwing,
-                                    set_fanSpeed,
-                                    set_swing,
-                                    set_light,
-                                );
+                                this.debugLog(`TypeSkillBasedApp changed for room '${zoneId}' in home '${homeId}' to '${set_mode}'`);
                                 if (set_mode == 'MANUAL') {
-                                    await this.setState(
-                                        `${homeId}.Rooms.${zoneId}.overlay.termination.expiry`,
-                                        null,
-                                        true,
-                                    );
-                                    await this.setState(
-                                        `${homeId}.Rooms.${zoneId}.overlay.termination.durationInSeconds`,
-                                        null,
-                                        true,
-                                    );
-                                    await this.setState(
-                                        `${homeId}.Rooms.${zoneId}.overlay.termination.remainingTimeInSeconds`,
-                                        null,
-                                        true,
-                                    );
+                                    await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.expiry`, null, true);
+                                    await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.durationInSeconds`, null, true);
+                                    await this.setState(`${homeId}.Rooms.${zoneId}.overlay.termination.remainingTimeInSeconds`, null, true);
                                 }
+                                shouldSetOverlay = true;
                                 break;
 
                             case 'power':
@@ -1014,47 +610,34 @@ class Tado extends utils.Adapter {
                                         this.debugLog(
                                             `Power changed for room '${zoneId}' in home '${homeId}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`,
                                         );
-                                        await this.setZoneOverlay(
-                                            homeId,
-                                            zoneId,
-                                            set_power,
-                                            set_temp,
-                                            set_mode,
-                                            set_durationInSeconds,
-                                            set_type,
-                                            set_acMode,
-                                            set_fanLevel,
-                                            set_horizontalSwing,
-                                            set_verticalSwing,
-                                            set_fanSpeed,
-                                            set_swing,
-                                            set_light,
-                                        );
+                                        shouldSetOverlay = true;
                                     }
                                 } else {
                                     this.debugLog(
                                         `Power changed for room '${zoneId}' in home '${homeId}' to '${state.val}' and temperature '${set_temp}' and mode '${set_mode}'`,
                                     );
-                                    await this.setZoneOverlay(
-                                        homeId,
-                                        zoneId,
-                                        set_power,
-                                        set_temp,
-                                        set_mode,
-                                        set_durationInSeconds,
-                                        set_type,
-                                        set_acMode,
-                                        set_fanLevel,
-                                        set_horizontalSwing,
-                                        set_verticalSwing,
-                                        set_fanSpeed,
-                                        set_swing,
-                                        set_light,
-                                    );
+                                    shouldSetOverlay = true;
                                 }
                                 break;
 
                             default:
+                        }
+                        if (shouldSetOverlay) {
+                            this.debugLog(`Calling setZoneOverlay for room '${zoneId}' in home '${homeId}' due to change in '${statename}'`);
+                            await this.setZoneOverlay(homeId, zoneId, {
+                                power: set_power,
+                                temperature: set_temp,
+                                typeSkillBasedApp: set_mode,
+                                durationInSeconds: set_durationInSeconds,
+                                type: set_type,
+                                acMode: set_acMode,
+                                fanLevel: set_fanLevel,
+                                horizontalSwing: set_horizontalSwing,
+                                verticalSwing: set_verticalSwing,
+                                fanSpeed: set_fanSpeed,
+                                swing: set_swing,
+                                light: set_light,
+                            });
                         }
                     }
                     this.debugLog('State change detected from different source than adapter');
@@ -1068,11 +651,8 @@ class Tado extends utils.Adapter {
                 }
             } else {
                 this.oldStatesVal[id] = state.val;
-                //this.debugLog(`Changed value ${state.val} for ID ${id} stored`);
-                //this.debugLog(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             }
         } else {
-            // The state was deleted
             this.debugLog(`state ${id} deleted`);
         }
     }
@@ -1095,9 +675,7 @@ class Tado extends utils.Adapter {
             throw new Error(`Power has value ${power} but should have the value 'ON' or 'OFF'.`);
         }
         if (terminationMode != 'NEXT_TIME_BLOCK' && terminationMode != 'MANUAL' && terminationMode != 'TIMER') {
-            throw new Error(
-                `TerminationMode has value ${terminationMode} but should have 'NEXT_TIMEBLOCK' or 'MANUAL' or 'TIMER'.`,
-            );
+            throw new Error(`TerminationMode has value ${terminationMode} but should have 'NEXT_TIMEBLOCK' or 'MANUAL' or 'TIMER'.`);
         }
         temperature = Math.round(temperature * 10) / 10;
 
@@ -1120,13 +698,9 @@ class Tado extends utils.Adapter {
         }
 
         this.debugLog(`setManualControlTadoX() payload is ${JSON.stringify(payload)}`);
-        let apiResponse = await this.api.apiCall(
-            `${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`,
-            'post',
-            payload,
-        );
+        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
         this.debugLog(`setManualControlTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsStateTadoX(homeId, roomId);
+        await this.manageRoomStatesTadoX(homeId, roomId);
     }
 
     /**
@@ -1134,12 +708,9 @@ class Tado extends utils.Adapter {
      * @param {string} roomId
      */
     async setResumeRoomScheduleTadoX(homeId, roomId) {
-        let apiResponse = await this.api.apiCall(
-            `${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/resumeSchedule`,
-            'post',
-        );
+        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
         this.debugLog(`setResumeRoomScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsStateTadoX(homeId, roomId);
+        await this.manageRoomStatesTadoX(homeId, roomId);
     }
 
     /**
@@ -1148,7 +719,7 @@ class Tado extends utils.Adapter {
     async setResumeHomeScheduleTadoX(homeId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
         this.debugLog(`setResumeHomeScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsTadoX(homeId);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -1157,7 +728,7 @@ class Tado extends utils.Adapter {
     async setBoostTadoX(homeId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/boost`, 'post');
         this.debugLog(`setBoostTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsTadoX(homeId);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -1166,7 +737,7 @@ class Tado extends utils.Adapter {
     async setAllOffTadoX(homeId) {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/allOff`, 'post');
         this.debugLog(`setAllOffTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.DoRoomsTadoX(homeId);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -1175,14 +746,14 @@ class Tado extends utils.Adapter {
      */
     async setClearZoneOverlay(homeId, zoneId) {
         try {
-            let url = `/api/v2/homes/${homeId}/zones/${zoneId}/overlay`;
+            const url = `/api/v2/homes/${homeId}/zones/${zoneId}/overlay`;
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
             await this.api.apiCall(url, 'delete');
             this.debugLog(`Called 'DELETE ${url}'`);
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             this.debugLog('CheckExpire() at clearZoneOverlay() started');
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.overlay.*`);
         } catch (error) {
@@ -1218,12 +789,10 @@ class Tado extends utils.Adapter {
                 throw new Error('No internet connection detected!');
             }
             let apiResponse = await this.api.apiCall(`/api/v2/devices/${deviceId}/temperatureOffset`, 'put', offset);
-            this.debugLog(
-                `API 'temperatureOffset' for home '${homeId}' and deviceID '${deviceId}' with body ${JSON.stringify(offset)} called.`,
-            );
+            this.debugLog(`API 'temperatureOffset' for home '${homeId}' and deviceID '${deviceId}' with body ${JSON.stringify(offset)} called.`);
             this.debugLog(`Response from 'temperatureOffset' is ${JSON.stringify(apiResponse)}`);
             if (apiResponse) {
-                await this.DoTemperatureOffset(homeId, zoneId, deviceId, apiResponse);
+                await this.manageTemperatureOffset(homeId, zoneId, deviceId, apiResponse);
             }
         } catch (error) {
             let eMsg = `Issue at setTemperatureOffset: '${error}'. Based on body ${JSON.stringify(offset)}`;
@@ -1245,9 +814,7 @@ class Tado extends utils.Adapter {
             timetableId = 0;
         }
         if (!(timetableId == 0 || timetableId == 1 || timetableId == 2)) {
-            this.log.error(
-                `Invalid value '${timetableId}' for state 'timetable_id'. Allowed values are '0', '1' and '2'.`,
-            );
+            this.log.error(`Invalid value '${timetableId}' for state 'timetable_id'. Allowed values are '0', '1' and '2'.`);
             return;
         }
         const timeTable = {
@@ -1260,18 +827,12 @@ class Tado extends utils.Adapter {
             if ((await isOnline()) == false) {
                 throw new Error('No internet connection detected!');
             }
-            apiResponse = await this.api.apiCall(
-                `/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`,
-                'put',
-                timeTable,
-            );
+            apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/schedule/activeTimetable`, 'put', timeTable);
 
             if (apiResponse) {
-                await this.DoTimeTables(homeId, zoneId, apiResponse);
+                await this.manageTimeTables(homeId, zoneId, apiResponse);
             }
-            this.debugLog(
-                `API 'activeTimetable' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(timeTable)} called.`,
-            );
+            this.debugLog(`API 'activeTimetable' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(timeTable)} called.`);
             this.debugLog(`Response from 'setActiveTimeTable' is ${JSON.stringify(apiResponse)}`);
         } catch (error) {
             let eMsg = `Issue at setActiveTimeTable: '${error}'. Based on body ${JSON.stringify(timeTable)}`;
@@ -1292,9 +853,7 @@ class Tado extends utils.Adapter {
             homePresence = 'HOME';
         }
         if (homePresence !== 'HOME' && homePresence !== 'AWAY' && homePresence !== 'AUTO') {
-            this.log.error(
-                `Invalid value '${homePresence}' for state 'homePresence'. Allowed values are HOME, AWAY and AUTO.`,
-            );
+            this.log.error(`Invalid value '${homePresence}' for state 'homePresence'. Allowed values are HOME, AWAY and AUTO.`);
             return;
         }
         const homeState = {
@@ -1312,7 +871,7 @@ class Tado extends utils.Adapter {
             } else {
                 apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/presenceLock`, 'put', homeState);
             }
-            await this.DoHomeState(homeId);
+            await this.manageHomeState(homeId);
             this.debugLog(`API 'state' for home '${homeId}' with body ${JSON.stringify(homeState)} called.`);
             this.debugLog(`Response from 'presenceLock' is ${JSON.stringify(apiResponse)}`);
         } catch (error) {
@@ -1326,52 +885,37 @@ class Tado extends utils.Adapter {
     }
 
     /**
+     * Sets the zone overlay with the given options.
+     *
      * @param {string} homeId
      * @param {string} zoneId
-     * @param {string} power
-     * @param {number} temperature
-     * @param {string} typeSkillBasedApp
-     * @param {number} durationInSeconds
-     * @param {string} type
-     * @param {string} acMode
-     * @param {string} fanLevel
-     * @param {string} horizontalSwing
-     * @param {string} verticalSwing
-     * @param {string} fanSpeed
-     * @param {string} swing
-     * @param {string} light
+     * @param {object} options
+     * @param {string} options.power
+     * @param {number} options.temperature
+     * @param {string} options.typeSkillBasedApp
+     * @param {number} options.durationInSeconds
+     * @param {string} options.type
+     * @param {string} options.acMode
+     * @param {string} options.fanLevel
+     * @param {string} options.horizontalSwing
+     * @param {string} options.verticalSwing
+     * @param {string} options.fanSpeed
+     * @param {string} options.swing
+     * @param {string} options.light
      */
-    async setZoneOverlay(
-        homeId,
-        zoneId,
-        power,
-        temperature,
-        typeSkillBasedApp,
-        durationInSeconds,
-        type,
-        acMode,
-        fanLevel,
-        horizontalSwing,
-        verticalSwing,
-        fanSpeed,
-        swing,
-        light,
-    ) {
-        power = power.toUpperCase();
-        typeSkillBasedApp = typeSkillBasedApp.toUpperCase();
-        durationInSeconds = Math.max(10, durationInSeconds);
-        type = type.toUpperCase();
-        fanSpeed = fanSpeed.toUpperCase();
-        acMode = acMode.toUpperCase();
-        fanLevel = fanLevel.toUpperCase();
-        horizontalSwing = horizontalSwing.toUpperCase();
-        verticalSwing = verticalSwing.toUpperCase();
-        swing = swing.toUpperCase();
-        light = light.toUpperCase();
-        if (!temperature) {
-            temperature = 21;
-        }
-        temperature = Math.round(temperature * 100) / 100;
+    async setZoneOverlay(homeId, zoneId, options) {
+        const power = options.power.toUpperCase();
+        const temperature = Math.round((options.temperature ?? 20) * 100) / 100;
+        const typeSkillBasedApp = options.typeSkillBasedApp.toUpperCase();
+        const durationInSeconds = Math.max(10, options.durationInSeconds);
+        const type = options.type.toUpperCase();
+        const fanSpeed = options.fanSpeed.toUpperCase();
+        const acMode = options.acMode.toUpperCase();
+        const fanLevel = options.fanLevel.toUpperCase();
+        const horizontalSwing = options.horizontalSwing.toUpperCase();
+        const verticalSwing = options.verticalSwing.toUpperCase();
+        const swing = options.swing.toUpperCase();
+        const light = options.light.toUpperCase();
 
         let config = {
             setting: {
@@ -1391,9 +935,7 @@ class Tado extends utils.Adapter {
                 }
             }
             if (type != 'HEATING' && type != 'AIR_CONDITIONING' && type != 'HOT_WATER') {
-                this.log.error(
-                    `Invalid value '${type}' for state 'type'. Supported values are HOT_WATER, AIR_CONDITIONING and HEATING`,
-                );
+                this.log.error(`Invalid value '${type}' for state 'type'. Supported values are HOT_WATER, AIR_CONDITIONING and HEATING`);
                 return;
             }
             if (power != 'ON' && power != 'OFF') {
@@ -1422,12 +964,8 @@ class Tado extends utils.Adapter {
             */
             console.log(JSON.stringify(this.roomCapabilities));
             if (!this.roomCapabilities || !this.roomCapabilities[zoneId]) {
-                this.log.error(
-                    `No room capabilities found for room '${zoneId}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`,
-                );
-                console.log(
-                    `No room capabilities found for room '${zoneId}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`,
-                );
+                this.log.error(`No room capabilities found for room '${zoneId}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
+                console.log(`No room capabilities found for room '${zoneId}'. Capabilities looks like '${JSON.stringify(this.roomCapabilities)}'`);
                 this.sendSentryWarn('Capabilities for zone not found');
                 return;
             }
@@ -1447,9 +985,7 @@ class Tado extends utils.Adapter {
 
                 if (capMinTemp && capMaxTemp) {
                     if (temperature > capMaxTemp || temperature < capMinTemp) {
-                        this.log.error(
-                            `Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`,
-                        );
+                        this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
                         return;
                     }
                     config.setting.temperature = {};
@@ -1468,9 +1004,7 @@ class Tado extends utils.Adapter {
                 if (capCanSetTemperature == true) {
                     if (capMinTemp && capMaxTemp) {
                         if (temperature > capMaxTemp || temperature < capMinTemp) {
-                            this.log.error(
-                                `Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`,
-                            );
+                            this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
                             return;
                         }
                     }
@@ -1481,21 +1015,14 @@ class Tado extends utils.Adapter {
 
             if (type == 'AIR_CONDITIONING' && power == 'ON') {
                 if (!this.roomCapabilities[zoneId][acMode]) {
-                    this.log.error(
-                        `AC-Mode ${acMode} not supported! Capailities looks like ${JSON.stringify(this.roomCapabilities)}`,
-                    );
-                    console.log(
-                        `AC-Mode ${acMode} in Room ${zoneId} not supported! Capailities looks like ${JSON.stringify(this.roomCapabilities)}`,
-                    );
+                    this.log.error(`AC-Mode ${acMode} not supported! Capailities looks like ${JSON.stringify(this.roomCapabilities)}`);
+                    console.log(`AC-Mode ${acMode} in Room ${zoneId} not supported! Capailities looks like ${JSON.stringify(this.roomCapabilities)}`);
                     this.sendSentryWarn('Capabilities for acMode not found');
                     return;
                 }
                 config.setting.mode = acMode;
                 let capMinTemp, capMaxTemp;
-                if (
-                    this.roomCapabilities[zoneId][acMode].temperatures &&
-                    this.roomCapabilities[zoneId][acMode].temperatures.celsius
-                ) {
+                if (this.roomCapabilities[zoneId][acMode].temperatures && this.roomCapabilities[zoneId][acMode].temperatures.celsius) {
                     capMinTemp = this.roomCapabilities[zoneId][acMode].temperatures.celsius.min; //valide v3 & v3+
                     capMaxTemp = this.roomCapabilities[zoneId][acMode].temperatures.celsius.max; //valide v3 & v3+
                 }
@@ -1508,9 +1035,7 @@ class Tado extends utils.Adapter {
 
                 if (capMinTemp && capMaxTemp) {
                     if (temperature > capMaxTemp || temperature < capMinTemp) {
-                        this.log.error(
-                            `Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`,
-                        );
+                        this.log.error(`Temperature of ${temperature}°C outside supported range of ${capMinTemp}°C to ${capMaxTemp}°C`);
                         return;
                     }
                     config.setting.temperature = {};
@@ -1536,36 +1061,28 @@ class Tado extends utils.Adapter {
                 }
                 if (capFanSpeeds) {
                     if (!capFanSpeeds.includes(fanSpeed)) {
-                        this.log.error(
-                            `Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are ${JSON.stringify(capFanSpeeds)}`,
-                        );
+                        this.log.error(`Invalid value '${fanSpeed}' for state 'fanSpeed'. Allowed values are ${JSON.stringify(capFanSpeeds)}`);
                         return;
                     }
                     config.setting.fanSpeed = fanSpeed;
                 }
                 if (capFanLevel) {
                     if (!capFanLevel.includes(fanLevel)) {
-                        this.log.error(
-                            `Invalid value '${fanLevel}' for state 'fanLevel'. Allowed values are ${JSON.stringify(capFanLevel)}`,
-                        );
+                        this.log.error(`Invalid value '${fanLevel}' for state 'fanLevel'. Allowed values are ${JSON.stringify(capFanLevel)}`);
                         return;
                     }
                     config.setting.fanLevel = fanLevel;
                 }
                 if (capSwings) {
                     if (!capSwings.includes(swing)) {
-                        this.log.error(
-                            `Invalid value '${swing}' for state 'swing'. Allowed values are ${JSON.stringify(capSwings)}`,
-                        );
+                        this.log.error(`Invalid value '${swing}' for state 'swing'. Allowed values are ${JSON.stringify(capSwings)}`);
                         return;
                     }
                     config.setting.swing = swing;
                 }
                 if (capLight) {
                     if (!capLight.includes(light)) {
-                        this.log.error(
-                            `Invalid value '${light}' for state 'light'. Allowed values are ${JSON.stringify(capLight)}`,
-                        );
+                        this.log.error(`Invalid value '${light}' for state 'light'. Allowed values are ${JSON.stringify(capLight)}`);
                         return;
                     }
                     config.setting.light = light;
@@ -1573,9 +1090,7 @@ class Tado extends utils.Adapter {
             }
 
             let result = await this.setZoneOverlayDebounced(homeId, zoneId, config);
-            this.debugLog(
-                `API 'ZoneOverlay' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(config)} called.`,
-            );
+            this.debugLog(`API 'ZoneOverlay' for home '${homeId}' and zone '${zoneId}' with body ${JSON.stringify(config)} called.`);
 
             if (result == null) {
                 throw new Error('Result of setZoneOverlay is null');
@@ -1618,12 +1133,7 @@ class Tado extends utils.Adapter {
     async _setZoneOverlay(homeId, zoneId, config) {
         try {
             this.log.debug(`Calling API for setZoneOverlay with config: ${JSON.stringify(config)}`);
-            const apiResponse = await this.api.apiCall(
-                `/api/v2/homes/${homeId}/zones/${zoneId}/overlay`,
-                'put',
-                config,
-                'setZoneOverlayPool',
-            );
+            const apiResponse = await this.api.apiCall(`/api/v2/homes/${homeId}/zones/${zoneId}/overlay`, 'put', config, 'setZoneOverlayPool');
             this.log.debug(`API response for setZoneOverlay: ${JSON.stringify(apiResponse)}`);
             return apiResponse;
         } catch (error) {
@@ -1647,7 +1157,7 @@ class Tado extends utils.Adapter {
             await this.api.apiCall(url, 'post');
             this.debugLog(`Called 'POST ${url}'`);
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindow.*`);
         } catch (error) {
             this.log.error(`Issue at activateOpenWindow(): '${error}'`);
@@ -1671,7 +1181,7 @@ class Tado extends utils.Adapter {
             }
             await this.api.apiCall(url, 'put', config);
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.openWindowDetection.*`);
         } catch (error) {
             console.log(`Body: ${JSON.stringify(config)}`);
@@ -1697,7 +1207,7 @@ class Tado extends utils.Adapter {
             }
             await this.api.apiCall(url, 'put', { childLockEnabled: enabled });
             await jsonExplorer.setLastStartTime();
-            await this.DoZoneStates(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
             jsonExplorer.checkExpire(`${homeId}.Rooms.${zoneId}.devices.${deviceId}.childLockEnabled`);
         } catch (error) {
             this.log.error(`Issue at setChildLock(): '${error}'`);
@@ -1737,7 +1247,7 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      */
-    async DoRoomsTadoX(homeId) {
+    async manageRoomsTadoX(homeId) {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
         this.debugLog(`Rooms object is ${JSON.stringify(rooms)}`);
@@ -1764,6 +1274,7 @@ class Tado extends utils.Adapter {
             rooms[i].balanceControl = rooms[i].balanceControl === null ? {} : rooms[i].balanceControl;
             rooms[i].openWindow = rooms[i].openWindow === null ? {} : rooms[i].openWindow;
             rooms[i].awayMode = rooms[i].awayMode === null ? {} : rooms[i].awayMode;
+            rooms[i].holidayMode = rooms[i].holidayMode === null ? {} : rooms[i].holidayMode;
         }
         this.debugLog(`Modified rooms object is ${JSON.stringify(rooms)}`);
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
@@ -1782,7 +1293,7 @@ class Tado extends utils.Adapter {
                 true,
                 1,
             );
-            await this.DoRoomsStateTadoX(homeId, roomId);
+            await this.manageRoomStatesTadoX(homeId, roomId);
         }
     }
 
@@ -1790,7 +1301,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} roomId
      */
-    async DoRoomsStateTadoX(homeId, roomId) {
+    async manageRoomStatesTadoX(homeId, roomId) {
         let roomsAndDevices = await this.getroomsAndDevicesTadoX(homeId, roomId);
         if (roomsAndDevices.boostMode == null) {
             roomsAndDevices.boostMode = {};
@@ -1813,8 +1324,8 @@ class Tado extends utils.Adapter {
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
     }
 
-    async DoData_Refresh() {
-        let now = new Date().getTime();
+    async refreshData() {
+        const now = new Date().getTime();
         let step = 'start';
         //outdated = now - this.lastupdate > ONEHOUR;
         //check outdate status for all objects
@@ -1844,7 +1355,7 @@ class Tado extends utils.Adapter {
 
             for (const i in this.getMeData.homes) {
                 let homeId = String(this.getMeData.homes[i].id);
-                this.DoWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMeData);
+                this.manageWriteJsonRespons(homeId, 'Stage_01_GetMe_Data', this.getMeData);
                 this.setObjectAsync(homeId, {
                     type: 'folder',
                     common: {
@@ -1854,34 +1365,34 @@ class Tado extends utils.Adapter {
                 });
 
                 step = 'DoHome';
-                await this.DoHome(homeId); //API Call only needed once, because data is static
+                await this.manageHome(homeId); //API Call only needed once, because data is static
 
-                step = 'DoMobileDevices';
+                step = 'manageMobileDevices';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
-                    await this.DoMobileDevices(homeId);
+                    await this.manageMobileDevices(homeId);
                     jsonExplorer.checkExpire(`${homeId}.Mobile_Devices.*`);
                 }
 
-                step = 'DoWeather';
+                step = 'manageWeather';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
-                    await this.DoWeather(homeId);
+                    await this.manageWeather(homeId);
                     jsonExplorer.checkExpire(`${homeId}.Weather.*`);
                 }
 
-                step = 'DoZones';
+                step = 'manageZones';
                 if (this.isTadoX) {
-                    await this.DoRoomsTadoX(homeId);
+                    await this.manageRoomsTadoX(homeId);
                 } else {
-                    await this.DoZones(homeId);
+                    await this.manageZones(homeId);
                 }
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
 
-                step = 'DoHomeState';
+                step = 'manageHomeState';
                 if (outdated[step].isOutdated) {
                     outdated[step].lastUpdate = now;
-                    await this.DoHomeState(homeId);
+                    await this.manageHomeState(homeId);
                     jsonExplorer.checkExpire(`${homeId}.Home.state.*`);
                 }
             }
@@ -1891,9 +1402,7 @@ class Tado extends utils.Adapter {
             }
 
             if (conn_state.val === false) {
-                this.log.info(
-                    `Initialisation finished, connected to Tado cloud service refreshing every ${this.intervall_time / 1000} seconds`,
-                );
+                this.log.info(`Initialisation finished, connected to Tado cloud service refreshing every ${this.intervall_time / 1000} seconds`);
                 this.setState('info.connection', true, true);
             }
 
@@ -1904,7 +1413,7 @@ class Tado extends utils.Adapter {
             }
             // timer
             polling = setTimeout(() => {
-                this.DoConnect();
+                this.connect();
             }, this.intervall_time);
             this.retryCount = 0;
             //this.log.info(`${numberOfCalls.calls} API calls since start.`);
@@ -1929,7 +1438,7 @@ class Tado extends utils.Adapter {
                         this.roomCapabilities = {};
                         outdated[key].lastUpdate = 0; //reset all lastUpdate to 0 to force refresh of all data
                     }
-                    this.DoConnect();
+                    this.connect();
                 }, retryDelay * 1000);
             } else {
                 this.log.error(`Retry limit reached! No further retries.`);
@@ -1938,7 +1447,7 @@ class Tado extends utils.Adapter {
         }
     }
 
-    async DoConnect() {
+    async connect() {
         try {
             if ((await isOnline()) == false) {
                 this.log.warn(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
@@ -1949,7 +1458,7 @@ class Tado extends utils.Adapter {
                 }
                 // timer
                 polling = setTimeout(() => {
-                    this.DoConnect();
+                    this.connect();
                 }, this.intervall_time);
                 return;
             }
@@ -1957,12 +1466,10 @@ class Tado extends utils.Adapter {
             this.debugLog('Internet connection detected. Everything fine!');
 
             if (!this.accessToken.token.refresh_token) {
-                this.log.error(
-                    `Adapter not running! No token configured. Go to adapter's config page and execute Step 1 and Step 2`,
-                );
+                this.log.error(`Adapter not running! No token configured. Go to adapter's config page and execute Step 1 and Step 2`);
                 return;
             }
-            await this.DoData_Refresh();
+            await this.refreshData();
         } catch (error) {
             this.log.error(`Issue at DoConnect(): ${error}`);
             console.error(`Issue at DoConnect(): ${error}`);
@@ -1975,7 +1482,7 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      */
-    async DoHome(homeId) {
+    async manageHome(homeId) {
         // Get additional basic data for all homes
         if (this.homeData === null) {
             this.homeData = await this.getHome(homeId);
@@ -1994,20 +1501,20 @@ class Tado extends utils.Adapter {
         if (!this.isTadoX) {
             this.homeData.masterswitch = '';
         }
-        this.DoWriteJsonRespons(homeId, 'Stage_02_HomeData', this.homeData);
+        this.manageWriteJsonRespons(homeId, 'Stage_02_HomeData', this.homeData);
         await jsonExplorer.traverseJson(this.homeData, `${homeId}.Home`, true, true, 0);
     }
 
     /**
      * @param {string} homeId
      */
-    async DoWeather(homeId) {
+    async manageWeather(homeId) {
         const weather_data = await this.getWeather(homeId);
         if (weather_data == null) {
             throw new Error('weather_data is null');
         }
         this.debugLog(`Weather_data Result: ${JSON.stringify(weather_data)}`);
-        this.DoWriteJsonRespons(homeId, 'Stage_04_Weather', weather_data);
+        this.manageWriteJsonRespons(homeId, 'Stage_04_Weather', weather_data);
         await jsonExplorer.traverseJson(weather_data, `${homeId}.Weather`, true, true, 0);
     }
 
@@ -2017,7 +1524,7 @@ class Tado extends utils.Adapter {
      * @param {string} deviceId
      * @param {object} offset
      */
-    async DoTemperatureOffset(homeId, zoneId, deviceId, offset = null) {
+    async manageTemperatureOffset(homeId, zoneId, deviceId, offset = null) {
         if (offset == null) {
             offset = await this.getTemperatureOffset(deviceId);
         }
@@ -2025,7 +1532,7 @@ class Tado extends utils.Adapter {
         if (offset == null) {
             throw new Error('offset is null');
         }
-        this.DoWriteJsonRespons(homeId, `Stage_12_Offset_${homeId}`, offset);
+        this.manageWriteJsonRespons(homeId, `Stage_12_Offset_${homeId}`, offset);
         if (offset.celsius != undefined) {
             offset.offsetCelsius = offset.celsius;
         }
@@ -2040,22 +1547,22 @@ class Tado extends utils.Adapter {
     /**
      * @param {string} homeId
      */
-    async DoMobileDevices(homeId) {
+    async manageMobileDevices(homeId) {
         this.MobileDevices_data = await this.getMobileDevices(homeId);
         if (this.MobileDevices_data == null) {
             throw new Error('MobileDevices_data is null');
         }
         this.debugLog(`MobileDevices_data Result: ${JSON.stringify(this.MobileDevices_data)}`);
-        this.DoWriteJsonRespons(homeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
+        this.manageWriteJsonRespons(homeId, 'Stage_06_MobileDevicesData', this.MobileDevices_data);
         await jsonExplorer.traverseJson(this.MobileDevices_data, `${homeId}.Mobile_Devices`, true, true, 0);
     }
 
     /**
      * @param {string} homeId
      */
-    async DoZones(homeId) {
-        if (outdated['DoZones'].isOutdated) {
-            outdated['DoZones'].lastUpdate = new Date().getTime();
+    async manageZones(homeId) {
+        if (outdated['manageZones'].isOutdated) {
+            outdated['manageZones'].lastUpdate = new Date().getTime();
             this.zonesData = await this.getZones(homeId);
         }
         let zones_data = structuredClone(this.zonesData);
@@ -2063,7 +1570,7 @@ class Tado extends utils.Adapter {
         if (zones_data == null) {
             throw new Error('Zones_data is null');
         }
-        this.DoWriteJsonRespons(homeId, 'Stage_08_ZonesData', zones_data);
+        this.manageWriteJsonRespons(homeId, 'Stage_08_ZonesData', zones_data);
 
         //Search for DeviceIDs to get Offset
         for (const j in zones_data) {
@@ -2074,12 +1581,9 @@ class Tado extends utils.Adapter {
                     if (deviceId != undefined) {
                         this.debugLog(`DeviceID for offset found: ${JSON.stringify(zones_data[j][k][l].serialNo)}`);
                         zones_data[j][k][l].id = zones_data[j][k][l].serialNo;
-                        if (
-                            zones_data[j][k][l].duties.includes(`ZONE_LEADER`) &&
-                            outdated['DoTemperatureOffset'].isOutdated
-                        ) {
-                            outdated['DoTemperatureOffset'].lastUpdate = new Date().getTime();
-                            await this.DoTemperatureOffset(homeId, zoneId, deviceId);
+                        if (zones_data[j][k][l].duties.includes(`ZONE_LEADER`) && outdated['manageTemperatureOffset'].isOutdated) {
+                            outdated['manageTemperatureOffset'].lastUpdate = new Date().getTime();
+                            await this.manageTemperatureOffset(homeId, zoneId, deviceId);
                         }
                     }
                 }
@@ -2093,10 +1597,10 @@ class Tado extends utils.Adapter {
 
         for (const i in zones_data) {
             let zoneId = zones_data[i].id;
-            await this.DoZoneStates(homeId, zoneId);
-            await this.DoCapabilities(homeId, zoneId);
-            await this.DoAwayConfiguration(homeId, zoneId);
-            await this.DoTimeTables(homeId, zoneId);
+            await this.manageZoneStates(homeId, zoneId);
+            await this.manageCapabilities(homeId, zoneId);
+            await this.manageAwayConfiguration(homeId, zoneId);
+            await this.manageTimeTables(homeId, zoneId);
         }
     }
 
@@ -2104,7 +1608,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async DoZoneStates(homeId, zoneId) {
+    async manageZoneStates(homeId, zoneId) {
         let ZonesState_data = await this.getZoneState(homeId, zoneId);
         if (ZonesState_data == null) {
             throw new Error('ZonesState_data is null');
@@ -2119,11 +1623,10 @@ class Tado extends utils.Adapter {
         ZonesState_data.overlay = ZonesState_data.overlay === null ? {} : ZonesState_data.overlay;
         ZonesState_data.openWindow = ZonesState_data.openWindow === null ? {} : ZonesState_data.openWindow;
         ZonesState_data.preparation = ZonesState_data.preparation === null ? {} : ZonesState_data.preparation;
-        ZonesState_data.nextScheduleChange =
-            ZonesState_data.nextScheduleChange === null ? {} : ZonesState_data.nextScheduleChange;
+        ZonesState_data.nextScheduleChange = ZonesState_data.nextScheduleChange === null ? {} : ZonesState_data.nextScheduleChange;
         ZonesState_data.nextTimeBlock = ZonesState_data.nextTimeBlock === null ? {} : ZonesState_data.nextTimeBlock;
 
-        this.DoWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
+        this.manageWriteJsonRespons(homeId, `Stage_09_ZoneStates_data_${zoneId}`, ZonesState_data);
         ZonesState_data.overlayClearZone = false;
         ZonesState_data.activateOpenWindow = false;
         await jsonExplorer.traverseJson(ZonesState_data, `${homeId}.Rooms.${zoneId}`, true, true, 2);
@@ -2133,7 +1636,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async DoCapabilities(homeId, zoneId) {
+    async manageCapabilities(homeId, zoneId) {
         let capabilities_data;
         if (this.roomCapabilities[zoneId]) {
             capabilities_data = this.roomCapabilities[zoneId];
@@ -2145,7 +1648,7 @@ class Tado extends utils.Adapter {
         }
         this.roomCapabilities[zoneId] = capabilities_data;
         this.debugLog(`Capabilities_data result for room '${zoneId}' is ${JSON.stringify(capabilities_data)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_09_Capabilities_data_${zoneId}`, capabilities_data);
+        this.manageWriteJsonRespons(homeId, `Stage_09_Capabilities_data_${zoneId}`, capabilities_data);
         await jsonExplorer.traverseJson(capabilities_data, `${homeId}.Rooms.${zoneId}.capabilities`, true, true, 2);
     }
 
@@ -2154,12 +1657,12 @@ class Tado extends utils.Adapter {
      * @param {string} zoneId
      * @param {object} timeTablesDataInput
      */
-    async DoTimeTables(homeId, zoneId, timeTablesDataInput = null) {
+    async manageTimeTables(homeId, zoneId, timeTablesDataInput = null) {
         if (timeTablesDataInput != null) {
             this.timeTablesData = timeTablesDataInput;
         } else {
-            if (outdated['DoTimeTables'].isOutdated) {
-                outdated['DoTimeTables'].lastUpdate = new Date().getTime();
+            if (outdated['manageTimeTables'].isOutdated) {
+                outdated['manageTimeTables'].lastUpdate = new Date().getTime();
                 this.timeTablesData = await this.getTimeTables(homeId, zoneId);
             }
         }
@@ -2169,7 +1672,7 @@ class Tado extends utils.Adapter {
         this.timeTablesData.tt_id = this.timeTablesData.id;
         delete this.timeTablesData.id;
         this.debugLog(`ZoneOverlay_data Result: ${JSON.stringify(this.timeTablesData)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_13_TimeTables_${zoneId}`, this.timeTablesData);
+        this.manageWriteJsonRespons(homeId, `Stage_13_TimeTables_${zoneId}`, this.timeTablesData);
         this.debugLog(`Timetable for room ${zoneId} is ${JSON.stringify(this.timeTablesData)}`);
         await jsonExplorer.traverseJson(this.timeTablesData, `${homeId}.Rooms.${zoneId}.timeTables`, true, true, 2);
     }
@@ -2178,23 +1681,17 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {string} zoneId
      */
-    async DoAwayConfiguration(homeId, zoneId) {
-        if (outdated['DoAwayConfiguration'].isOutdated) {
-            outdated['DoAwayConfiguration'].lastUpdate = new Date().getTime();
+    async manageAwayConfiguration(homeId, zoneId) {
+        if (outdated['manageAwayConfiguration'].isOutdated) {
+            outdated['manageAwayConfiguration'].lastUpdate = new Date().getTime();
             this.awayConfigurationData = await this.getAwayConfiguration(homeId, zoneId);
         }
         if (this.awayConfigurationData == null) {
             throw new Error('AwayConfiguration_data is null');
         }
         this.debugLog(`AwayConfiguration_data Result: ${JSON.stringify(this.awayConfigurationData)}`);
-        this.DoWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, this.awayConfigurationData);
-        await jsonExplorer.traverseJson(
-            this.awayConfigurationData,
-            `${homeId}.Rooms.${zoneId}.awayConfig`,
-            true,
-            true,
-            2,
-        );
+        this.manageWriteJsonRespons(homeId, `Stage_10_AwayConfiguration_${zoneId}`, this.awayConfigurationData);
+        await jsonExplorer.traverseJson(this.awayConfigurationData, `${homeId}.Rooms.${zoneId}.awayConfig`, true, true, 2);
     }
 
     /**
@@ -2202,7 +1699,7 @@ class Tado extends utils.Adapter {
      * @param {string} state_name
      * @param {any} value
      */
-    async DoWriteJsonRespons(homeId, state_name, value) {
+    async manageWriteJsonRespons(homeId, state_name, value) {
         try {
             if (this.log.level == 'debug' || this.log.level == 'silly') {
                 this.debugLog(`JSON data written for ${state_name} with values: ${JSON.stringify(value)}`);
@@ -2230,7 +1727,7 @@ class Tado extends utils.Adapter {
      * @param {string} homeId
      * @param {object} homeStateData
      */
-    async DoHomeState(homeId, homeStateData = null) {
+    async manageHomeState(homeId, homeStateData = null) {
         if (homeStateData == null) {
             homeStateData = await this.getHomeState(homeId);
         }
@@ -2238,7 +1735,7 @@ class Tado extends utils.Adapter {
             throw new Error('homeState_data is null');
         }
         this.debugLog(`HomeState_data Result: ${JSON.stringify(homeStateData)}`);
-        this.DoWriteJsonRespons(homeId, 'Stage_11_HomeState', homeStateData);
+        this.manageWriteJsonRespons(homeId, 'Stage_11_HomeState', homeStateData);
         await jsonExplorer.traverseJson(homeStateData, `${homeId}.Home.state`, true, true, 1);
     }
 
@@ -2292,8 +1789,7 @@ class Tado extends utils.Adapter {
         if (this.refreshTokenInProgress == false) {
             //check for expire only if refreshToken is not in progress
             this.shouldRefreshToken =
-                expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 ||
-                this.accessToken.token.expires_at == undefined;
+                expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
             //this.shouldRefreshToken = true; //for testing only
             this.debugLog(`Need to refreshT is ${this.shouldRefreshToken} as expire time is ${expires_at}`);
             /*setTimeout(() => {
@@ -2335,9 +1831,7 @@ class Tado extends utils.Adapter {
                                 console.error(`RefreshT error is: ${error.response.data.error}`);
                                 this.log.error(`Refresh-Token error is: ${error.response.data.error}`);
                                 if (error.response.data.error.includes('invalid_grant')) {
-                                    this.log.warn(
-                                        'If this error happens again, re-create token in adapter settings by starting with step 1',
-                                    );
+                                    this.log.warn('If this error happens again, re-create token in adapter settings by starting with step 1');
                                 }
                             } else {
                                 console.error(`${error} with response ${JSON.stringify(error.response.data)}`);
@@ -2420,7 +1914,7 @@ class Tado extends utils.Adapter {
             // @ts-expect-error status exists
             let status = parseInt(errorObject.status ?? 0);
 
-            if (status == 401 || status == 403 || status == 504) {
+            if (status == 401 || status == 403 || status == 429 || status == 504) {
                 return;
             }
             if (
@@ -2612,6 +2106,25 @@ class Tado extends utils.Adapter {
  */
 function toBoolean(valueToBoolean) {
     return valueToBoolean === true || valueToBoolean === 'true';
+}
+
+/**
+ * @param {ioBroker.State | null | undefined} state
+ * @param {T} defaultValue
+ * @param {(val: any) => T} [processFunc]
+ * @returns {T}
+ * @template T
+ */
+function getStateValue(state, defaultValue, processFunc) {
+    const value = state?.val;
+    if (value == null || value === '') {
+        return defaultValue;
+    }
+    if (processFunc) {
+        return processFunc(value);
+    }
+    // eslint-disable-next-line jsdoc/check-tag-names
+    return /** @type {T} */ (value);
 }
 
 // @ts-expect-error parent is a valid property on module
