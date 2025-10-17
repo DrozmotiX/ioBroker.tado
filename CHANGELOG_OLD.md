@@ -1,4 +1,8 @@
 # Older changes
+## 0.7.7 (2025-04-08)
+* (HGlab01) optimize sentry usage
+* (HGlab01) improve retry-mechanism when it comes to erros
+
 ## 0.7.5 (2025-03-31)
 * (HGlab01) some further refactorings
 * (HGlab01) Bump axios to 1.8.4

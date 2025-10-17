@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.8.0",
+    "version": "0.8.1-alpha.0",
     "news": {
+      "0.8.1-alpha.0": {
+        "en": "code refactorings\nfix issue 'definition missing for holidayMode' [TadoX]\nfix issue 'cannot read properties of undefined (reading 'match')'",
+        "de": "code refactorings\nproblem beheben 'Definition fehlt für HolidayMode' [TadoX]\nfix problem 'kann nicht lesen eigenschaften von undefiniert (lesen 'match') '",
+        "ru": "рефакторинг кода\nрешение проблемы «определение, отсутствующее для режима отдыха» [TadoX]\nпроблема исправления «не может прочитать свойства неопределенного (чтение «соответствия»)» \"",
+        "pt": "refatorações de código\ncorrigir problema 'definição em falta para feriadoMode' [TadoX]\ncorrigir o problema 'não é possível ler as propriedades de indefinidas (lendo 'match') '",
+        "nl": "coderefactoring\nfix issue 'definitie ontbreekt voor vakantieMode' [TadoX]\nfix issue 'kan niet lezen eigenschappen van ongedefinieerd (lezen 'match') '",
+        "fr": "refacturation du code\ncorrection de problème 'définition manquante pour HolidayMode' [TadoX]\ncorrection du problème 'ne peut pas lire les propriétés de l'indéfini (lecture de 'match') '",
+        "it": "refactorings\nrisolvere problema 'definizione mancante per vacanzaMode' [TadoX]\nrisolvere problema 'non può leggere le proprietà di non definito (leggendo 'match') '",
+        "es": "refactorings code\nsolucionar el problema 'definición falta para holidayMode' [TadoX]\nsolucionar el problema 'no puede leer propiedades de indefinidos (leer 'match') '",
+        "pl": "kod refakturowania\nfix issue \"brakuje definicji dla holidayMode\" [TadoX]\nfix issue 'nie może odczytać właściwości niezdefiniowanych (odczyt' match ')'",
+        "uk": "рефакторинг коду\nвиправлено проблему «відхилення від дня народження» [TadoX]\nвиправити проблему «не можна читати властивості невизначеного (читання «матч») р",
+        "zh-cn": "代码重构\n固定问题“ 定义缺失的假日模式 ” [TadoX]\n固定问题“ 无法读取未定义的属性( 正在读取“ match” )  '"
+      },
       "0.8.0": {
         "en": "new configuration capabilities to manage API usage quota (#1047, #1048)\nImplement API debouncing\nRefactorings Tado API calls\nfix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nfix Object of state \"tado.0.xxxxx.Rooms.y.openWindow\" is missing the required property \"common.type\" (#1059)\nBump axios to 1.12.2\nBump iobroker-jsonexplorer to 0.2.0",
         "de": "neue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nImplementierung API debouncing\nRefactorings Tado API Anrufe\nproblem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nfix Objekt des Staates \"tado.0.xxxxx.Rooms.y.openWindow\" fehlt die erforderliche Eigenschaft \"common.type\" (#1059)\nBump axios zu 1.12.2\nBump iobroker-jsonexplorer auf 0,2.0",
@@ -80,19 +93,6 @@
         "pl": "fix issue \"brakuje definicji dla awayMode\" [TadoX]\nfix issue \"brakuje definicji dla podgrzewania wstępnego\" [TadoX]\nDodatkowe wytyczne / dziennik w odniesieniu do wydania ReforecToken\nnowe możliwości konfiguracji w celu zarządzania kwotą użytkowania API (# 1047, # 1048)\nfix Obiekt stanu \"tado.0.xxxxx.Rooms.yopenWindow\" brakuje właściwości \"common.type\" (# 1059)\nAksykony bumpy do 1.12.2",
         "uk": "виправлено проблему «відхилення відліку» [TadoX]\nвиправлено проблему «відхилення від прогріву» [Тадокс]\nДодаткові вказівки / журнал, коли мова йде про RefreshToken\nнові можливості налаштування для управління квотою використання API (#1047, #1048)\nвиправлено об'єкт держави \"tado.0.xxxxx.Rooms.y.openWindow\" відсутній необхідний майно \"common.type\" (#1059)\nБампер аксіос до 1.12.2",
         "zh-cn": "固定问题“ 定义缺失, 用于远程模式 ” [TadoX]\n修复问题“ 预热定义缺失 ” [塔多\n关于刷新问题的补充指导/记录\n管理API使用配额的新配置能力(#1047,#1048)\n固定状态对象\"tado.0.xxxxxx. Rooms.y.openWindow\"缺少所需的属性\"common.type\"(#1059)\n横轴改为1.12.2"
-      },
-      "0.8.0-alpha.0": {
-        "en": "fix issue 'definition missing for awayMode' [TadoX]\nfix issue 'definition missing for preheating' [TadoX]\nAdditional guidance/log when it comes to RefreshToken issue\nnew configuration capabilities to manage API usage quota (#1047, #1048)\nBump axios to 1.12.2",
-        "de": "problem beheben 'Definition fehlt für wegMode' [TadoX]\nproblem beheben 'Definition fehlt für Vorwärmen' (TadoX)\nZusätzliche Anleitung/Log bei RefreshToken Problem\nneue Konfigurationsfunktionen zur Verwaltung der API-Nutzungsquote (#1047, #1048)\nBump axios zu 1.12.2",
-        "ru": "обсуждение Definition Missing for awayMode (TadoX)\nпроблема исправления «определение, отсутствующее для предварительного нагрева» [ТадоХ]\nДополнительное руководство / журнал, когда дело доходит до проблемы RefreshToken\nновые возможности конфигурации для управления квотой использования API (#1047, #1048)\nАксиос накачки до 1.12.2",
-        "pt": "corrigir problema 'definição em falta para awayMode' [TadoX]\ncorrigir a questão 'definição em falta para o pré-aquecimento' [TadoX]\nOrientação/log adicional quando se trata de questão RefreshToken\nnovos recursos de configuração para gerenciar a quota de uso da API (#1047, #1048)\nBump axios a 1.12.2",
-        "nl": "fix issue 'definitie ontbreekt voor wegMode' [TadoX]\nfix issue 'definitie ontbreekt voor voorverwarming' [TadoX]\nAanvullende richtsnoeren/log als het gaat om RefreshToken kwestie\nnieuwe configuratiemogelijkheden voor het beheren van API-gebruiksquota (#1047, #1048)\nBump axios naar 1.12.2",
-        "fr": "correction du problème 'définition manquante pour awayMode' [TadoX]\ncorrection de la question \"définition manquante pour le préchauffage\" [TadoX]\nConseils/log supplémentaires pour la question RefreshToken\nnouvelles capacités de configuration pour gérer le quota d'utilisation de l'API (#1047, #1048)\nAxios de pompe au 1.12.2",
-        "it": "risolvere problema 'definizione mancante per viaMode' [TadoX]\nrisolvere problema 'definizione mancante per preriscaldamento' [TadoX]\nUlteriori indicazioni/log quando si tratta di RefreshToken problema\nnuove funzionalità di configurazione per gestire la quota di utilizzo API (#1047, #1048)\nAssio di bump a 1.12.2",
-        "es": "solucionar el problema 'definición falta para awayMode' [TadoX]\nsolucionar el problema 'definición falta para precalentar' [TadoX]\nOrientación/log adicional cuando se trata de asunto RefreshToken\nnuevas capacidades de configuración para gestionar la cuota de uso de API (#1047, #1048)\nAxios de bomba a 1.12.2",
-        "pl": "fix issue \"brakuje definicji dla awayMode\" [TadoX]\nfix issue \"brakuje definicji dla podgrzewania wstępnego\" [TadoX]\nDodatkowe wytyczne / dziennik w odniesieniu do wydania ReforecToken\nnowe możliwości konfiguracji w celu zarządzania kwotą użytkowania API (# 1047, # 1048)\nAksykony bumpy do 1.12.2",
-        "uk": "виправлено проблему «відхилення відліку» [TadoX]\nвиправлено проблему «відхилення від прогріву» [Тадокс]\nДодаткові вказівки / журнал, коли мова йде про RefreshToken\nнові можливості налаштування для управління квотою використання API (#1047, #1048)\nБампер аксіос до 1.12.2",
-        "zh-cn": "固定问题“ 定义缺失, 用于远程模式 ” [TadoX]\n修复问题“ 预热定义缺失 ” [塔多\n关于刷新问题的补充指导/记录\n管理API使用配额的新配置能力(#1047,#1048)\n横轴改为1.12.2"
       }
     },
     "titleLang": {
@@ -176,7 +176,7 @@
       }
     },
     "blockedVersions": [
-      "<0.7.0"
+      "<0.8.0"
     ]
   },
   "encryptedNative": [],
