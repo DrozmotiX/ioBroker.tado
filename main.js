@@ -1388,6 +1388,7 @@ class Tado extends utils.Adapter {
                     await this.manageZones(homeId);
                 }
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.*Window*.*`);
 
                 step = 'manageHomeState';
                 if (outdated[step].isOutdated) {
