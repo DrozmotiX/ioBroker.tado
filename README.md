@@ -72,10 +72,11 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.8.1 (2025-11-04)
 * (HGlab01) code refactorings
 * (HGlab01) fix issue 'definition missing for holidayMode' [TadoX]
 * (HGlab01) fix issue 'cannot read properties of undefined (reading 'match')'
+* (HGlab01) fix issue openWindow data not up to date #1086
 
 ### 0.8.0 (2025-10-07)
 * (HGlab01) new configuration capabilities to manage API usage quota (#1047, #1048)
