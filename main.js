@@ -1317,8 +1317,10 @@ class Tado extends utils.Adapter {
             roomsAndDevices.manualControlTermination.controlType = roomsAndDevices.manualControlTermination.type;
             delete roomsAndDevices.manualControlTermination.type;
         }
-
-        roomsAndDevices.balanceControl = roomsAndDevices.balanceControl === null ? {} : roomsAndDevices.balanceControl;
+        roomsAndDevices.balanceControl = roomsAndDevices.balanceControl == null ? {} : roomsAndDevices.balanceControl;
+        roomsAndDevices.openWindow = roomsAndDevices.openWindow == null ? {} : roomsAndDevices.openWindow;
+        roomsAndDevices.awayMode = roomsAndDevices.awayMode == null ? {} : roomsAndDevices.awayMode;
+        roomsAndDevices.holidayMode = roomsAndDevices.holidayMode == null ? {} : roomsAndDevices.holidayMode;
         roomsAndDevices.resumeScheduleRoom = false;
         this.debugLog(`Modified RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
