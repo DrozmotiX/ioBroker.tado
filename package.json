@@ -22,7 +22,7 @@
     "@iobroker/adapter-core": "^3.3.2",
     "axios": "^1.13.1",
     "https": "^1.0.0",
-    "iobroker-jsonexplorer": "^0.2.1",
+    "iobroker-jsonexplorer": "^0.2.2",
     "lodash.debounce": "^4.0.8"
   },
   "devDependencies": {
