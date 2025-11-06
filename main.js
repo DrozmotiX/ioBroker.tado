@@ -5,28 +5,15 @@ const TadoApi = require('./lib/tadoApi.js');
 const jsonExplorer = require('iobroker-jsonexplorer');
 const state_attr = require(`${__dirname}/lib/state_attr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
-const https = require('https');
 const axios = require('axios');
 const { version } = require('./package.json');
 const debounce = require('lodash.debounce');
 
-const EXPIRATION_WINDOW_IN_SECONDS = 10;
+const TOKEN_EXPIRATION_WINDOW = 10;
 const TADO_X_URL = `https://hops.tado.com`;
 const CLIENT_ID = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
-const TADO_URL = 'https://my.tado.com';
-const TADO_APP_URL = `https://app.tado.com/`;
-const TADO_TIMEOUT = 5000; //5000ms before timeout
 const DEBOUNCE_TIME = 750; //750ms debouncing (waiting if further calls come in and just execute the last one)
 const DELAY_AFTER_CALL = 300; //300ms pause between api calls
-
-// @ts-expect-error create axios instance
-let axiosInstance = axios.create({
-    timeout: TADO_TIMEOUT,
-    baseURL: `${TADO_URL}/`,
-    httpsAgent: new https.Agent({ keepAlive: true }),
-    referer: TADO_APP_URL,
-    origin: TADO_APP_URL,
-});
 
 // @ts-expect-error create axios instance
 const axiosInstanceToken = axios.create({
@@ -119,7 +106,7 @@ class Tado extends utils.Adapter {
         this.refreshTokenInProgress = false;
         this.shouldRefreshToken = false;
 
-        this.api = new TadoApi(this, axiosInstance, DELAY_AFTER_CALL); //pause between calls
+        this.api = new TadoApi(this, DELAY_AFTER_CALL); //pause between calls
         this.debouncedSetZoneOverlay = debounce(
             (homeId, zoneId, config, resolve, reject) => {
                 this._setZoneOverlay(homeId, zoneId, config).then(resolve).catch(reject);
@@ -1793,7 +1780,7 @@ class Tado extends utils.Adapter {
         if (this.refreshTokenInProgress == false) {
             //check for expire only if refreshToken is not in progress
             this.shouldRefreshToken =
-                expires_at.getTime() - new Date().getTime() < EXPIRATION_WINDOW_IN_SECONDS * 1000 || this.accessToken.token.expires_at == undefined;
+                expires_at.getTime() - new Date().getTime() < TOKEN_EXPIRATION_WINDOW * 1000 || this.accessToken.token.expires_at == undefined;
             //this.shouldRefreshToken = true; //for testing only
             this.debugLog(`Need to refreshT is ${this.shouldRefreshToken} as expire time is ${expires_at}`);
             /*setTimeout(() => {
