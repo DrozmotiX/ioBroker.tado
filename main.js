@@ -15,12 +15,13 @@ const TADO_X_URL = `https://hops.tado.com`;
 const CLIENT_ID = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
 const TADO_URL = 'https://my.tado.com';
 const TADO_APP_URL = `https://app.tado.com/`;
+const TADO_TIMEOUT = 5000; //5000ms before timeout
 const DEBOUNCE_TIME = 750; //750ms debouncing (waiting if further calls come in and just execute the last one)
 const DELAY_AFTER_CALL = 300; //300ms pause between api calls
 
 // @ts-expect-error create axios instance
 let axiosInstance = axios.create({
-    timeout: 20000, //20000
+    timeout: TADO_TIMEOUT,
     baseURL: `${TADO_URL}/`,
     httpsAgent: new https.Agent({ keepAlive: true }),
     referer: TADO_APP_URL,
