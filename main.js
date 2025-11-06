@@ -10,6 +10,8 @@ const { version } = require('./package.json');
 const debounce = require('lodash.debounce');
 
 const TOKEN_EXPIRATION_WINDOW = 10;
+const TOKEN_API_TIMEOUT = 10000; //10s
+const TOKEN_BASE_URL = `https://login.tado.com/oauth2`;
 const TADO_X_URL = `https://hops.tado.com`;
 const CLIENT_ID = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
 const DEBOUNCE_TIME = 750; //750ms debouncing (waiting if further calls come in and just execute the last one)
@@ -17,7 +19,8 @@ const DELAY_AFTER_CALL = 300; //300ms pause between api calls
 
 // @ts-expect-error create axios instance
 const axiosInstanceToken = axios.create({
-    baseURL: `https://login.tado.com/oauth2`,
+    timeout: TOKEN_API_TIMEOUT,
+    baseURL: TOKEN_BASE_URL,
 });
 
 let polling; // Polling timer
