@@ -20,7 +20,7 @@
   "dependencies": {
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.3.2",
-    "axios": "^1.13.1",
+    "axios": "^1.13.2",
     "https": "^1.0.0",
     "iobroker-jsonexplorer": "^0.2.2",
     "lodash.debounce": "^4.0.8"
