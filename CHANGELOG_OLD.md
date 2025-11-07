@@ -1,4 +1,7 @@
 # Older changes
+## 0.7.8 (2025-04-10)
+* (HGlab01) fix issue 'definition missing for balanceControl' [TadoX]
+
 ## 0.7.7 (2025-04-08)
 * (HGlab01) optimize sentry usage
 * (HGlab01) improve retry-mechanism when it comes to erros
