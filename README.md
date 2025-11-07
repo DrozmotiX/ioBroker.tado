@@ -74,9 +74,11 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 -->
 ### __WORK IN PROGRESS__
 * (HGlab01) add retry mechanism when it comes to timeouts
-* (HGlab01) fix definition missing for 'awayMode' with value 'null'
-* (HGlab01) fix definition missing for 'holidayMode' with value 'null'
+* (HGlab01) add attribute 'isRoomLinkRestricted'
+* (HGlab01) finally fix definition missing for 'awayMode' with value 'null' [TadoX]
+* (HGlab01) finally fix definition missing for 'holidayMode' with value 'null' [TadoX]
 * (HGlab01) bump iobroker-jsonExplorer to 0.2.2
+* (HGlab01) bump axios to 1.13.2
 
 ### 0.8.1 (2025-11-04)
 * (HGlab01) code refactorings
