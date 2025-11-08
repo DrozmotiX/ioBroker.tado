@@ -273,110 +273,158 @@ class Tado extends utils.Adapter {
      * @param {string} beforeStatename
      */
     async onStateChangeTadoX(id, state, homeId, roomId, deviceId, statename, beforeStatename) {
-        this.debugLog(`${id} changed`);
-        const [temperature, mode, power, remainingTimeInSeconds, nextTimeBlockStart, boostMode] = await Promise.all([
-            this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.temperature.value`),
-            this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.controlType`),
-            this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.power`),
-            this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.remainingTimeInSeconds`),
-            this.getStateAsync(`${homeId}.Rooms.${roomId}.nextTimeBlock.start`),
-            this.getStateAsync(`${homeId}.Rooms.${roomId}.boostMode`),
-        ]);
+        try {
+            this.debugLog(`${id} changed`);
+            const [temperature, mode, power, remainingTimeInSeconds, nextTimeBlockStart, boostMode] = await Promise.all([
+                this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.temperature.value`),
+                this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.controlType`),
+                this.getStateAsync(`${homeId}.Rooms.${roomId}.setting.power`),
+                this.getStateAsync(`${homeId}.Rooms.${roomId}.manualControlTermination.remainingTimeInSeconds`),
+                this.getStateAsync(`${homeId}.Rooms.${roomId}.nextTimeBlock.start`),
+                this.getStateAsync(`${homeId}.Rooms.${roomId}.boostMode`),
+            ]);
 
-        const set_boostMode = getStateValue(boostMode, false, toBoolean);
-        const set_remainingTimeInSeconds = getStateValue(remainingTimeInSeconds, 1800, val => parseInt(val.toString()));
-        const set_temp = getStateValue(temperature, 20, val => parseFloat(val.toString()));
-        const set_NextTimeBlockStartExists = getStateValue(nextTimeBlockStart, false, () => true); //return always true if exists
-        let set_power = getStateValue(power, 'OFF', val => val.toString().toUpperCase());
-        let set_terminationMode = getStateValue(mode, 'NO_OVERLAY', val => val.toString().toUpperCase());
+            const set_boostMode = getStateValue(boostMode, false, toBoolean);
+            const set_remainingTimeInSeconds = getStateValue(remainingTimeInSeconds, 1800, val => parseInt(val.toString()));
+            const set_temp = getStateValue(temperature, 20, val => parseFloat(val.toString()));
+            const set_NextTimeBlockStartExists = getStateValue(nextTimeBlockStart, false, () => true); //return always true if exists
+            let set_power = getStateValue(power, 'OFF', val => val.toString().toUpperCase());
+            let set_terminationMode = getStateValue(mode, 'NO_OVERLAY', val => val.toString().toUpperCase());
+            let offSet, deviceID;
 
-        this.debugLog(`boostMode is: ${set_boostMode}`);
-        this.debugLog(`Power is: ${set_power}`);
-        this.debugLog(`Temperature is: ${set_temp}`);
-        this.debugLog(`Termination mode is: ${set_terminationMode}`);
-        this.debugLog(`RemainingTimeInSeconds is: ${set_remainingTimeInSeconds}`);
-        this.debugLog(`NextTimeBlockStart exists: ${set_NextTimeBlockStartExists}`);
-        this.debugLog(`DevicId is: ${deviceId}`);
+            this.debugLog(`boostMode is: ${set_boostMode}`);
+            this.debugLog(`Power is: ${set_power}`);
+            this.debugLog(`Temperature is: ${set_temp}`);
+            this.debugLog(`Termination mode is: ${set_terminationMode}`);
+            this.debugLog(`RemainingTimeInSeconds is: ${set_remainingTimeInSeconds}`);
+            this.debugLog(`NextTimeBlockStart exists: ${set_NextTimeBlockStartExists}`);
+            this.debugLog(`DevicId is: ${deviceId}`);
 
-        switch (statename) {
-            case 'power':
-                if (set_terminationMode == 'NO_OVERLAY') {
-                    if (set_power == 'ON') {
-                        this.debugLog(`Overlay cleared for room '${roomId}' in home '${homeId}'`);
-                        await this.setResumeRoomScheduleTadoX(homeId, roomId);
+            switch (statename) {
+                case 'power':
+                    if (set_terminationMode == 'NO_OVERLAY') {
+                        if (set_power == 'ON') {
+                            this.debugLog(`Overlay cleared for room '${roomId}' in home '${homeId}'`);
+                            await this.setResumeRoomScheduleTadoX(homeId, roomId);
+                            break;
+                        } else {
+                            set_terminationMode = 'MANUAL';
+                        }
+                    }
+
+                    await this.setManualControlTadoX(
+                        homeId,
+                        roomId,
+                        set_power,
+                        set_temp,
+                        set_terminationMode,
+                        set_boostMode,
+                        set_remainingTimeInSeconds,
+                    );
+                    if (set_power == 'OFF') {
+                        jsonExplorer.stateSetCreate(`${homeId}.Rooms.${roomId}.setting.temperature.value`, 'value', null);
+                    }
+                    break;
+
+                case 'value':
+                    if (beforeStatename != 'temperature') {
+                        this.log.warn(`Change of ${id} ignored`);
                         break;
-                    } else {
-                        set_terminationMode = 'MANUAL';
                     }
-                }
 
-                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
-                if (set_power == 'OFF') {
-                    jsonExplorer.stateSetCreate(`${homeId}.Rooms.${roomId}.setting.temperature.value`, 'value', null);
-                }
-                break;
-
-            case 'value':
-                if (beforeStatename != 'temperature') {
-                    this.log.warn(`Change of ${id} ignored`);
-                    break;
-                }
-
-                if (set_terminationMode == 'NO_OVERLAY') {
-                    if (set_NextTimeBlockStartExists) {
-                        set_terminationMode = 'NEXT_TIME_BLOCK';
-                    } else {
-                        set_terminationMode = 'MANUAL';
+                    if (set_terminationMode == 'NO_OVERLAY') {
+                        if (set_NextTimeBlockStartExists) {
+                            set_terminationMode = 'NEXT_TIME_BLOCK';
+                        } else {
+                            set_terminationMode = 'MANUAL';
+                        }
                     }
-                }
-                set_power = 'ON';
-                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
-                break;
-
-            case 'boost':
-                if (state.val == true) {
-                    await this.setBoostTadoX(homeId);
-                    await jsonExplorer.sleep(1000);
-                    this.create_state(id, 'boost', false);
-                }
-                break;
-
-            case 'resumeScheduleHome':
-                if (state.val == true) {
-                    await this.setResumeHomeScheduleTadoX(homeId);
-                    await jsonExplorer.sleep(1000);
-                    this.create_state(id, 'resumeScheduleHome', false);
-                }
-                break;
-
-            case 'resumeScheduleRoom':
-                if (state.val == true) {
-                    await this.setResumeRoomScheduleTadoX(homeId, roomId);
-                    await jsonExplorer.sleep(1000);
-                    this.create_state(id, 'resumeScheduleRoom', false);
-                }
-                break;
-
-            case 'allOff':
-                if (state.val == true) {
-                    await this.setAllOffTadoX(homeId);
-                    await jsonExplorer.sleep(1000);
-                    this.create_state(id, 'allOff', false);
-                }
-                break;
-
-            case 'remainingTimeInSeconds':
-                set_terminationMode = 'TIMER';
-                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
-                break;
-
-            case 'controlType':
-                if (beforeStatename != 'manualControlTermination') {
-                    this.log.warn(`Change of ${id} ignored`);
+                    set_power = 'ON';
+                    await this.setManualControlTadoX(
+                        homeId,
+                        roomId,
+                        set_power,
+                        set_temp,
+                        set_terminationMode,
+                        set_boostMode,
+                        set_remainingTimeInSeconds,
+                    );
                     break;
-                }
-                await this.setManualControlTadoX(homeId, roomId, set_power, set_temp, set_terminationMode, set_boostMode, set_remainingTimeInSeconds);
-                break;
+
+                case 'boost':
+                    if (state.val == true) {
+                        await this.setBoostTadoX(homeId);
+                        await jsonExplorer.sleep(1000);
+                        this.create_state(id, 'boost', false);
+                    }
+                    break;
+
+                case 'resumeScheduleHome':
+                    if (state.val == true) {
+                        await this.setResumeHomeScheduleTadoX(homeId);
+                        await jsonExplorer.sleep(1000);
+                        this.create_state(id, 'resumeScheduleHome', false);
+                    }
+                    break;
+
+                case 'resumeScheduleRoom':
+                    if (state.val == true) {
+                        await this.setResumeRoomScheduleTadoX(homeId, roomId);
+                        await jsonExplorer.sleep(1000);
+                        this.create_state(id, 'resumeScheduleRoom', false);
+                    }
+                    break;
+
+                case 'allOff':
+                    if (state.val == true) {
+                        await this.setAllOffTadoX(homeId);
+                        await jsonExplorer.sleep(1000);
+                        this.create_state(id, 'allOff', false);
+                    }
+                    break;
+
+                case 'remainingTimeInSeconds':
+                    set_terminationMode = 'TIMER';
+                    await this.setManualControlTadoX(
+                        homeId,
+                        roomId,
+                        set_power,
+                        set_temp,
+                        set_terminationMode,
+                        set_boostMode,
+                        set_remainingTimeInSeconds,
+                    );
+                    break;
+
+                case 'controlType':
+                    if (beforeStatename != 'manualControlTermination') {
+                        this.log.warn(`Change of ${id} ignored`);
+                        break;
+                    }
+                    await this.setManualControlTadoX(
+                        homeId,
+                        roomId,
+                        set_power,
+                        set_temp,
+                        set_terminationMode,
+                        set_boostMode,
+                        set_remainingTimeInSeconds,
+                    );
+                    break;
+                case 'temperatureOffset':
+                    offSet = parseFloat(String(state.val));
+                    deviceID = beforeStatename;
+                    this.log.info(`Offset new is ${offSet}`);
+                    this.log.info(`DeviceId is ${deviceID}`);
+                    this.setOffSetTadoX(homeId, deviceID, offSet);
+                    break;
+            }
+        } catch (error) {
+            this.log.error(`Issue at state change (TadoX): ${error}`);
+            console.error(`Issue at state change (TadoX): ${error}`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
         }
     }
 
@@ -692,6 +740,19 @@ class Tado extends utils.Adapter {
         let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
         this.debugLog(`setManualControlTadoX() response is ${JSON.stringify(apiResponse)}`);
         await this.manageRoomStatesTadoX(homeId, roomId);
+    }
+
+    /**
+     * @param {string} homeId
+     * @param {string} deviceID
+     * @param {number} offSet offset of the device
+     */
+    async setOffSetTadoX(homeId, deviceID, offSet) {
+        const payload = { temperatureOffset: Math.round(offSet * 10) / 10 };
+        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/roomsAndDevices/devices/${deviceID}`, 'patch', payload);
+        await this.sleep(5000);
+        this.log.info(`setOffSetTadoX() response is ${JSON.stringify(apiResponse)}`);
+        await this.manageRoomsTadoX(homeId);
     }
 
     /**
@@ -1481,14 +1542,14 @@ class Tado extends utils.Adapter {
         if (this.homeData === null) {
             this.homeData = await this.getHome(homeId);
             await this.create_state(`${homeId}.meterReadings`, 'meterReadings', JSON.stringify({}));
+            if (this.homeData.generation == 'LINE_X') {
+                this.isTadoX = true;
+                this.log.info(`TadoX is ${this.isTadoX}`);
+            } else {
+                this.isTadoX = false;
+            }
         }
         this.debugLog(`Home_data Result: ${JSON.stringify(this.homeData)}`);
-        if (this.homeData.generation == 'LINE_X') {
-            this.isTadoX = true;
-            this.log.info(`TadoX is ${this.isTadoX}`);
-        } else {
-            this.isTadoX = false;
-        }
         if (this.homeData == null) {
             throw new Error('home_data is null');
         }
