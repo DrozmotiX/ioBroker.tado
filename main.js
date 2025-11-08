@@ -412,10 +412,14 @@ class Tado extends utils.Adapter {
                     );
                     break;
                 case 'temperatureOffset':
+                    if (state.val == null) {
+                        this.log.warn('No valid value for offset found, ignored!');
+                        break;
+                    }
                     offSet = parseFloat(String(state.val));
                     deviceID = beforeStatename;
-                    this.log.info(`Offset new is ${offSet}`);
-                    this.log.info(`DeviceId is ${deviceID}`);
+                    this.debugLog(`Offset new is ${offSet}`);
+                    this.debugLog(`DeviceId is ${deviceID}`);
                     this.setOffSetTadoX(homeId, deviceID, offSet);
                     break;
             }
@@ -709,37 +713,45 @@ class Tado extends utils.Adapter {
      * @param {number} durationInSeconds
      */
     async setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds) {
-        //{`"setting`":{`"power`":`"ON`",`"isBoost`":false,`"temperature`":{`"value`":18.5,`"valueRaw`":18.52,`"precision`":0.1}},`"termination`":{`"type`":`"NEXT_TIME_BLOCK`"}}
-        if (power != 'ON' && power != 'OFF') {
-            throw new Error(`Power has value ${power} but should have the value 'ON' or 'OFF'.`);
-        }
-        if (terminationMode != 'NEXT_TIME_BLOCK' && terminationMode != 'MANUAL' && terminationMode != 'TIMER') {
-            throw new Error(`TerminationMode has value ${terminationMode} but should have 'NEXT_TIMEBLOCK' or 'MANUAL' or 'TIMER'.`);
-        }
-        temperature = Math.round(temperature * 10) / 10;
+        try {
+            //{`"setting`":{`"power`":`"ON`",`"isBoost`":false,`"temperature`":{`"value`":18.5,`"valueRaw`":18.52,`"precision`":0.1}},`"termination`":{`"type`":`"NEXT_TIME_BLOCK`"}}
+            if (power != 'ON' && power != 'OFF') {
+                throw new Error(`Power has value ${power} but should have the value 'ON' or 'OFF'.`);
+            }
+            if (terminationMode != 'NEXT_TIME_BLOCK' && terminationMode != 'MANUAL' && terminationMode != 'TIMER') {
+                throw new Error(`TerminationMode has value ${terminationMode} but should have 'NEXT_TIMEBLOCK' or 'MANUAL' or 'TIMER'.`);
+            }
+            temperature = Math.round(temperature * 10) / 10;
 
-        let payload = {};
-        payload.termination = {};
-        payload.termination.type = terminationMode;
-        payload.setting = {};
-        payload.setting.power = power;
-        payload.setting.isBoost = toBoolean(boostMode);
+            let payload = {};
+            payload.termination = {};
+            payload.termination.type = terminationMode;
+            payload.setting = {};
+            payload.setting.power = power;
+            payload.setting.isBoost = toBoolean(boostMode);
 
-        if (power == 'OFF') {
-            payload.setting.temperature = null;
-        } else {
-            payload.setting.temperature = {};
-            payload.setting.temperature.value = temperature;
+            if (power == 'OFF') {
+                payload.setting.temperature = null;
+            } else {
+                payload.setting.temperature = {};
+                payload.setting.temperature.value = temperature;
+            }
+
+            if (terminationMode == 'TIMER') {
+                payload.termination.durationInSeconds = durationInSeconds;
+            }
+
+            this.debugLog(`setManualControlTadoX() payload is ${JSON.stringify(payload)}`);
+            let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
+            this.debugLog(`setManualControlTadoX() response is ${JSON.stringify(apiResponse)}`);
+            await this.manageRoomStatesTadoX(homeId, roomId);
+        } catch (error) {
+            this.log.error(`Issue at setManualControlTadoX(): '${error}'`);
+            console.error(`Issue at setManualControlTadoX(): '${error}'`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
         }
-
-        if (terminationMode == 'TIMER') {
-            payload.termination.durationInSeconds = durationInSeconds;
-        }
-
-        this.debugLog(`setManualControlTadoX() payload is ${JSON.stringify(payload)}`);
-        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/manualControl`, 'post', payload);
-        this.debugLog(`setManualControlTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.manageRoomStatesTadoX(homeId, roomId);
     }
 
     /**
@@ -748,11 +760,26 @@ class Tado extends utils.Adapter {
      * @param {number} offSet offset of the device
      */
     async setOffSetTadoX(homeId, deviceID, offSet) {
-        const payload = { temperatureOffset: Math.round(offSet * 10) / 10 };
-        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/roomsAndDevices/devices/${deviceID}`, 'patch', payload);
-        await this.sleep(5000);
-        this.log.info(`setOffSetTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.manageRoomsTadoX(homeId);
+        try {
+            offSet = Math.round(offSet * 10) / 10;
+            if (offSet < -10 || offSet > 10) {
+                this.log.warn('Temperature offset should be between -10.0 and 10.0');
+                await this.sleep(3000);
+                await this.manageRoomsTadoX(homeId);
+                return;
+            }
+            const payload = { temperatureOffset: offSet };
+            let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/roomsAndDevices/devices/${deviceID}`, 'patch', payload);
+            this.debugLog(`setOffSetTadoX() response is ${JSON.stringify(apiResponse)}`);
+            await this.sleep(5000);
+            await this.manageRoomsTadoX(homeId);
+        } catch (error) {
+            this.log.error(`Issue at setOffSetTadoX(): '${error}'`);
+            console.error(`Issue at setOffSetTadoX(): '${error}'`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
+        }
     }
 
     /**
@@ -760,36 +787,68 @@ class Tado extends utils.Adapter {
      * @param {string} roomId
      */
     async setResumeRoomScheduleTadoX(homeId, roomId) {
-        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
-        this.debugLog(`setResumeRoomScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.manageRoomStatesTadoX(homeId, roomId);
+        try {
+            let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/rooms/${roomId}/resumeSchedule`, 'post');
+            this.debugLog(`setResumeRoomScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
+            await this.manageRoomStatesTadoX(homeId, roomId);
+        } catch (error) {
+            this.log.error(`Issue at setResumeRoomScheduleTadoX(): '${error}'`);
+            console.error(`Issue at setResumeRoomScheduleTadoX(): '${error}'`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
+        }
     }
 
     /**
      * @param {string} homeId
      */
     async setResumeHomeScheduleTadoX(homeId) {
-        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
-        this.debugLog(`setResumeHomeScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.manageRoomsTadoX(homeId);
+        try {
+            let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/resumeSchedule`, 'post');
+            this.debugLog(`setResumeHomeScheduleTadoX() response is ${JSON.stringify(apiResponse)}`);
+            await this.manageRoomsTadoX(homeId);
+        } catch (error) {
+            this.log.error(`Issue at setResumeHomeScheduleTadoX(): '${error}'`);
+            console.error(`Issue at setResumeHomeScheduleTadoX(): '${error}'`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
+        }
     }
 
     /**
      * @param {string} homeId
      */
     async setBoostTadoX(homeId) {
-        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/boost`, 'post');
-        this.debugLog(`setBoostTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.manageRoomsTadoX(homeId);
+        try {
+            let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/boost`, 'post');
+            this.debugLog(`setBoostTadoX() response is ${JSON.stringify(apiResponse)}`);
+            await this.manageRoomsTadoX(homeId);
+        } catch (error) {
+            this.log.error(`Issue at setBoostTadoX(): '${error}'`);
+            console.error(`Issue at setBoostTadoX(): '${error}'`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
+        }
     }
 
     /**
      * @param {string} homeId
      */
     async setAllOffTadoX(homeId) {
-        let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/allOff`, 'post');
-        this.debugLog(`setAllOffTadoX() response is ${JSON.stringify(apiResponse)}`);
-        await this.manageRoomsTadoX(homeId);
+        try {
+            let apiResponse = await this.api.apiCall(`${TADO_X_URL}/homes/${homeId}/quickActions/allOff`, 'post');
+            this.debugLog(`setAllOffTadoX() response is ${JSON.stringify(apiResponse)}`);
+            await this.manageRoomsTadoX(homeId);
+        } catch (error) {
+            this.log.error(`Issue at setAllOffTadoX(): '${error}'`);
+            console.error(`Issue at setAllOffTadoX(): '${error}'`);
+            if (error instanceof Error) {
+                this.errorHandling(error);
+            }
+        }
     }
 
     /**
