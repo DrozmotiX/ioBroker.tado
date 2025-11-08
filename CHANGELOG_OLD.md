@@ -1,4 +1,7 @@
 # Older changes
+## 0.7.9 (2025-04-17)
+* (HGlab01) fix issue 'refreshToken() failed'
+
 ## 0.7.8 (2025-04-10)
 * (HGlab01) fix issue 'definition missing for balanceControl' [TadoX]
 
