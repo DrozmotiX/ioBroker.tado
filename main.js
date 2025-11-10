@@ -1455,6 +1455,8 @@ class Tado extends utils.Adapter {
         roomsAndDevices.openWindow = roomsAndDevices.openWindow == null ? {} : roomsAndDevices.openWindow;
         roomsAndDevices.awayMode = roomsAndDevices.awayMode == null ? {} : roomsAndDevices.awayMode;
         roomsAndDevices.holidayMode = roomsAndDevices.holidayMode == null ? {} : roomsAndDevices.holidayMode;
+        roomsAndDevices.nextTimeBlock = roomsAndDevices.nextTimeBlock == null ? {} : roomsAndDevices.nextTimeBlock;
+        roomsAndDevices.nextScheduleChange = roomsAndDevices.nextScheduleChange == null ? {} : roomsAndDevices.nextScheduleChange;
         roomsAndDevices.resumeScheduleRoom = false;
         this.debugLog(`Modified RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
