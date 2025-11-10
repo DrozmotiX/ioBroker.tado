@@ -1385,7 +1385,7 @@ class Tado extends utils.Adapter {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
         this.debugLog(`Rooms object is ${JSON.stringify(rooms)}`);
-        this.debugLog(`RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
+        this.debugLog(`Rooms object is ${JSON.stringify(roomsAndDevices)}`);
         rooms.boost = false;
         rooms.resumeScheduleHome = false;
         rooms.allOff = false;
@@ -1409,6 +1409,8 @@ class Tado extends utils.Adapter {
             rooms[i].openWindow = rooms[i].openWindow === null ? {} : rooms[i].openWindow;
             rooms[i].awayMode = rooms[i].awayMode === null ? {} : rooms[i].awayMode;
             rooms[i].holidayMode = rooms[i].holidayMode === null ? {} : rooms[i].holidayMode;
+            rooms[i].nextTimeBlock = rooms[i].nextTimeBlock === null ? {} : rooms[i].nextTimeBlock;
+            rooms[i].nextScheduleChange = rooms[i].nextScheduleChange === null ? {} : rooms[i].nextScheduleChange;
         }
         this.debugLog(`Modified rooms object is ${JSON.stringify(rooms)}`);
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
