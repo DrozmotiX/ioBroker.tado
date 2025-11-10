@@ -1376,7 +1376,7 @@ class Tado extends utils.Adapter {
     }
 
     //////////////////////////////////////////////////////////////////////
-    /* DO Methods														*/
+    /* Manage Methods														*/
     //////////////////////////////////////////////////////////////////////
     /**
      * @param {string} homeId
@@ -1529,6 +1529,8 @@ class Tado extends utils.Adapter {
                 }
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.*Window*.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.nextScheduleChange.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.nextTimeBlock.*`);
 
                 step = 'manageHomeState';
                 if (outdated[step].isOutdated) {
