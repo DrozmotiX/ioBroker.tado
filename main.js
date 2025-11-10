@@ -116,6 +116,14 @@ class Tado extends utils.Adapter {
             },
             DEBOUNCE_TIME, // debouncing (waiting if further calls come in and just execute the last one)
         );
+        this.debouncedSetManualControlTadoX = debounce(
+            (homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds, resolve, reject) => {
+                this._setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds)
+                    .then(resolve)
+                    .catch(reject);
+            },
+            DEBOUNCE_TIME,
+        );
     }
 
     /**
@@ -713,6 +721,21 @@ class Tado extends utils.Adapter {
      * @param {number} durationInSeconds
      */
     async setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds) {
+        return new Promise((resolve, reject) => {
+            this.debouncedSetManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds, resolve, reject);
+        });
+    }
+
+    /**
+     * @param {string} homeId
+     * @param {string} roomId
+     * @param {string} power
+     * @param {number} temperature
+     * @param {string} terminationMode
+     * @param {boolean} boostMode
+     * @param {number} durationInSeconds
+     */
+    async _setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds) {
         try {
             //{`"setting`":{`"power`":`"ON`",`"isBoost`":false,`"temperature`":{`"value`":18.5,`"valueRaw`":18.52,`"precision`":0.1}},`"termination`":{`"type`":`"NEXT_TIME_BLOCK`"}}
             if (power != 'ON' && power != 'OFF') {
