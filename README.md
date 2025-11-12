@@ -75,6 +75,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 -->
 ### 0.8.3-alpha.0 (2025-11-08)
 * (HGlab01) add capability to set OffSet [TadoX]
+* (HGlab01) Implement deboucing also for TadoX
 
 ### 0.8.2 (2025-11-07)
 * (HGlab01) add retry mechanism when it comes to timeouts
@@ -127,3 +128,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 
 SOFTWARE.
+
