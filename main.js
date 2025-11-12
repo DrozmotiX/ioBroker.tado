@@ -116,6 +116,14 @@ class Tado extends utils.Adapter {
             },
             DEBOUNCE_TIME, // debouncing (waiting if further calls come in and just execute the last one)
         );
+        this.debouncedSetManualControlTadoX = debounce(
+            (homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds, resolve, reject) => {
+                this._setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds)
+                    .then(resolve)
+                    .catch(reject);
+            },
+            DEBOUNCE_TIME,
+        );
     }
 
     /**
@@ -713,6 +721,21 @@ class Tado extends utils.Adapter {
      * @param {number} durationInSeconds
      */
     async setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds) {
+        return new Promise((resolve, reject) => {
+            this.debouncedSetManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds, resolve, reject);
+        });
+    }
+
+    /**
+     * @param {string} homeId
+     * @param {string} roomId
+     * @param {string} power
+     * @param {number} temperature
+     * @param {string} terminationMode
+     * @param {boolean} boostMode
+     * @param {number} durationInSeconds
+     */
+    async _setManualControlTadoX(homeId, roomId, power, temperature, terminationMode, boostMode, durationInSeconds) {
         try {
             //{`"setting`":{`"power`":`"ON`",`"isBoost`":false,`"temperature`":{`"value`":18.5,`"valueRaw`":18.52,`"precision`":0.1}},`"termination`":{`"type`":`"NEXT_TIME_BLOCK`"}}
             if (power != 'ON' && power != 'OFF') {
@@ -1353,7 +1376,7 @@ class Tado extends utils.Adapter {
     }
 
     //////////////////////////////////////////////////////////////////////
-    /* DO Methods														*/
+    /* Manage Methods														*/
     //////////////////////////////////////////////////////////////////////
     /**
      * @param {string} homeId
@@ -1362,7 +1385,7 @@ class Tado extends utils.Adapter {
         let rooms = await this.getRoomsTadoX(homeId);
         let roomsAndDevices = await this.getRoomsAndDevicesTadoX(homeId);
         this.debugLog(`Rooms object is ${JSON.stringify(rooms)}`);
-        this.debugLog(`RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
+        this.debugLog(`Rooms object is ${JSON.stringify(roomsAndDevices)}`);
         rooms.boost = false;
         rooms.resumeScheduleHome = false;
         rooms.allOff = false;
@@ -1386,6 +1409,8 @@ class Tado extends utils.Adapter {
             rooms[i].openWindow = rooms[i].openWindow === null ? {} : rooms[i].openWindow;
             rooms[i].awayMode = rooms[i].awayMode === null ? {} : rooms[i].awayMode;
             rooms[i].holidayMode = rooms[i].holidayMode === null ? {} : rooms[i].holidayMode;
+            rooms[i].nextTimeBlock = rooms[i].nextTimeBlock === null ? {} : rooms[i].nextTimeBlock;
+            rooms[i].nextScheduleChange = rooms[i].nextScheduleChange === null ? {} : rooms[i].nextScheduleChange;
         }
         this.debugLog(`Modified rooms object is ${JSON.stringify(rooms)}`);
         await jsonExplorer.traverseJson(rooms, `${homeId}.Rooms`, true, true, 0);
@@ -1432,6 +1457,8 @@ class Tado extends utils.Adapter {
         roomsAndDevices.openWindow = roomsAndDevices.openWindow == null ? {} : roomsAndDevices.openWindow;
         roomsAndDevices.awayMode = roomsAndDevices.awayMode == null ? {} : roomsAndDevices.awayMode;
         roomsAndDevices.holidayMode = roomsAndDevices.holidayMode == null ? {} : roomsAndDevices.holidayMode;
+        roomsAndDevices.nextTimeBlock = roomsAndDevices.nextTimeBlock == null ? {} : roomsAndDevices.nextTimeBlock;
+        roomsAndDevices.nextScheduleChange = roomsAndDevices.nextScheduleChange == null ? {} : roomsAndDevices.nextScheduleChange;
         roomsAndDevices.resumeScheduleRoom = false;
         this.debugLog(`Modified RoomsAndDevices object is ${JSON.stringify(roomsAndDevices)}`);
         await jsonExplorer.traverseJson(roomsAndDevices, `${homeId}.Rooms.${roomId}`, true, true, 0);
@@ -1502,6 +1529,8 @@ class Tado extends utils.Adapter {
                 }
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.*Window*.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.nextScheduleChange.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.nextTimeBlock.*`);
 
                 step = 'manageHomeState';
                 if (outdated[step].isOutdated) {
