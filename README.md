@@ -73,7 +73,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.8.3-alpha.1 (2025-11-12)
 * (HGlab01) add capability to set OffSet [TadoX]
 * (HGlab01) Implement deboucing also for TadoX
 * (HGlab01) fix nextScheduleChange is missing the required property "common.type" [TadoX]
@@ -129,5 +129,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 
 SOFTWARE.
-
-
