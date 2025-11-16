@@ -1528,6 +1528,7 @@ class Tado extends utils.Adapter {
                     await this.manageZones(homeId);
                 }
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.setting.*`);
+                jsonExplorer.checkExpire(`${homeId}.Rooms.*.termination.*`);
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.*Window*.*`);
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.nextScheduleChange.*`);
                 jsonExplorer.checkExpire(`${homeId}.Rooms.*.nextTimeBlock.*`);
