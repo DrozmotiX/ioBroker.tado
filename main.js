@@ -1912,7 +1912,7 @@ class Tado extends utils.Adapter {
                         await this.setState(powerPath, 'OFF');
                         await this.setState(typeSkillBasedAppPath, 'MANUAL');
                     }
-                    await this.sleep(600);
+                    await this.sleep(800);
                 }
             }
         } catch (error) {
