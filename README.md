@@ -76,6 +76,7 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 ### __WORK IN PROGRESS__
 * (HGlab01) checkExpire for termination-attributes
 * (HGlab01) add attributes 'smartReminders' & 'smartRemindersInAppEnabled'
+* (HGlab01) fix #1107 masterswitch turning OFF does not work any longer
 
 ### 0.8.3 (2025-11-13)
 * (HGlab01) add capability to set OffSet [TadoX]
