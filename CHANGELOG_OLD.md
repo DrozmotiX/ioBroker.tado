@@ -1,4 +1,7 @@
 # Older changes
+## 0.7.10 (2025-04-25)
+* (HGlab01) further token refresh optimizations
+
 ## 0.7.9 (2025-04-17)
 * (HGlab01) fix issue 'refreshToken() failed'
 
