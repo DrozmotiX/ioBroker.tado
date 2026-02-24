@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.8.4-alpha.0",
+    "version": "0.8.4",
     "news": {
+      "0.8.4": {
+        "en": "checkExpire for termination-attributes\nadd attributes 'smartReminders' & 'smartRemindersInAppEnabled'\nfix #1107 masterswitch turning OFF does not work any longer\nfix #1117 Request failed with status code 400 with response \"Unsupported content type\"\nbump axios to 1.13.5",
+        "de": "überprüfung Befristung von Kündigungszuschüssen\nattribute 'smartReminders' & 'smartRemindersInAppEnabled hinzufügen '\nfix #1107 masterswitch Drehen OFF funktioniert nicht mehr\nplatz #1117 Anfrage fehlgeschlagen mit Statuscode 400 mit Antwort \"Unsupported content type\"\nbump-axios zu 1.13.5",
+        "ru": "проверить Срок действия атрибутов терминации\nдобавить атрибуты SmartReminders и SmartRemindersInAppEnabled \"\n#1107 Masterswitch Turning OFF больше не работает\n#1117Править Запрос провалился с кодом состояния 400 с ответом «Неподдерживаемый тип контента»\nбамперы до 1,13,5",
+        "pt": "verificar Expiração para atributos de rescisão\nadicionar atributos 'smartReminders' & 'smartRemindersInAppEnabled '\ncorrigir #1107 masterswitch desligar não funciona mais\ncorreção #1117 O pedido falhou com o código de estado 400 com a resposta \"Tipo de conteúdo não suportado\"\naxios de choque para 1.13.5",
+        "nl": "controleren Verlopen voor termination-attributes\nattributen 'smartReminders' & 'smartRemindersInAppEnabled toevoegen '\nfix #1107 masterswitch draaien OFF werkt niet meer\nfix #1117 Verzoek mislukt met statuscode 400 met antwoord \"Niet ondersteund inhoudstype\"\nbump axios tot 1.13.5",
+        "fr": "contrôle Expire pour les attributs de terminaison\najouter les attributs 'smartReminders' et 'smartRemindersInAppEnabled '\ncorrection #107 masterswitch tourning OFF ne fonctionne plus\ncorrection no 117 La demande a échoué avec le code d'état 400 avec la réponse \"Type de contenu non pris en charge\"\naxios de bosse à 1.13.5",
+        "it": "verifica Scadenza per gli attributi di terminazione\naggiungere attributi 'smartReminders' & 'smartRemindersInappEnabled '\ncorrezione #1107 masterswitch girando OFF non funziona più\ncorrezione #1117 Richiesta non riuscita con codice di stato 400 con risposta \"Tipo di contenuto non supportato\"\nparaurti a 1.13.5",
+        "es": "cheque Expire for termination-attributes\nañadir atributos 'smartReminders' & 'smartRemindersInAppEnabled '\n#1107 masterswitch turn OFF no funciona más\n#1117 Solicitud falló con el código de estado 400 con respuesta \"Tipo de contenido sin soporte\"\naxios de golpe a 1.13.5",
+        "pl": "kontrola Termin wygaśnięcia - atrybuty\ndodaj atrybuty 'smartReminders' & 'smartRemindersInapPenabled'\nfix # 1107 masterswitch turning OFF nie działa już\nfix # 1117 Zapytanie nie powiodło się z kodem statusu 400 z odpowiedzią \"Nieobsługiwany typ treści\"\nboom axios do 1.13.5",
+        "uk": "увійти Закінчення для припинення\nдодати атрибути 'smartReminders' & 'smartRemindersInAppEnabled Р\nвиправити #1107 masterswitch поворот OFF не працює більше\nзафіксувати #1117 Запит не вдалося з кодом статусу 400 з відповіддю \"Підтриманий тип вмісту\"\nbump axios до 1.13.5",
+        "zh-cn": "检查 终止属性过期\n添加属性“ smartReminders” 和“ smartReminders InAppEnabled ”  '\n修补 # 1107 高手开关不再有效\n修复 # 1117 请求失败, 状态代码为 400, 响应“ 不支持的内容类型 ”\n折合轴为 1.13.5"
+      },
       "0.8.4-alpha.0": {
         "en": "checkExpire for termination-attributes\nadd attributes 'smartReminders' & 'smartRemindersInAppEnabled'\nfix #1107 masterswitch turning OFF does not work any longer\nfix #1117 Request failed with status code 400 with response \"Unsupported content type\"\nbump axios to 1.13.5",
         "de": "überprüfung Befristung von Kündigungszuschüssen\nattribute 'smartReminders' & 'smartRemindersInAppEnabled hinzufügen '\nfix #1107 masterswitch Drehen OFF funktioniert nicht mehr\nplatz #1117 Anfrage fehlgeschlagen mit Statuscode 400 mit Antwort \"Unsupported content type\"\nbump-axios zu 1.13.5",
@@ -80,19 +93,6 @@
         "pl": "kod refakturowania\nfix issue \"brakuje definicji dla holidayMode\" [TadoX]\nfix issue 'nie może odczytać właściwości niezdefiniowanych (odczyt' match ')'\nfix issue open Dane okna nieaktualne # 1086",
         "uk": "рефакторинг коду\nвиправлено проблему «відхилення від дня народження» [TadoX]\nвиправити проблему «не можна читати властивості невизначеного (читання «матч») р\nфіксувати проблему відкритим Дані вікна не додаються до дати #1086",
         "zh-cn": "代码重构\n固定问题“ 定义缺失的假日模式 ” [TadoX]\n固定问题“ 无法读取未定义的属性( 正在读取“ match” )  '\n固定问题打开 窗口数据未更新 # 1086"
-      },
-      "0.8.1-alpha.0": {
-        "en": "code refactorings\nfix issue 'definition missing for holidayMode' [TadoX]\nfix issue 'cannot read properties of undefined (reading 'match')'",
-        "de": "code refactorings\nproblem beheben 'Definition fehlt für HolidayMode' [TadoX]\nfix problem 'kann nicht lesen eigenschaften von undefiniert (lesen 'match') '",
-        "ru": "рефакторинг кода\nрешение проблемы «определение, отсутствующее для режима отдыха» [TadoX]\nпроблема исправления «не может прочитать свойства неопределенного (чтение «соответствия»)» \"",
-        "pt": "refatorações de código\ncorrigir problema 'definição em falta para feriadoMode' [TadoX]\ncorrigir o problema 'não é possível ler as propriedades de indefinidas (lendo 'match') '",
-        "nl": "coderefactoring\nfix issue 'definitie ontbreekt voor vakantieMode' [TadoX]\nfix issue 'kan niet lezen eigenschappen van ongedefinieerd (lezen 'match') '",
-        "fr": "refacturation du code\ncorrection de problème 'définition manquante pour HolidayMode' [TadoX]\ncorrection du problème 'ne peut pas lire les propriétés de l'indéfini (lecture de 'match') '",
-        "it": "refactorings\nrisolvere problema 'definizione mancante per vacanzaMode' [TadoX]\nrisolvere problema 'non può leggere le proprietà di non definito (leggendo 'match') '",
-        "es": "refactorings code\nsolucionar el problema 'definición falta para holidayMode' [TadoX]\nsolucionar el problema 'no puede leer propiedades de indefinidos (leer 'match') '",
-        "pl": "kod refakturowania\nfix issue \"brakuje definicji dla holidayMode\" [TadoX]\nfix issue 'nie może odczytać właściwości niezdefiniowanych (odczyt' match ')'",
-        "uk": "рефакторинг коду\nвиправлено проблему «відхилення від дня народження» [TadoX]\nвиправити проблему «не можна читати властивості невизначеного (читання «матч») р",
-        "zh-cn": "代码重构\n固定问题“ 定义缺失的假日模式 ” [TadoX]\n固定问题“ 无法读取未定义的属性( 正在读取“ match” )  '"
       }
     },
     "titleLang": {
