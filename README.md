@@ -113,6 +113,8 @@ If your setup is not working, please raise a [ticket](https://github.com/Drozmot
 * (HGlab01) Bump axios to 1.12.2
 * (HGlab01) Bump iobroker-jsonexplorer to 0.2.0
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
