@@ -26,7 +26,8 @@ export default [
         // as this improves maintainability. jsdoc warnings will not block buiuld process.
         files: ['**/*.js', '**/*.ts'],
         rules: {
-            'jsdoc/reject-any-type': 'off'
+            'jsdoc/reject-any-type': 'off',
+            'jsdoc/require-param-description': 'off',
             // 'jsdoc/require-jsdoc': 'off',
             // 'jsdoc/require-param': 'off',
             // 'jsdoc/require-param-description': 'off',

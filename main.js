@@ -2222,7 +2222,7 @@ class Tado extends utils.Adapter {
 
 /**
  * @param {string | number | boolean} valueToBoolean
- * @returns {boolean}
+ * @returns {boolean} return a boolean value
  */
 function toBoolean(valueToBoolean) {
     return valueToBoolean === true || valueToBoolean === 'true';
@@ -2232,7 +2232,7 @@ function toBoolean(valueToBoolean) {
  * @param {ioBroker.State | null | undefined} state
  * @param {T} defaultValue
  * @param {(val: any) => T} [processFunc]
- * @returns {T}
+ * @returns {T} returns the value to the given state or the default value if the state is null or undefined
  * @template T
  */
 function getStateValue(state, defaultValue, processFunc) {
