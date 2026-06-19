@@ -23,7 +23,6 @@ const axiosInstanceToken = axios.create({
 });
 
 let polling; // Polling timer
-let pooltimer = [];
 let outdated = {
     //${homeId}.Mobile_Devices
     manageMobileDevices: {
@@ -1551,11 +1550,11 @@ class Tado extends utils.Adapter {
 
             // Clear running timer
             if (polling) {
-                clearTimeout(polling);
+                this.clearTimeout(polling);
                 polling = null;
             }
             // timer
-            polling = setTimeout(() => {
+            polling = this.setTimeout(() => {
                 this.connect();
             }, this.intervall_time);
             this.retryCount = 0;
@@ -1574,7 +1573,7 @@ class Tado extends utils.Adapter {
                 this.log.error(`Disconnected from Tado cloud service ..., retry in ${retryDelay} seconds !`);
                 this.setState('info.connection', false, true);
                 // retry connection
-                polling = setTimeout(() => {
+                polling = this.setTimeout(() => {
                     for (let key in outdated) {
                         this.getMeData = null;
                         this.homeData = null;
@@ -1596,11 +1595,11 @@ class Tado extends utils.Adapter {
                 this.log.warn(`No internet connection detected. Retry in ${this.intervall_time / 1000} seconds.`);
                 // Clear running timer
                 if (polling) {
-                    clearTimeout(polling);
+                    this.clearTimeout(polling);
                     polling = null;
                 }
                 // timer
-                polling = setTimeout(() => {
+                polling = this.setTimeout(() => {
                     this.connect();
                 }, this.intervall_time);
                 return;
@@ -1935,9 +1934,6 @@ class Tado extends utils.Adapter {
                 expires_at.getTime() - new Date().getTime() < TOKEN_EXPIRATION_WINDOW * 1000 || this.accessToken.token.expires_at == undefined;
             //this.shouldRefreshToken = true; //for testing only
             this.debugLog(`Need to refreshT is ${this.shouldRefreshToken} as expire time is ${expires_at}`);
-            /*setTimeout(() => {
-                this.refreshToken();
-            }, 70);*/ //for testing only
         } else {
             this.debugLog(`RefreshT in progress, therfore I just wait until refresh is done... [${id}]`);
             let i = 0;
@@ -2106,25 +2102,6 @@ class Tado extends utils.Adapter {
         }
     }
 
-    async resetTimer() {
-        const states = await this.getStatesAsync('*.Rooms.*.link');
-        for (const idS in states) {
-            let deviceId = idS.split('.');
-            let pooltimerid = deviceId[2] + deviceId[4];
-            this.debugLog(`Check if timer ${pooltimerid} to be cleared.`);
-            if (pooltimer[pooltimerid]) {
-                clearTimeout(pooltimer[pooltimerid]);
-                pooltimer[pooltimerid] = null;
-                this.debugLog(`Timer ${pooltimerid} cleared.`);
-            }
-        }
-        if (polling) {
-            clearTimeout(polling);
-            polling = null;
-            this.debugLog(`Polling-Timer cleared.`);
-        }
-    }
-
     /**
      * @param {string} message
      */
@@ -2281,34 +2258,3 @@ if (module.parent) {
     // otherwise start the instance directly
     new Tado();
 }
-
-/**
- * @param {string} inputString is a string that may contain numbers starting with / or /RU or /SU or /VA
- * @returns {string} returns the input string with all numbers replaced by 'x' while retaining the prefix
- */
-/*function replaceNumbers(inputString) {
-    const regex = /(\/SU|\/VA|\/RU|\/)\d+/g; // Regular expression to find numbers that start with / or /RU or /SU or /VA
-    const replacedString = inputString.replace(regex, (match, prefix) => {
-        // Replacement function called for each matching pattern
-        const numberPart = match.substring(prefix.length); // The prefix (/ or /RU or /SU or /VA) is retained
-        const replacedNumberPart = numberPart.replace(/\d/g, 'x'); // Replaces each digit in the number part with 'x'
-        return prefix + replacedNumberPart; // Returns the prefix and the replaced number part
-    });
-    return replacedString;
-}*/
-
-/*const asyncCallWithTimeout = async (asyncPromise, timeLimit) => {
-    let timeoutHandle;
-
-    const timeoutPromise = new Promise((_resolve, reject) => {
-        timeoutHandle = setTimeout(
-            () => reject(new Error('Async call timeout limit reached')),
-            timeLimit
-        );
-    });
-
-    return Promise.race([asyncPromise, timeoutPromise]).then(result => {
-        clearTimeout(timeoutHandle);
-        return result;
-    });
-};*/
