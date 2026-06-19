@@ -1,4 +1,16 @@
 # Older changes
+## 0.8.0 (2025-10-07)
+* (HGlab01) new configuration capabilities to manage API usage quota (#1047, #1048)
+* (HGlab01) Implement API debouncing
+* (HGlab01) Refactorings Tado API calls
+* (HGlab01) fix issue 'definition missing for awayMode' [TadoX]
+* (HGlab01) fix issue 'definition missing for preheating' [TadoX]
+* (HGlab01) Additional guidance/log when it comes to RefreshToken issue
+* (HGlab01) fix Object of state "tado.0.xxxxx.Rooms.y.openWindow" is missing the required property "common.type" (#1059)
+* (HGlab01) Bump axios to 1.12.2
+* (HGlab01) Bump iobroker-jsonexplorer to 0.2.0
+
+
 ## 0.7.10 (2025-04-25)
 * (HGlab01) further token refresh optimizations
 

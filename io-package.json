@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tado",
-    "version": "0.8.4",
+    "version": "0.8.5",
     "news": {
+      "0.8.5": {
+        "en": "improve code quality\nadd attribute adminUserId\nuse automated translation into several languages\nbump axios to 1.8.0",
+        "de": "Verbesserung der Codequalität\nAttribut adminUserId hinzufügen\nAutomatisierte Übersetzung in mehrere Sprachen nutzen\nAxios auf Version 1.8.0 aktualisieren",
+        "ru": "улучшить качество кода\nдобавить атрибут adminUserId\nиспользовать автоматический перевод на несколько языков\nПовысить версию Axios до 1.8.0",
+        "pt": "melhorar a qualidade do código\nAdicionar atributo adminUserId\nusar tradução automática para vários idiomas\nAtualize o Axios para a versão 1.8.0.",
+        "nl": "codekwaliteit verbeteren\nvoeg attribuut adminUserId toe\nGebruik automatische vertaling naar meerdere talen.\nUpdate axios naar 1.8.0",
+        "fr": "améliorer la qualité du code\najouter l'attribut adminUserId\nutiliser la traduction automatique dans plusieurs langues\nMise à jour d'axios vers la version 1.8.0",
+        "it": "migliorare la qualità del codice\naggiungi l'attributo adminUserId\nutilizzare la traduzione automatica in diverse lingue\nAggiornare Axios alla versione 1.8.0.",
+        "es": "mejorar la calidad del código\nagregar atributo adminUserId\nutilizar la traducción automática a varios idiomas\nActualizar Axios a la versión 1.8.0",
+        "pl": "poprawić jakość kodu\ndodaj atrybut adminUserId\nkorzystaj z automatycznego tłumaczenia na kilka języków\npodnieś axios do 1.8.0",
+        "uk": "покращити якість коду\nдодати атрибут adminUserId\nвикористовувати автоматичний переклад кількома мовами\nпідвищити axios до версії 1.8.0",
+        "zh-cn": "提高代码质量\n添加属性 adminUserId\n使用自动翻译功能翻译成多种语言\n将 axios 版本升级到 1.8.0"
+      },
       "0.8.4": {
         "en": "checkExpire for termination-attributes\nadd attributes 'smartReminders' & 'smartRemindersInAppEnabled'\nfix #1107 masterswitch turning OFF does not work any longer\nfix #1117 Request failed with status code 400 with response \"Unsupported content type\"\nbump axios to 1.13.5",
         "de": "überprüfung Befristung von Kündigungszuschüssen\nattribute 'smartReminders' & 'smartRemindersInAppEnabled hinzufügen '\nfix #1107 masterswitch Drehen OFF funktioniert nicht mehr\nplatz #1117 Anfrage fehlgeschlagen mit Statuscode 400 mit Antwort \"Unsupported content type\"\nbump-axios zu 1.13.5",
@@ -80,19 +93,6 @@
         "pl": "dodaj mechanizm ponowny jeśli chodzi o timeout\ndodaj atrybut 'isRoomLinkRestricted'\nwreszcie naprawić brak definicji dla 'awayMode' z wartością 'null' [TadoX]\nwreszcie naprawić brak definicji dla 'holidayMode' z wartością 'null' [TadoX]\nbump iobroker- jsonExplorer do 0.2.2\naxios bump do 1.13.2",
         "uk": "додати механізм птиху, коли мова йде про час\nдодати атрибут 'isRoomLinkRestricted Р\nнарешті фіксуйте визначення, відсутнє для 'awayMode' з значенням 'null' [Тадокс]\nнарешті фіксуйте визначення, що відсутній для 'holidayMode' з значенням 'null' [Тадокс]\nbump iobroker-jsonExplorer до 0.2.2\nbump axios до 1.13.2",
         "zh-cn": "超时时添加重试机制\n添加属性“ is RoomLink 限制性  '\n最后用“ null” 来修正“ 远离模式” 的定义 [塔多\n最终将“ holidayMode” 定义中缺少的值“ 无效 ” [塔多\n钢筋混凝土-Json爆炸器改为0.2.2\n弯曲轴到1.13.2"
-      },
-      "0.8.1": {
-        "en": "code refactorings\nfix issue 'definition missing for holidayMode' [TadoX]\nfix issue 'cannot read properties of undefined (reading 'match')'\nfix issue openWindow data not up to date #1086",
-        "de": "code refactorings\nproblem beheben 'Definition fehlt für HolidayMode' [TadoX]\nfix problem 'kann nicht lesen eigenschaften von undefiniert (lesen 'match') '\nproblem öffnen Fensterdaten nicht aktuell #1086",
-        "ru": "рефакторинг кода\nрешение проблемы «определение, отсутствующее для режима отдыха» [TadoX]\nпроблема исправления «не может прочитать свойства неопределенного (чтение «соответствия»)» \"\nобсуждение fix open Оконные данные не актуальны #1086",
-        "pt": "refatorações de código\ncorrigir problema 'definição em falta para feriadoMode' [TadoX]\ncorrigir o problema 'não é possível ler as propriedades de indefinidas (lendo 'match') '\ncorrigir o problema aberto Dados da janela não atualizados # 1086",
-        "nl": "coderefactoring\nfix issue 'definitie ontbreekt voor vakantieMode' [TadoX]\nfix issue 'kan niet lezen eigenschappen van ongedefinieerd (lezen 'match') '\nfix probleem open Venstergegevens niet up-to-date #1086",
-        "fr": "refacturation du code\ncorrection de problème 'définition manquante pour HolidayMode' [TadoX]\ncorrection du problème 'ne peut pas lire les propriétés de l'indéfini (lecture de 'match') '\ncorrection du problème ouvert Données de la fenêtre non à jour #1086",
-        "it": "refactorings\nrisolvere problema 'definizione mancante per vacanzaMode' [TadoX]\nrisolvere problema 'non può leggere le proprietà di non definito (leggendo 'match') '\nproblema risolto aperto Dati della finestra non aggiornati #1086",
-        "es": "refactorings code\nsolucionar el problema 'definición falta para holidayMode' [TadoX]\nsolucionar el problema 'no puede leer propiedades de indefinidos (leer 'match') '\nsolucionar el problema abierto Datos de ventana no actualizados #1086",
-        "pl": "kod refakturowania\nfix issue \"brakuje definicji dla holidayMode\" [TadoX]\nfix issue 'nie może odczytać właściwości niezdefiniowanych (odczyt' match ')'\nfix issue open Dane okna nieaktualne # 1086",
-        "uk": "рефакторинг коду\nвиправлено проблему «відхилення від дня народження» [TadoX]\nвиправити проблему «не можна читати властивості невизначеного (читання «матч») р\nфіксувати проблему відкритим Дані вікна не додаються до дати #1086",
-        "zh-cn": "代码重构\n固定问题“ 定义缺失的假日模式 ” [TadoX]\n固定问题“ 无法读取未定义的属性( 正在读取“ match” )  '\n固定问题打开 窗口数据未更新 # 1086"
       }
     },
     "titleLang": {
