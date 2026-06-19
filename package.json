@@ -21,7 +21,6 @@
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.3.2",
     "axios": "^1.17.0",
-    "https": "^1.0.0",
     "iobroker-jsonexplorer": "^0.2.2",
     "lodash.debounce": "^4.0.8"
   },
@@ -34,7 +33,7 @@
     "@iobroker/testing": "^5.2.2",
     "@tsconfig/node22": "^22.0.5",
     "@types/gulp": "^4.0.18",
-    "@types/node": "^25.9.2",
+    "@types/node": "^22.19.20",
     "@types/proxyquire": "^1.3.31",
     "proxyquire": "^2.1.3"
   },
@@ -50,7 +49,8 @@
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:js && npm run test:package",
     "check": "tsc --noEmit -p tsconfig.check.json",
-    "lint": "eslint -c eslint.config.mjs ."
+    "lint": "eslint -c eslint.config.mjs .",
+    "translate": "translate-adapter"
   },
   "bugs": {
     "url": "https://github.com/DrozmotiX/ioBroker.tado/issues"

@@ -17,7 +17,6 @@ const CLIENT_ID = `1bb50063-6b0c-4d11-bd99-387f4a91cc46`;
 const DEBOUNCE_TIME = 750; //750ms debouncing (waiting if further calls come in and just execute the last one)
 const DELAY_AFTER_CALL = 300; //300ms pause between api calls
 
-// @ts-expect-error create axios instance
 const axiosInstanceToken = axios.create({
     timeout: TOKEN_API_TIMEOUT,
     baseURL: TOKEN_BASE_URL,

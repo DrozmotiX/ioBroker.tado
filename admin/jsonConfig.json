@@ -1,5 +1,5 @@
 {
-  "i18n": false,
+  "i18n": true,
   "type": "tabs",
   "tabsStyle": {
     "width": "calc(100% - 100px)"
